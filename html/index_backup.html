@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<html LANG=ru> 
+<title> reader </title>
+
+<!-- <link rel="stylesheet" type="text/css" href="style/book_reader.css" /> -->
+<link rel="stylesheet"  href="style/book_reader.css" />
+<!--
+<STYLE type="text/css">
+	
+.block2 { 
+background: #ffffff; 
+padding: 5px; 
+border: solid 1px black; 
+float: left; 
+position: absolute; 
+top: 300;
+}
+.body1 {
+background: #FFFFFF;
+border: solid 1px dimgrey;
+opacity: 0.5;
+width: 1050px;
+height: 150px;
+position:absolute;
+top:100;
+z-index:1;
+}
+.body2 {
+background: #FFFFFF;
+border: solid 1px dimgrey;
+opacity: 0.8;
+width: 900px;
+height: 350px;
+position:fixed;
+top:300;
+z-index:1;
+}
+
+.zoomline{
+	position: fixed;
+	align: center;
+	background-color: rgba(255,255,255,0.9);
+	border-radius:  4px;
+	border: solid 1px green;
+	width: 80%;
+	left: 10%;
+	height: 15%;
+	top: 80%;
+	}
+
+.table2{
+    background-color: rgba(255,255,255,0.9); 
+}
+.button_word{
+  top: 90%;
+  position: fixed;
+  border-radius:  4px;
+  font-size:20px;
+  color: rgba(255,255,255,0.0);
+  width: 9%;
+  height: 30%;
+  border-color: rgba(255,255,255,0.0);
+  background-color: rgba(255,255,255,0.0); 
+}
+.button_div{
+  top: 70%;
+  halign: center;
+  position: fixed;
+  border-radius:  4px;
+  font-size:20px;
+  color: rgba(255,255,255,0.9);
+  width: 9%;
+  height: 30%;
+  border-color: rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.7); 
+}
+.button_menu{
+  top: 35%;
+  halign: center;
+  position: fixed;
+  border-radius:  4px;
+  font-size:20px;
+  color: rgba(255,255,255,0.9);
+  width: 9%;
+  height: 30%;
+  border-color: rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.5); 
+}
+</style>
+<style>
+BODY {
+    background-color: #F8F8FF;
+    background: url(pics/back.gif);
+    -moz-background-size: 100%; 
+    -webkit-background-size: 100%; 
+    -o-background-size: 100%; 
+    background-size: 100%;  
+    bgproperties: fixed; 
+    background-repeat:no-repeat; 
+    background-attachment:fixed;
+   }
+.table1 {
+    width: 80%;
+    height: 12%; 
+    background-color: rgba(255,255,255,0.7); 
+    border-radius:  4px;
+   } 
+.table3 {
+    width: 100%;
+    background-color: rgba(255,255,255,0.7); 
+   } 
+.main_table {
+	border-radius:  4px;
+	}
+
+</STYLE>
+-->
+
+</head>
+<body align="center"> <!-- leftmargin="120" rightmargin="120" topmargin="50" id="body"> -->
+<center>
+
+<table>
+<td width="10%" > </td>
+<table width="80%" class="table1"> 
+<tr>
+  <td>
+    <form width="40%" id="reg" name="reg">
+      <input text="text" id="reg" name="name" />
+      <br>
+      <input type="button" value="load text" onclick="getName();" id="ok" />
+    </form>
+  </td>
+  <!--
+  <td>
+    <form width="40%" id="reg2" name="reg2">
+      <input text="text2" id="reg2" name="name2" />
+      <br>
+      <input type="button" value="load text 2" onclick="load_file();" id="ok2" />
+    </form>
+  </td>
+  -->
+  <td>
+    <a> zoom </a>
+    <FORM name="myForm"> 
+      <select id="mySelectId" name="mySelect" onchange="select_magnification()">
+        <option value="6"> 6 </option>
+        <option value="2"> 2 </option>
+        <option value="3"> 3 </option>
+        <option value="4"> 4 </option>
+        <option value="5"> 5 </option>
+        <option value="7"> 7 </option>
+        <option value="8"> 8 </option>
+        <option value="9"> 9 </option>
+        <option value="10"> 10 </option>
+      </select>
+    </FORM>
+  </td>
+  <td>
+    <a> method </a>
+    <FORM name="myForm"> 
+      <select id="mySelectId_2" name="mySelect" onchange="select_method()">
+        <option value="1"> zoom </option>
+        <option value="2"> box </option>
+      </select>
+    </FORM>
+  </td>
+</tr>
+</table>
+<td width="10%" > </td>
+</table>
+</center>
+<br>
+
+<center>
+<table width="100%" height="25%" class='main_table' >
+<script language=JavaScript type="text/javascript" src="script/reader_tts_book-test.js"></script>
+  <td width="10%" >
+      <input type="button" value="sentence/paragraph" onclick="change_type(type);" id="read_type" class="button_menu"/>
+      <br>
+      <input type="button" value="prev_div" onclick="scrollbut_div(prev);" id="prev_div" class="button_div"/>
+      <br>
+      <input type="button" value="prev_word" onclick="scrollbut(prev);" id="prev" class="button_word"/>
+  </td>
+  
+<td valign="top" bgcolor="white" class='main_table' >
+<table width="70%" position='fixed' left='40%'> <td width='5%'></td>
+<td id='text_from_file'>	
+ <!-- <a href="menu.html">This is a link to menu </a> -->
+  <!-- ------------------------------------------------------------------------------  --> 
+<input type="button" value="load text" onclick="text_from_file(text);" id='text' />
+</td></table> 
+
+<br><br><br><br><br><br><br><br><br>
+  
+  <div id='div2'>  </div>
+  </td>
+  <td width="10%" >
+	  <input type="button" value="next_div" onclick="scrollbut_div(next);" id="next_div" class="button_div"/>
+      <br>
+      <input type="button" value="next_word" onclick="scrollbut(next);" id="next" class="button_word"/>
+  </td>
+</table>
+</center>
+
+<div id="zoomline" class="zoomline"> 
+zoom
+</div>
+
+<!--
+	<h1>Audio Element Sample</h1>
+    <audio src="demo.mp3" controls autoplay loop> 
+        HTML5 audio not supported
+    </audio>
+-->
+<!--
+	<h1>Audio Element Sample</h1>
+    <audio src=src="http://translate.google.com/translate_tts?tl=RU&q=Добрый  День Уважаемые Директора,   как ваше душевное настроение   чем могу быть полезна" controls autoplay loop> 
+        HTML5 audio not supported
+    </audio>
+-->   
+<!-- <p onclick="soundClick()">звук</p> --> 
+<!-- <iframe src="http://translate.google.com/translate_tts?tl=RU&q=Добрый  День Уважаемые Директора,   как ваше душевное настроение   чем могу быть полезна" width="0" height="0" border="0"></iframe> -->
+
+</body>
+</html>

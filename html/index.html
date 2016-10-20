@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<html LANG=ru> 
+<title> files </title>
+<STYLE type="text/css">
+.folder_bkg{
+  position: fixed;
+  border-radius:  4px;
+  text-align: left;
+  font-size:20px;
+  color: black;
+  width: 81%;
+  height: 75%;
+  left: 1%; 
+  top: 1%;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,255,200,0.7); 
+  border: solid 2px green;
+}
+.folder{
+  position: fixed;
+  border-radius:  4px;
+  text-align: center;
+  font-size:20px;
+  color: black;
+  width: 15%;
+  height: 20%;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,255,200,0.7); 
+  border: solid 2px green;
+}
+.file_txt{
+  border-radius:  4px;
+  font-size:20px;
+  color: rgba(255,255,255,0.9);
+  width: 15%;
+  height: 20%;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,255,200,0.7); 
+  border: solid 2px green;
+}
+
+.buttons{
+  position: fixed;
+  border-radius:  4px;
+  text-align: center;
+  font-size:20px;
+  color: black;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,200,0.7); 
+  border: solid 2px green;
+  width: 15%;	
+  height: 20%;
+}
+</style>
+<script language=JavaScript type="text/javascript" src="script/files.js"></script>
+</head>
+<body>
+<!-- <input type="button" value="show" onclick="show_files();"/> -->
+<?php require('script/files.php'); ?>	
+<!-- <a href='script/files.php?hello=true'>Run PHP Function</a> -->
+<!-- <div id='temp' style="left:60%;top:60%;" class='buttons'></div> -->
+
+<!--
+<div id='test_i' style="left:60%;top:60%; position:fixed;" >
+<form action="" method="post" > Name: <input type="text" name="fname"><br> <input type="submit" value="button"> </form> 
+<form action="" method="post"> <input type="submit" value="button" name="fname" class='buttons'> </form> 
+</div>
+-->
+<!-- <form action="script/welcome.php" method="post"> Name: <input type="text" name="name"><br> <input type="submit"> </form> -->
+</body>
+</html>

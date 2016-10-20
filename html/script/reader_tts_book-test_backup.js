@@ -10,9 +10,7 @@ var startFontSize = 20;
 //var wnd = document.documentElement.clientHeight;
 var wnd = screen.width-40;
 
-var n_display_type = 0;
 
-/*
 function select_magnification(){
 	//alert("qwe")
 	var objSel = document.getElementById("mySelectId");
@@ -21,9 +19,9 @@ function select_magnification(){
   		//alert(objSel.options[objSel.selectedIndex].value);
   		zoom=objSel.options[objSel.selectedIndex].value;
 	}
-} 
+}
+ 
 select_magnification()
-
 function select_method(){
 	var objSel = document.getElementById("mySelectId_2");
 	if ( objSel.selectedIndex != -1)
@@ -32,7 +30,7 @@ function select_method(){
   		type=objSel.options[objSel.selectedIndex].value;
 	}
 }
-
+/*
 function loadtext(){
 	var div = document.getElementById('reg');
 	div.outerHTML = '<form id="reg" name="reg"> <input text="text" id="name" name="name" /> <input type="button" value="отправить на страницу" onClick="getName();" /> </form>'
@@ -144,7 +142,10 @@ function display_array(array) {
 		var elem = document.getElementById('table');
 		elem.appendChild(btn);
 		}
-
+		//if (arr[i]=='\n' || arr[i]=='\r' || arr[i]=='\r\n' || arr[i]=='<br>'){
+		//if (arr[i]=='\n' || arr[i]=='\r'){
+		//found = arr[i].indexOf(' ');
+		//if (found!=-1){
 		if (arr[i]==''){
 			var br = document.createElement('br');
 			elem.appendChild(br);	
@@ -165,22 +166,158 @@ var offsetfromcursorY=15 // y offset of tooltip
 var ie=d.all && !window.opera;
 var ns6=d.getElementById && !d.all;
 var tipobj,op;
+
+/*
+function tooltip(a, pos) {
+//function tooltip(el) {
+	//txt='qwerty'
+	el='this';
+	var ident = event.target.id;
+	//alert(id);
+	if (a==1){
+		ident=pos;
+	}
+	txt=array[ident];
+	
+	var msg = new SpeechSynthesisUtterance(txt);
+	msg.rate = 0.8;
+	msg.lang = 'ru';
+	window.speechSynthesis.speak(msg);
+	
+	tipobj=d.getElementById('mess');
+	//tipobj=d.getElementById('ident');
+	tipobj.innerHTML = txt;
+	op = 1;  
+	var br=d.getElementById(ident).getBoundingClientRect()
+	var xx=br.left;
+	var yy=br.top;
+	//var xx=event.clientX;
+	//var yy=event.clientY;
+	xx=xx;
+	yy=yy;
+	yy = document.documentElement.clientHeight;
+	var s = tipobj.style
+	tipobj.position = 'fixed'
+	s.position = 'fixed'
+	//tipobj.top = 1500+'px'
+	if (type==1){
+  		s.MozBorderRadius = s.WebkitBorderRadius = s.borderRadius = '8px';
+  		s.border = '0px groove green';
+  		//s.display = 'block';
+  		//var height_i = zoom*startFontSize*1.2
+  		s.height = zoom*startFontSize*1.2+'px';
+  		s.lineHeight = zoom*startFontSize*1.2+'px';
+  		//s.width = startFontSize*zoom*txt.length*0.7+'px';
+  		//s.width = 1100+'px'
+  		s.width = 80+'%'
+  		//s.textDecoration = 'none';
+  		s.halign='center';
+  		s.textAlign = 'center';
+  		s.color = 'black';
+  		//s.fontWeight = 'bold';
+  		s.background = 'white';
+  		s.fontSize = startFontSize*zoom+'px'
+  		if ((xx+startFontSize*zoom*txt.length*0.7)>wnd){
+  			xx=wnd-startFontSize*zoom*txt.length*0.7;
+  		}
+  		//s.left = xx+'px';
+  		//s.top = yy+'px';
+  		//s.left = 30+'px'
+  		s.left = 10+'%'
+  		//var top = 150-100*height/document.documentElement.clientHeight;
+  		//s.top = 75 +'%';
+  		s.top = 500 +'px';
+  		s.opacity = op;
+  		s.visibility="visible";
+  		//s.verticalAlign="bottom";
+  		//tipobj.top = 100+'%'
+  	}
+  	if (type==2){
+  		zoom=1.1;
+  		s.MozBorderRadius = s.WebkitBorderRadius = s.borderRadius = '8px';
+  		s.border = '2px groove green';
+  		//s.display = 'block';
+  		s.height = zoom*startFontSize*1.1+'px';
+  		s.lineHeight = zoom*startFontSize*1.1+'px';
+  		//s.width = '100px';
+  		//s.textDecoration = 'none';
+  		s.textAlign = 'center';
+  		s.color = 'black';
+  		//s.fontWeight = 'bold';
+  		s.background = 'white';
+  		s.fontSize = startFontSize*zoom+'px'
+  		s.left = xx+'px';
+  		s.top = yy+'px';
+  		s.opacity = 1;
+  		s.visibility="visible";
+  		//s.verticalAlign="bottom";
+  	}
+	//el.onmousemove=positiontip;
+	position = ident;
+	//appear();
+	iter++;
+	//position = id;
+}
+
+function scroll(event){
+	var txt;
+	if (event.keyCode==39) {
+		if (position < (array.length-1)){
+			position ++;
+		}
+		if (iter==0){position=0;}
+		tooltip(1, position);
+	}
+	if (event.keyCode==37) {
+		if (position > 0){
+			position = position - 1;
+		}
+		if (iter==0){position=0;}
+		//alert(position);
+		tooltip(1, position);
+	}  
+	iter++;
+}
+
+
+var order;
+function scrollbut(order){
+	var txt;
+	if (order==next) {
+		if (position < (array.length-1)){
+			position ++;
+		}
+		if (iter==0){position=0;}
+		tooltip(1, position);
+	}
+	if (order==prev) {
+		if (position > 0){
+			position = position - 1;
+		}
+		if (iter==0){position=0;}
+		//alert(position);
+		tooltip(1, position);
+	}  
+	iter++;
+ }
+*/
  
 var div_iter = 1; 
 var div_iter_prev = 0; 
 var max_div_iter = 125;
 var div_color_prev = 'black';
 var div_id = [];
+//div_id.push('dt1');
+//div_id.push('dt2');
+//div_id.push('di3');
+//div_id.push('dt4');
 for (i=1; i<max_div_iter+1; i++){div_id.push('dt'+i.toString());}
-var max_sentence_iter = 125;
-var sentence_id = [];
-for (i=1; i<max_sentence_iter+1; i++){sentence_id.push('st'+i.toString());}
-//for (i=1; i<max_div_iter+1; i++){div_id.push('dt'+i.toString());}
 //div_id = ['dt1','dt2','dt3','dt4','dt5','dt6','dt7','dt8','dt9','dt10'];
-//div_id = ['st1','st2','st3','st4','st5'];
  
-
+ 
 function scrollbut_div(order){
+	//if (div_iter!=0 & div_iter!=max_div_iter){div_iter_prev = div_iter;}
+	//if (div_iter!=div_iter_prev){div_iter_prev = div_iter;}
 	div_iter_prev = div_iter;
 	var txt;
 	if (order==next) {
@@ -191,8 +328,8 @@ function scrollbut_div(order){
 		if (div_iter > 0){ div_iter = div_iter - 1; }
 		else{div_iter=0;}
 	}  
-	if (n_display_type==0){var id=sentence_id[div_iter];}
-	else {var id=div_id[div_iter];}
+	var id = div_id[div_iter];
+	//var id = 'dt'+str(iter);
 	if (id.charAt(1)=='i'){
 		tts('рисунок номер '+'1');
 	}
@@ -208,34 +345,22 @@ function show_zoom(id){
 	var zoomline = d.getElementById('zoomline');
 	var div = d.getElementById(id);
 	zoomline.innerHTML=div.innerHTML;
-	//alert(div.innerHTML);
 	}
-	
 	
 function highlite(id){
 	//alert(id);
-	if (n_display_type==0){var id_prev = sentence_id[div_iter_prev];}
-	else {var id_prev=div_id[div_iter_prev];}
-	//var id_prev = sentence_id[div_iter_prev]
 	if (id.charAt(1)!='i'){
 		var div = d.getElementById(id);
 		div.style.color='green';
 	}
-	if (id_prev.charAt(1)!='i'){
+	if (div_id[div_iter_prev].charAt(1)!='i'){
 		if (div_iter!=div_iter_prev){
-		d.getElementById(id_prev).style.color='black';
+		d.getElementById(div_id[div_iter_prev]).style.color='black';
 		}
 	}
 	//div_color_prev = div.style.color;
 	}
 	
-function tts(txt){
-	var msg = new SpeechSynthesisUtterance(txt);
-	msg.rate = 0.9;
-	msg.lang = 'ru';
-	window.speechSynthesis.speak(msg);
-	}
-
 function utter(id){
 	var div = d.getElementById(id);
 	var txt = div.innerText;
@@ -244,14 +369,15 @@ function utter(id){
 	var msg = new SpeechSynthesisUtterance(txt);
 	msg.rate = 0.9;
 	msg.lang = 'ru';
-	window.speechSynthesis.pause()
-	window.speechSynthesis.cancel()
 	window.speechSynthesis.speak(msg);
-	
-	//tts_ya.speak('Вы используете технологию SpeechKit')
-	
 	}
 	
+function tts(txt){
+	var msg = new SpeechSynthesisUtterance(txt);
+	msg.rate = 0.9;
+	msg.lang = 'ru';
+	window.speechSynthesis.speak(msg);
+	}
 
 function load_file(){
 	//alert('get name 2');
@@ -262,38 +388,3 @@ function load_file(){
 	var div = d.getElementById('div2');
 	
 }
-
-    
-function change_type(type){
-	//alert(n_display_type);
-	n_display_type = n_display_type+1 
-	if (n_display_type == 2){n_display_type = 0; alert('by sentence');}	
-	else{alert('by paragraph');}
-	}
-
-function text_from_file(text){
-    var page_text = read_file('books_test/test_book.txt'); 
-	var text_place = d.getElementById('text_from_file');
-	text_place.innerHTML=page_text;
-	//alert('from file!');
-	//text_place.innerHTML='ghjgjhgjhgj hjhjhk hjkhjhkjhk';
-	}
-
-function read_file(file){	
-	//var file = 'test_book.txt';
-    var file_i = new XMLHttpRequest();
-    var allText = 'empty text';
-    file_i.onreadystatechange = function ()
-    {
-	if(file_i.readyState === 4)
-		{   if(file_i.status === 200 || file_i.status == 0)
-			{   allText = file_i.responseText;
-				//return allText;
-			}
-		}
-    }
-    file_i.open("GET", file, false);
-    file_i.send(null);
-    //alert(allText);
-    return allText;
-	}
