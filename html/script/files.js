@@ -10,9 +10,13 @@ function new_file(){
 	var temp_div = document.getElementById('files_button_prev');
 	temp_div.innerHTML=text;
 	document.getElementById('files_button_next').innerHTML='';
-	
-	//text = '<form action="script/welcome.php?hello=true" method="post"> Name: <input type="text" name="name"><br> <input type="submit"> </form>'
-	//var temp_div = document.getElementById('temp');
-	//temp_div.innerHTML=text;
+	}
 
+function show_letters(n){
+	//alert('hello');
+	text = '<div style="left: 84%;	top: 8%; position:fixed;"> <form action="" method="post"> <input type="submit" value="edit" name="edit_word" class="buttons"> </div>';
+	text = '<form action="" class="buttons" method="post" style="width:32%"> <input type="text" name="dir_name"><br> <input type="submit" value="button">';
+	var temp_div = document.getElementById('input_area');
+	//temp_div.innerHTML=text;
+	//document.getElementById('files_button_enter').innerHTML='';
 	}

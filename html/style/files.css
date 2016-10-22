@@ -1,0 +1,49 @@
+.folder_bkg{
+  position: fixed;
+  border-radius:  4px;
+  text-align: left;
+  font-size:20px;
+  color: black;
+  width: 81%;
+  height: 75%;
+  left: 1%; 
+  top: 1%;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,220,200,0.7); 
+  border: solid 2px green;
+}
+.folder{
+  position: fixed;
+  border-radius:  4px;
+  text-align: center;
+  font-size:20px;
+  color: black;
+  width: 15%;
+  height: 20%;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,255,200,0.7); 
+  border: solid 2px green;
+}
+.file_txt{
+  border-radius:  4px;
+  font-size:20px;
+  color: rgba(255,255,255,0.9);
+  width: 15%;
+  height: 20%;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,255,200,0.7); 
+  border: solid 2px green;
+}
+
+.buttons{
+  position: fixed;
+  border-radius:  4px;
+  text-align: center;
+  font-size:20px;
+  color: black;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,200,0.7); 
+  border: solid 2px green;
+  width: 15%;	
+  height: 20%;
+}
