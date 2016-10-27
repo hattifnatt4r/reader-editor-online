@@ -12,32 +12,7 @@ var wnd = screen.width-40;
 
 var n_display_type = 0;
 
-/*
-function select_magnification(){
-	//alert("qwe")
-	var objSel = document.getElementById("mySelectId");
-	if ( objSel.selectedIndex != -1)
-	{
-  		//alert(objSel.options[objSel.selectedIndex].value);
-  		zoom=objSel.options[objSel.selectedIndex].value;
-	}
-} 
-select_magnification()
 
-function select_method(){
-	var objSel = document.getElementById("mySelectId_2");
-	if ( objSel.selectedIndex != -1)
-	{
-  		//alert(objSel.options[objSel.selectedIndex].value);
-  		type=objSel.options[objSel.selectedIndex].value;
-	}
-}
-
-function loadtext(){
-	var div = document.getElementById('reg');
-	div.outerHTML = '<form id="reg" name="reg"> <input text="text" id="name" name="name" /> <input type="button" value="отправить на страницу" onClick="getName();" /> </form>'
-}
-*/
 function clear(){
 	for(j=0; j<array.length; j++){
 		var elem = document.getElementById(j)

@@ -1,17 +1,21 @@
 <?php
-$usr_dir = 'books_test';
-$_SESSION['nentry'] = 0;
-$_SESSION['usr_dir'] = "books_test";
-$_SESSION["file_counter"] = 0;
-$_SESSION["word_i"] = 'HHEELLOO ';
-$_SESSION["letter_i"] = 'a';
 session_start();
-echo 'USR-DIR'.$_SESSION['usr_dir'].' ';
+if ($_SESSION["session"]!=10){
+	$_SESSION['usr_dir'] = "books_test";
+	$_SESSION["file_counter"] = 0;
+	$_SESSION["word_i"] = 'HHEELLOO';
+	$_SESSION['nentry'] = 0;
+	$_SESSION["letter_i"] = 'a';
+	echo 'SESSION_START';
+	$_SESSION["session"] = 10;
+	$_SESSION["file_text"] = '';
+	}
+//echo 'USR-DIR'.$_SESSION['usr_dir'].' ';
 $entry=find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
 $filename = $_SESSION["usr_dir"].'/'.$entry;
 echo '<div style="left: 25%; top: 78%;  position:fixed;">'.$_SESSION["file_counter"].' '.$filename.'</div>';
 echo '<div style="left: 25%; top: 85%;  position:fixed;">'.$_SESSION["word_i"].' '.'</div>';
-//echo '<div style="left: 25%; top: 90%;  position:fixed;">'.session_id().' '.'</div>';
+echo '<div style="left: 25%; top: 90%;  position:fixed;">'.session_status().' '.'</div>';
 
 //-- files ------------------------------------------------------------------
 echo '<div class="folder_bkg" >  files </div>';
@@ -52,14 +56,15 @@ function find_object($i_obj, $usr_dir){
 	    }
 	    closedir($handle);
 	} 
-	echo $entry;
+	//echo $entry;
 	return $entry;}
 
 echo '<div id="files_button_edit" style="left: 84%;	top: 8%; position:fixed;"> 
 <form action="" method="post"> <input type="submit" value="edit" name="edit_word" class="buttons" style="height:5%;">
 	</div>';
 if (isset($_POST['edit_word'])) {
-	header('Location:/editor_test.html');
+	$_SESSION["letter_counter"]=0;
+	header('Location:/editor_word.html');
 }
 echo '<div id="files_button_restart" style="left: 84%;	top: 2%; position:fixed;"> 
 <form action="" method="post"> <input type="submit" value="restart" name="new_session" class="buttons" style="height:5%;">
@@ -68,9 +73,6 @@ if (isset($_POST['new_session'])) {
 	$_SESSION['usr_dir'] = "books_test";
 	$_SESSION["file_counter"] = 0;
 	$_SESSION["word_i"] = 'HHEELLOO';
-	//session_unset();
-	//session_destroy();
-	//session_start();
 	header('Location:/index.html');
 }
 
@@ -103,19 +105,16 @@ echo '<div id="files_button_foptions" style="left: 33%;	top: 78%;  position:fixe
 <form action="" method="post"> <input type="submit" value="file options" name="foptions" class="buttons" ">
 	</div>';
 if (isset($_POST['foptions'])) {
-	echo 'foptions';
+	//echo 'foptions';
 	echo '<div id="files_foptions" class="folder" style="left: 33%; top: 20%; position:fixed; width:60%; height:70%"> 
 		<form action="" method="post"> <input type="submit" value="delete object" name="delete_obj" class="buttons" style="left: 33%; top: 20%;" >
 		<form action="" method="post"> <input type="submit" value="rename object" name="rename" class="buttons" style="left: 65%; top: 20%;" >
 		</div>';  
 }
 if (isset($_POST['delete_obj'])) {
-	echo 'DELETE';
 	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
-	echo $filename;
 	if (file_exists($filename)){ 
-		//unlink($filename);
 		rename($filename, 'books_test/trash/'.$entry);}
 	header('Location:/index.html');
 }
@@ -124,21 +123,34 @@ echo '<div id="files_button_enter" style="left: 50%;	top: 78%;  position:fixed;"
 <form action="" method="post"> <input type="submit" value="enter" name="enter_obj" class="buttons" ">
 	</div>';
 if (isset($_POST['enter_obj'])) {
-	echo 'ENTER ';
+	//echo 'ENTER ';
 	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
-	if (is_dir($filename)){ 
-		$_SESSION['usr_dir'] = $filename;
-		//$_SESSION['file_counter'] = 0;
-		echo 'NEW-DIR'.$_SESSION['usr_dir'];
-		}
 	if ($_SESSION["file_counter"]==0){
 		if ($_SESSION["usr_dir"]!='books_test'){
 			$new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
 			$_SESSION["usr_dir"] = $new_dir;
 			//$_SESSION['file_counter'] = 0;
-			}}
-	header('Location:/index.html');
+			header('Location:/index.html');
+			}
+	}else{
+		if (is_dir($filename)){ 
+			$_SESSION['usr_dir'] = $filename;
+			//$_SESSION['file_counter'] = 0;
+			//echo 'NEW-DIR'.$_SESSION['usr_dir'];
+			header('Location:/index.html');
+		}else{
+			$myfile = fopen($filename, "r") or die("Unable to open file!");
+			$txt = fread($myfile, filesize($filename));
+			//fwrite($myfile, $txt);
+			fclose($myfile);
+			$_SESSION["file_text"] = $txt;
+			//echo filesize($filename).$filename.'TEXT:'.$txt;
+			header('Location:/reader.html');
+			//header('Location:/index.html');
+			}
+		}
+	//header('Location:/index.html');
 }
 //-- next/prev buttons ------------------------------------------------------
 echo '<div id="files_button_prev" style="left: 67%;	top: 78%;  position:fixed;"> 
@@ -152,7 +164,7 @@ echo '<div id="files_button_next" style="left: 84%;	top: 78%;  position:fixed;">
 <form action="" method="post"> <input type="submit" value="next" name="nextobj" class="buttons">
 	</div>';
 if (isset($_POST['nextobj'])) {
-	echo 'next';
+	//echo 'next';
 	if ($_SESSION["file_counter"]<$_SESSION["nentry"]){$_SESSION["file_counter"] +=1;}
 	header('Location:/index.html');
 }
