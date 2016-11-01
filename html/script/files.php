@@ -1,4 +1,5 @@
 <?php
+echo '<script language=JavaScript type="text/javascript" src="script/files.js"></script>';
 session_start();
 if ($_SESSION["session"]!=10){
 	$_SESSION['usr_dir'] = "books_test";
@@ -153,8 +154,16 @@ if (isset($_POST['enter_obj'])) {
 	//header('Location:/index.html');
 }
 //-- next/prev buttons ------------------------------------------------------
+/*
+echo '<div id="files_button_prev" style="left: 67%; top: 78%; position:fixed;"> 
+	<input id="prev" type="button" class="buttons" value="next" onclick="scroll_files(prev);">   
+	</div>';
+echo '<div id="files_button_next" style="left: 84%; top: 78%; position:fixed;"> 
+	<input id="next" type="button" class="buttons" value="next" onclick="scroll_files(next);">   
+	</div>';
+*/
 echo '<div id="files_button_prev" style="left: 67%;	top: 78%;  position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="prev" name="prevobj" class="buttons" ">
+<form action="" method="post"> <input type="submit" value="prev" name="prevobj" class="buttons" onckicl="alert(scroll);">
 	</div>';
 if (isset($_POST['prevobj'])) {
 	if ($_SESSION["file_counter"]>0){$_SESSION["file_counter"] -=1;}

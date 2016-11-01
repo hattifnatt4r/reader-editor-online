@@ -1,4 +1,5 @@
-
+//alert('reader');
+var text_type=0;
 var iter = 0;
 var zoom = 5;
 var n_display_type = 0;
@@ -23,6 +24,7 @@ for (i=1; i<max_sentence_iter+1; i++){sentence_id.push('st'+i.toString());}
 //div_id = ['st1','st2','st3','st4','st5'];
  
 function scrollbut_div(order){
+	//alert('reader');
 	div_iter_prev = div_iter;
 	var txt;
 	if (order==next) {
@@ -46,6 +48,7 @@ function scrollbut_div(order){
 	}
 	highlite(id);
 	document.getElementById('hidden_iter').innerHTML=div_iter;
+	document.getElementById('hidden_array').innerHTML=div_id;
  }
  
 function show_zoom(id){

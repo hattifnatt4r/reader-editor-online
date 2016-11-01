@@ -153,9 +153,9 @@ function parse_text($text_origin){
 		if (strpos($word,'\n')!=False){echo 'PARAGRAPH!!!';}
 		}
 	
-	$text = '<div id=p0><em id=p0s0><em id=p0s0w0>';
+	$text = '<div id="p0"><em id="p0s0"><em id="p0s0w0">';
 	$i_w = 1; $i_s = 1; $i_p = 1;
-	
+	$arr_w=['p0s0w0']; $arr_s=['p0s0']; $arr_p=['p0'];
 	for ($k=0; $k<count($arr); $k++){
 		$word=$arr[$k];
 		
@@ -164,14 +164,17 @@ function parse_text($text_origin){
 		else{
 			if ( strpos($word,'\n')!=False ){ 
 				$text = $text.'|'.$word.'|'."</em></em></div><div id=p$i_p><em id=p$i_p"."s$i_s><em id=p$i_p"."s$i_s"."w$i_w>";
+				array_push($arr_p, "p$i_p");
 				$i_p+=1; $i_s+=1; $i_w+=1;
 				}
 			elseif ( strpos($word,'.')!=False ){ 
 				$text = $text.'|'.$word.'|'."</em></em><em id=p$i_p"."s$i_s><em id=p$i_p"."s$i_s"."w$i_w>";
+				array_push($arr_s, "p$i_p"."s$i_s");
 				$i_s+=1; $i_w+=1;
 				}
 			else{ 
 				$text = $text.'|'.$word.'|'."</em><em id=p$i_p"."s$i_s"."w$i_w>";
+				array_push($arr_w, "p$i_p"."s$i_s"."w$i_w");
 				$i_w+=1;
 				}
 			}
@@ -179,10 +182,13 @@ function parse_text($text_origin){
 		}
 	
 	//echo $text;
-	echo "<div style='position:fixed; top:20%; left:15%'>".$text."</div>";
-	echo "<div style='position:fixed; top:40%; left:15%'>".htmlspecialchars($text)."</div>";
+	//echo "<div style='position:fixed; top:20%; left:15%'>".$text."</div>";
+	//echo "<div style='position:fixed; top:40%; left:15%'>".htmlspecialchars($text)."</div>";
 	//echo "$lt ".$text."$gt";
 	//echo htmlspecialchars($text);
+	echo "<div id='hidden_array_p' style='position:fixed; top:40%; left:85%'>$arr_p</div>";
+	echo "<div id='hidden_array_s' style='position:fixed; top:42%; left:85%'>$arr_s</div>";
+	echo "<div id='hidden_array_w' style='position:fixed; top:44%; left:85%'>".htmlspecialchars($arr_w)."</div>";
 	return $text;
 }
 ?>
