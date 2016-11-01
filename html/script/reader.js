@@ -1,3 +1,11 @@
+var session = localStorage.getItem('reader_session');
+if (session!='started'){
+	session = 'started';
+	localStorage.setItem('reader_session', session);
+	localStorage.setItem('reader_iter', JSON.stringify(0));
+	}
+var reader_iter = localStorage.getItem('reader_iter');
+
 //alert('reader');
 var text_type=0;
 var iter = 0;
@@ -10,45 +18,55 @@ var ie=d.all && !window.opera;
 var ns6=d.getElementById && !d.all;
 var tipobj,op;
  
-var div_iter = 1; 
+//var div_iter = 0; 
 var div_iter_prev = 0; 
-var max_div_iter = 125;
-var div_color_prev = 'black';
-var div_id = [];
-for (i=1; i<max_div_iter+1; i++){div_id.push('dt'+i.toString());}
-var max_sentence_iter = 125;
-var sentence_id = [];
-for (i=1; i<max_sentence_iter+1; i++){sentence_id.push('st'+i.toString());}
+var max_div_iter = 120;
+var paragraph_id = [];
 //for (i=1; i<max_div_iter+1; i++){div_id.push('dt'+i.toString());}
-//div_id = ['dt1','dt2','dt3','dt4','dt5','dt6','dt7','dt8','dt9','dt10'];
-//div_id = ['st1','st2','st3','st4','st5'];
+for (i=0; i<5+1; i++){paragraph_id.push('p'+i.toString());}
+var sentence_id = [];
+//for (i=1; i<max_sentence_iter+1; i++){sentence_id.push('st'+i.toString());}
+for (i=0; i<30+1; i++){sentence_id.push('s'+i.toString());}
+var word_id = [];
+for (i=0; i<125+1; i++){word_id.push('w'+i.toString());}
+var arr_id = word_id;
+var id_prev='w0';
  
 function scrollbut_div(order){
 	//alert('reader');
-	div_iter_prev = div_iter;
+	//div_iter_prev = div_iter;
 	var txt;
 	if (order==next) {
 		//alert('next');
-		if (div_iter < (max_div_iter)){ div_iter ++; }
-		else{div_iter=max_div_iter;}
+		if (reader_iter < (max_div_iter)){ reader_iter ++; }
+		else{reader_iter=max_div_iter;}
 	}
 	if (order==prev) {
 		//alert('prev');
-		if (div_iter > 0){ div_iter = div_iter - 1; }
-		else{div_iter=0;}
+		if (reader_iter > 0){ reader_iter -= 1; }
+		else{reader_iter=0;}
 	}  
-	if (n_display_type==0){var id=sentence_id[div_iter];}
-	else {var id=div_id[div_iter];}
+	n_display_type = document.getElementById('hidden_type').innerHTML;
+	if (n_display_type==0){arr_id=word_id;}
+	else if (n_display_type==1){arr_id=sentence_id;}
+	else if (n_display_type==2){arr_id=paragraph_id;}
+	//else {var id=div_id[div_iter];}
+	id=arr_id[reader_iter];
+	localStorage.setItem('reader_iter', JSON.stringify(reader_iter));
+	var name = document.getElementById(id).getAttribute("title");
 	if (id.charAt(1)=='i'){
 		tts('рисунок номер '+'1');
 	}
+	utter(id);
 	if (id.charAt(1)=='t'){
 		//show_zoom(id);	
 		utter(id);
 	}
 	highlite(id);
-	document.getElementById('hidden_iter').innerHTML=div_iter;
-	document.getElementById('hidden_array').innerHTML=div_id;
+	document.getElementById('word_i').value = d.getElementById(id).innerText; 
+	document.getElementById('hidden_iter').innerHTML=reader_iter;
+	//document.getElementById('hidden_array').innerHTML=div_id;
+	id_prev = id;
  }
  
 function show_zoom(id){
@@ -60,20 +78,9 @@ function show_zoom(id){
 	}
 	
 function highlite(id){
-	//alert(id);
-	if (n_display_type==0){var id_prev = sentence_id[div_iter_prev];}
-	else {var id_prev=div_id[div_iter_prev];}
-	//var id_prev = sentence_id[div_iter_prev]
-	if (id.charAt(1)!='i'){
-		var div = d.getElementById(id);
-		div.style.color='green';
-	}
-	if (id_prev.charAt(1)!='i'){
-		if (div_iter!=div_iter_prev){
-		d.getElementById(id_prev).style.color='black';
-		}
-	}
-	//div_color_prev = div.style.color;
+	d.getElementById(id_prev).style.color=null;
+	var div = d.getElementById(id);
+	div.style.color='green';
 	}
 function utter(id){
 	var div = d.getElementById(id);
@@ -92,9 +99,14 @@ function utter(id){
     
 function change_type(type){
 	//alert(n_display_type);
-	n_display_type = n_display_type+1 
-	if (n_display_type == 2){n_display_type = 0; alert('by sentence');}	
-	else{alert('by paragraph');}
+	//n_display_type = n_display_type+1 
+	var n;
+	if (n_display_type == 0){n = 1; arr_id=sentence_id; alert('by sentence');}	
+	else if (n_display_type == 1){n = 2; arr_id=paragraph_id; alert('by paragraph');}	
+	else if (n_display_type == 2){n = 0; arr_id=word_id; alert('by word');}	
+	n_display_type = n;
+	document.getElementById('hidden_type').innerHTML=n_display_type;
+	//else{alert('by paragraph');}
 	}
 
 //text_from_file(text);

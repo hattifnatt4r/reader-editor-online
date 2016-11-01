@@ -8,7 +8,7 @@ echo '<div id="files_button_edit" style="left: 84%;	top: 2%; position:fixed;">
 
 if (isset($_POST['edit'])) {
 	echo 'word '.$_SESSION["word_i"];
-	header('Location:/index.html');
+	header('Location:'.$_SESSION["editor_exit"]);
 }
 
 $word = $_SESSION["word_i"]; $c = $_SESSION["letter_counter"];

@@ -10,6 +10,7 @@ if ($_SESSION["session"]!=10){
 	echo 'SESSION_START';
 	$_SESSION["session"] = 10;
 	$_SESSION["file_text"] = '';
+	$_SESSION["editor_exit"] = '';
 	}
 //echo 'USR-DIR'.$_SESSION['usr_dir'].' ';
 $entry=find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
@@ -64,6 +65,7 @@ echo '<div id="files_button_edit" style="left: 84%;	top: 8%; position:fixed;">
 <form action="" method="post"> <input type="submit" value="edit" name="edit_word" class="buttons" style="height:5%;">
 	</div>';
 if (isset($_POST['edit_word'])) {
+	$_SESSION["editor_exit"] = '/index.html';
 	$_SESSION["letter_counter"]=0;
 	header('Location:/editor_word.html');
 }
@@ -147,6 +149,7 @@ if (isset($_POST['enter_obj'])) {
 			fclose($myfile);
 			$_SESSION["file_text"] = $txt;
 			//echo filesize($filename).$filename.'TEXT:'.$txt;
+			//isset($_POST['enter_obj'])=False;
 			header('Location:/reader.html');
 			//header('Location:/index.html');
 			}

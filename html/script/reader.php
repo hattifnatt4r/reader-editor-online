@@ -5,17 +5,35 @@ if ($_SESSION["session_reader"]!=10){
 	$_SESSION["reader_counter"] = 0;
 	}
 $text = $_SESSION["file_text"];
-echo "<div id='text_from_file' class='buttons' style='width:83%; height:95%; left:1%; top:2%;background-color: rgba(255,255,255,0.1);' > 
-$text </div>";
-//echo '<div class="buttons" style="width:98%; height:98%;" >  </div>';
-
 echo '<div id="files_button_edit" style="left: 85%;	top: 2%; position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="edit" name="edit" class="buttons" style="height:5%;">
+<form action="" method="post"> <input type="submit" value="edit_ii" name="edit_ii" class="buttons" style="height:5%;">
 	</div>';
-if (isset($_POST['edit'])) {
+if (isset($_POST['edit_ii'])) {
 	echo 'word '.$_SESSION["word_i"];
 	header('Location:/index.html');
 }
+
+echo '<div style="left: 85%;	top: 44%; position:fixed;"> 
+<form action="" method="post"> <input type="text" id="word_i" name="lastname" value="Mouse" style="width:0%;height:0%;">
+<input type="submit" value="edit" name="edit_word" class="buttons" style="left: 85%; top: 44%; position:fixed;height:5%;">
+	</div>';
+if (isset($_POST['edit_word'])) {
+	$_SESSION["editor_exit"] = '/reader.html';
+	$_SESSION["letter_counter"]=0;
+	$_SESSION["word_i"] = $_POST["lastname"];
+	header('Location:/editor_word.html');
+}
+
+if (isset($_POST['reader_menu_go_files'])) {
+	header('Location:/index.html');
+	}	
+if (isset($_POST['reader_menu_go_file1'])) {
+	header('Location:/index.html');
+	}
+//$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
+$new_text = parse_text($_SESSION["file_text"]);
+echo "<div id='text_from_file' class='buttons' style='width:83%; height:95%; left:1%; top:2%;background-color: rgba(255,255,255,0.1);' > $new_text </div>";
+
 
 echo '<div id="reader_menu" style="left: 85%;	top: 5%; position:fixed;"> 
 	<form action="" method="post"> <input type="submit" value="menu" name="reader_menu" class="buttons" style="width:14%;">
@@ -77,12 +95,6 @@ if (isset($_POST['reader_menu_go'])) {
 		<form action="" method="post"> <input type="submit" value="file1" name="reader_menu_fo_file1" class="buttons" >
 		</div>';
 	//header('Location:/index.html');
-	}
-if (isset($_POST['reader_menu_go_files'])) {
-	header('Location:/index.html');
-	}	
-if (isset($_POST['reader_menu_go_file1'])) {
-	header('Location:/index.html');
 	}	
 
 //-- appearance-common ------------------------------------------------------
@@ -106,45 +118,22 @@ if (isset($_POST['reader_menu_appearance-common_buttonsize'])) {
 //---------------------------------------------------------------------------
 
 //echo 'NEWTEXT: '.$text;
-parse_text($_SESSION["file_text"]);
+//parse_text($_SESSION["file_text"]);
 function parse_text($text_origin){
-	$i_w = 0; $i_s = 0; $i_p = 0;
-	$i=0;
-	$text = $text_origin;
-	/*
-	//$text = '<div id=p0><em id=p0s0><em id=p0s0w0>'.$text;
-	$text = '<em id=s0 >|'.$text;
-	$i_start = strlen('<em id=s0 >|');
-	$proceed = 1;
-	$i = strpos($text,'. ',$i_start);
-	echo ' III-'.$i;
-	//if ($i==False){echo 'FALSE';}
-	
-	while ($proceed==1){
-		$i = strpos($text,'. ',$i_start);
-		//echo ' III-'.$i;
-		if ($i==False){$text=$text.'|<em>'; $proceed=0; }
-		else{
-			$text = substr($text, 0, $i)."|</em><em id=s$i_s >|".substr($text,$i);
-			$i_s +=1; $i_start = $i+strlen("|</em><em id=s$i_s >|");
-			}
-		}
-		//if ($i>20){$proceed=0;}
-		*/
-	
+	//echo 'alert($text_origin)';
 	$arr = array();
 	$i_start=0;
 	$proceed = 1;
 	$k=0;
 	while ($proceed==1){
 		$k+=1;
-		$i = strpos($text,' ',$i_start+1);
+		$i = strpos($text_origin,' ',$i_start+1);
 		//echo ' III-'.$i;
 		if ($i==False){
-			$word = substr($text,$i_start);
+			$word = substr($text_origin,$i_start);
 			$proceed=0; }
 		else{
-			$word = substr($text,$i_start,$i-$i_start); 
+			$word = substr($text_origin,$i_start,$i-$i_start); 
 			$i_start = $i;
 			}
 		array_push($arr, $word);
@@ -152,28 +141,41 @@ function parse_text($text_origin){
 		if ($word==' '){echo 'EMPTY!!!!!';}
 		if (strpos($word,'\n')!=False){echo 'PARAGRAPH!!!';}
 		}
-	
-	$text = '<div id="p0"><em id="p0s0"><em id="p0s0w0">';
+	//$tag = 'mark style="background-color: rgba(0,0,0,0);"';
+	$tag = 'em';
+	//$text = '<div id="p0"><em id="p0s0"><em id="p0s0w0">';
+	$text = "<div id='p0'><$tag id='s0'><$tag id='w0'>";
 	$i_w = 1; $i_s = 1; $i_p = 1;
-	$arr_w=['p0s0w0']; $arr_s=['p0s0']; $arr_p=['p0'];
+	//$arr_w=['p0s0w0']; $arr_s=['p0s0']; $arr_p=['p0'];
+	$arr_w=['w0']; $arr_s=['s0']; $arr_p=['p0'];
 	for ($k=0; $k<count($arr); $k++){
 		$word=$arr[$k];
 		
-		if ($k==count($arr)-1){ $text = $text.'|'.$word.'|'."</em></em></div>";}
+		if ($k==count($arr)-1){ $text = $text.$word."</$tag></$tag></div>";}
+		/*
+		else{
+			$text = $text.$word."</$tag><$tag id='w$i_w'>";
+				//array_push($arr_w, "p$i_p"."s$i_s"."w$i_w");
+				$i_w+=1;
+			}
+			*/
 		
 		else{
 			if ( strpos($word,'\n')!=False ){ 
-				$text = $text.'|'.$word.'|'."</em></em></div><div id=p$i_p><em id=p$i_p"."s$i_s><em id=p$i_p"."s$i_s"."w$i_w>";
+				//$text = $text.'|'.$word.'|'."</$tag></$tag></div><div id=p$i_p><$tag id=p$i_p"."s$i_s><$tag id=p$i_p"."s$i_s"."w$i_w>";
+				$text = $text.$word."</$tag></$tag></div><div id=p$i_p><$tag id=s$i_s><$tag id=w$i_w>";
 				array_push($arr_p, "p$i_p");
 				$i_p+=1; $i_s+=1; $i_w+=1;
 				}
 			elseif ( strpos($word,'.')!=False ){ 
-				$text = $text.'|'.$word.'|'."</em></em><em id=p$i_p"."s$i_s><em id=p$i_p"."s$i_s"."w$i_w>";
+				//$text = $text.'|'.$word.'|'."</$tag></$tag><$tag id=p$i_p"."s$i_s><$tag id=p$i_p"."s$i_s"."w$i_w>";
+				$text = $text.$word."</$tag></$tag><$tag id=s$i_s><$tag id=w$i_w>";
 				array_push($arr_s, "p$i_p"."s$i_s");
 				$i_s+=1; $i_w+=1;
 				}
 			else{ 
-				$text = $text.'|'.$word.'|'."</em><em id=p$i_p"."s$i_s"."w$i_w>";
+				//$text = $text.'|'.$word.'|'."</$tag><$tag id=p$i_p"."s$i_s"."w$i_w>";
+				$text = $text.$word."</$tag><$tag id=w$i_w>";
 				array_push($arr_w, "p$i_p"."s$i_s"."w$i_w");
 				$i_w+=1;
 				}
@@ -183,13 +185,14 @@ function parse_text($text_origin){
 	
 	//echo $text;
 	//echo "<div style='position:fixed; top:20%; left:15%'>".$text."</div>";
-	//echo "<div style='position:fixed; top:40%; left:15%'>".htmlspecialchars($text)."</div>";
+	//echo "<div style='position:fixed; top:20%; left:1%'>".htmlspecialchars($text)."</div>";
 	//echo "$lt ".$text."$gt";
 	//echo htmlspecialchars($text);
-	echo "<div id='hidden_array_p' style='position:fixed; top:40%; left:85%'>$arr_p</div>";
-	echo "<div id='hidden_array_s' style='position:fixed; top:42%; left:85%'>$arr_s</div>";
-	echo "<div id='hidden_array_w' style='position:fixed; top:44%; left:85%'>".htmlspecialchars($arr_w)."</div>";
-	return $text;
+	//echo "<div id='hidden_array_p' style='position:fixed; top:40%; left:85%'>$arr_p</div>";
+	//echo "<div id='hidden_array_s' style='position:fixed; top:42%; left:85%'>$arr_s</div>";
+	//echo "<div id='hidden_array_w' style='position:fixed; top:44%; left:85%'>".htmlspecialchars($arr_w)."</div>";
+	//echo "<div id='text_from_file' class='buttons' style='width:83%; height:95%; left:1%; top:2%;background-color: rgba(255,255,255,0.1);' >  $text </div>";
+	return ($text);
 }
 ?>
 
