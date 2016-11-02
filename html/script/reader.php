@@ -32,7 +32,7 @@ if (isset($_POST['reader_menu_go_file1'])) {
 	}
 //$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
 $new_text = parse_text($_SESSION["file_text"]);
-echo "<div id='text_from_file' class='buttons' style='width:83%; height:95%; left:1%; top:2%;background-color: rgba(255,255,255,0.1);' > $new_text </div>";
+echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
 
 
 echo '<div id="reader_menu" style="left: 85%;	top: 5%; position:fixed;"> 
