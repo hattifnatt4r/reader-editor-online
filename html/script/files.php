@@ -7,7 +7,7 @@ if ($_SESSION["session"]!=10){
 	$_SESSION["word_i"] = 'HHEELLOO';
 	$_SESSION['nentry'] = 0;
 	$_SESSION["letter_i"] = 'a';
-	echo 'SESSION_START';
+	//echo 'SESSION_START';
 	$_SESSION["session"] = 10;
 	$_SESSION["file_text"] = '';
 	$_SESSION["editor_exit"] = '';
@@ -30,6 +30,7 @@ if ($handle = opendir($_SESSION['usr_dir'])) {
     }
     $_SESSION['nentry'] = $i-1;
     closedir($handle);
+    echo "<div id='hidden_files_nentry' style='position:fixed; top:67%; left:85%'>".$_SESSION['nentry']."</div>";
 } else {echo "bad dir";}
 
 function show_file($entry, $i){
@@ -39,7 +40,7 @@ function show_file($entry, $i){
 		left: $a%;
 		top: $b%;
 		" ;		
-	echo "<div class='folder' style='$style' > 
+	echo "<div id=fileid_'$i' class='folder' style='$style' > 
 	$entry
 	</div>";
 }
@@ -123,10 +124,12 @@ if (isset($_POST['delete_obj'])) {
 }
 //-- enter button -----------------------------------------------------------
 echo '<div id="files_button_enter" style="left: 50%;	top: 78%;  position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="enter" name="enter_obj" class="buttons" ">
+<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">
+<input type="submit" value="enter" name="enter_obj" class="buttons" ">
 	</div>';
 if (isset($_POST['enter_obj'])) {
-	//echo 'ENTER ';
+	$_SESSION["file_counter"]=$_POST["file_n"];
+	//echo 'ENTER '.$_POST["file_n"];
 	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
 	if ($_SESSION["file_counter"]==0){
@@ -157,14 +160,14 @@ if (isset($_POST['enter_obj'])) {
 	//header('Location:/index.html');
 }
 //-- next/prev buttons ------------------------------------------------------
-/*
+
 echo '<div id="files_button_prev" style="left: 67%; top: 78%; position:fixed;"> 
-	<input id="prev" type="button" class="buttons" value="next" onclick="scroll_files(prev);">   
+	<input id="prev" type="button" class="buttons" value="prev" onclick="scroll_files(prev);">   
 	</div>';
 echo '<div id="files_button_next" style="left: 84%; top: 78%; position:fixed;"> 
 	<input id="next" type="button" class="buttons" value="next" onclick="scroll_files(next);">   
 	</div>';
-*/
+/*
 echo '<div id="files_button_prev" style="left: 67%;	top: 78%;  position:fixed;"> 
 <form action="" method="post"> <input type="submit" value="prev" name="prevobj" class="buttons" onckicl="alert(scroll);">
 	</div>';
@@ -180,6 +183,7 @@ if (isset($_POST['nextobj'])) {
 	if ($_SESSION["file_counter"]<$_SESSION["nentry"]){$_SESSION["file_counter"] +=1;}
 	header('Location:/index.html');
 }
+*/ 
 //---------------------------------------------------------------------------
 
 

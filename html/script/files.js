@@ -1,21 +1,25 @@
-//alert('scroll_test');
 
-var session = localStorage.getItem('session');
-if (session!='started'){
-	session = 'started';
-	localStorage.setItem('session', session);
-	localStorage.setItem('file_iter', JSON.stringify(0));
+//alert('scroll_test');
+var files_session = localStorage.getItem('files_session');
+if (files_session!='started'){
+	files_session = 'started';
+	localStorage.setItem('files_session', files_session);
+	localStorage.setItem('files_iter', JSON.stringify(1));
 	}
+var files_iter = JSON.parse(localStorage.getItem('files_iter'));
+var nentry = document.getElementById('hidden_files_nentry').innerHTML;
 
 //alert('scroll_test');
 function scroll_files(order){
-	alert('scroll');
-	var file_iter = JSON.parse(localStorage.getItem('file_iter'));
-	if (order==next){
-		file_iter+=1;}
-	if (order==prev){ if (file_iter>0) {file_iter-=1;} }
-	localStorage.setItem('file_iter', JSON.stringify(file_iter));
-	document.getElementById('files_hidden_iter').innerHTML=file_iter;
+	files_iter = JSON.parse(localStorage.getItem('files_iter'));
+	//alert('scroll');
+	//var files_iter = JSON.parse(localStorage.getItem('files_iter'));
+	if (order==next){ if (files_iter<nentry) {files_iter+=1;} }
+	if (order==prev){ if (files_iter>0) {files_iter-=1;} }
+	//files_iter+=1;
+	localStorage.setItem('files_iter', JSON.stringify(files_iter));
+	document.getElementById('hidden_file_iter').innerHTML='iter:'+JSON.stringify(files_iter);
+	document.getElementById('file_n').value = files_iter; 
 	}
 
 //---------------------------------------------------------------------------
@@ -42,3 +46,4 @@ function show_letters(n){
 	//document.getElementById('files_button_enter').innerHTML='';
 	}
 	
+
