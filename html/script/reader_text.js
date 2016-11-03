@@ -7,7 +7,7 @@ if (session!='started'){
 var reader_iter = JSON.parse(localStorage.getItem('reader_iter'));
 var n_display_type = 0;
  
-var max_div_iter = 120;
+var max_reader_iter = 120;
 var paragraph_id = [];
 //for (i=1; i<max_div_iter+1; i++){div_id.push('dt'+i.toString());}
 for (i=0; i<5+1; i++){paragraph_id.push('p'+i.toString());}
@@ -23,10 +23,10 @@ function scrollbut_div(order){
 	reader_iter = JSON.parse(localStorage.getItem('reader_iter'));
 	var txt;
 	if (order==next) {
-		if (reader_iter < (max_div_iter)){ reader_iter ++; }
-		else{reader_iter=max_div_iter;}
+		if (reader_iter < (max_reader_iter)){ reader_iter ++; }
+		else{reader_iter=max_reader_iter;}
 	}
-	if (order==prev) {
+	else if (order==prev) {
 		if (reader_iter > 0){ reader_iter -= 1; }
 		else{reader_iter=0;}
 	}  
@@ -37,28 +37,16 @@ function scrollbut_div(order){
 	//else {var id=div_id[div_iter];}
 	id=arr_id[reader_iter];
 	localStorage.setItem('reader_iter', JSON.stringify(reader_iter));
+	
 	var name = document.getElementById(id).getAttribute("title");
-	if (id.charAt(1)=='i'){
-		tts('рисунок номер '+'1');
-	}
+	//if (id.charAt(1)=='i'){ tts('рисунок номер '+'1'); }
+	//if (id.charAt(1)=='t'){ show_zoom(id); utter(id); }
 	utter(id);
-	if (id.charAt(1)=='t'){
-		//show_zoom(id);	
-		utter(id);
-	}
 	highlite(id);
 	document.getElementById('word_i').value = document.getElementById(id).innerText; 
 	document.getElementById('hidden_iter').innerHTML=reader_iter;
-	//document.getElementById('hidden_array').innerHTML=div_id;
 	id_prev = id;
- }
- 
-function show_zoom(id){
-	var zoomline = document.getElementById('zoomline');
-	var div = document.getElementById(id);
-	zoomline.innerHTML=div.innerHTML;
-	}
-	
+ }	
 function highlite(id){
 	document.getElementById(id_prev).style.color=null;
 	var div = document.getElementById(id);
@@ -73,17 +61,21 @@ function utter(id){
 	window.speechSynthesis.pause()
 	window.speechSynthesis.cancel()
 	window.speechSynthesis.speak(msg);	
+	}	
+function show_zoom(id){
+	var zoomline = document.getElementById('zoomline');
+	var div = document.getElementById(id);
+	zoomline.innerHTML=div.innerHTML;
 	}
-	
 
-    
 function change_type(type){
-	var n;
-	if (n_display_type == 0){n = 1; arr_id=sentence_id; alert('by sentence');}	
-	else if (n_display_type == 1){n = 2; arr_id=paragraph_id; alert('by paragraph');}	
-	else if (n_display_type == 2){n = 0; arr_id=word_id; alert('by word');}	
-	n_display_type = n;
+	var types = ['by word','by sentence','by paragraph'];
+	if (n_display_type == 0){n_display_type = 1; arr_id=sentence_id; }	
+	else if (n_display_type == 1){n_display_type = 2; arr_id=paragraph_id; }	
+	else if (n_display_type == 2){n_display_type = 0; arr_id=word_id; }	
 	document.getElementById('hidden_type').innerHTML=n_display_type;
+	document.getElementById('reader_type').value=types[n_display_type];
+	scrollbut_div('');
 	}
 
 function text_from_file(text){

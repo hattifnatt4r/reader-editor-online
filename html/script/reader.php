@@ -32,9 +32,7 @@ echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
 echo '<div id="reader_menu" style="left: 85%;	top: 2%; position:fixed;"> 
 	<input type="button" class="buttons" value="menu" onclick="show_reader_menu();"  style="width:14%;"> 
 	</div>';
-echo '<div id="paragraph_sentence_word" style="left: 85%; top: 53%; position:fixed; "> 
-	<input type="button" class="buttons" value="type" onclick="change_type(type);"  style="width:14%;">   
-	</div>';
+echo '<input id="reader_type" type="button" class="buttons" value="word" onclick="change_type(type);"  style="left: 85%; top: 53%; position:fixed; width:14%;">' ;
 
 
 echo '<div id="next" style="left: 65%; top: 75%; position:fixed; "> 
