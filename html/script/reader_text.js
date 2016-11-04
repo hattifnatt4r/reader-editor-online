@@ -2,21 +2,17 @@ var session = localStorage.getItem('reader_session');
 if (session!='started'){
 	session = 'started';
 	localStorage.setItem('reader_session', session);
-	localStorage.setItem('reader_iter', JSON.stringify(0));
-	localStorage.setItem('reader_selecttype', JSON.stringify(0));
-	localStorage.setItem('reader_zoomtype', JSON.stringify(0));
+	localStorage.setItem('reader_iter', '0');
+	localStorage.setItem('reader_selecttype', '0');
+	localStorage.setItem('reader_zoomtype', '0');
 	localStorage.setItem('latest_w', 'p0s0w0');
 	localStorage.setItem('latest_s', 'p0s0');
 	localStorage.setItem('latest_p', 'p0');
 	localStorage.setItem('id_prev', 'p0s0w0');
+	localStorage.setItem('text_edit', '0test0');
+	
+	localStorage.setItem('editor_iter', '0');
 	}
-//var reader_iter = JSON.parse(localStorage.getItem('reader_iter'));
-//var n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
-//var n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
-
-//var types = ['by word','by sentence','by paragraph'];
-//document.getElementById('reader_selecttype').value=types[n_select_type];
- 
 
 var text = document.getElementById('hidden_text').innerHTML;
 //alert(text);
@@ -30,13 +26,8 @@ function scrollbut_div(order){
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
 	id_arr = get_id_array();
 	max_iter = id_arr.length;
-	if (order==next) {
-		if (reader_iter < (max_iter)){ reader_iter ++; }
-		else{reader_iter=max_iter;}
-	}else if (order==prev) {
-		if (reader_iter > 0){ reader_iter -= 1; }
-		else{reader_iter=0;}
-	}  
+	if (order==next) { if (reader_iter < (max_iter)) { reader_iter ++; } else { reader_iter=max_iter; } }
+	else if (order==prev) { if (reader_iter > 0) { reader_iter -= 1; } else { reader_iter=0; } }  
 	localStorage.setItem('reader_iter', JSON.stringify(reader_iter));
 	id=id_arr[reader_iter];
 	
@@ -154,6 +145,7 @@ function reader_zoom_type(order=0){
 	document.getElementById('reader_zoomtype').value=types[n_zoom_type];
 	zoom_set_text();
 	}
+	
 	
 function reader_parse_text(text_origin){
 	var div_end = '\n'; var div_start = '';

@@ -5,7 +5,7 @@ function show_reader_menu(){
 	var e2=create_element('div', 'reader_menu_area', 'buttons', 'width:80%; height:86%; left:10%; top:7%;background-color: rgba(255,255,255,0.9);');
 	var inner_e2 = '<input id="reader_menu_appearance" type="button" class="buttons" value="appearance" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';
 	inner_e2+= '<input id="reader_menu_appearance-common" type="button" class="buttons" value="appearance-common" onclick="show_menu_appearance_common();" style="left:35%; top:15%; position:fixed; width:14%;">';
-	inner_e2+= '<input id="reader_menu_edit" type="button" class="buttons" value="edit" onclick="alert(123);" style="left:50%; top:50%; position:fixed; width:14%;">';
+	//inner_e2+= '<input id="reader_menu_edit" type="button" class="buttons" value="edit" onclick="alert(123);" style="left:50%; top:50%; position:fixed; width:14%;">';
 	inner_e2+= '<input id="reader_menu_sound" type="button" class="buttons" value="sound" onclick="alert(123);" style="left:15%; top:50%; position:fixed; width:14%;">';
 	//inner_e2+= '<input id="reader_menu_go" type="button" class="buttons" value="go" onclick="show_menu_go();" style="left:68%; top:50%; position:fixed; width:14%;">';
 	inner_e2+= '<input id="reader_menu_back" type="button" class="buttons" value="back" onclick="reader_menu_back();" style="left:68%; top:15%; position:fixed; width:14%;">';
@@ -40,6 +40,15 @@ function show_menu_go(element_id='reader_menu_area'){
 	}
 function goto_files(){ window.location.href = '/index.html'; }
 	
+
+function reader_editor(){
+	//alert(123);
+	id = get_id();
+	text = document.getElementById(id).innerHTML;
+	localStorage.setItem('text_edit', text);
+	window.location.href = '/editor.html';
+	}
+
 function create_element(tag, id, cl, st='', inner='', value='', name='', onclick='', t=''){
 	var element = document.createElement(tag);
 	element.setAttribute('id', id);

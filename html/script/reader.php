@@ -12,7 +12,7 @@ if (isset($_POST['reader_menu_go_file1'])) {
 	header('Location:/index.html');
 	}
 
-echo '<div style="left: 85%; top: 46%; position:fixed;"> 
+/*echo '<div style="left: 85%; top: 46%; position:fixed;"> 
 <form action="" method="post"> <input type="text" id="word_i" name="lastname" value="Mouse" style="width:0%;height:0%;">
 <input type="submit" value="edit" name="edit_word" class="buttons" style="left: 85%; top: 46%; position:fixed;height:5%;width:14%;">
 	</div>';
@@ -21,7 +21,8 @@ if (isset($_POST['edit_word'])) {
 	$_SESSION["letter_counter"]=0;
 	$_SESSION["word_i"] = $_POST["lastname"];
 	header('Location:/editor_word.html');
-}
+}*/
+echo '<input id="reader_edit" type="button" class="buttons" value="edit 2" onclick="reader_editor(reader_edit);"  style="left:85%; top:46%; position:fixed; width:14%;height:5%;">' ;
 
 //-- text -------------------------------------------------------------------
 //$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
