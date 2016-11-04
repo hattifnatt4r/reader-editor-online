@@ -33,16 +33,12 @@ echo "<div hidden id='hidden_text' style='position:fixed; top:67%; left:85%'>".$
 //-- buttons ----------------------------------------------------------------
 
 echo '<input id="reader_menu" type="button" class="buttons" value="menu" onclick="show_reader_menu();"  style="left: 85%; top: 2%; position:fixed; width:14%;">' ;
-echo '<input id="reader_selecttype" type="button" class="buttons" value="word" onclick="reader_select_type(1);"  style="left: 85%; top: 53%; position:fixed; width:14%;">' ;
-echo '<input id="reader_zoomtype" type="button" class="buttons" value="zoom" onclick="reader_zoom_type(1);"  style="left: 85%; top: 40%; position:fixed; width:14%;height:5%;">' ;
+echo '<input id="reader_go" type="button" class="buttons" value="go" onclick="show_menu_go();"  style="left: 85%; top: 25%; position:fixed; width:14%;height:5%;">' ;
+echo '<input id="reader_selecttype" type="button" class="buttons" value="word" onclick="reader_select_type(1);"  style="left: 85%; top: 32%; position:fixed; width:14%;height:5%;">' ;
+echo '<input id="reader_zoomtype" type="button" class="buttons" value="zoom" onclick="reader_zoom_type(1);"  style="left: 85%; top: 39%; position:fixed; width:14%;height:5%;">' ;
 
-
-echo '<div id="reader_next" style="left: 65%; top: 75%; position:fixed; "> 
-	<input id="next" type="button" class="buttons" value="prev" onclick="scrollbut_div(prev);"  style="width:14%;">   
-	</div>';
-echo '<div id="reader_prev" style="left: 85%; top: 75%; position:fixed;"> 
-	<input id="prev" type="button" class="buttons" value="next" onclick="scrollbut_div(next);"  style="width:14%;">   
-	</div>';
+echo '<input id="prev" type="button" class="buttons" value="prev" onclick="scrollbut_div(prev);"  style="left: 85%; top: 53%; position:fixed; width:14%;">' ;
+echo '<input id="next" type="button" class="buttons" value="next" onclick="scrollbut_div(next);"  style="left: 85%; top: 75%; position:fixed; width:14%;">' ;
 
 
 //---------------------------------------------------------------------------
