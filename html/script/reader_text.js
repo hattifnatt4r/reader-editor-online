@@ -66,6 +66,18 @@ function scrollbut_div(order){
 	utter(id);
 	highlite(id);
 	document.getElementById('word_i').value = document.getElementById(id).innerText; 
+	
+	n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
+	if (n_zoom_type==1){
+		text = document.getElementById(localStorage.getItem('latest_w')).innerHTML;
+		elem=document.getElementById('reader_zoom_w');
+		if (elem){elem.innerHTML=text;}
+		}
+	if (n_zoom_type==2){
+		text = document.getElementById(localStorage.getItem('latest_s')).innerHTML;
+		elem=document.getElementById('reader_zoom_s');
+		if (elem){elem.innerHTML=text;}
+		}
 	//document.getElementById('hidden_iter').innerHTML=reader_iter;
 	//id_prev = id;
 	localStorage.setItem('id_prev', id );
