@@ -10,9 +10,9 @@ if (session!='started'){
 	localStorage.setItem('latest_p', 'p0');
 	localStorage.setItem('id_prev', 'p0s0w0');
 	}
-var reader_iter = JSON.parse(localStorage.getItem('reader_iter'));
-var n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
-var n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
+//var reader_iter = JSON.parse(localStorage.getItem('reader_iter'));
+//var n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
+//var n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
 
 //var types = ['by word','by sentence','by paragraph'];
 //document.getElementById('reader_selecttype').value=types[n_select_type];
@@ -27,13 +27,9 @@ reader_zoom_type(order=0);
  
 function scrollbut_div(order){
 	reader_iter = JSON.parse(localStorage.getItem('reader_iter'));
-	var txt;
-	
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
-	if (n_select_type==0){arr_id=word_id; }
-	else if (n_select_type==1){arr_id=sentence_id;}
-	else if (n_select_type==2){arr_id=paragraph_id;}
-	max_iter = arr_id.length;
+	id_arr = get_id_array();
+	max_iter = id_arr.length;
 	if (order==next) {
 		if (reader_iter < (max_iter)){ reader_iter ++; }
 		else{reader_iter=max_iter;}
@@ -42,7 +38,7 @@ function scrollbut_div(order){
 		else{reader_iter=0;}
 	}  
 	localStorage.setItem('reader_iter', JSON.stringify(reader_iter));
-	id=arr_id[reader_iter];
+	id=id_arr[reader_iter];
 	
 	if ((order==next)||(order==prev)){
 		if (n_select_type==0){ 
@@ -63,80 +59,81 @@ function scrollbut_div(order){
 	var name = document.getElementById(id).getAttribute("title");
 	//if (id.charAt(1)=='i'){ tts('рисунок номер '+'1'); }
 	//if (id.charAt(1)=='t'){ show_zoom(id); utter(id); }
-	utter(id);
-	highlite(id);
+	utter(id); highlite(); zoom_set_text();
 	document.getElementById('word_i').value = document.getElementById(id).innerText; 
 	
+}	
+function zoom_set_text(){
 	n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
 	if (n_zoom_type==1){
 		text = document.getElementById(localStorage.getItem('latest_w')).innerHTML;
 		elem=document.getElementById('reader_zoom_w');
 		if (elem){elem.innerHTML=text;}
-		}
-	if (n_zoom_type==2){
+	}if (n_zoom_type==2){
 		text = document.getElementById(localStorage.getItem('latest_s')).innerHTML;
 		elem=document.getElementById('reader_zoom_s');
 		if (elem){elem.innerHTML=text;}
-		}
-	//document.getElementById('hidden_iter').innerHTML=reader_iter;
-	//id_prev = id;
-	localStorage.setItem('id_prev', id );
- }	
-function highlite(id){
-	id_prev = localStorage.getItem('id_prev');
+	}
+}
+function highlite(){
+	//alert(id_prev);
+	id_prev = localStorage.getItem('id_prev'); id = get_id()
 	document.getElementById(id_prev).style.color=null;
 	var div = document.getElementById(id);
 	div.style.color='green';
-	}
-function utter(id){
-	var div = document.getElementById(id);
-	var txt = div.innerText;
+	localStorage.setItem('id_prev', id);
+}function utter(id){
+	var txt = document.getElementById(id).innerText;
 	var msg = new SpeechSynthesisUtterance(txt);
-	msg.rate = 0.9;
-	msg.lang = 'ru';
+	msg.rate = 0.9; msg.lang = 'ru';
 	window.speechSynthesis.pause()
 	window.speechSynthesis.cancel()
 	window.speechSynthesis.speak(msg);	
 	}	
-function show_zoom(id){
-	var zoomline = document.getElementById('zoomline');
-	var div = document.getElementById(id);
-	zoomline.innerHTML=div.innerHTML;
-	}
 
+
+function get_id(){
+	//alert('get_id()');
+	iter = JSON.parse(localStorage.getItem('reader_iter'));
+	id_arr = get_id_array();
+	latest_id = id_arr[iter];
+	//alert('get_id() done');
+	return(latest_id);
+}function get_id_array(){
+	//alert('get_id_array()');
+	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
+	if (n_select_type == 1){ id_arr=sentence_id; }	
+	else if (n_select_type == 2){ id_arr=paragraph_id; }	
+	else if (n_select_type == 0){ id_arr=word_id; }	
+	//alert('get_id_array() done');
+	return(id_arr);
+}function get_id_backup(){
+	//alert('get_id_backup()');
+	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
+	if (n_select_type == 0){ latest_id=localStorage.getItem('latest_w'); }	
+	else if (n_select_type == 1){ latest_id=localStorage.getItem('latest_s'); }	
+	else if (n_select_type == 2){ latest_id=localStorage.getItem('latest_p'); }	
+	//alert('get_id_backup() done');
+	return(latest_id);
+}
 
 function reader_select_type(order=0){
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
 	var types = ['by word','by sentence','by paragraph'];
 	if (order==1){
-		if (n_select_type == 0){n_select_type = 1; arr_id=sentence_id; latest_id=localStorage.getItem('latest_s'); }	
-		else if (n_select_type == 1){n_select_type = 2; arr_id=paragraph_id; latest_id=localStorage.getItem('latest_p'); }	
-		else if (n_select_type == 2){n_select_type = 0; arr_id=word_id; latest_id=localStorage.getItem('latest_w'); }	
+		n_select_type = (n_select_type+1)%3;
 		localStorage.setItem('reader_selecttype', JSON.stringify(n_select_type));
-		reader_iter = arr_id.indexOf(latest_id);
-		localStorage.setItem('reader_iter', JSON.stringify(reader_iter));
+		id_arr = get_id_array();  latest_id = get_id_backup();
+		localStorage.setItem('reader_iter', id_arr.indexOf(latest_id).toString() );
 	}
-	else{
-		if (n_select_type == 1){ arr_id=sentence_id; }	
-		else if (n_select_type == 2){ arr_id=paragraph_id; }	
-		else if (n_select_type == 0){ arr_id=word_id; }	
-		iter = JSON.parse(localStorage.getItem('reader_iter'));
-		latest_id = arr_id[iter];
-		}
-	highlite(latest_id);
-	localStorage.setItem('id_prev', latest_id);
+	highlite(); zoom_set_text();
 	document.getElementById('reader_selecttype').value=types[n_select_type];
-	//scrollbut_div('');
-	}
-	
-//var elem = document.getElementById("reader_zoom_area");
+}
 function reader_zoom_type(order=0){
 	n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
 	var types = ['no zoom', 'zoom word','zoom sentence'];
 	if (order==1){
-		if (n_zoom_type == 0){n_zoom_type = 1; }	
-		else if (n_zoom_type == 1){n_zoom_type = 2; }	
-		else if (n_zoom_type == 2){n_zoom_type = 0; }	
+		n_zoom_type = (n_zoom_type+1)%3;	
 		localStorage.setItem('reader_zoomtype', JSON.stringify(n_zoom_type));
 	}
 	if (n_zoom_type==0){ 
@@ -155,14 +152,8 @@ function reader_zoom_type(order=0){
 		document.getElementById('text_from_file').style.height = '70%';
 	}
 	document.getElementById('reader_zoomtype').value=types[n_zoom_type];
+	zoom_set_text();
 	}
-
-function reader_show_zoom(id){
-	var zoomline = document.getElementById('zoomline');
-	var div = document.getElementById(id);
-	zoomline.innerHTML=div.innerHTML;
-	}
-	
 	
 function reader_parse_text(text_origin){
 	var div_end = '\n'; var div_start = '';
@@ -222,7 +213,7 @@ function reader_parse_text(text_origin){
 			}
 		} 
 	}
-	alert(text);
+	//alert(text);
 	word_id = arr_w;
 	sentence_id = arr_s;
 	paragraph_id = arr_p;
