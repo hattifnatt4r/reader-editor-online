@@ -4,22 +4,33 @@ var files_session = localStorage.getItem('files_session');
 if (files_session!='started'){
 	files_session = 'started';
 	localStorage.setItem('files_session', files_session);
-	localStorage.setItem('files_iter', JSON.stringify(1));
+	localStorage.setItem('files_iter', JSON.stringify(0));
+	localStorage.setItem('files_iter_prev', JSON.stringify(0));
 	}
 var files_iter = JSON.parse(localStorage.getItem('files_iter'));
+var files_iter_prev = JSON.parse(localStorage.getItem('files_iter_prev'));
 var nentry = document.getElementById('hidden_files_nentry').innerHTML;
+//scroll_files(0);
 
 //alert('scroll_test');
 function scroll_files(order){
 	files_iter = JSON.parse(localStorage.getItem('files_iter'));
-	//alert('scroll');
-	//var files_iter = JSON.parse(localStorage.getItem('files_iter'));
+	files_iter_prev = JSON.parse(localStorage.getItem('files_iter_prev'));
 	if (order==next){ if (files_iter<nentry) {files_iter+=1;} }
-	if (order==prev){ if (files_iter>0) {files_iter-=1;} }
+	else if (order==prev){ if (files_iter>0) {files_iter-=1;} }
+	else ( files_iter = order );
+	localStorage.setItem('files_iter_prev', JSON.stringify(files_iter));
 	//files_iter+=1;
 	localStorage.setItem('files_iter', JSON.stringify(files_iter));
-	document.getElementById('hidden_file_iter').innerHTML='iter:'+JSON.stringify(files_iter);
+	//document.getElementById('hidden_file_iter').innerHTML='iter:'+JSON.stringify(files_iter);
 	document.getElementById('file_n').value = files_iter; 
+	
+	var fileid = 'fileid_'+files_iter.toString();
+	document.getElementById(fileid).className = 'buttons_hover'; 
+	if (files_iter!=files_iter_prev){
+		var fileid = 'fileid_'+files_iter_prev.toString();
+		document.getElementById(fileid).className = 'buttons';  }
+	//alert(fileid);
 	}
 
 //---------------------------------------------------------------------------

@@ -20,8 +20,8 @@ echo '<div style="left: 25%; top: 85%;  position:fixed;">'.$_SESSION["word_i"].'
 echo '<div style="left: 25%; top: 90%;  position:fixed;">'.session_status().' '.'</div>';
 
 //-- files ------------------------------------------------------------------
-echo '<div class="folder_bkg" >  files </div>';
-echo '<div class="folder", style="left: 5%; top: 5%;" >  .. </div>';
+echo '<div id="files_area" class="folder_bkg" >  files </div>';
+echo '<input id="fileid_0" type="button" class="buttons" value=".." onclick="scroll_files(0);"  style="left: 5%; top: 5%;">';
 if ($handle = opendir($_SESSION['usr_dir'])) {
     $i = 1;
     while (false !== ($entry = readdir($handle))) {
@@ -40,9 +40,8 @@ function show_file($entry, $i){
 		left: $a%;
 		top: $b%;
 		" ;		
-	echo "<div id=fileid_'$i' class='folder' style='$style' > 
-	$entry
-	</div>";
+	echo '<input id="fileid_'.$i.'" type="button" class="buttons" value='.$entry.' onclick="scroll_files('.$i.');"  style="'.$style.'">' ;
+	//echo "<div id=fileid_'$i' class='folder' style='$style' > $entry </div>";
 }
 //---------------------------------------------------------------------------
 function find_object($i_obj, $usr_dir){

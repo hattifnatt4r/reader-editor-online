@@ -54,6 +54,18 @@
   width: 15%; height: 20%;
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
+.buttons_hover{
+  position: fixed;
+  text-align: center;
+  font-size:20px;
+  color: black;
+  border-radius:  4px;
+  border-color: rgba(255,255,255,0.9);
+  background-color: rgba(200,255,200,0.7); 
+  border: solid 2px green;
+  width: 15%; height: 20%;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
+}
 
 /* ------------------------------------------------------------ */
 .reader_bkg {
@@ -68,6 +80,7 @@
   }
   
 .text_scroll{
+text-indent:5%;
 width:83%; height:94%; 
 left:1%; top:2%;
 background-color: rgba(255,255,255,0.1);
