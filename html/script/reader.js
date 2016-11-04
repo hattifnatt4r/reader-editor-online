@@ -45,3 +45,33 @@ function create_element(tag, id, cl, st, inner='', value='', name='', onclick=''
 	return (element);
 	}
 
+
+
+function text_from_file(text){
+	//alert('from file!');
+    var page_text = read_file('books_test/test_book_3.txt'); 
+    //var page_text = 'test test test';
+	var text_place = d.getElementById('text_from_file');
+	text_place.innerHTML=page_text;
+	//alert('from file!');
+	//text_place.innerHTML='ghjgjhgjhgj hjhjhk hjkhjhkjhk';
+	}
+
+function read_file(file){	
+	//var file = 'test_book.txt';
+    var file_i = new XMLHttpRequest();
+    var allText = 'empty text';
+    file_i.onreadystatechange = function ()
+    {
+	if(file_i.readyState === 4)
+		{   if(file_i.status === 200 || file_i.status == 0)
+			{   allText = file_i.responseText;
+				//return allText;
+			}
+		}
+    }
+    file_i.open("GET", file, false);
+    file_i.send(null);
+    //alert(allText);
+    return allText;
+	}

@@ -14,7 +14,7 @@ if (isset($_POST['reader_menu_go_file1'])) {
 
 echo '<div style="left: 85%; top: 46%; position:fixed;"> 
 <form action="" method="post"> <input type="text" id="word_i" name="lastname" value="Mouse" style="width:0%;height:0%;">
-<input type="submit" value="edit" name="edit_word" class="buttons" style="left: 85%; top: 46%; position:fixed;height:5%;">
+<input type="submit" value="edit" name="edit_word" class="buttons" style="left: 85%; top: 46%; position:fixed;height:5%;width:14%;">
 	</div>';
 if (isset($_POST['edit_word'])) {
 	$_SESSION["editor_exit"] = '/reader.html';
@@ -26,21 +26,24 @@ if (isset($_POST['edit_word'])) {
 //-- text -------------------------------------------------------------------
 //$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
 $new_text = parse_text($_SESSION["file_text"]);
-echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
+//echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
+echo "<div id='text_from_file' class='text_scroll' align='left' >".$_SESSION["file_text"]."</div>";
+echo "<div hidden id='hidden_text' style='position:fixed; top:67%; left:85%'>".$_SESSION["file_text"]."</div>";
 
 //-- buttons ----------------------------------------------------------------
-echo '<div id="reader_menu" style="left: 85%;	top: 2%; position:fixed;"> 
-	<input type="button" class="buttons" value="menu" onclick="show_reader_menu();"  style="width:14%;"> 
-	</div>';
-echo '<input id="reader_type" type="button" class="buttons" value="word" onclick="change_type(type);"  style="left: 85%; top: 53%; position:fixed; width:14%;">' ;
+
+echo '<input id="reader_menu" type="button" class="buttons" value="menu" onclick="show_reader_menu();"  style="left: 85%; top: 2%; position:fixed; width:14%;">' ;
+echo '<input id="reader_selecttype" type="button" class="buttons" value="word" onclick="reader_select_type(1);"  style="left: 85%; top: 53%; position:fixed; width:14%;">' ;
+echo '<input id="reader_zoomtype" type="button" class="buttons" value="zoom" onclick="reader_zoom_type(1);"  style="left: 85%; top: 40%; position:fixed; width:14%;height:5%;">' ;
 
 
-echo '<div id="next" style="left: 65%; top: 75%; position:fixed; "> 
-	<input type="button" class="buttons" value="prev" onclick="scrollbut_div(prev);"  style="width:14%;">   
+echo '<div id="reader_next" style="left: 65%; top: 75%; position:fixed; "> 
+	<input id="next" type="button" class="buttons" value="prev" onclick="scrollbut_div(prev);"  style="width:14%;">   
 	</div>';
-echo '<div id="prev" style="left: 85%; top: 75%; position:fixed;"> 
-	<input type="button" class="buttons" value="next" onclick="scrollbut_div(next);"  style="width:14%;">   
+echo '<div id="reader_prev" style="left: 85%; top: 75%; position:fixed;"> 
+	<input id="prev" type="button" class="buttons" value="next" onclick="scrollbut_div(next);"  style="width:14%;">   
 	</div>';
+
 
 //---------------------------------------------------------------------------
 
