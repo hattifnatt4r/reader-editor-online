@@ -46,6 +46,7 @@ function reader_editor(){
 	id = get_id();
 	text = document.getElementById(id).innerHTML;
 	localStorage.setItem('text_edit', text);
+	localStorage.setItem('editor_iter', '0');
 	window.location.href = '/editor.html';
 	}
 

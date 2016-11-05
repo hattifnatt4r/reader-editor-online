@@ -138,7 +138,7 @@ function reader_zoom_type(order=0){
 	}else if (n_zoom_type==2){
 		var elem = document.getElementById("reader_zoom_w");
 		if (elem!=null){ elem.parentNode.removeChild(elem); }
-		var elem=create_element('div', 'reader_zoom_s', 'text_zoom');
+		var elem=create_element('div', 'reader_zoom_s', 'text_zoom_s');
 		elem.innerHTML = 'zoom sentence';
 		document.getElementById('text_from_file').style.height = '70%';
 	}
