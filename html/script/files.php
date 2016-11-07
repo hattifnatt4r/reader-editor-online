@@ -11,6 +11,8 @@ if ($_SESSION["session"]!=10){
 	$_SESSION["session"] = 10;
 	$_SESSION["file_text"] = '';
 	$_SESSION["editor_exit"] = '';
+	
+	$_SESSION["filename_opened"] = '';
 	}
 //echo 'USR-DIR'.$_SESSION['usr_dir'].' ';
 $entry=find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
@@ -152,6 +154,7 @@ if (isset($_POST['enter_obj'])) {
 			$_SESSION["file_text"] = $txt;
 			//echo filesize($filename).$filename.'TEXT:'.$txt;
 			//isset($_POST['enter_obj'])=False;
+			$_SESSION["filename_opened"] = $filename;
 			header('Location:/reader.html');
 			//header('Location:/index.html');
 			}
