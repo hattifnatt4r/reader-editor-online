@@ -27,22 +27,25 @@ if (ischanged=='0'){
 	document.getElementById('text_from_file').innerHTML = text_parsed;
 	localStorage.setItem('text_origin', text);
 	localStorage.setItem('text_parsed', text_parsed);
-}else{
+}
+else{
 	var text = localStorage.getItem('text_origin');
-	var text_parsed = reader_parse_text(text);
+	text_parsed = reader_parse_text(text);
 	document.getElementById('text_from_file').innerHTML = text_parsed;
 	localStorage.setItem('text_parsed', text_parsed);
 	
-	//alert(text);
-	localStorage.setItem('ischanged_text', '1');
-	document.getElementById('save_text_text').value = text; 
+	localStorage.setItem('ischanged_text', '0');
+	save_file();
 	//window.location.href = '/script/php_functions/save_file.php';
-	//document.getElementById('save_text_submit').click(); 
 	//document.getElementById("save_text_submit").removeEventListener("click", myFunction);
 	}
 
-function myFunction(){alert('done');}
-//alert(word_id.toString());
+function save_file(){
+	alert('save');
+	var text = localStorage.getItem('text_origin');
+	document.getElementById('save_text_text_js').value = text; 
+	document.getElementById('save_text_submit_js').click(); 
+	}
 reader_select_type(order=0);
 reader_zoom_type(order=0);
  
@@ -177,17 +180,18 @@ function show_reader_menu(){
 	//var e2=create_element('div', 'reader_menu_area', 'buttons', 'width:80%; height:86%; left:10%; top:7%;background-color: rgba(255,255,255,0.9);');
 	var elem=create_element('div', 'reader_menu_area', '');
 	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	
 	inner_e+= '<div id="reader_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<input id="reader_menu_appearance" type="button" class="buttons" value="appearance" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';
-	inner_e+= '<input id="reader_menu_appearance-common" type="button" class="buttons" value="appearance-common" onclick="show_menu_appearance_common();" style="left:35%; top:15%; position:fixed; width:14%;">';
-	inner_e+= '<input id="reader_menu_sound" type="button" class="buttons" value="sound" onclick="alert(123);" style="left:15%; top:50%; position:fixed; width:14%;">';
+	inner_e+= '<div id="reader_menu_appearance" class="buttons" onclick="alert(123);" style="left:15%; top:15%;">appearance</v>';
+	inner_e+= '<div id="reader_menu_appearance-common" class="buttons" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
+	inner_e+= '<div id="reader_menu_sound" class="buttons" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
+	
+	//inner_e+= '<div id="reader_menu_save_js" class="buttons" onclick="save_file();" style="left:60%; top:50%;">save js</div>';
+	
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}
-function reader_menu_back(){
-	var elem = document.getElementById("reader_menu_area");
-	elem.parentNode.removeChild(elem);
-	}
+
 function show_menu_appearance_common(element_id='reader_menu_area'){
 	e = document.getElementById(element_id)
 	var inner_e = '<input id="reader_menu_appearance-common_reset" type="button" class="buttons" value="reset" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';

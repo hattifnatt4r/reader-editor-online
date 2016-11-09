@@ -1,5 +1,8 @@
-var letters_arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','-',',','?','!','"','space','\n'];
-var numbers_arr = ['space','\n', 0,1,2,3,4,5,6,7,8,9, '+','-','=','*','/','<','>','.',',', '^','?','!','"', 'x','y','z','a','b','c','d','e'];
+
+var dict_symbols = { a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z', dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', quotes:'"', space:' ', newline:'<br>', plus:'+', minus:'-', eq:'=', less:' ', more:' ', sim:'~', cdot:'.', star:'*', divide:'/', lbr:'(', rbr:')', power:'^', pc:'%', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}'};
+var dict_symbols_buttons = dict_symbols;
+var letters_arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','dash','dot', 'comma','qmark','emark','quotes','space','newline'];
+var numbers_arr = ['space','newline', 0,1,2,3,4,5,6,7,8,9, 'plus','minus','eq','star','divide','less','more','dot','comma', 'power','qmark','emark','quotes', 'x','y','z','a','b','c','d','e'];
 //var numbers_arr = letters_arr;
 var symbols_arr = letters_arr;
 var n_butset=5; var n_but=8; var d_x=0.6; var d_y=0.6;
@@ -62,8 +65,21 @@ function editor_scroll(order){
 	iter = parseInt(localStorage.getItem('editor_iter'));
 	text = localStorage.getItem('text_edit');
 	max_iter = text.length;
-	if (order==1) { if (iter < max_iter) { iter +=1; } else { iter=max_iter; } }
-	else if (order==0) { if (iter > 0) { iter -= 1; } else { iter=0; } }  
+	if (order==1 && iter < max_iter){ 
+		iter +=1; 
+		i_rbr = text.indexOf('>',iter); i_lbr = text.indexOf('<',iter);
+		if (i_lbr==-1){i_lbr=text.length;} if (i_rbr==-1){i_rbr=text.length+1;}
+		if (i_rbr<i_lbr){ iter=i_rbr+1; }
+		}  
+	else if (order==0 && iter > 0) { 
+		iter -= 1; 
+		i_rbr = text.substr(0,iter).lastIndexOf('>'); i_lbr = text.substr(0,iter).lastIndexOf('<');
+		if (i_lbr==-1){i_lbr=0;} if (i_rbr==-1){i_rbr=0;}
+		if (i_rbr<i_lbr){ iter=i_lbr; }
+		}  
+	//i_rbr = text.indexOf('>',iter); i_lbr = text.indexOf('<',iter);
+	//if (i_lbr==-1){i_lbr=text.length;} if (i_rbr==-1){i_rbr=text.length+1;}
+	//if (i_rbr<i_lbr){ iter=i_rbr; }
 	localStorage.setItem('editor_iter', iter.toString());
 	editor_set_cursor();
 }function editor_delete(){
@@ -80,9 +96,11 @@ function editor_scroll(order){
 	if (type==0) { arr=letters_arr; }  else if (type==1) { arr=numbers_arr; } else if (type==2) { arr=symbols_arr; }
 	iter = parseInt(localStorage.getItem('editor_iter'));
 	text = localStorage.getItem('text_edit');
-	text_c = text.substr(0, iter)+arr[n]+text.substr(iter);
+	//letter = arr[n];
+	letter = dict_symbols[arr[n]];
+	text_c = text.substr(0, iter)+letter+text.substr(iter);
 	localStorage.setItem('text_edit', text_c);
-	iter_new = iter+1;
+	iter_new = iter+letter.length;
 	localStorage.setItem('editor_iter', iter_new.toString());
 	editor_set_cursor(); 
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
@@ -123,11 +141,12 @@ function editor_show_letters(type){
 	inner_e = '';
 	for (i=0; i<n_but; i++){
 		i_name = arr[i+n*n_but];
+		i_name_button = dict_symbols_buttons[arr[i+n*n_but]];
 		style = button_size_pos(i)[0];
 		if (i+n*8 == n_butset*n_but-1){
 			inner_e += '<div id="editor_letters_back" class="buttons" onclick="editor_letters_back();"  style="'+style+'"> back </div>';
 		}else{
-			inner_e += '<div id="editor_letter_'+i_name+'" class="buttons" onclick="editor_set_letter('+(i+n*n_but)+','+type.toString()+');"  style="'+style+'">'+i_name+'</div>';
+			inner_e += '<div id="editor_letter_'+i_name+'" class="buttons" onclick="editor_set_letter('+(i+n*n_but)+','+type.toString()+');"  style="'+style+'">'+i_name_button+'</div>';
 		}
 	}
 	elem.innerHTML = inner_e;

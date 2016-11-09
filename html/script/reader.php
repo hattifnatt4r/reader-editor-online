@@ -11,40 +11,32 @@ if (isset($_POST['reader_menu_go_files'])) {
 if (isset($_POST['reader_menu_go_file1'])) {
 	header('Location:/index.html');
 	}
+echo 'filename '.$_SESSION["filename_opened"];
+//echo '<div style="left: 83%; top: 20%; position:fixed;"> 
+//<form action="" method="post"> <input type="text" id="save_text_text" name="text_origin" value="Mouse" style="width:0%;height:0%;">
+//<input type="submit" id="save_text_submit" value="save" name="save_text" class="buttons" style="left: 83%; top: 20%; position:fixed;height:5%;width:2%;">
+//</div>';
 
-echo '<div style="left: 83%; top: 20%; position:fixed;"> 
-<form action="" method="post"> <input type="text" id="save_text_text" name="text_origin" value="Mouse" style="width:0%;height:0%;">
-<input type="submit" id="save_text_submit" value="save" name="save_text" class="buttons" style="left: 83%; top: 20%; position:fixed;height:5%;width:2%;">
-	</div>';
-
-if (isset($_POST['save_text'])) {
-	$text = $_POST["text_origin"];
+if (isset($_POST['save_text_js'])) {
+	$text = $_POST["text_origin_js"];
 	//echo $text;
 	$fname = $_SESSION["filename_opened"];
 	$myfile = fopen($fname, "w") or die("Unable to open file!");
 	chmod($full_name, 0666);
 	fwrite($myfile, $text);
 	fclose($myfile);
-	//echo 'saved '.$fname;
+	echo 'saved '.$fname;
+	$_SESSION["file_text"] = $text;
 	header('Location:/reader.html');
 } 
-/*echo '<div style="left: 85%; top: 46%; position:fixed;"> 
-<form action="" method="post"> <input type="text" id="word_i" name="lastname" value="Mouse" style="width:0%;height:0%;">
-<input type="submit" value="edit" name="edit_word" class="buttons" style="left: 85%; top: 46%; position:fixed;height:5%;width:14%;">
-	</div>';
-if (isset($_POST['edit_word'])) {
-	$_SESSION["editor_exit"] = '/reader.html';
-	$_SESSION["letter_counter"]=0;
-	$_SESSION["word_i"] = $_POST["lastname"];
-	header('Location:/editor_word.html');
-}*/
+
 echo '<input id="reader_edit" type="button" class="buttons" value="edit 2" onclick="reader_editor(reader_edit);"  style="left:85%; top:46%; position:fixed; width:14%;height:5%;">' ;
 
 //-- text -------------------------------------------------------------------
 //$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
 //$new_text = parse_text($_SESSION["file_text"]);
 //echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
-echo "<div id='text_from_file' class='text_scroll' align='left' >".$_SESSION["file_text"]."</div>";
+echo "<div id='text_from_file' class='text_scroll_0' align='left' >".$_SESSION["file_text"]."</div>";
 echo "<div hidden id='hidden_text' style='position:fixed; top:67%; left:85%'>".$_SESSION["file_text"]."</div>";
 
 //-- buttons ----------------------------------------------------------------
