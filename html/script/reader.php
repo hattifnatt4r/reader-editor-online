@@ -36,7 +36,7 @@ echo '<input id="reader_edit" type="button" class="buttons" value="edit 2" oncli
 //$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
 //$new_text = parse_text($_SESSION["file_text"]);
 //echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
-echo "<div id='text_from_file' class='text_scroll_0' align='left' >".$_SESSION["file_text"]."</div>";
+echo "<div id='text_from_file' class='text_scroll' align='left' >".$_SESSION["file_text"]."</div>";
 echo "<div hidden id='hidden_text' style='position:fixed; top:67%; left:85%'>".$_SESSION["file_text"]."</div>";
 
 //-- buttons ----------------------------------------------------------------

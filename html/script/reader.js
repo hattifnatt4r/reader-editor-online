@@ -20,6 +20,7 @@ if (session!='started'){
 	localStorage.setItem('ischanged_text', '0');
 	}
 
+
 var ischanged = localStorage.getItem('ischanged_text');
 if (ischanged=='0'){
 	var text = document.getElementById('hidden_text').innerHTML;
@@ -41,7 +42,7 @@ else{
 	}
 
 function save_file(){
-	alert('save');
+	//alert('save');
 	var text = localStorage.getItem('text_origin');
 	document.getElementById('save_text_text_js').value = text; 
 	document.getElementById('save_text_submit_js').click(); 
@@ -214,13 +215,15 @@ function reader_editor(){
 	id = get_id();
 	text = document.getElementById(id).innerHTML;
 	text_plane = merge_text(text);
+	text_i = text.replace(/:nl:/g, '<br>'); text_plane = text_i;
 	localStorage.setItem('text_edit', text_plane);
 	localStorage.setItem('editor_iter', '0');
 	window.location.href = '/editor.html';
 }function editor_reader(){
 	text = localStorage.getItem('text_edit');
+	text_i = text.replace(/<br>/g, ':nl:'); text = text_i;
 	id = localStorage.getItem('reader_id_curr');
-	//alert(text);
+	alert('to reader: '+text);
 	//id = get_id();
 	//alert(id);
 	text_parsed = localStorage.getItem('text_parsed');

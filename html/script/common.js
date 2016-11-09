@@ -18,8 +18,22 @@ function create_element(tag, id, cl='', st='', inner='', value='', name='', oncl
 	return (element);
 	}
 
+function replace_all(text, a,b){
+	var proceed=1;
+	while (proceed==1){
+		i = text.indexOf(a);
+		if (i==-1) { proceed=0; }
+		else { text_i = text.replace(a, b); text = text_i; }
+	}
+	return(text);
+}
+
 function merge_text(text){
 	//alert(text);
+	var tag = 'em'; var tag_p = 'p';
+	closing = '</'+tag+'></'+tag+'></'+tag_p+'>';
+	text = replace_all(text, closing, ':nl:')
+	//alert('replaced: '+text);
 	var proceed = 1;
 	while (proceed==1){
 		i = text.indexOf('<');
@@ -29,7 +43,7 @@ function merge_text(text){
 			text = text_i;
 			}
 		}
-	//alert(text);
+	alert('merged: '+text);
 	return (text);
 	}
 
@@ -44,8 +58,10 @@ function reader_parse_text(text_origin){
 		text_origin = text;
 		}
 		*/
-	var text = text_origin.replace('\n', '| ');
-	text_origin = text;
+	//var text = text_origin.replace('*nl*', '\n');
+	//text_origin = text;
+	//var text = text_origin.replace('\n', ' \n ');
+	//text_origin = text;
 		
 	var arr = []; var i_start=0;
 	var proceed = 1; var k=0; var i=0; var word='';
@@ -61,8 +77,7 @@ function reader_parse_text(text_origin){
 		//if (strpos(word,'\n')!=False){echo 'PARAGRAPH!!!';}
 		}
 	
-	var tag = 'em';
-	var tag_p = 'p';
+	var tag = 'em'; var tag_p = 'p';
 	var text = "<"+tag_p+" id='p0'><"+tag+" id='p0s0'><"+tag+" id='p0s0w0'>";
 	var i_w = 0; var i_s = 0; var i_p = 0;
 	var arr_w=['p0s0w0']; var arr_s=['p0s0']; var arr_p=['p0'];
@@ -73,7 +88,8 @@ function reader_parse_text(text_origin){
 		if (k==arr.length-1){ text = text+word+'</'+tag+'></'+tag+'></'+tag_p+'>'; }
 		else{
 			//id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
-			if ( word.indexOf('|')!=-1 ){ 
+			if ( word.indexOf(':nl:')!=-1 ){ 
+			//if ( word.indexOf('\n')!=-1 ){ 
 				i_p+=1; i_s=0; i_w=0;
 				id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
 				text = text+word+'</'+tag+'></'+tag+'></'+tag_p+'><'+tag_p+' id="'+id_p+'"><'+tag+' id="'+id_p+id_s+'"><'+tag+' id="'+id_p+id_s+id_w+'">';
@@ -91,7 +107,9 @@ function reader_parse_text(text_origin){
 			}
 		} 
 	}
-	//alert(text);
+	//text_i = text.replace('*nl*',''); text = text_i;
+	text_i = text.replace(/:nl:/g,''); text = text_i;
+	alert('parsed:'+text);
 	word_id = arr_w;
 	sentence_id = arr_s;
 	paragraph_id = arr_p;

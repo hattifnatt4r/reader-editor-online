@@ -1,5 +1,5 @@
 
-var dict_symbols = { a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z', dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', quotes:'"', space:' ', newline:'<br>', plus:'+', minus:'-', eq:'=', less:' ', more:' ', sim:'~', cdot:'.', star:'*', divide:'/', lbr:'(', rbr:')', power:'^', pc:'%', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}'};
+var dict_symbols = { a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z', dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', quotes:'"', space:' ', newline:'<br> ', plus:'+', minus:'-', eq:'=', less:' ', more:' ', sim:'~', cdot:'.', star:'*', divide:'/', lbr:'(', rbr:')', power:'^', pc:'%', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}'};
 var dict_symbols_buttons = dict_symbols;
 var letters_arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','dash','dot', 'comma','qmark','emark','quotes','space','newline'];
 var numbers_arr = ['space','newline', 0,1,2,3,4,5,6,7,8,9, 'plus','minus','eq','star','divide','less','more','dot','comma', 'power','qmark','emark','quotes', 'x','y','z','a','b','c','d','e'];
