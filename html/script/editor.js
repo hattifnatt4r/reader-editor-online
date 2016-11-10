@@ -13,10 +13,16 @@ var n_x=4; var n_y=2; var l_x=100; var l_y=70; var o_x=0; var o_y=25;
 //id = get_id();
 //text = document.getElementById(id).innerHTML;
 text = localStorage.getItem('text_edit');
+//alert('text_edit: '+text);
+//alert(localStorage.getItem('editor_back'));
 document.getElementById('editor_text_area').innerHTML=text;
 editor_set_cursor();
 editor_show_start();
 
+function editor_exit(){
+	localStorage.setItem('ischanged_text', '1');
+	window.location.href = localStorage.getItem('editor_back');
+	}
 
 function editor_set_cursor(){
 	iter = parseInt(localStorage.getItem('editor_iter'));
@@ -56,7 +62,7 @@ function editor_show_menu(){
 	inner_e+= '<div id="editor_appearance-common" class="buttons" onclick="show_menu_appearance_common();" style="left:35%; top:15%;"> appearance </div>';
 	inner_e+= '<div id="editor_sound"  class="buttons" onclick="alert(123);" style="left:15%; top:50%;"> sound </div>';
 	inner_e+= '<div id="editor_read"  class="buttons" onclick="alert(123);" style="left:60%; top:15%;"> read </div>';
-	inner_e+= '<div id="editor_save"  class="buttons" onclick="editor_reader();" style="left:60%; top:50%;"> save </div>';
+	inner_e+= '<div id="editor_exit"  class="buttons" onclick="editor_exit();" style="left:60%; top:50%;"> exit </div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}
@@ -84,11 +90,14 @@ function editor_scroll(order){
 	editor_set_cursor();
 }function editor_delete(){
 	if (iter>0) { 
-		iter = parseInt(localStorage.getItem('editor_iter'));
 		text = localStorage.getItem('text_edit');
-		text_c = text.substr(0, iter-1)+text.substr(iter);
+		iter = parseInt(localStorage.getItem('editor_iter'));
+		i_rbr = text.substr(0,iter).lastIndexOf('>'); i_lbr = text.substr(0,iter).lastIndexOf('<');
+		if (i_rbr==iter-1){ i_l = i_lbr }
+		else { i_l = iter-1 }
+		text_c = text.substr(0, i_l)+text.substr(iter);
 		localStorage.setItem('text_edit', text_c);
-		localStorage.setItem('editor_iter', (iter-1).toString());
+		localStorage.setItem('editor_iter', (i_l).toString());
 		editor_set_cursor(); 
 	}
 }function editor_set_letter(n, type){

@@ -16,6 +16,7 @@ if (session!='started'){
 	localStorage.setItem('text_edit', '0test0');
 	
 	localStorage.setItem('editor_iter', '0');
+	localStorage.setItem('editor_back', '/reader.html');
 	
 	localStorage.setItem('ischanged_text', '0');
 	}
@@ -30,8 +31,21 @@ if (ischanged=='0'){
 	localStorage.setItem('text_parsed', text_parsed);
 }
 else{
-	var text = localStorage.getItem('text_origin');
-	text_parsed = reader_parse_text(text);
+	text = localStorage.getItem('text_edit');
+	text = replace_all(text, '<br>', ':nl:'); 
+	
+	text_parsed = localStorage.getItem('text_parsed');
+	document.getElementById('temp').innerHTML = text_parsed;
+	id = localStorage.getItem('reader_id_curr');
+	document.getElementById(id).innerHTML = text;
+	
+	text_all_parsed = document.getElementById('temp').innerHTML;
+	text_all_origin = merge_text(text_all_parsed);
+	localStorage.setItem('text_origin', text_all_origin);
+	//alert('set new text: '+text);
+	
+	//var text_all_origin = localStorage.getItem('text_origin');
+	text_parsed = reader_parse_text(text_all_origin);
 	document.getElementById('text_from_file').innerHTML = text_parsed;
 	localStorage.setItem('text_parsed', text_parsed);
 	
@@ -42,7 +56,6 @@ else{
 	}
 
 function save_file(){
-	//alert('save');
 	var text = localStorage.getItem('text_origin');
 	document.getElementById('save_text_text_js').value = text; 
 	document.getElementById('save_text_submit_js').click(); 
@@ -215,24 +228,9 @@ function reader_editor(){
 	id = get_id();
 	text = document.getElementById(id).innerHTML;
 	text_plane = merge_text(text);
-	text_i = text.replace(/:nl:/g, '<br>'); text_plane = text_i;
+	text_plane = replace_all(text, ':nl:', '<br>');
 	localStorage.setItem('text_edit', text_plane);
 	localStorage.setItem('editor_iter', '0');
+	localStorage.setItem('editor_back', '/reader.html');
 	window.location.href = '/editor.html';
-}function editor_reader(){
-	text = localStorage.getItem('text_edit');
-	text_i = text.replace(/<br>/g, ':nl:'); text = text_i;
-	id = localStorage.getItem('reader_id_curr');
-	alert('to reader: '+text);
-	//id = get_id();
-	//alert(id);
-	text_parsed = localStorage.getItem('text_parsed');
-	document.getElementById('temp').innerHTML = text_parsed;
-	//alert(id);
-	document.getElementById(id).innerHTML = text;
-	text_all_parsed = document.getElementById('temp').innerHTML;
-	text_all_origin = merge_text(text_all_parsed);
-	localStorage.setItem('text_origin', text_all_origin);
-	localStorage.setItem('ischanged_text', '1');
-	window.location.href = '/reader.html';
 }

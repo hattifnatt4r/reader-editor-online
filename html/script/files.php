@@ -22,7 +22,8 @@ echo '<div style="left: 25%; top: 85%;  position:fixed;">'.$_SESSION["word_i"].'
 echo '<div style="left: 25%; top: 90%;  position:fixed;">'.session_status().' '.'</div>';
 
 //-- files ------------------------------------------------------------------
-echo '<div id="files_area" class="folder_bkg" >  files </div>';
+echo '<div id="files_area" class="text_scroll" style="height:74%;" >  files </div>';
+echo '<div id="files_zoom_area" class="text_zoom" style="left:2.5%;width:63%;">  not selected </div>';
 echo '<input id="fileid_0" type="button" class="buttons" value=".." onclick="scroll_files(0);"  style="left: 5%; top: 5%;">';
 if ($handle = opendir($_SESSION['usr_dir'])) {
     $i = 1;
@@ -63,14 +64,7 @@ function find_object($i_obj, $usr_dir){
 	//echo $entry;
 	return $entry;}
 
-echo '<div id="files_button_edit" style="left: 84%;	top: 8%; position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="edit" name="edit_word" class="buttons" style="height:5%;">
-	</div>';
-if (isset($_POST['edit_word'])) {
-	$_SESSION["editor_exit"] = '/index.html';
-	$_SESSION["letter_counter"]=0;
-	header('Location:/editor_word.html');
-}
+/*
 echo '<div id="files_button_restart" style="left: 84%;	top: 2%; position:fixed;"> 
 <form action="" method="post"> <input type="submit" value="restart" name="new_session" class="buttons" style="height:5%;">
 	</div>';
@@ -79,34 +73,36 @@ if (isset($_POST['new_session'])) {
 	$_SESSION["file_counter"] = 0;
 	$_SESSION["word_i"] = 'HHEELLOO';
 	header('Location:/index.html');
-}
+} */
 
 
-echo '<div id="files_button_menu" style="left: 84%;	top: 17%;  position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="menu" name="menu" class="buttons" ">
-	</div>';
-echo '<div id="files_button_nextp" style="left: 84%; top: 40%; position:fixed;"> 
-	<input type="button" class="buttons" value="next page" onclick="alert();">   
-	</div>';
-	
+echo '<div id="files_menu" class="buttons" onclick="files_show_menu();"  style="left:84%;top:2%;">menu</div>' ;
+
 //-- new file/folder --------------------------------------------------------
-echo '<div id="files_button_new"   style="left: 5%;  top: 78%; position:fixed;"> 
-	<input type="button" class="buttons" value="new" onclick="new_file();">   
-	</div>';
 function create_file($fname, $usr_dir) {
 	$full_name = $usr_dir."/".$fname.".txt";
 	$myfile = fopen($full_name, "w") or die("Unable to open file!");
 	chmod($full_name, 0666);
-	//$txt = "John Doe";
-	//fwrite($myfile, $txt);
 	fclose($myfile);
-  }
-if (isset($_POST['file_name'])) {
-	echo $_POST["file_name"];
-	if ($_POST["file_name"]!=''){ create_file($_POST["file_name"],$_SESSION['usr_dir']); header('Location:/index.html');}
-  }
+	echo 'FILE: '.$full_name.' ';
+}function create_dir($fname, $usr_dir) {
+	$full_name = $usr_dir."/".$fname;
+	echo 'DIR: '.$full_name.' ';
+	mkdir($full_name, 0777);
+}
+if (isset($_POST['files_create_submit'])) {
+	$value = $_POST['files_create_submit'];
+	$text = $_POST["files_name_text"];
+	echo 'TEXT: '.$text.' '; 
+	if ($text!='' || $text!=' ' || $text!='  '){
+		if ($value=='create file') { create_file($text,$_SESSION['usr_dir']); }
+		elseif ($value=='create dir') { create_dir($text,$_SESSION['usr_dir']); }
+		header('Location:/index.html'); 
+	}
+}
+
 //-- file options -----------------------------------------------------------
-echo '<div id="files_button_foptions" style="left: 33%;	top: 78%;  position:fixed;"> 
+echo '<div id="files_button_foptions" style="left: 84%;	top: 30%;  position:fixed;"> 
 <form action="" method="post"> <input type="submit" value="file options" name="foptions" class="buttons" ">
 	</div>';
 if (isset($_POST['foptions'])) {
@@ -124,9 +120,9 @@ if (isset($_POST['delete_obj'])) {
 	header('Location:/index.html');
 }
 //-- enter button -----------------------------------------------------------
-echo '<div id="files_button_enter" style="left: 50%;	top: 78%;  position:fixed;"> 
+echo '<div id="files_button_enter" style="left: 84%;	top: 53%;  position:fixed;"> 
 <form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">
-<input type="submit" value="enter" name="enter_obj" class="buttons" ">
+<input type="submit" value="enter" name="enter_obj" class="buttons" style="left:84%;top:53%;">
 	</div>';
 if (isset($_POST['enter_obj'])) {
 	$_SESSION["file_counter"]=$_POST["file_n"];
@@ -163,47 +159,11 @@ if (isset($_POST['enter_obj'])) {
 }
 //-- next/prev buttons ------------------------------------------------------
 
-echo '<div id="files_button_prev" style="left: 67%; top: 78%; position:fixed;"> 
+echo '<div id="files_button_prev" style="left: 67%; top: 77%; position:fixed;"> 
 	<input id="prev" type="button" class="buttons" value="prev" onclick="scroll_files(prev);">   
 	</div>';
-echo '<div id="files_button_next" style="left: 84%; top: 78%; position:fixed;"> 
+echo '<div id="files_button_next" style="left: 84%; top: 77%; position:fixed;"> 
 	<input id="next" type="button" class="buttons" value="next" onclick="scroll_files(next);">   
 	</div>';
-/*
-echo '<div id="files_button_prev" style="left: 67%;	top: 78%;  position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="prev" name="prevobj" class="buttons" onckicl="alert(scroll);">
-	</div>';
-if (isset($_POST['prevobj'])) {
-	if ($_SESSION["file_counter"]>0){$_SESSION["file_counter"] -=1;}
-	header('Location:/index.html');
-}
-echo '<div id="files_button_next" style="left: 84%;	top: 78%;  position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="next" name="nextobj" class="buttons">
-	</div>';
-if (isset($_POST['nextobj'])) {
-	//echo 'next';
-	if ($_SESSION["file_counter"]<$_SESSION["nentry"]){$_SESSION["file_counter"] +=1;}
-	header('Location:/index.html');
-}
-*/ 
-//---------------------------------------------------------------------------
-
-
-/*
-$filename = $usr_dir.'/test.txt';
-if (file_exists($filename)) {
-    //echo "The file $filename exists";
-    //chmod($filename, 0666);
-    if (is_writable($filename)) { //echo 'The file is writable';
-		$file = fopen($filename,"w");
-		//echo fwrite($file,"Hello World. Testing!");
-		fclose($file);
-		} 
-    else { echo 'The file is not writable'; }
-	}
-else {
-    echo "The file $filename does not exist";
-}
-*/
 
 ?>

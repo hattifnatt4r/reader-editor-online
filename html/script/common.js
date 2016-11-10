@@ -43,7 +43,7 @@ function merge_text(text){
 			text = text_i;
 			}
 		}
-	alert('merged: '+text);
+	//alert('merged: '+text);
 	return (text);
 	}
 
@@ -108,8 +108,9 @@ function reader_parse_text(text_origin){
 		} 
 	}
 	//text_i = text.replace('*nl*',''); text = text_i;
-	text_i = text.replace(/:nl:/g,''); text = text_i;
-	alert('parsed:'+text);
+	//text_i = text.replace(/:nl:/g,''); text = text_i;
+	text = replace_all(text, ':nl:',''); 
+	//alert('parsed:'+text);
 	word_id = arr_w;
 	sentence_id = arr_s;
 	paragraph_id = arr_p;
