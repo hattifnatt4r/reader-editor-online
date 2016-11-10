@@ -102,9 +102,10 @@ if (isset($_POST['files_create_submit'])) {
 }
 
 //-- file options -----------------------------------------------------------
-echo '<div id="files_button_foptions" style="left: 84%;	top: 30%;  position:fixed;"> 
-<form action="" method="post"> <input type="submit" value="file options" name="foptions" class="buttons" ">
-	</div>';
+//echo '<div id="files_button_foptions" style="left: 84%;	top: 30%;  position:fixed;"> 
+//<form action="" method="post"> <input type="submit" value="file options" name="foptions" class="buttons" ">
+//	</div>';
+
 if (isset($_POST['foptions'])) {
 	//echo 'foptions';
 	echo '<div id="files_foptions" class="folder" style="left: 33%; top: 20%; position:fixed; width:60%; height:70%"> 
@@ -112,6 +113,7 @@ if (isset($_POST['foptions'])) {
 		<form action="" method="post"> <input type="submit" value="rename object" name="rename" class="buttons" style="left: 65%; top: 20%;" >
 		</div>';  
 }
+
 if (isset($_POST['delete_obj'])) {
 	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
@@ -119,51 +121,70 @@ if (isset($_POST['delete_obj'])) {
 		rename($filename, 'books_test/trash/'.$entry);}
 	header('Location:/index.html');
 }
-//-- enter button -----------------------------------------------------------
-echo '<div id="files_button_enter" style="left: 84%;	top: 53%;  position:fixed;"> 
-<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">
-<input type="submit" value="enter" name="enter_obj" class="buttons" style="left:84%;top:53%;">
-	</div>';
-if (isset($_POST['enter_obj'])) {
-	$_SESSION["file_counter"]=$_POST["file_n"];
-	//echo 'ENTER '.$_POST["file_n"];
-	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
-	$filename = $_SESSION['usr_dir'].'/'.$entry;
-	if ($_SESSION["file_counter"]==0){
-		if ($_SESSION["usr_dir"]!='books_test'){
-			$new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
-			$_SESSION["usr_dir"] = $new_dir;
-			//$_SESSION['file_counter'] = 0;
-			header('Location:/index.html');
-			}
-	}else{
-		if (is_dir($filename)){ 
-			$_SESSION['usr_dir'] = $filename;
-			//$_SESSION['file_counter'] = 0;
-			//echo 'NEW-DIR'.$_SESSION['usr_dir'];
-			header('Location:/index.html');
-		}else{
-			$myfile = fopen($filename, "r") or die("Unable to open file!");
-			$txt = fread($myfile, filesize($filename));
-			//fwrite($myfile, $txt);
-			fclose($myfile);
-			$_SESSION["file_text"] = $txt;
-			//echo filesize($filename).$filename.'TEXT:'.$txt;
-			//isset($_POST['enter_obj'])=False;
-			$_SESSION["filename_opened"] = $filename;
-			header('Location:/reader.html');
-			//header('Location:/index.html');
-			}
-		}
-	//header('Location:/index.html');
-}
-//-- next/prev buttons ------------------------------------------------------
 
+//-- next/prev buttons ------------------------------------------------------
 echo '<div id="files_button_prev" style="left: 67%; top: 77%; position:fixed;"> 
 	<input id="prev" type="button" class="buttons" value="prev" onclick="scroll_files(prev);">   
 	</div>';
 echo '<div id="files_button_next" style="left: 84%; top: 77%; position:fixed;"> 
 	<input id="next" type="button" class="buttons" value="next" onclick="scroll_files(next);">   
 	</div>';
+	
+//-- enter/options button ---------------------------------------------------
+echo '<div id="files_button_enter" style="left: 84%;	top: 53%;  position:fixed;"> 
+<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">
+<input type="submit" value="enter" name="enter_obj" class="buttons" style="left:84%;top:53%;">
+<input type="submit" value="options" name="enter_obj" class="buttons" style="left:84%;top:30%;">
+	</div>';
+if (isset($_POST['enter_obj'])) {
+	$value = $_POST['enter_obj'];
+	$_SESSION["file_counter"]=$_POST["file_n"];
+	//echo 'ENTER '.$_POST["file_n"];
+	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
+	$filename = $_SESSION['usr_dir'].'/'.$entry;
+	if ($value=='enter'){
+		if ($_SESSION["file_counter"]==0){
+			if ($_SESSION["usr_dir"]!='books_test'){
+				$new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
+				$_SESSION["usr_dir"] = $new_dir;
+				//$_SESSION['file_counter'] = 0;
+				header('Location:/index.html');
+				}
+		}else{
+			if (is_dir($filename)){ 
+				$_SESSION['usr_dir'] = $filename;
+				//$_SESSION['file_counter'] = 0;
+				//echo 'NEW-DIR'.$_SESSION['usr_dir'];
+				header('Location:/index.html');
+			}else{
+				$myfile = fopen($filename, "r") or die("Unable to open file!");
+				$txt = fread($myfile, filesize($filename));
+				//fwrite($myfile, $txt);
+				fclose($myfile);
+				$_SESSION["file_text"] = $txt;
+				//echo filesize($filename).$filename.'TEXT:'.$txt;
+				//isset($_POST['enter_obj'])=False;
+				$_SESSION["filename_opened"] = $filename;
+				header('Location:/reader.html');
+				//header('Location:/index.html');
+				}
+			}
+	}elseif($value=='options'){ 
+		//echo '<div id="files_foptions" class="folder" style="left: 33%; top: 20%; position:fixed; width:60%; height:70%"> 
+		//<form action="" method="post"> <input type="submit" value="delete object" name="delete_obj" class="buttons" style="left: 33%; top: 20%;" >
+		//<form action="" method="post"> <input type="submit" value="rename object" name="rename" class="buttons" style="left: 65%; top: 20%;" >
+		//</div>';  
+		
+		echo '<div id="files_options_area">
+		      <div id="files_options_back"  onclick="editor_back(this.id);" class="back_area"></div>
+		      <div id="files_options_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">
+		      <form action="" method="post"> <input type="submit" value="delete object" name="delete_obj" class="buttons" style="left: 33%; top: 20%;" >
+		      <form action="" method="post"> <input type="submit" value="rename object" name="rename" class="buttons" style="left: 65%; top: 20%;" >
+		      </div></div>';
+	}
+	
+	//header('Location:/index.html');
+}
+
 
 ?>

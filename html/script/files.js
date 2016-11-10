@@ -74,18 +74,7 @@ function files_create(){
 	
 	inner_e+= '<div id="files_create_zoom" class="text_zoom" style="left:15%;top:15%;width:63%;"> file </div>';
 	inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_create_edit(123);" style="left:40%; top:45%;">edit name</div>';
-	//inner_e+= '<div id="files_create-file" class="buttons" onclick="alert(123);" style="left:12%; top:45%;">file</div>';
-	//inner_e+= '<div id="files_create-dir" class="buttons" onclick="alert(123);" style="left:70%; top:45%;">dir</div>';
 	
-	/*
-	inner_e+= '<div id="files_create-dir" style="left:70%;top:45%;width:20%;position:fixed;"> ';
-	inner_e+= '<form action="" method="post">  <input type="text" id="files_name_text_file" name="files_name_text_dir" value="dir" style="width:0%;height:0%;">';
-	inner_e+= '<input type="submit" value="create dir" name="files_create-dir_submit" class="buttons" style="left:70%;top:45%;"></div>';
-	
-	inner_e+= '<div id="files_create-file" style="left:13%;top:45%:width:20%;position:fixed;"> ';
-	inner_e+= '<form action="" method="post">  <input type="text" id="files_name_text_dir" name="files_name_text_file" value="file" style="width:0%;height:0%;">';
-	inner_e+= '<input type="submit" value="create file" name="files_create-file_submit" class="buttons" style="left:13%;top:45%;"></div>';
-	*/
 	inner_e+= '<div id="files_create-file" style="left:13%;top:45%:width:20%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">  <input type="text" id="files_name_text" name="files_name_text" value="file" style="width:0%;height:0%;">';
 	inner_e+= '<input type="submit" value="create file" name="files_create_submit" class="buttons" style="left:13%;top:45%;">';
