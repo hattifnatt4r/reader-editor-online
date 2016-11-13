@@ -43,7 +43,7 @@ function show_file($entry, $i){
 		left: $a%;
 		top: $b%;
 		" ;		
-	echo '<input id="fileid_'.$i.'" type="button" class="buttons" value='.$entry.' onclick="scroll_files('.$i.');"  style="'.$style.'">' ;
+	echo '<div id="fileid_'.$i.'"  class="buttons" onclick="scroll_files('.$i.');"  style="'.$style.'">'.$entry.'</div>' ;
 	//echo "<div id=fileid_'$i' class='folder' style='$style' > $entry </div>";
 }
 //---------------------------------------------------------------------------

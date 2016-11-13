@@ -78,6 +78,7 @@ function reader_parse_text(text_origin){
 		}
 	
 	var tag = 'em'; var tag_p = 'p';
+	var tag = 'em class="text"'; var tag_p = 'p';
 	var text = "<"+tag_p+" id='p0'><"+tag+" id='p0s0'><"+tag+" id='p0s0w0'>";
 	var i_w = 0; var i_s = 0; var i_p = 0;
 	var arr_w=['p0s0w0']; var arr_s=['p0s0']; var arr_p=['p0'];
@@ -85,7 +86,7 @@ function reader_parse_text(text_origin){
 	//alert(arr.length);
 	for (k=0; k<arr.length; k++){
 		word=arr[k];
-		if (k==arr.length-1){ text = text+word+'</'+tag+'></'+tag+'></'+tag_p+'>'; }
+		if (k==arr.length-1){ text = text+word+'</'+tag+'></'+tag+'></'+tag_p+'>'+  '<'+tag_p+'><br></'+tag_p+'>'; }
 		else{
 			//id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
 			if ( word.indexOf(':nl:')!=-1 ){ 

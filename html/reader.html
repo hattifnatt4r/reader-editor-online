@@ -4,10 +4,13 @@
 <html LANG=ru> 
 <title> reader </title>
 <!-- <link rel="stylesheet"  href="style/files.css" /> -->
+<link rel="stylesheet"  href="style/common.css" />
 <link rel="stylesheet"  href="style/files.css" />
 </head>
 
-<body class='reader_bkg' style='background-color: rgba(200,255,200,0.9);'>
+<body class='body_bkg'>
+<!-- <div id='reader_buttons_panel' class='button_panel_shadow' style='left:82.5%;top:0%;width:30%;height:100%;'> </div> -->
+<div id='reader_buttons_panel' class='button_panel' style='left:83%;top:0%;width:30%;height:100%;'> </div>
 <!-- <input type="button" value="load text" onclick="text_from_file(text);" id='text' style='position:fixed; top:30%; left:85%'/> -->
 <!-- <input type="button" value="next" onclick="scrollbut_div(next);" id='next' style='position:fixed; top:30%; left:85%'/>  -->
 <?php require('script/reader.php'); ?>	
@@ -23,9 +26,6 @@
 <script language=JavaScript type="text/javascript" src="script/reader.js"></script>
 
 
-<div id='hidden_type' style='position:fixed; top:30%; left:83%'>0</div>
-<div id='hidden_iter' style='position:fixed; top:35%; left:83%'>1</div>
-<div id='hidden_array' style='position:fixed; top:40%; left:83%'>1</div>
 <div id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
 </body>
 </html>

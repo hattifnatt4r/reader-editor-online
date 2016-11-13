@@ -3,7 +3,7 @@ if (session!='started'){
 	session = 'started';
 	localStorage.setItem('reader_session', session);
 	localStorage.setItem('reader_iter', '0');
-	localStorage.setItem('reader_selecttype', '0');
+	localStorage.setItem('reader_selecttype', '1');
 	localStorage.setItem('reader_zoomtype', '0');
 	localStorage.setItem('latest_w', 'p0s0w0');
 	localStorage.setItem('latest_s', 'p0s0');
@@ -21,6 +21,10 @@ if (session!='started'){
 	localStorage.setItem('ischanged_text', '0');
 	}
 
+var bodyStyles = window.getComputedStyle(document.body);
+var fooBar = bodyStyles.getPropertyValue('--button-radius');
+//alert(fooBar);
+//document.body.style.setProperty('--button-radius','20px');
 
 var ischanged = localStorage.getItem('ischanged_text');
 if (ischanged=='0'){
@@ -112,9 +116,11 @@ function zoom_set_text(){
 function highlite(){
 	//alert(id_prev);
 	id_prev = localStorage.getItem('reader_id_prev'); id = get_id()
-	document.getElementById(id_prev).style.color=null;
+	//document.getElementById(id_prev).style.color=null;
+	document.getElementById(id_prev).className='text';
 	var div = document.getElementById(id);
-	div.style.color='green';
+	//div.style.color='green';
+	div.className='text_highlite';
 	localStorage.setItem('reader_id_prev', id);
 }function utter(id){
 	var txt = document.getElementById(id).innerText;
@@ -173,17 +179,17 @@ function reader_zoom_type(order=0){
 	if (n_zoom_type==0){ 
 		var elem = document.getElementById("reader_zoom_s");
 		if (elem!=null){ elem.parentNode.removeChild(elem); }
-		document.getElementById('text_from_file').style.height = '94%';
+		document.getElementById('text_from_file_box').style.height = '96%';
 	}else if (n_zoom_type==1){
 		var elem=create_element('div', 'reader_zoom_w', 'text_zoom');
 		elem.innerHTML = 'zoom word';
-		document.getElementById('text_from_file').style.height = '70%';
+		document.getElementById('text_from_file_box').style.height = '70%';
 	}else if (n_zoom_type==2){
 		var elem = document.getElementById("reader_zoom_w");
 		if (elem!=null){ elem.parentNode.removeChild(elem); }
 		var elem=create_element('div', 'reader_zoom_s', 'text_zoom_s');
 		elem.innerHTML = 'zoom sentence';
-		document.getElementById('text_from_file').style.height = '70%';
+		document.getElementById('text_from_file_box').style.height = '70%';
 	}
 	document.getElementById('reader_zoomtype').value=types[n_zoom_type];
 	zoom_set_text();
