@@ -1,4 +1,4 @@
-
+/*
 .folder_bkg{
   position: fixed;
   text-align: left;
@@ -31,7 +31,7 @@
   background-color: rgba(200,255,200,0.7); 
   border: solid 2px green;
 }
-
+*/
 /* ------------------------------------------------------------ */
 
   
@@ -46,7 +46,8 @@ text-align:center;
 font-size:25px; line-height: 135%; 
 /*font-style:normal; font-weight: 500; */
 position:fixed;
-width:79%; height:96%; 
+width:var(--reader-textweight);  height: var(--reader-textheight); 
+width:80%;  height:96%; 
 left:2%; top:2%;
 background-color: rgba(255,255,255,1);
 /* box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.15), 1px 3px 5px 1px rgba(0,0,0,0.15); */

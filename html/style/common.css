@@ -26,30 +26,29 @@ body {
   --color_bkg2: #77a8a8;
   --color_bkg2: #80ced6;
   --color_bkg2: #d5f4e6;
-  
   /*--color_bkg2: #7AC133;*/
-  --button-radius: 4px;
   
   --color_button1: white;
   --color_button1: #87bdd8;
   --color_button1: #5b9aa0;
   --color_button1: #96ceb4;
    
+  --button-width: 15%; --button-height: 20%;
+  --button-radius: 4px;
+  --reader-textwidth: calc(100% - var(--button-width)*1.4); --reader-textheight: 96%;
+  --reader-textleft:2%; --reader-texttop:2%;
+  
+  --reader-zoomheight:20%; --reader-zoomtop:calc(100% - var(--reader-zoomheight)*1.2); --reader-textheight-zoom: calc(100% - var(--reader-zoomheight)*1.4);
 }
 .body_bkg{
-  position: fixed;
-  left:0;top:0;width:100%;height:100%;
-  text-align: center;
-  /*font-size:25px; line-height: 130%; */
-  color: black;
-  width: 15%; height: 20%;
-  background-color: var(--color_bkg0); 
+  position: fixed; left:0;top:0; width:100%;height:100%;
+  background-color: var(--color_bkg0); font-weight:500; font-size:20px;
 }
 .text{
-color: black;font-size:22px; font-style:normal; font-weight:500; color:rgba(0,0,0,0.8);
+color: black; font-style:normal; color:rgba(0,0,0,0.8);
 }
 .text_highlite{
-color: black;font-size:22px; font-style:normal; font-weight:500; color:rgba(0,0,0,0.8);
+color: black; font-style:normal; color:rgba(0,0,0,0.8);
 background-color: green; 
 background-color: #00b300; 
 background-color: #6eb300; 
@@ -57,24 +56,20 @@ background-color: #b1d775;
 }
 /*
 .button_panel{
-  position: fixed;
-  text-align: center;
+  position: fixed; width: 15%; height: 20%;
   font-size:20px;
-  color: black;
-  width: 15%; height: 20%;
   background-color: var(--color_bkg1); 
   box-shadow: 0 5px 10px 0 var(--color_bkg2), 0 10px 15px 0 var(--color_bkg2);
 }
 .button_panel_shadow{
-  position: fixed;
-  text-align: center;
+  position: fixed; width: 15%; height: 20%;
   font-size:20px;
-  color: black;
-  width: 15%; height: 20%;
   background-color: var(--color_bkg2)
 } */
+
+/*-- buttons -------------------------------------------------------------*/
 .buttons{
-  position: fixed;
+  position: fixed; width: var(--button-width); height: var(--button-height);
   text-align: center;
   font-size:150%;
   border-radius:  var(--button-radius);
@@ -82,7 +77,6 @@ background-color: #b1d775;
   color: rgba(0,0,0,0.6);
   color: white;
   background-color: var(--color_button1); 
-  width: 15%; height: 20%;
   box-shadow: 1px 2px 5px 2px rgba(0,0,0,0.24);
   box-shadow: 4px 4px 0px  #daebe8;
 }
@@ -91,14 +85,89 @@ background-color: #b1d775;
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
 .buttons_hover{
-  position: fixed;
+  position: fixed; width: var(--button-width); height: var(--button-height);
   text-align: center;
   font-size:150%;
   color: rgba(0,0,0,0.6);
   border-radius:  var(--button-radius);
   border-color: var(--color_bkg2);
   background-color: rgba(255,255,255,1); 
-  width: 15%; height: 20%;
   background-color: var(--color_bkg2); 
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
+}
+
+/*-- reader text ---------------------------------------------------------*/
+.text_scroll_box{
+position:fixed; text-align:center; 
+left:var(--reader-textleft); top:var(--reader-texttop); width:var(--reader-textwidth); height: var(--reader-textheight); 
+font-size:25px; line-height: 135%; 
+/*font-style:normal; font-weight: 500; */
+background-color: white;
+/* box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.15), 1px 3px 5px 1px rgba(0,0,0,0.15); */
+}
+.text_scroll_shadow{
+position:absolute; width:100%; height:5%; z-index:100;
+background: linear-gradient(white, rgba(255,255,255,0));
+}
+.text_scroll{
+position:relative; left:0%;top:0%; width:102%;height:100%;
+overflow-y: scroll; /*direction:rtl; */
+}
+.text_scroll::-webkit-scrollbar {
+    color:black; /*direction: rtl; */
+}
+.text_scroll::-webkit-scrollbar-track {
+	position:absolute; left:0%;
+    /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  */
+	background-color: #b1d775;
+	border-color: green;
+	border-radius: 10px;
+}
+.text_scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;  
+    background-color: #6eb300;
+    /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
+}
+.reader_text{
+position:relative; left:2.5%;top:2%; width:93.5%;height:90%; 
+background-color: rgba(255,255,255,0.9);
+}
+
+/*-- zoom ----------------------------------------------------------------*/
+.reader_zoom_box{
+position:fixed; left:var(--reader-textleft); top:var(--reader-zoomtop); width:calc(var(--reader-textwidth)*1.02); height: var(--reader-zoomheight); 
+}.zoom_scroll_shadow{
+position:absolute; width:3%; height:90%; left:0%;top:0%; z-index:100;
+background: linear-gradient(to right, white, rgba(255,255,255,0));
+}.text_zoom{
+font-size: 600%; position:relative; width:100%; height:100%;
+border-radius: var(--border-radius);
+background-color: rgba(255,255,255,0.9);
+color: rgba(0,0,0,0.6);
+/*box-shadow: 1px 2px 5px 2px rgba(0,0,0,0.24);  */
+overflow-x: scroll; overflow-y: hidden; white-space: nowrap;
+}.text_zoom::-webkit-scrollbar {
+    position:relative; 
+}.text_zoom::-webkit-scrollbar-track {
+	background-color: #b1d775;
+	border-color: green;
+	border-radius: 10px;
+}.text_zoom::-webkit-scrollbar-thumb {
+    border-radius: 10px;  
+    background-color: #6eb300;
+}
+
+/*--- menu ---------------------------------------------------------------*/
+.button_app{
+  width: 10%; height: 10%; left:10%;
+  font-size:20px;
+  border-radius: var(--border-radius);
+  border-color: rgba(255,255,255,0.3);
+  background-color: rgba(255,255,200,0.7); 
+  border: solid 2px green;
+}
+
+.back_area{
+position:fixed; left:0%;top:0%; width:100%;height:100%; 
+background-color:rgba(100,100,100,0.4);
 }

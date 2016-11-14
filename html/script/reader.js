@@ -105,11 +105,11 @@ function zoom_set_text(){
 	n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
 	if (n_zoom_type==1){
 		text = document.getElementById(localStorage.getItem('latest_w')).innerHTML;
-		elem=document.getElementById('reader_zoom_w');
+		elem=document.getElementById('reader_zoom');
 		if (elem){elem.innerHTML=text;}
 	}if (n_zoom_type==2){
 		text = document.getElementById(localStorage.getItem('latest_s')).innerHTML;
-		elem=document.getElementById('reader_zoom_s');
+		elem=document.getElementById('reader_zoom');
 		if (elem){elem.innerHTML=text;}
 	}
 }
@@ -176,20 +176,30 @@ function reader_zoom_type(order=0){
 		n_zoom_type = (n_zoom_type+1)%3;	
 		localStorage.setItem('reader_zoomtype', JSON.stringify(n_zoom_type));
 	}
+	textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom')
 	if (n_zoom_type==0){ 
-		var elem = document.getElementById("reader_zoom_s");
+		var elem = document.getElementById("reader_zoom_box");
 		if (elem!=null){ elem.parentNode.removeChild(elem); }
-		document.getElementById('text_from_file_box').style.height = '96%';
+		document.getElementById('text_from_file_box').style.height = bodyStyles.getPropertyValue('--reader-textheight');
+	/*
 	}else if (n_zoom_type==1){
-		var elem=create_element('div', 'reader_zoom_w', 'text_zoom');
-		elem.innerHTML = 'zoom word';
-		document.getElementById('text_from_file_box').style.height = '70%';
-	}else if (n_zoom_type==2){
-		var elem = document.getElementById("reader_zoom_w");
+		var elem = document.getElementById("reader_zoom_box");
 		if (elem!=null){ elem.parentNode.removeChild(elem); }
-		var elem=create_element('div', 'reader_zoom_s', 'text_zoom_s');
-		elem.innerHTML = 'zoom sentence';
-		document.getElementById('text_from_file_box').style.height = '70%';
+		var elem=create_element('div', 'reader_zoom_box', 'reader_zoom_box');
+		elem.innerHTML='<div id=reader_zoom class="text_zoom">zoom word</div>';
+		//elem.innerHTML = 'zoom word';
+		document.getElementById('text_from_file_box').style.height = textheight_zoom;
+	*/
+	}else{
+		var elem = document.getElementById("reader_zoom_box");
+		if (elem!=null){ elem.parentNode.removeChild(elem); }
+		var elem=create_element('div', 'reader_zoom_box','reader_zoom_box');
+		//elem.innerHTML='<div id=reader_zoom class="text_zoom">zoom word</div>'
+		inner_i = '<div id=reader_zoom class="text_zoom">zoom word</div>';
+		inner_i+= "<div class='zoom_scroll_shadow'> </div>";
+		inner_i+= "<div class='zoom_scroll_shadow' style='left:97%;background: linear-gradient(to right, rgba(255,255,255,0),white);'> </div>";
+		elem.innerHTML = inner_i;
+		document.getElementById('text_from_file_box').style.height = textheight_zoom;
 	}
 	document.getElementById('reader_zoomtype').value=types[n_zoom_type];
 	zoom_set_text();
