@@ -9,7 +9,7 @@
 
 <body class='body_bkg'>
 <!-- <div id='reader_buttons_panel' class='button_panel_shadow' style='left:82.5%;top:0%;width:30%;height:100%;'> </div> -->
-<div id='reader_buttons_panel' class='button_panel' style='left:83%;top:0%;width:30%;height:100%;'> </div>
+<!-- <div id='reader_buttons_panel' class='button_panel' style='left:83%;top:0%;width:30%;height:100%;'> </div> -->
 <!-- <input type="button" value="load text" onclick="text_from_file(text);" id='text' style='position:fixed; top:30%; left:85%'/> -->
 <!-- <input type="button" value="next" onclick="scrollbut_div(next);" id='next' style='position:fixed; top:30%; left:85%'/>  -->
 <?php require('script/reader.php'); ?>	
@@ -19,12 +19,12 @@
 <form action="" method="post"> <input type="text" id="save_text_text_js" name="text_origin_js" value="Mouse" style="width:0%;height:0%;">
 <input type="submit" id="save_text_submit_js" value="save" name="save_text_js" class="buttons"></div>
 
-<div id='temp' style='position:fixed; top:50%; left:83%'>0</div>
+<div hidden id='temp' style='position:fixed; top:50%; left:83%'>0</div>
 
 <script language=JavaScript type="text/javascript" src="script/common.js"></script>
 <script language=JavaScript type="text/javascript" src="script/reader.js"></script>
 
 
-<div id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
+<div hidden id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
 </body>
 </html>

@@ -11,7 +11,7 @@ if (isset($_POST['reader_menu_go_files'])) {
 if (isset($_POST['reader_menu_go_file1'])) {
 	header('Location:/index.html');
 	}
-echo 'filename '.$_SESSION["filename_opened"];
+//echo 'filename '.$_SESSION["filename_opened"];
 //echo '<div style="left: 83%; top: 20%; position:fixed;"> 
 //<form action="" method="post"> <input type="text" id="save_text_text" name="text_origin" value="Mouse" style="width:0%;height:0%;">
 //<input type="submit" id="save_text_submit" value="save" name="save_text" class="buttons" style="left: 83%; top: 20%; position:fixed;height:5%;width:2%;">
@@ -30,29 +30,24 @@ if (isset($_POST['save_text_js'])) {
 	header('Location:/reader.html');
 } 
 
-echo '<input id="reader_edit" type="button" class="buttons" value="edit 2" onclick="reader_editor(reader_edit);"  style="left:85%; top:46%; position:fixed; width:14%;height:5%;">' ;
-
 //-- text -------------------------------------------------------------------
-//$test = "<em id='w53'> the</em><em id='w54'> arsenic</em>";
-//$new_text = parse_text($_SESSION["file_text"]);
-//echo "<div id='text_from_file' class='text_scroll' > $new_text </div>";
-echo "<div id='text_from_file_box' class='text_scroll_box' >  
-<div class='text_scroll_shadow' style='top:0%;'> </div>
-<div class='text_scroll_shadow' style='top:95%;background: linear-gradient(rgba(255,255,255,0),white);'> </div>
-<div class='text_scroll' align='left' ><div id='text_from_file' class='reader_text'>".$_SESSION["file_text"]."</div>
+echo "<div id='text_from_file_box' class='text_scroll_box' >".  
+//"<div class='text_scroll_shadow' style='top:0%;'> </div>".
+//"<div class='text_scroll_shadow' style='top:95%;background: linear-gradient(rgba(255,255,255,0),white);'> </div>".
+"<div class='text_scroll' align='left' ><div id='text_from_file' class='reader_text'>".$_SESSION["file_text"]."</div>
 </div></div>";
 //echo "<div id='text_from_file' class='text_scroll' align='left' >".$_SESSION["file_text"]."</div>";
 echo "<div hidden id='hidden_text' style='position:fixed; top:67%; left:85%'>".$_SESSION["file_text"]."</div>";
 
 //-- buttons ----------------------------------------------------------------
+//echo '<div id="reader_edit" class="buttons" onclick="reader_editor(reader_edit);"  style="left:85%;top:46%;width:14%;height:5%;">edit</div>' ;
+//echo '<div id="reader_menu" class="buttons" onclick="show_reader_menu();"  style="left:85%;top:2%; width:14%;">menu</div>' ;
+//echo '<div id="reader_go" class="buttons" onclick="show_menu_go();"  style="left:85%;top:25%; width:14%;height:5%;">go</div>' ;
+//echo '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);"  style="left: 85%;top:32%;width:14%;height:5%;">word</div>' ;
+//echo '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="left:85%;top:39%;width:14%;height:5%;">zoom</div>' ;
 
-echo '<input id="reader_menu" type="button" class="buttons" value="menu" onclick="show_reader_menu();"  style="left: 85%; top: 2%; position:fixed; width:14%;">' ;
-echo '<input id="reader_go" type="button" class="buttons" value="go" onclick="show_menu_go();"  style="left: 85%; top: 25%; position:fixed; width:14%;height:5%;">' ;
-echo '<input id="reader_selecttype" type="button" class="buttons" value="word" onclick="reader_select_type(1);"  style="left: 85%; top: 32%; position:fixed; width:14%;height:5%;">' ;
-echo '<input id="reader_zoomtype" type="button" class="buttons" value="zoom" onclick="reader_zoom_type(1);"  style="left: 85%; top: 39%; position:fixed; width:14%;height:5%;">' ;
-
-echo '<input id="prev" type="button" class="buttons" value="prev" onclick="scrollbut_div(prev);"  style="left: 85%; top: 53%; position:fixed; width:14%;">' ;
-echo '<input id="next" type="button" class="buttons" value="next" onclick="scrollbut_div(next);"  style="left: 85%; top: 75%; position:fixed; width:14%;">' ;
+//echo '<div id="prev" class="buttons" onclick="scrollbut_div(prev);"  style="left:85%;top:53%;width:14%;"><strong style="font-size:200%;">&#8672;</strong></div>' ;
+//echo '<div id="next" class="buttons" onclick="scrollbut_div(next);"  style="left:85%;top:75%;width:14%;"><strong style="font-size:200%;">&#8674;</strong></div>' ;
 
 
 ?>
