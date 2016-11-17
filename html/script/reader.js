@@ -4,7 +4,7 @@ if (session!='started'){
 	localStorage.setItem('reader_session', session);
 	localStorage.setItem('reader_iter', '0');
 	localStorage.setItem('reader_selecttype', '1');
-	localStorage.setItem('reader_zoomtype', '0');
+	localStorage.setItem('reader_zoomtype', '2');
 	localStorage.setItem('latest_w', 'p0s0w0');
 	localStorage.setItem('latest_s', 'p0s0');
 	localStorage.setItem('latest_p', 'p0');
@@ -20,6 +20,8 @@ if (session!='started'){
 	
 	localStorage.setItem('ischanged_text', '0');
 	}
+//$('.text_scroll_box').foggy({ blurRadius:15, opacity:0.8, cssFilterSupport:true }); 
+//$(function() { alert('hello') });
 
 var bodyStyles = window.getComputedStyle(document.body);
 //var fooBar = bodyStyles.getPropertyValue('--button-radius');
@@ -169,7 +171,7 @@ function get_id(){
 
 function reader_select_type(order=0){
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
-	var types = ['by word','by sentence','by paragraph'];
+	var types = ['by word','by sentence','by paragr'];
 	if (order==1){
 		n_select_type = (n_select_type+1)%3;
 		localStorage.setItem('reader_selecttype', JSON.stringify(n_select_type));
@@ -228,7 +230,7 @@ function show_reader_menu(){
 	//var e2=create_element('div', 'reader_menu_area', 'buttons', 'width:80%; height:86%; left:10%; top:7%;background-color: rgba(255,255,255,0.9);');
 	var elem=create_element('div', 'reader_menu_area', '');
 	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
-	inner_e+= '<div id="reader_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
+	inner_e+= '<div id="reader_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	inner_e+= '<div id="reader_menu_appearance" class="buttons" onclick="alert(123);" style="left:15%; top:15%;">appearance</div>';
 	inner_e+= '<div id="reader_menu_appearance-common" class="buttons" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
 	inner_e+= '<div id="reader_menu_sound" class="buttons" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
@@ -237,6 +239,9 @@ function show_reader_menu(){
 	//inner_e+= '<div id="reader_menu_save_js" class="buttons" onclick="save_file();" style="left:60%; top:50%;">save js</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
+	$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	$('#reader_buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	$('.reader_zoom_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 }function show_menu_appearance_common(element_id='reader_menu_area'){
 	e = document.getElementById(element_id)
 	var inner_e = '<input id="reader_menu_appearance-common_reset" type="button" class="buttons" value="reset" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';

@@ -1,7 +1,11 @@
 
 function editor_back(id){
+	$('.text_scroll_box').foggy(false); 
+	$('#reader_buttons_area').foggy(false); 
+	$('.reader_zoom_box').foggy(false); 
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
+	//$('.text_scroll_box').foggy(false); 
 	}
 	
 function create_element(tag, id, cl='', st='', inner='', value='', name='', onclick='', t=''){
