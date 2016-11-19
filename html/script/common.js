@@ -1,3 +1,10 @@
+var symbol_prev = '<strong style="font-size:200%;">&#8672;</strong>';
+var symbol_next = '<strong style="font-size:200%;">&#8674;</strong>';
+var symbol_enter = '<strong style="font-size:200%;">&#10004;</strong>';
+var symbol_delete = '<strong style="font-size:200%;">&#10008;</strong>';
+var symbol_delete = '<strong style="font-size:200%;">&#10007;</strong>';
+var symbol_cut = '<strong style="font-size:200%;">&#9985;</strong>';
+
 var bodyStyles = window.getComputedStyle(document.body);
 var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
 var btop = parseInt(bodyStyles.getPropertyValue('--reader-buttons-top'));
@@ -27,18 +34,19 @@ function menu_blur(){
 	$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 	$('.buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 	$('.reader_zoom_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-	}
+}
 function editor_back(id){
-	var elem = document.getElementById('#reader_buttons_area');
-	if (elem!=null){
+	//var elem = document.getElementById('reader_buttons_area');
+	//var elem = $('#reader_buttons_area');
+	if ( document.getElementById('reader_buttons_area') || document.getElementById('files_buttons_area') ){
+		//alert('unblur');
 		$('.text_scroll_box').foggy(false); 
 		$('.buttons_area').foggy(false); 
 		$('.reader_zoom_box').foggy(false); 
 	}
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
-	//$('.text_scroll_box').foggy(false); 
-	}
+}
 	
 function create_element(tag, id, cl='', st='', inner='', value='', name='', onclick='', t=''){
 	var element = document.createElement(tag);
@@ -65,7 +73,7 @@ function replace_all(text, a,b){
 }
 
 function merge_text(text){
-	//alert(text);
+	//alert('start: '+text);
 	var tag = 'em'; var tag_p = 'p';
 	closing = '</'+tag+'></'+tag+'></'+tag_p+'>';
 	text = replace_all(text, closing, ':nl:')

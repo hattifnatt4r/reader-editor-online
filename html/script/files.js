@@ -1,4 +1,4 @@
-
+$.getScript("/script/common.js");
 //alert('scroll_test');
 var files_session = localStorage.getItem('files_session');
 if (files_session!='started'){
@@ -105,10 +105,10 @@ function files_show_buttons(){
 	inner_e+= '<div id="files_button_enter" style="left:84%;top:53%;position:fixed;">'; 
 	inner_e+= '<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">';
 	inner_e+= '<input hidden type="submit" id="files_enter_hidden" value="enter" name="enter_obj" "></div>';
-	inner_e+= '<div id="files_enter" class="buttons" style="'+reader_button_position(2)+'" onclick="files_enter();"><strong style="font-size:200%;">&#10004;</strong></div></div>';
+	inner_e+= '<div id="files_enter" class="buttons" style="'+reader_button_position(2)+'" onclick="files_enter();">'+symbol_enter+'</div></div>';
 	
-	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'"><strong style="font-size:200%;">&#8672;</strong></div>' ;
-	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+reader_button_position(4)+'"><strong style="font-size:200%;">&#8674;</strong></div>' ;
+	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
+	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+reader_button_position(4)+'">'+symbol_next+'</div>' ;
 	elem.innerHTML=inner_e;
 	}
 function files_enter(){ document.getElementById('files_enter_hidden').click();  }
@@ -138,7 +138,7 @@ function files_show_options(){
 	inner_e+= '</div>';
 	
 	elem.innerHTML = inner_e;
-	//menu_blur();
+	menu_blur();
 	}
 function files_options_edit(){
 	//alert('options_edit');
@@ -166,7 +166,7 @@ function files_show_menu(){
 	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:60%; top:50%;">new file</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
-	//menu_blur();
+	menu_blur();
 	}
 function files_show_create(){
 	var elem=create_element('div', 'files_create_area', '');
@@ -185,8 +185,6 @@ function files_show_create(){
 	}
 
 function files_create_edit(text){
-	//text = '';
-	//text='12345';
 	localStorage.setItem('text_edit', text);
 	localStorage.setItem('editor_iter', '0');
 	localStorage.setItem('if_create_file', '1');
