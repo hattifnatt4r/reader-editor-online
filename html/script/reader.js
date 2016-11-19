@@ -24,19 +24,12 @@ if (session!='started'){
 //$(function() { alert('hello') });
 
 var bodyStyles = window.getComputedStyle(document.body);
-//var fooBar = bodyStyles.getPropertyValue('--button-radius');
-screen_height = window.screen.height+'px';
-screen_width = window.screen.width+'px';
-document.body.style.setProperty('--screen-height', screen_height);
-document.body.style.setProperty('--screen-width', screen_width);
-//textheight_zoom = bodyStyles.getPropertyValue('--color_bkg1');
-//alert(textheight_zoom);
+//set_screen_pars();
+	screen_height = window.screen.height+'px';
+	screen_width = window.screen.width+'px';
+	document.body.style.setProperty('--screen-height', screen_height);
+	document.body.style.setProperty('--screen-width', screen_width);
 
-var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
-var btop = parseInt(bodyStyles.getPropertyValue('--reader-buttons-top'));
-var bbot = parseInt(bodyStyles.getPropertyValue('--reader-buttons-bottom'));
-var yspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-yspace'));
-var lx = parseInt(bodyStyles.getPropertyValue('--reader-buttons-width-pc'));
 //var bcolor = bodyStyles.getPropertyValue('--color_button_set');
 //alert(yspace);
 reader_show_buttons();
@@ -171,7 +164,7 @@ function get_id(){
 
 function reader_select_type(order=0){
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
-	var types = ['by word','by sentence','by paragr'];
+	var types = ['select word','select sentence','select paragr'];
 	if (order==1){
 		n_select_type = (n_select_type+1)%3;
 		localStorage.setItem('reader_selecttype', JSON.stringify(n_select_type));
@@ -207,20 +200,16 @@ function reader_zoom_type(order=0){
 	elem = document.getElementById('reader_menu_back');
 	if (elem!=null){elem.click();}
 	zoom_set_text();
+	document.getElementById('reader_zoomtype').innerHTML=types[n_zoom_type];
 }
 	
 //-- buttons -------------------------------------------------------------------------
 
-function reader_button_position(i){
-	yh = (bbot-btop-(yn-1)*yspace )/yn; 
-	x = 100-lx*1.1;  
-	y = btop + i*(yspace+yh*1);
-	style = 'left:'+x+'%;top:'+y+'%;width:'+lx+'%;height:'+yh+'%;';
-	return(style); }
 function reader_show_buttons(){
-	var elem=create_element('div', 'reader_buttons_area', '');
+	var elem=create_element('div', 'reader_buttons_area', 'buttons_area');
 	inner_e = '<div id="reader_menu" class="buttons" onclick="show_reader_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
-	inner_e+= '<div id="reader_go" class="buttons" onclick="show_menu_go();"  style="'+reader_button_position(1)+'">go</div>' ;
+	inner_e+= '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="'+reader_button_position(1)+'">zoom</div>' ;
+	//inner_e+= '<div id="reader_go" class="buttons" onclick="show_menu_go();"  style="'+reader_button_position(1)+'">go</div>' ;
 	inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);"  style="'+reader_button_position(2)+'">word</div>' ;
 	inner_e+= '<div id="prev" class="buttons" onclick="scrollbut_div(prev);"  style="'+reader_button_position(3)+'"><strong style="font-size:200%;">&#8672;</strong></div>' ;
 	inner_e+= '<div id="next" class="buttons" onclick="scrollbut_div(next);"  style="'+reader_button_position(4)+'"><strong style="font-size:200%;">&#8674;</strong></div>' ;
@@ -234,14 +223,17 @@ function show_reader_menu(){
 	inner_e+= '<div id="reader_menu_appearance" class="buttons" onclick="alert(123);" style="left:15%; top:15%;">appearance</div>';
 	inner_e+= '<div id="reader_menu_appearance-common" class="buttons" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
 	inner_e+= '<div id="reader_menu_sound" class="buttons" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
-	inner_e+= '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="left:65%;top:50%;width:14%;">zoom</div>' ;
-	inner_e+= '<div id="reader_edit" class="buttons" onclick="reader_editor(reader_edit);"  style="left:65%;top:15%;width:14%;">edit</div>' ;
+	//inner_e+= '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="left:65%;top:50%;width:14%;">zoom</div>' ;
+	inner_e+= '<div id="reader_go" class="buttons" onclick="show_menu_go();"  style="left:70%;top:50%;">go</div>' ;
+	inner_e+= '<div id="reader_menu_go-files" class="buttons" onclick="goto_files();" style="left:50%; top:50%;">go files</div>';
+	inner_e+= '<div id="reader_edit" class="buttons" onclick="reader_editor(reader_edit);"  style="left:70%;top:15%;">edit</div>' ;
 	//inner_e+= '<div id="reader_menu_save_js" class="buttons" onclick="save_file();" style="left:60%; top:50%;">save js</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
-	$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-	$('#reader_buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-	$('.reader_zoom_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	menu_blur();
+	//$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	//$('.buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	//$('.reader_zoom_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 }function show_menu_appearance_common(element_id='reader_menu_area'){
 	e = document.getElementById(element_id)
 	var inner_e = '<input id="reader_menu_appearance-common_reset" type="button" class="buttons" value="reset" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';
@@ -255,9 +247,8 @@ function show_menu_go(element_id='reader_menu_area'){
 	var elem=create_element('div', 'reader_go_area', '');
 	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="reader_go_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<input id="reader_menu_go_files" type="button" class="buttons" value="files" onclick="goto_files();" style="left:15%; top:15%; position:fixed; width:14%;">';
+	//inner_e+= '<input id="reader_menu_go_files" type="button" class="buttons" value="files" onclick="goto_files();" style="left:15%; top:15%; position:fixed; width:14%;">';
 	inner_e+= '<input id="reader_menu_go_file1" type="button" class="buttons" value="file1" onclick="goto_files();" style="left:35%; top:15%; position:fixed; width:14%;">';
-	inner_e+= '<input id="reader_menu_back" type="button" class="buttons" value="back" onclick="reader_menu_back();" style="left:68%; top:15%; position:fixed; width:14%;">';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}
