@@ -64,6 +64,7 @@ if (ischanged=='0'){
 	}
 reader_select_type(order=0);
 reader_zoom_type(order=0);
+//alert(document.getElementById('text_from_file').innerHTML);
  
 function scrollbut_div(order){
 	reader_iter = JSON.parse(localStorage.getItem('reader_iter'));

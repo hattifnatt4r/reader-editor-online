@@ -1,7 +1,7 @@
-var symbol_prev = '<strong style="font-size:200%;">&#8672;</strong>';
-var symbol_next = '<strong style="font-size:200%;">&#8674;</strong>';
-var symbol_enter = '<strong style="font-size:200%;">&#10004;</strong>';
-var symbol_delete = '<strong style="font-size:200%;">&#10008;</strong>';
+var symbol_prev = '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
+var symbol_next = '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
+var symbol_enter = '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
+var symbol_delete = '<strong style="font-size:200%;line-height:105%">&#10008;</strong>';
 var symbol_delete = '<strong style="font-size:200%;">&#10007;</strong>';
 var symbol_cut = '<strong style="font-size:200%;">&#9985;</strong>';
 
@@ -76,7 +76,9 @@ function merge_text(text){
 	//alert('start: '+text);
 	var tag = 'em'; var tag_p = 'p';
 	closing = '</'+tag+'></'+tag+'></'+tag_p+'>';
-	text = replace_all(text, closing, ':nl:')
+	text = replace_all(text, closing, ':nl:');
+	text = replace_all(text, '<abbr>', ':lbr:');
+	text = replace_all(text, '</abbr>', ':rbr:');
 	//alert('replaced: '+text);
 	var proceed = 1;
 	while (proceed==1){
@@ -88,24 +90,13 @@ function merge_text(text){
 			}
 		}
 	//alert('merged: '+text);
+	text = replace_all(text, ':lbr:', '<abbr>');
+	text = replace_all(text, ':rbr:', '</abbr>');
 	return (text);
 	}
 
 function reader_parse_text(text_origin){
 	var div_end = '\n'; var div_start = '';
-	//alert(text_origin);
-	/*
-	var i_start=0; var proceed = 1; var i=0;
-	while (proceed==1){
-		if ( text_origin.substr(-2)==' ' ) { text = text_origin.substr(0,text_origin.length-1); }
-		else{ proceed=0; }
-		text_origin = text;
-		}
-		*/
-	//var text = text_origin.replace('*nl*', '\n');
-	//text_origin = text;
-	//var text = text_origin.replace('\n', ' \n ');
-	//text_origin = text;
 		
 	var arr = []; var i_start=0;
 	var proceed = 1; var k=0; var i=0; var word='';

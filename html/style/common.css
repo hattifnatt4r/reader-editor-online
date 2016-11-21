@@ -8,13 +8,17 @@ body {
   --color_button1: #b1d775; 
   
   --color_button_set: #8fcfef; 
-  
+  --color-cursor: rgba(0,0,0,0.6);
+  --color-cursor: #b1d775;
+  --color-cursor: rgba(0,102,0,0.4);
+  --color-cursor: rgba(51,102,0,0.4);
+  --color-cursor: #59aa09;
   
   --screen-height: 800px; --screen-width: 1200px;
-  --button-height-pc: 18; --button-fontsize-pc: 5;
-  --button-fontsize:calc(var(--screen-height)*var(--button-fontsize-pc)/100);
-  --button-height: calc(var(--button-height-pc)* 1%); --button-width: 15%;
-  --button-radius: 1%;
+  --button-height-pc: 18;  --button-height:  calc(var(--button-height-pc)* 1%); 
+  --button-fontsize-pc: 5; --button-fontsize:calc(var(--screen-height)*var(--button-fontsize-pc)/100);
+  --button-width-pc: 15;   --button-width:   calc(var(--button-width-pc)* 1%); 
+  --button-bordewidth-pc: 0.8; --button-radius: 1%;
   
   --reader-buttons-ny: 5; --reader-buttons-yspace:3; --reader-buttons-top:2; --reader-buttons-bottom:97.5; --reader-buttons-width-pc:14;
   --reader-textwidth: calc(100% - var(--reader-buttons-width-pc)*1.35*1%); --reader-textheight: 95%;
@@ -26,7 +30,7 @@ body {
 }
 .body_bkg{
   position: fixed; left:0;top:0; width:100%;height:100%;
-  background-color: var(--color_bkg0); font-weight:500; font-size:20px; text-align:center;
+  background-color: var(--color_bkg0); font-weight:500; font-size:20px; text-align:center; 
 }
 .text{
 font-style:normal; 
@@ -41,23 +45,21 @@ background-color: #b1d775;
 .buttons_area{}
 
 .buttons{
-  position: fixed; width: var(--button-width); height: calc(var(--screen-height)*var(--button-height-pc)/100); 
-  text-align: center; vertical-align:middle; /*line-height: calc(var(--screen-height)*var(--button-height-pc)/100);  */
+  position:fixed; box-sizing:border-box;
+  width: var(--button-width); height: calc(var(--screen-height)*var(--button-height-pc)/100); 
+  text-align: center; vertical-align:top; /*line-height: calc(var(--screen-height)*var(--button-height-pc)/100);  */  line-height:103%;
   font-size:calc(var(--screen-height)*var(--button-fontsize-pc)/100); 
-  font-weight:600; word-break: break-all;
-  border-radius:  var(--button-radius);
-  border-color: var(--color_bkg2);
+  font-weight:600; word-break: break-all; 
   color: rgba(0,0,0,0.45);
   background-color: #7b949d;  
   /* background-color: #98acb3; */
-  border: solid  calc(0.8*var(--screen-height)/100 ) #7b949d;  box-sizing: border-box;
+  border: solid  calc(var(--button-bordewidth-pc)*var(--screen-height)/100 ) #7b949d;  border-radius:  var(--button-radius); 
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 15px 30px 0 rgba(0,0,0,0.17);
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);  
 }
 .buttons:hover{
-  background-color: var(--color_bkg2); 
   background-color: #c4cfd4;
-  border: solid  calc(0.8*var(--screen-height)/100 ) #c4cfd4;  
+  border: solid  calc(var(--button-bordewidth-pc)*var(--screen-height)/100 ) #c4cfd4;  
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
 .files{
@@ -83,7 +85,7 @@ background-color: var(--color); border: solid calc(0.2*0.8*var(--button-fontsize
 
 .buttons_editor{
 position: fixed; width: 2%; height: 2%; 
-text-align: center; vertical-align:middle; /*line-height: calc(var(--screen-height)*var(--button-height-pc)/100);  */
+text-align: center; vertical-align:top; line-height:100%;
 font-size: calc(var(--editor-fontsize-pc)*var(--screen-height)/100); 
   /*font-size: 30px;*/
   font-weight:600;
@@ -157,7 +159,7 @@ overflow-x: scroll; overflow-y: hidden; white-space: nowrap;
     background-color: #c8ccd0; 
 }
 
-/*--- menu ---------------------------------------------------------------*/
+/*-- menu ----------------------------------------------------------------*/
 .button_app{
   width: 10%; height: 10%; left:10%;
   font-size:20px;
@@ -171,3 +173,22 @@ overflow-x: scroll; overflow-y: hidden; white-space: nowrap;
 position:fixed; left:0%;top:0%; width:100%;height:100%; 
 background-color:rgba(100,100,100,0.6);
 }
+
+/*-- caret ---------------------------------------------------------------*/ 
+.blinking-cursor {
+  /*font-weight: 100;
+  font-size: 30px;
+  color: #2E3D48; */
+  font-size:104%;  opacity:0.5;
+  position:absolute; left: calc(-0.022*var(--screen-width)); 
+  -webkit-animation: 1s blink step-end infinite;
+  -moz-animation: 1s blink step-end infinite;
+  -ms-animation: 1s blink step-end infinite;
+  -o-animation: 1s blink step-end infinite;
+  animation: 1s blink step-end infinite;
+}
+@keyframes "blink"         { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
+@-moz-keyframes blink      { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
+@-webkit-keyframes "blink" { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
+@-ms-keyframes "blink"     { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
+@-o-keyframes "blink"      { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
