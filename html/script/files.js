@@ -81,11 +81,7 @@ function scroll_files(order){
 	document.getElementById('file_n').value = files_iter; 
 	files_fill_zoom();
 	
-	var fileid = 'fileid_'+files_iter.toString();  elem = document.getElementById(fileid); 
-	rect_scroll = document.getElementById('files_area_box').getBoundingClientRect(); 
-	rect = elem.getBoundingClientRect(); 
-	if (rect.top+0.5*(rect.bottom-rect.top)>rect_scroll.bottom || rect.bottom-0.5*(rect.bottom-rect.top)<rect_scroll.top)
-		{document.getElementById(fileid).scrollIntoView(true);} 
+	var fileid = 'fileid_'+files_iter.toString();  scroll_to(fileid, 'files_area_box');
 	
 	title=elem.getAttribute('title');
 	if (title=='dir'){fclass='files-dir-hover';} else{fclass='files-txt-hover';}  elem.className = 'files '+fclass; 
@@ -105,15 +101,18 @@ function files_show_buttons(){
 	inner_e+= '<div id="files_button_enter" style="left:84%;top:53%;position:fixed;">'; 
 	inner_e+= '<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">';
 	inner_e+= '<input hidden type="submit" id="files_enter_hidden" value="enter" name="enter_obj" "></div>';
-	inner_e+= '<div id="files_enter" class="buttons" style="'+reader_button_position(2)+'" onclick="files_enter();">'+symbol_enter+'</div></div>';
+	inner_e+= '<div id="files_enter" class="buttons" style="'+reader_button_position(2)+'" onclick="files_click(0);">'+symbol_enter+'</div></div>';
 	
 	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
 	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+reader_button_position(4)+'">'+symbol_next+'</div>' ;
 	elem.innerHTML=inner_e;
 	}
-function files_enter(){ document.getElementById('files_enter_hidden').click();  }
+function files_click(n){ 
+	var arr_names = ["files_enter_hidden", "files_delete_hidden", "files_edit_hidden", 'files_createdir_hidden', 'files_createtxt_hidden'];
+	document.getElementById(arr_names[n]).click();  }
 function files_show_options(){
 	//alert('show_options');
+	menu_blur();
 	iter = localStorage.getItem('files_iter');
 	//alert('fileid_'+iter.toString());
 	var if_i=localStorage.getItem('if_rename_file');
@@ -124,21 +123,22 @@ function files_show_options(){
 	localStorage.setItem('text_edit', fname);
 	var elem=create_element('div', 'files_options_area', '');
 	var inner_e = '<div id="files_options_back"  onclick="editor_back(this.id);" class="back_area"></div>';
-	inner_e+= '<div id="files_options_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
+	inner_e+= '<div id="files_options_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
-	inner_e+= '<div id="files_options_zoom" class="text_zoom" style="left:15%;top:15%;width:63%;">'+fname+'</div>';
+	inner_e+= '<div id="files_options_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_options_zoom" class="text_zoom">'+fname+'</div></div>';
 	inner_e+= '<div id="files_options_edit-name" class="buttons" onclick="files_options_edit();" style="left:40%; top:45%;">edit name</div>';
 	
 	inner_e+= '<div id="files_options_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">';
 	inner_e+= '<input type="text" id="files_options_n" name="files_options_n" value="'+iter.toString()+'" style="width:0%;height:0%;">';
 	inner_e+= '<input type="text" id="files_options_text" name="files_options_text" value="'+fname+'" style="width:0%;height:0%;">';
-	inner_e+= '<input type="submit" value="delete" name="files_options_submit" class="buttons" style="left:13%;top:45%;">';
-	inner_e+= '<input type="submit" value="edit"   name="files_options_submit" class="buttons" style="left:70%;top:45%;"></div>';
+	inner_e+= '<input hidden id="files_delete_hidden" type="submit" value="delete" name="files_options_submit">'; 
+	inner_e+= '<input hidden id="files_edit_hidden"   type="submit" value="edit"   name="files_options_submit"></div>';
+	inner_e+= '<div class="buttons" onclick="files_click(1);" style="left:13%;top:45%;">delete</div>';
+	inner_e+= '<div class="buttons" onclick="files_click(2);" style="left:70%;top:45%;">edit</div>';
 	inner_e+= '</div>';
-	
+		
 	elem.innerHTML = inner_e;
-	menu_blur();
 	}
 function files_options_edit(){
 	//alert('options_edit');
@@ -171,15 +171,18 @@ function files_show_menu(){
 function files_show_create(){
 	var elem=create_element('div', 'files_create_area', '');
 	var inner_e = '<div id="files_create_back"  onclick="editor_back(this.id);" class="back_area"></div>';
-	inner_e+= '<div id="files_create_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
+	inner_e+= '<div id="files_create_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
-	inner_e+= '<div id="files_create_zoom" class="text_zoom" style="left:15%;top:15%;width:63%;"> file </div>';
+	//inner_e+= '<div id="files_create_zoom" class="text_zoom" style="left:15%;top:15%;width:63%;"> file </div>';
+	inner_e+= '<div id="files_create_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_create_zoom" class="text_zoom">file</div></div>';
 	inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_create_edit(123);" style="left:40%; top:45%;">edit name</div>';
 	
 	inner_e+= '<div id="files_create_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">  <input type="text" id="files_name_text" name="files_name_text" value="file" style="width:0%;height:0%;">';
-	inner_e+= '<input type="submit" value="create file" name="files_create_submit" class="buttons" style="left:13%;top:45%;">';
-	inner_e+= '<input type="submit" value="create dir" name="files_create_submit" class="buttons" style="left:70%;top:45%;"></div>';
+	inner_e+= '<input hidden id="files_createtxt_hidden" type="submit" value="create file" name="files_create_submit" >';
+	inner_e+= '<input hidden id="files_createdir_hidden" type="submit" value="create dir"  name="files_create_submit"></div>';
+	inner_e+= '<div class="buttons" onclick="files_click(4)" style="left:13%;top:45%;">create file</div>';
+	inner_e+= '<div class="buttons" onclick="files_click(3)" style="left:70%;top:45%;">create dir </div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}

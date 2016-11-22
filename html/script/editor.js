@@ -1,8 +1,8 @@
 $.getScript("/script/common.js");
 var editor_lang = 'en';
-var editor_type = 'texttop_twolines_v1';
-var editor_type = 'texttop_oneline_v1';
-var editor_type = '';
+var scroll_by = 'letter';
+var scroll_by = 'word';
+
 
 var dict_letters_ru = {r1:'а',r2:'б',r3:'в',r4:'г',r5:'д',r6:'е',r7:'ё',r8:'ж',r9:'з',r10:'и',r11:'й',r12:'к',r13:'л',r14:'м',r15:'н',r16:'о',r17:'п',r18:'р',r19:'с',r20:'т',r21:'у',r22:'ф',r23:'х',r24:'ц',r25:'ч',r26:'ш',r27:'щ',r28:'ъ',r29:'ы',r30:'ь',r31:'э',r32:'ю',r33:'я' };
 var dict_letters_en = { a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z'};
@@ -20,43 +20,39 @@ var numbers_arr =    ['newline','sim','approx','leq','geq','ll','gg','cup','cap'
 var symbols_arr = letters_arr;
 var letters_arr = letters_arr_ru;
 
-if (editor_type=='textleft_v1'){
-	var b_nset=5; var b_n=8;
-	var b_nx=2; var b_ny=4; var b_xspace=3; var b_yspace=5; 
-	var b_left=65; var b_right=98; var b_top=4; var b_bottom=96;
-}else{
-	var b_nset=5; var b_n=10;
-	var b_nx=5; var b_ny=2; var b_xspace=6; var b_yspace=9; 
-	var b_left=3; var b_right=95; var b_top=37; var b_bottom=91.7;
-	//var b_top=55; var b_bottom=105;
-}
-
 var editor_type = 'texttop_twolines_v1';
-//var editor_type = 'texttop_oneline_v1';
+var editor_type = 'texttop_oneline_v1';
+//var editor_type = 'textleft_v1';
 var bodyStyles = window.getComputedStyle(document.body);
 screen_h = window.screen.height;     
 screen_w = window.screen.width;
 if (editor_type=='textleft_v1'){
+	document.body.style.setProperty('--editor-fontsize-pc', 6.3);
+	document.body.style.setProperty('--editor-borderwidth-pc', 1);
+	document.body.style.setProperty('--editor-wordbreak', 'break-all');
+	var b_nset=5; var b_n=8;
+	var b_nx=2; var b_ny=4; var b_xspace=5; var b_yspace=6; 
+	var b_left=75; var b_right=107; var b_top=4; var b_bottom=97; var b_rightwidth=6;
 	e_style = 'width:'+(b_left-5)+'%; height:75%;';
 	var elem=create_element('div', 'editor_text_box','text_scroll_box', st=e_style); 
 	elem.innerHTML = "<div class='text_scroll' align='left' ><div id='editor_text_area' class='reader_text'>text</div></div>";
 }
 if (editor_type=='texttop_oneline_v1'){
-	var b_nset=5; var b_n=10;
-	var b_nx=5; var b_ny=2; var b_xspace=6; var b_yspace=9; 
-	var b_left=3; var b_right=95; var b_top=37; var b_bottom=91.7;
 	document.body.style.setProperty('--editor-fontsize-pc', 7);
 	document.body.style.setProperty('--editor-borderwidth-pc', 2);
-	e_style = 'top:2%; width:96%; height:'+(b_top-7)+'%; left:2%;';
+	var b_nset=5; var b_n=10;
+	var b_nx=5; var b_ny=2; var b_xspace=5; var b_yspace=7; 
+	var b_left=3; var b_right=97; var b_top=38; var b_bottom=95;
+	e_style = 'top:2%; width:96%; height:'+(b_top-8)+'%; left:2%;';
 	var elem=create_element('div', 'editor_text_box','reader_zoom_box', st=e_style);
 	elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="font-size:900%;">zoom word</div>'; 
 }
 if (editor_type=='texttop_twolines_v1'){
-	var b_nset=5; var b_n=10;
-	var b_nx=5; var b_ny=2; var b_xspace=6; var b_yspace=9; 
-	var b_top=55; var b_bottom=105; var b_botheight=10.5;
 	document.body.style.setProperty('--editor-fontsize-pc', 7);
 	document.body.style.setProperty('--editor-borderwidth-pc', 2);
+	var b_nset=5; var b_n=10;
+	var b_nx=5; var b_ny=2; var b_xspace=5; var b_yspace=7; 
+	var b_top=55; var b_bottom=110; b_left=2; b_right=98; var b_botheight=13;
 	e_style = 'top:2%; width:96%; height:'+(b_top-7)+'%; left:2%;';
 	var elem=create_element('div', 'editor_text_box','text_scroll_box', st=e_style); 
 	elem.innerHTML = "<div class='text_scroll' align='left' ><div id='editor_text_area' class='reader_text' style='font-style:bold;font-size:650%;line-height:111%;color:rgba(0,0,0,0.6);'>text</div></div>"; 
@@ -74,11 +70,12 @@ function editor_exit(){
 	}
 
 function editor_set_cursor(){
-	cursor='<em style="position:relative;"><em class="blinking-cursor" >|</em></em>';
+	cursor='<em id="cursor" style="position:relative;"><em class="blinking-cursor" >|</em></em>';
 	iter = parseInt(localStorage.getItem('editor_iter'));
 	text = localStorage.getItem('text_edit');
 	text_c = text.substr(0, iter)+cursor+text.substr(iter);
 	document.getElementById('editor_text_area').innerHTML=text_c;
+	scroll_to('cursor','editor_text_box');
 	//alert(text_c);
 	}
 function set_button_appearance(id){ alert(id); }
@@ -100,9 +97,9 @@ function editor_show_start(){
 	inner_e1+= '<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();"           style="'+button_size_pos(5)[0]+'"> exit </div>';
 	inner_e1+= "</div>"
 	inner_e2 = "<div id='editor_buttons_area_2'>";
-	inner_e2+= '<div id="editor_delete" class="buttons_editor" onclick="editor_delete();"   style="'+button_size_pos(4)[0]+'">'+symbol_delete+'</div>';
-	inner_e2+= '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="'+button_size_pos(8)[0]+'">'+symbol_prev+'</div>';
-	inner_e2+= '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);"  style="'+button_size_pos(9)[0]+'">'+symbol_next+'</div>';
+	inner_e2+= '<div id="editor_delete" class="buttons_editor" onclick="editor_delete();"   style="'+button_size_pos(4)[0]+'">'+symbol_delete_editor+'</div>';
+	inner_e2+= '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="'+button_size_pos(8)[0]+'">'+symbol_prev_editor+'</div>';
+	inner_e2+= '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);"  style="'+button_size_pos(9)[0]+'">'+symbol_next_editor+'</div>';
 	inner_e2+= "</div>"
 	inner_e3 = "<div id='editor_buttons_area_3'></div>";
 	inner_e4 = "<div id='editor_buttons_area_4'></div>";
@@ -192,6 +189,7 @@ function button_size_pos(i){
 	dy = (b_bottom - b_top -(b_ny-1)*b_yspace )/b_ny; //alert(dy);
 	y = b_top + (dy+b_yspace)*(i-i%b_nx)/b_nx;   ny = (i-i%b_nx)/b_nx;
 	if (b_botheight!=null && ny==b_ny-1){dy=b_botheight;}
+	if (b_rightwidth!=null && (i%b_nx)==b_nx-1){dx=b_rightwidth;}
 	style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+dx.toString()+'%; height:'+dy.toString()+'%;'  ;
 	return([style,x,y,dx,dy]);
 	}

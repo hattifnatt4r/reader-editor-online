@@ -1,21 +1,26 @@
-var symbol_prev = '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
-var symbol_next = '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
-var symbol_enter = '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
-var symbol_delete = '<strong style="font-size:200%;line-height:105%">&#10008;</strong>';
-var symbol_delete = '<strong style="font-size:200%;">&#10007;</strong>';
-var symbol_cut = '<strong style="font-size:200%;">&#9985;</strong>';
+var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
+var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
+var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
+var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
+var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
+var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
+var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
+var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
+var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
 
 var bodyStyles = window.getComputedStyle(document.body);
 var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
-var btop = parseInt(bodyStyles.getPropertyValue('--reader-buttons-top'));
-var bbot = parseInt(bodyStyles.getPropertyValue('--reader-buttons-bottom'));
+var btop = parseInt(bodyStyles.getPropertyValue('--reader-texttop-pc'));
+var bbot = parseInt(bodyStyles.getPropertyValue('--reader-textbottom-pc'));
 var yspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-yspace'));
-var lx = parseInt(bodyStyles.getPropertyValue('--reader-buttons-width-pc'));
+var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
+var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
 function reader_button_position(i){
-	yh = (bbot-btop-(yn-1)*yspace )/yn; 
-	x = 100-lx*1.1;  
-	y = btop + i*(yspace+yh*1);
-	style = 'left:'+x+'%;top:'+y+'%;width:'+lx+'%;height:'+yh+'%;';
+	dy = (bbot-btop-(yn-1)*yspace )/yn; 
+	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
+	//x = 100-lx*1.1;  
+	y = btop + i*(yspace+dy*1);
+	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
 	return(style); }
 
 /*
@@ -30,6 +35,17 @@ function set_screen_pars{
 	alert(screen_height);	
 	}
 */
+
+function scroll_to(id, id_area, title=0){
+	if (title==0){ elem = document.getElementById(id);  }
+	else { elem= document.querySelectorAll('[id="'+id+'"]')[1]; //alert('title '+elem+' '+id+' '+area); 
+		}
+	rect_scroll = document.getElementById(id_area).getBoundingClientRect(); 
+	rect = elem.getBoundingClientRect();  //alert(elem+' '+rect_scroll.right+' '+rect.left+' '+rect.right);
+	if (rect.top+0.5*(rect.bottom-rect.top)>rect_scroll.bottom || rect.left+0.5*(rect.right-rect.left)>rect_scroll.right || rect.bottom-0.5*(rect.bottom-rect.top)<rect_scroll.top || rect.right-0.5*(rect.right-rect.left)<rect_scroll.left )
+		{elem.scrollIntoView(true);} 
+	}
+
 function menu_blur(){
 	$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 	$('.buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
@@ -107,9 +123,6 @@ function reader_parse_text(text_origin){
 		else{
 			word = text_origin.substr(i_start, i-i_start); i_start = i; }
 		arr.push(word);
-		//echo ' WORD '.$i.' '.$word;
-		//if (word==' '){echo 'EMPTY!!!!!';}
-		//if (strpos(word,'\n')!=False){echo 'PARAGRAPH!!!';}
 		}
 	
 	var tag = 'em'; var tag_p = 'p';
@@ -143,8 +156,6 @@ function reader_parse_text(text_origin){
 			}
 		} 
 	}
-	//text_i = text.replace('*nl*',''); text = text_i;
-	//text_i = text.replace(/:nl:/g,''); text = text_i;
 	text = replace_all(text, ':nl:',''); 
 	//alert('parsed:'+text);
 	word_id = arr_w;

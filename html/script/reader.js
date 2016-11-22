@@ -96,7 +96,9 @@ function scrollbut_div(order){
 	var name = document.getElementById(id).getAttribute("title");
 	//if (id.charAt(1)=='i'){ tts('рисунок номер '+'1'); }
 	//if (id.charAt(1)=='t'){ show_zoom(id); utter(id); }
-	utter(id); highlite(); zoom_set_text();
+	utter(id);  highlite();  zoom_set_text();  
+	scroll_to(id,'text_from_file_box'); //alert('scroll');
+	scroll_to(id,'reader_zoom_box',title=1); //alert('scroll');
 	document.getElementById('word_i').value = document.getElementById(id).innerText; 
 	
 }	
@@ -106,9 +108,10 @@ function zoom_set_text(){
 		text = document.getElementById(localStorage.getItem('latest_w')).innerHTML;
 	}if (n_zoom_type==2){
 		text = document.getElementById(localStorage.getItem('latest_s')).innerHTML;
+		//text = replace_all(text, 'id=','title='); //alert('text: '+text);
 	}
 	elem=document.getElementById('reader_zoom');
-	if (elem){elem.innerHTML=text;}
+	if (elem){elem.innerHTML=text; /*alert('set: '+elem.innerHTML);*/}
 }
 function highlite(){
 	//alert(id_prev);

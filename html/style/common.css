@@ -1,17 +1,11 @@
 body {
-  --color_bkg0: #e0e2e4;  
-  
+  --color_bkg0: #e0e2e4;    
   --color_bkg1: #96897f;
-  
   --color_bkg2: #d5f4e6;
-  
-  --color_button1: #b1d775; 
-  
+  --color-buttons-normal: #7b949d; 
+  --color-buttons-normal: #8aa0a8; 
+  /*--color-buttons-normal: #85a3ad;*/ 
   --color_button_set: #8fcfef; 
-  --color-cursor: rgba(0,0,0,0.6);
-  --color-cursor: #b1d775;
-  --color-cursor: rgba(0,102,0,0.4);
-  --color-cursor: rgba(51,102,0,0.4);
   --color-cursor: #59aa09;
   
   --screen-height: 800px; --screen-width: 1200px;
@@ -20,13 +14,18 @@ body {
   --button-width-pc: 15;   --button-width:   calc(var(--button-width-pc)* 1%); 
   --button-bordewidth-pc: 0.8; --button-radius: 1%;
   
-  --reader-buttons-ny: 5; --reader-buttons-yspace:3; --reader-buttons-top:2; --reader-buttons-bottom:97.5; --reader-buttons-width-pc:14;
-  --reader-textwidth: calc(100% - var(--reader-buttons-width-pc)*1.35*1%); --reader-textheight: 95%;
-  --reader-textleft:2%; --reader-texttop:2%;
+  --reader-texttop-pc:2; --reader-textbottom-pc:97; --reader-textright-pc:82.5;
+  --reader-textleft:1.5%;                              --reader-textright:calc(1%*var(--reader-textright-pc)); 
+  --reader-texttop:calc(1%*var(--reader-texttop-pc));  --reader-textbottom:calc(1%*var(--reader-textbottom-pc));
+  --reader-textheight: calc(var(--reader-textbottom) - var(--reader-texttop));
+  --reader-textwidth:  calc(var(--reader-textright) - var(--reader-textleft));
   
-  --reader-zoomheight:20%; --reader-zoomtop:calc(100% - var(--reader-zoomheight)*1.15); --reader-textheight-zoom: calc(100% - var(--reader-zoomheight)*1.4);
+  --reader-buttons-ny: 5; --reader-buttons-yspace:3; --reader-buttons-xspace:2;
+  --reader-buttons-width: calc((100 - var(--reader-textwidth-pc) - 2*var(--reader-buttons-xspace))*1%);
+  
+  --reader-zoomheight:20%; --reader-zoomtop:calc(100% - var(--reader-zoomheight)*1.15); --reader-textheight-zoom: calc(100% - var(--reader-zoomheight)*1.38);
 
-  --editor-fontsize-pc:1; --editor-borderwidth-pc:1;
+  --editor-fontsize-pc:1; --editor-borderwidth-pc:1; --editor-wordbreak: normal;
 }
 .body_bkg{
   position: fixed; left:0;top:0; width:100%;height:100%;
@@ -43,17 +42,16 @@ background-color: #b1d775;
 
 /*-- buttons -------------------------------------------------------------*/
 .buttons_area{}
-
 .buttons{
   position:fixed; box-sizing:border-box;
   width: var(--button-width); height: calc(var(--screen-height)*var(--button-height-pc)/100); 
   text-align: center; vertical-align:top; /*line-height: calc(var(--screen-height)*var(--button-height-pc)/100);  */  line-height:103%;
   font-size:calc(var(--screen-height)*var(--button-fontsize-pc)/100); 
-  font-weight:600; word-break: break-all; 
+  font-weight:600; word-break: normal; 
   color: rgba(0,0,0,0.45);
-  background-color: #7b949d;  
+  background-color: var(--color-buttons-normal);  
   /* background-color: #98acb3; */
-  border: solid  calc(var(--button-bordewidth-pc)*var(--screen-height)/100 ) #7b949d;  border-radius:  var(--button-radius); 
+  border: solid  calc(var(--button-bordewidth-pc)*var(--screen-height)/100 ) var(--color-buttons-normal);  border-radius:  var(--button-radius); 
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 15px 30px 0 rgba(0,0,0,0.17);
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);  
 }
@@ -84,13 +82,11 @@ background-color: var(--color); border: solid calc(0.2*0.8*var(--button-fontsize
 .files-txt-hover{ --color:#f2e6d9;--color:#cfe2e2;--color:#70a9a9; background-color:var(--color); border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color); }
 
 .buttons_editor{
-position: fixed; width: 2%; height: 2%; 
+position: fixed; box-sizing:border-box; width: 2%; height: 2%; 
 text-align: center; vertical-align:top; line-height:100%;
 font-size: calc(var(--editor-fontsize-pc)*var(--screen-height)/100); 
-  /*font-size: 30px;*/
-  font-weight:600;
+  font-weight:600; word-break: var(--editor-wordbreak);
   border-radius:  var(--button-radius);
-  border-color: var(--color_bkg2);
   color: rgba(0,0,0,0.45);
   background-color: #7b949d;  
   background-color: #98acb3;  
@@ -106,33 +102,25 @@ box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
 position:fixed; text-align:center; 
-left:var(--reader-textleft); top:var(--reader-texttop); width:var(--reader-textwidth); height: var(--reader-textheight); 
+left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); 
 font-size:25px; line-height: 135%; color:rgba(0,0,0,0.8);
 background-color: white; 
 border: dashed 2px #8a8a5c;
-/* box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.15), 1px 3px 5px 1px rgba(0,0,0,0.15); */
 }
 .text_scroll_shadow{
 position:absolute; width:100%; height:5%; z-index:100;
 background: linear-gradient(white, rgba(255,255,255,0));
-}
-.text_scroll{
+}.text_scroll{
 position:relative; left:0%;top:0%; width:99.5%;height:100%;
 overflow-y: scroll; /*direction:rtl; */
-}
-.text_scroll::-webkit-scrollbar {
+}.text_scroll::-webkit-scrollbar {
     color:black; /*direction: rtl; */
-}
-.text_scroll::-webkit-scrollbar-track {
+}.text_scroll::-webkit-scrollbar-track {
 	position:absolute; left:0%;
 	background-color: white;
-}
-.text_scroll::-webkit-scrollbar-thumb {
-    /*border-radius: 10px; */ 
+}.text_scroll::-webkit-scrollbar-thumb {
     background-color: #c8ccd0;
-    /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
-}
-.reader_text{
+}.reader_text{
 position:relative; left:2.5%;top:2%; width:93.5%;height:90%; 
 background-color: rgba(255,255,255,0.9);
 }
@@ -148,8 +136,7 @@ background: linear-gradient(to right, white, rgba(255,255,255,0));
 }.text_zoom{
 font-size: 600%; position:relative; width:100%; height:97.5%;
 border-radius: var(--border-radius);
-font-style:normal; 
-color: rgba(0,0,0,0.6);
+font-style:normal;  color: rgba(0,0,0,0.6);
 overflow-x: scroll; overflow-y: hidden; white-space: nowrap;
 }.text_zoom::-webkit-scrollbar {
     position:relative; 
@@ -180,15 +167,15 @@ background-color:rgba(100,100,100,0.6);
   font-size: 30px;
   color: #2E3D48; */
   font-size:104%;  opacity:0.5;
-  position:absolute; left: calc(-0.022*var(--screen-width)); 
-  -webkit-animation: 1s blink step-end infinite;
-  -moz-animation: 1s blink step-end infinite;
-  -ms-animation: 1s blink step-end infinite;
-  -o-animation: 1s blink step-end infinite;
-  animation: 1s blink step-end infinite;
+  position:absolute; left: calc(-0.021*var(--screen-width)); 
+  -webkit-animation: 1.3s blink step-end infinite;
+  -moz-animation: 1.3s blink step-end infinite;
+  -ms-animation: 1.3s blink step-end infinite;
+  -o-animation: 1.3s blink step-end infinite;
+  animation: 1.3s blink step-end infinite;
 }
-@keyframes "blink"         { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
-@-moz-keyframes blink      { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
-@-webkit-keyframes "blink" { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
-@-ms-keyframes "blink"     { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
-@-o-keyframes "blink"      { from, to {color: transparent;} 50% {color: var(--color-cursor);} }
+@keyframes "blink"         { from, to {color: var(--color-cursor);} 50% {color: transparent;} }
+@-moz-keyframes blink      { from, to {color: var(--color-cursor);} 50% {color: transparent;} }
+@-webkit-keyframes "blink" { from, to {color: var(--color-cursor);} 50% {color: transparent;} }
+@-ms-keyframes "blink"     { from, to {color: var(--color-cursor);} 50% {color: transparent;} }
+@-o-keyframes "blink"      { from, to {color: var(--color-cursor);} 50% {color: transparent;} }
