@@ -21,7 +21,7 @@ var symbols_arr = letters_arr;
 var letters_arr = letters_arr_ru;
 
 var editor_type = 'texttop_twolines_v1';
-var editor_type = 'texttop_oneline_v1';
+//var editor_type = 'texttop_oneline_v1';
 //var editor_type = 'textleft_v1';
 var bodyStyles = window.getComputedStyle(document.body);
 screen_h = window.screen.height;     
@@ -88,12 +88,12 @@ function editor_show_start(){
 	//inner_e0 = '<div id="editor_back" class="buttons" onclick="alert(123);"  style="left:79%; top:2%;"> back </div>';
 	inner_e1 = "<div id='editor_buttons_area_1'>";
 	inner_e1+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+button_size_pos(1)[0]+'">menu</div>';
-	inner_e1+= '<div id="editor_utter"   class="buttons_editor" onclick="editor_utter_word();"     style="'+button_size_pos(7)[0]+'">utter</div>';
-	inner_e1+= '<div id="editor_select"  class="buttons_editor" onclick="editor_select_word();"    style="'+button_size_pos(6)[0]+'">by word</div>';
+	inner_e1+= '<div id="editor_utter"   class="buttons_editor disabled" onclick="editor_utter_word();"     style="'+button_size_pos(7)[0]+'">utter</div>';
+	inner_e1+= '<div id="editor_select"  class="buttons_editor disabled" onclick="editor_select_word();"    style="'+button_size_pos(6)[0]+'">by word</div>';
 	//inner_e1+= '<div id="editor_symbols" class="buttons_editor" onclick="editor_show_letters(2);"  style="'+button_size_pos(1)[0]+'">symbols</div>';
 	inner_e1+= '<div id="editor_numbers" class="buttons_editor" onclick="editor_show_letters(1);"  style="'+button_size_pos(2)[0]+'">numbers symbols</div>';
 	inner_e1+= '<div id="editor_letters" class="buttons_editor" onclick="editor_show_letters(0);"  style="'+button_size_pos(3)[0]+'">letters</div>';
-	inner_e1+= '<div id="editor_go"      class="buttons_editor" onclick="show_menu_go();"          style="'+button_size_pos(0)[0]+'">go</div>';
+	inner_e1+= '<div id="editor_go"      class="buttons_editor disabled" onclick="show_menu_go();"          style="'+button_size_pos(0)[0]+'">go</div>';
 	inner_e1+= '<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();"           style="'+button_size_pos(5)[0]+'"> exit </div>';
 	inner_e1+= "</div>"
 	inner_e2 = "<div id='editor_buttons_area_2'>";
@@ -111,17 +111,30 @@ function editor_show_start(){
 	document.getElementById('editor_backto_letters').style.visibility='hidden';
 	}
 function editor_show_menu(){
+	menu_blur();
 	var elem=create_element('div', 'editor_menu_area', '');
 	var inner_e = '<div id="editor_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="editor_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<div id="editor_appearance"  class="buttons" onclick="alert(123);"    style="left:15%; top:15%;"> appearance-common </div>';
-	inner_e+= '<div id="editor_appearance-common" class="buttons" onclick="show_menu_appearance_common();" style="left:35%; top:15%;"> appearance </div>';
-	inner_e+= '<div id="editor_sound"       class="buttons" onclick="alert(123);"    style="left:15%; top:50%;"> sound </div>';
-	inner_e+= '<div id="editor_read"        class="buttons" onclick="alert(123);"    style="left:60%; top:15%;"> read </div>';
+	inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
+	inner_e+= '<div id="editor_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:15%;"> appearance </div>';
+	inner_e+= '<div id="editor_sound"       class="buttons disabled" onclick=""    style="left:15%; top:50%;"> sound </div>';
+	inner_e+= '<div id="editor_read"        class="buttons disabled" onclick=""    style="left:60%; top:15%;"> read </div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}
-
+/*
+function editor_scroll_byword(order){
+	iter = parseInt(localStorage.getItem('editor_iter'));
+	text = localStorage.getItem('text_edit');
+	space = '<abbr>&#160 </abbr>';
+	lspace = text.substr(0,iter).lastIndexOf(space);
+	
+	proceed = 1;
+	while(proceed==1){
+		if text[iter]
+		}
+	}
+	*/ 
 function editor_scroll(order){
 	ltag = '<abbr>'; rtag = '</abbr>';
 	iter = parseInt(localStorage.getItem('editor_iter'));

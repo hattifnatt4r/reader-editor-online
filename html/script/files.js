@@ -13,20 +13,29 @@ if (files_session!='started'){
 	localStorage.setItem('if_rename_file', '0');
 	}
 //set_screen_pars();
+//alert('alert');
 var bodyStyles = window.getComputedStyle(document.body);
 screen_height = window.screen.height+'px';
 screen_width = window.screen.width+'px';
+//alert('alert1');
 document.body.style.setProperty('--screen-height', screen_height);
 document.body.style.setProperty('--screen-width', screen_width);
+//alert('alert2');
+textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
+document.getElementById("files_area_box").style.height = textheight_zoom;
+//alert('alert3');
 
 var files_iter = JSON.parse(localStorage.getItem('files_iter'));
 var files_iter_prev = JSON.parse(localStorage.getItem('files_iter_prev'));
 var nentry = document.getElementById('hidden_files_nentry').innerHTML;
 //scroll_files(0);
-files_show_buttons();
+//alert('alert4');
+files_show_buttons(); 
+//alert('alert5');
 
 localStorage.setItem('editor_back', '/index.html');
 var if_i=localStorage.getItem('if_create_file');
+//alert('alert6');
 if (if_i=='1'){
 	//alert('create');
 	document.getElementById('files_menu').click(); 
@@ -94,7 +103,9 @@ function scroll_files(order){
 
 //-- show buttons ---------------------------------------------------------------------------
 function files_show_buttons(){
+	//alert('alert b0');
 	var elem=create_element('div', 'files_buttons_area', 'buttons_area');
+	//alert('alert b1');
 	inner_e = '<div id="files_menu" class="buttons" onclick="files_show_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
 	inner_e+= '<div id="files_button_options" class="buttons" onclick="files_show_options();"  style="'+reader_button_position(1)+'">options</div>';
 	
@@ -105,7 +116,9 @@ function files_show_buttons(){
 	
 	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
 	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+reader_button_position(4)+'">'+symbol_next+'</div>' ;
+	//alert('alert');
 	elem.innerHTML=inner_e;
+	//alert('alert b2');
 	}
 function files_click(n){ 
 	var arr_names = ["files_enter_hidden", "files_delete_hidden", "files_edit_hidden", 'files_createdir_hidden', 'files_createtxt_hidden'];
@@ -159,9 +172,9 @@ function files_show_menu(){
 	var inner_e = '<div id="files_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	
 	inner_e+= '<div id="files_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<div id="files_appearance" class="buttons" onclick="alert(123);" style="left:15%; top:15%;">appearance</div>';
-	inner_e+= '<div id="files_appearance-common" class="buttons" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
-	inner_e+= '<div id="files_sound" class="buttons" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
+	inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:15%;">appearance</div>';
+	inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
+	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
 	
 	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:60%; top:50%;">new file</div>';
 	inner_e+= '</div>';
@@ -197,3 +210,46 @@ function files_create_edit(text){
 	window.location.href = '/editor.html';
 	}
 	
+//------------------------------------------------------------------------------------
+/*
+var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
+var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
+var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
+var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
+var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
+var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
+var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
+var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
+var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
+
+var bodyStyles = window.getComputedStyle(document.body);
+var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
+var btop = parseInt(bodyStyles.getPropertyValue('--reader-texttop-pc'));
+var bbot = parseInt(bodyStyles.getPropertyValue('--reader-textbottom-pc'));
+var yspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-yspace'));
+var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
+var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
+function reader_button_position(i){
+	dy = (bbot-btop-(yn-1)*yspace )/yn; 
+	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
+	//x = 100-lx*1.1;  
+	y = btop + i*(yspace+dy*1);
+	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
+	return(style); }
+
+function create_element(tag, id, cl='', st='', inner='', value='', name='', onclick='', t=''){
+	//alert('create');
+	var element = document.createElement(tag);
+	element.setAttribute('id', id);
+	element.setAttribute('class', cl);
+	element.setAttribute('style', st);
+	element.setAttribute('value', value);
+	element.setAttribute('name', name);
+	element.setAttribute('onclick', onclick);
+	element.setAttribute('type', t);
+	element.innerHTML=inner;
+	document.body.appendChild(element);
+	return (element);
+	}
+*/
+

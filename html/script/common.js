@@ -1,3 +1,4 @@
+
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
 var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
 var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
@@ -39,7 +40,7 @@ function set_screen_pars{
 function scroll_to(id, id_area, title=0){
 	if (title==0){ elem = document.getElementById(id);  }
 	else { elem= document.querySelectorAll('[id="'+id+'"]')[1]; //alert('title '+elem+' '+id+' '+area); 
-		}
+	}
 	rect_scroll = document.getElementById(id_area).getBoundingClientRect(); 
 	rect = elem.getBoundingClientRect();  //alert(elem+' '+rect_scroll.right+' '+rect.left+' '+rect.right);
 	if (rect.top+0.5*(rect.bottom-rect.top)>rect_scroll.bottom || rect.left+0.5*(rect.right-rect.left)>rect_scroll.right || rect.bottom-0.5*(rect.bottom-rect.top)<rect_scroll.top || rect.right-0.5*(rect.right-rect.left)<rect_scroll.left )
@@ -50,21 +51,36 @@ function menu_blur(){
 	$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 	$('.buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 	$('.reader_zoom_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	$('#editor_buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 }
 function editor_back(id){
 	//var elem = document.getElementById('reader_buttons_area');
 	//var elem = $('#reader_buttons_area');
-	if ( document.getElementById('reader_buttons_area') || document.getElementById('files_buttons_area') ){
+	//if ( document.getElementById('reader_buttons_area') || document.getElementById('files_buttons_area') ){
 		//alert('unblur');
 		$('.text_scroll_box').foggy(false); 
 		$('.buttons_area').foggy(false); 
 		$('.reader_zoom_box').foggy(false); 
-	}
+		$('#editor_buttons_area').foggy(false); 
+	//}
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
 }
+function utter(txt, lang='ru'){
+	//var txt = document.getElementById(id).innerText;
+	var msg = new SpeechSynthesisUtterance(txt);
+	//lang = localStorage.getItem('reader_lang');
+	ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
+	if (en){ msg.lang='en'; } else{msg.lang=lang;}
+	if (ru){ msg.lang='ru'; } 
+	msg.rate = 0.9; //msg.lang = 'ru';
+	window.speechSynthesis.pause()
+	window.speechSynthesis.cancel()
+	window.speechSynthesis.speak(msg);	
+	}	
 	
 function create_element(tag, id, cl='', st='', inner='', value='', name='', onclick='', t=''){
+	//alert('create');
 	var element = document.createElement(tag);
 	element.setAttribute('id', id);
 	element.setAttribute('class', cl);
@@ -161,7 +177,8 @@ function reader_parse_text(text_origin){
 	word_id = arr_w;
 	sentence_id = arr_s;
 	paragraph_id = arr_p;
-	return (text);
+	//return (text);
+	return ([text, word_id, sentence_id, paragraph_id]);
 }
 
 
