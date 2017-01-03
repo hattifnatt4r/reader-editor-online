@@ -17,6 +17,7 @@ var yspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-yspace'));
 var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
 var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
 function reader_button_position(i){
+	yn=5; btop=2; bbot=98; yspace=2; xspace=2; textright=82;
 	dy = (bbot-btop-(yn-1)*yspace )/yn; 
 	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
 	//x = 100-lx*1.1;  

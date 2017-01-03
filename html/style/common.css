@@ -79,7 +79,7 @@ background-color: #afdf9f;
 /*background-color: rgba(0,102,0,0.5); */
 box-shadow: 0 5px 8px 0 rgba(0,0,0,0.03), 0 5px 15px 0 rgba(0,0,0,0.15);  
 }
-.files-dir{ --color:#b1d775;--color:#afce7e;--color:#a6ce7e; /*--color:#cece7e; --color:#bace7e;*/ background-color: var(--color); border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color);}
+.files-dir{ --color:#b1d775;--color:#afce7e;--color:#a6ce7e;  background-color: var(--color); border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color);}
 .files-dir:hover{ --color:#d9ecc6;--color:#cfe2cf;--color:#80ac39; background-color:var(--color); border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color);}
 .files-dir-hover{ --color:#d9ecc6;--color:#cfe2cf;--color:#80ac39; background-color:var(--color); border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color);}
 .files-txt{ --color:#d1b561; --color:#b3d8e6; --color:#b8d6e0; --color:#bdd4db; --color:#a6d9d9; --color:#acd2d2;

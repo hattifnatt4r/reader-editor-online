@@ -1,5 +1,5 @@
 <?php
-echo '<script language=JavaScript type="text/javascript" src="script/files.js"></script>';
+//echo '<script language=JavaScript type="text/javascript" src="script/files.js"></script>';
 session_start();
 if ($_SESSION["session"]!=10){
 	$_SESSION['usr_dir'] = "books_test";
@@ -56,6 +56,8 @@ function show_file($entry, $i){
 		" ;		
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
 	if (is_dir($filename)){$class='files files-dir';$title='dir';} else { $class='files files-txt';$title='txt'; }
+	//$class='files files-dir';$title='dir';
+	//$class='files';$title='txt';
 	//if ($entry=='readme.txt'){ $class = 'files attention'; }
 	$file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="scroll_files('.$i.');"  style="'.$style.'" title="'.$title.'">'.$entry.'</div>' ;
 	return($file_i);

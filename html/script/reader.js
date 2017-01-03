@@ -1,5 +1,23 @@
-$.getScript("/script/common.js");
+var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
+var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
+var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
+var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
+var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
+var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
+var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
+var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
+var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
 
+function reader_button_position(i){
+	yn=5; btop=2; bbot=98; yspace=3; xspace=2; textright=82;
+	dy = (bbot-btop-(yn-1)*yspace )/yn; 
+	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
+	//x = 100-lx*1.1;  
+	y = btop + i*(yspace+dy*1);
+	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
+	return(style); }
+
+//$.getScript("/script/common.js");
 var session = localStorage.getItem('reader_session');
 if (session!='started'){
 	session = 'started';
@@ -205,7 +223,9 @@ function reader_zoom_type(order=0){
 //-- buttons -------------------------------------------------------------------------
 
 function reader_show_buttons(){
-	var elem=create_element('div', 'reader_buttons_area', 'buttons_area');
+	//var elem=create_element('div', 'reader_buttons_area', 'buttons_area');
+	var elem = document.getElementById('reader_buttons_area');
+	alert('buttons');
 	inner_e = '<div id="reader_menu" class="buttons" onclick="show_reader_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
 	inner_e+= '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="'+reader_button_position(1)+'">zoom</div>' ;
 	inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);"  style="'+reader_button_position(2)+'">word</div>' ;
