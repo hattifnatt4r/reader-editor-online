@@ -1,24 +1,4 @@
-var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
-var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
-var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
-var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
-var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
-var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
-var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
-var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
-var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
 
-function reader_button_position(i){
-	yn=5; btop=2; bbot=98; yspace=3; xspace=2; textright=82;
-	dy = (bbot-btop-(yn-1)*yspace )/yn; 
-	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
-	//x = 100-lx*1.1;  
-	y = btop + i*(yspace+dy*1);
-	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
-	return(style); }
-
-
-//$.getScript("/script/common.js");
 var files_session = localStorage.getItem('files_session');
 if (files_session!='started'){
 	files_session = 'started';
@@ -108,7 +88,7 @@ function scroll_files(order){
 	document.getElementById('file_n').value = files_iter; 
 	files_fill_zoom();
 	
-	var fileid = 'fileid_'+files_iter.toString();  scroll_to(fileid, 'files_area_box');
+	var fileid = 'fileid_'+files_iter.toString();  scroll_to(fileid, 'files_area_box', title=0);
 	
 	title=elem.getAttribute('title');
 	if (title=='dir'){fclass='files-dir-hover';} else{fclass='files-txt-hover';}  elem.className = 'files '+fclass; 
@@ -157,7 +137,7 @@ function files_show_options(){
 	//alert(fname);
 	//fname = '332211';
 	localStorage.setItem('text_edit', fname);
-	var elem=create_element('div', 'files_options_area', '');
+	var elem=create_element('div', 'files_options_area', '','','','','','','');
 	var inner_e = '<div id="files_options_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="files_options_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
@@ -191,7 +171,7 @@ function files_options_edit(){
 	}
 
 function files_show_menu(){
-	var elem=create_element('div', 'files_menu_area', '');
+	var elem=create_element('div', 'files_menu_area', '','','','','','','');
 	var inner_e = '<div id="files_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	
 	inner_e+= '<div id="files_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
@@ -205,7 +185,7 @@ function files_show_menu(){
 	menu_blur();
 	}
 function files_show_create(){
-	var elem=create_element('div', 'files_create_area', '');
+	var elem=create_element('div', 'files_create_area', '','','','','','','');
 	var inner_e = '<div id="files_create_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="files_create_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	

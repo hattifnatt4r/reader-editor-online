@@ -1,4 +1,4 @@
-$.getScript("/script/common.js");
+
 var editor_lang = 'en';
 var scroll_by = 'letter';
 var scroll_by = 'word';
@@ -34,7 +34,7 @@ if (editor_type=='textleft_v1'){
 	var b_nx=2; var b_ny=4; var b_xspace=5; var b_yspace=6; 
 	var b_left=75; var b_right=107; var b_top=4; var b_bottom=97; var b_rightwidth=6;
 	e_style = 'width:'+(b_left-5)+'%; height:75%;';
-	var elem=create_element('div', 'editor_text_box','text_scroll_box', st=e_style); 
+	var elem=create_element('div', 'editor_text_box','text_scroll_box', e_style, '','','','',''); 
 	elem.innerHTML = "<div class='text_scroll' align='left' ><div id='editor_text_area' class='reader_text'>text</div></div>";
 }
 if (editor_type=='texttop_oneline_v1'){
@@ -44,7 +44,7 @@ if (editor_type=='texttop_oneline_v1'){
 	var b_nx=5; var b_ny=2; var b_xspace=5; var b_yspace=7; 
 	var b_left=3; var b_right=97; var b_top=38; var b_bottom=95;
 	e_style = 'top:2%; width:96%; height:'+(b_top-8)+'%; left:2%;';
-	var elem=create_element('div', 'editor_text_box','reader_zoom_box', st=e_style);
+	var elem=create_element('div', 'editor_text_box','reader_zoom_box', e_style,'','','','','');
 	elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="font-size:900%;">zoom word</div>'; 
 }
 if (editor_type=='texttop_twolines_v1'){
@@ -54,7 +54,7 @@ if (editor_type=='texttop_twolines_v1'){
 	var b_nx=5; var b_ny=2; var b_xspace=5; var b_yspace=7; 
 	var b_top=55; var b_bottom=110; b_left=2; b_right=98; var b_botheight=13;
 	e_style = 'top:2%; width:96%; height:'+(b_top-7)+'%; left:2%;';
-	var elem=create_element('div', 'editor_text_box','text_scroll_box', st=e_style); 
+	var elem=create_element('div', 'editor_text_box','text_scroll_box', e_style, '','','','',''); 
 	elem.innerHTML = "<div class='text_scroll' align='left' ><div id='editor_text_area' class='reader_text' style='font-style:bold;font-size:650%;line-height:111%;color:rgba(0,0,0,0.6);'>text</div></div>"; 
 }
 
@@ -75,7 +75,7 @@ function editor_set_cursor(){
 	text = localStorage.getItem('text_edit');
 	text_c = text.substr(0, iter)+cursor+text.substr(iter);
 	document.getElementById('editor_text_area').innerHTML=text_c;
-	scroll_to('cursor','editor_text_box');
+	scroll_to('cursor','editor_text_box', title=0);
 	//alert(text_c);
 	}
 function set_button_appearance(id){ alert(id); }
@@ -84,7 +84,7 @@ function editor_show_start(){
 	//app_button_html = '<div id="app_button" class="button_app" onclick="set_button_appearance(this.id);" > * </div>';
 	app = app_button_html; app='';
 	elem = document.getElementById('editor_buttons_area');
-	if (elem==null){ var elem = create_element('div', 'editor_buttons_area'); }
+	if (elem==null){ var elem = create_element('div', 'editor_buttons_area', '','','','','','',''); }
 	//inner_e0 = '<div id="editor_back" class="buttons" onclick="alert(123);"  style="left:79%; top:2%;"> back </div>';
 	inner_e1 = "<div id='editor_buttons_area_1'>";
 	inner_e1+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+button_size_pos(1)[0]+'">menu</div>';
@@ -112,7 +112,7 @@ function editor_show_start(){
 	}
 function editor_show_menu(){
 	menu_blur();
-	var elem=create_element('div', 'editor_menu_area', '');
+	var elem=create_element('div', 'editor_menu_area', '','','','','','','');
 	var inner_e = '<div id="editor_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="editor_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
 	inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
@@ -212,7 +212,7 @@ function editor_show_letters(type){
 	if (type==0) { arr=letters_arr; }  else if (type==1) { arr=numbers_arr; } else if (type==2) { arr=symbols_arr; }
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_3');
-	if (elem==null){ var elem = create_element('div', 'editor_buttons_area_3', '', 'background-color: green;'); }
+	if (elem==null){ var elem = create_element('div', 'editor_buttons_area_3', '', 'background-color: green;', '','','','',''); }
 	else{ document.getElementById('editor_buttons_area_3').style.visibility='visible'; }
 	inner_e = ''; i=0;
 	for (ii=0; ii<b_n; ii++){
@@ -232,7 +232,7 @@ function editor_show_letters(type){
 	document.getElementById('editor_backto_start').style.visibility='hidden';
 	document.getElementById('editor_backto_letters').style.visibility='visible';
 	elem = document.getElementById('editor_buttons_area_4');
-	if (elem==null){ var elem = create_element('div', 'editor_buttons_area_4', '', 'background-color: green;'); }
+	if (elem==null){ var elem = create_element('div', 'editor_buttons_area_4', '', 'background-color: green;', '','','','',''); }
 	else{ document.getElementById('editor_buttons_area_4').style.visibility='visible'; }
 	inner_e = ''; ii=0;
 	for (i=0; i<b_n; i++){

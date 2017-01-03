@@ -3,16 +3,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <html LANG=ru> 
 <title> reader </title>
-
 <link rel="stylesheet"  href="style/common_2.css" />
-<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
 <script language=JavaScript type="text/javascript" src="script/plugins/jquery-3.1.1.min.js"></script>
 <script language=JavaScript type="text/javascript" src="script/plugins/jquery.foggy.min.js"></script>
 </head>
 
 <body class='body_bkg'>
 <?php require('script/reader.php'); ?>	
+<div id='reader_buttons_area' class='buttons_area'></div>
+
 <div hidden id='hidden_text_parsed' style='position:fixed; top:0%; left:0%'>0</div>
+<div hidden id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
+<div hidden id='temp' style='position:fixed; top:50%; left:83%'>0</div>
 
 <div hidden style="left: 60%; top: 15%; position:fixed;"> 
 <form action="" method="post"> <input type="text" id="save_text_text_js" name="text_origin_js" value="Mouse" style="width:0%;height:0%;">
@@ -20,11 +22,8 @@
 
 <div hidden id='temp' style='position:fixed; top:50%; left:83%'>0</div>
 
-<div id='reader_buttons_area' class='buttons_area'></div>
-<script language=JavaScript type="text/javascript" src="script/common.js"></script>
+<script language=JavaScript type="text/javascript" src="script/common.js"></script> 
 <script language=JavaScript type="text/javascript" src="script/reader.js"></script>
 
-
-<div hidden id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
 </body>
 </html>

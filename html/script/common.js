@@ -1,4 +1,4 @@
-
+//alert('common');
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
 var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
 var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
@@ -16,11 +16,11 @@ var bbot = parseInt(bodyStyles.getPropertyValue('--reader-textbottom-pc'));
 var yspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-yspace'));
 var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
 var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
+
 function reader_button_position(i){
-	yn=5; btop=2; bbot=98; yspace=2; xspace=2; textright=82;
+	yn=5; btop=2; bbot=98; yspace=3; xspace=2; textright=82;
 	dy = (bbot-btop-(yn-1)*yspace )/yn; 
 	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
-	//x = 100-lx*1.1;  
 	y = btop + i*(yspace+dy*1);
 	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
 	return(style); }
@@ -38,7 +38,7 @@ function set_screen_pars{
 	}
 */
 
-function scroll_to(id, id_area, title=0){
+function scroll_to(id, id_area, title){
 	if (title==0){ elem = document.getElementById(id);  }
 	else { elem= document.querySelectorAll('[id="'+id+'"]')[1]; //alert('title '+elem+' '+id+' '+area); 
 	}
@@ -67,20 +67,20 @@ function editor_back(id){
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
 }
-function utter(txt, lang='ru'){
+function utter(txt, lang){
 	//var txt = document.getElementById(id).innerText;
 	var msg = new SpeechSynthesisUtterance(txt);
 	//lang = localStorage.getItem('reader_lang');
 	ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
-	if (en){ msg.lang='en'; } else{msg.lang=lang;}
-	if (ru){ msg.lang='ru'; } 
+	if (lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
+	else{msg.lang=lang;}
 	msg.rate = 0.9; //msg.lang = 'ru';
 	window.speechSynthesis.pause()
 	window.speechSynthesis.cancel()
 	window.speechSynthesis.speak(msg);	
 	}	
 	
-function create_element(tag, id, cl='', st='', inner='', value='', name='', onclick='', t=''){
+function create_element(tag, id, cl, st, inner, value, name, onclick, t){
 	//alert('create');
 	var element = document.createElement(tag);
 	element.setAttribute('id', id);

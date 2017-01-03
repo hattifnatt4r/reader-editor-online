@@ -1,23 +1,5 @@
-var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
-var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
-var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
-var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
-var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
-var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
-var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
-var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
-var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
+//alert('reader');
 
-function reader_button_position(i){
-	yn=5; btop=2; bbot=98; yspace=3; xspace=2; textright=82;
-	dy = (bbot-btop-(yn-1)*yspace )/yn; 
-	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
-	//x = 100-lx*1.1;  
-	y = btop + i*(yspace+dy*1);
-	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
-	return(style); }
-
-//$.getScript("/script/common.js");
 var session = localStorage.getItem('reader_session');
 if (session!='started'){
 	session = 'started';
@@ -42,12 +24,13 @@ if (session!='started'){
 	localStorage.setItem('reader_lang', 'ru');
 	}
 
+//alert('reader');
 var bodyStyles = window.getComputedStyle(document.body);
 //set_screen_pars();
-	screen_height = window.screen.height+'px';
-	screen_width = window.screen.width+'px';
-	document.body.style.setProperty('--screen-height', screen_height);
-	document.body.style.setProperty('--screen-width', screen_width);
+screen_height = window.screen.height+'px';
+screen_width = window.screen.width+'px';
+document.body.style.setProperty('--screen-height', screen_height);
+document.body.style.setProperty('--screen-width', screen_width);
 
 reader_show_buttons();
 var ischanged = localStorage.getItem('ischanged_text');
@@ -88,7 +71,7 @@ if (ischanged=='0'){
 reader_select_type(order=0);
 reader_zoom_type(order=0);
 //alert(document.getElementById('text_from_file').innerHTML);
- 
+
 function scrollbut_div(order){
 	iter = JSON.parse(localStorage.getItem('reader_iter'));
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
@@ -127,21 +110,21 @@ function scrollbut_div(order){
 	//if (id.charAt(1)=='t'){ show_zoom(id); utter(id); }
 	lang = localStorage.getItem('reader_lang');
 	utter(document.getElementById(id).innerText, lang);  highlite();  zoom_set_text();  
-	scroll_to(id,'text_from_file_box'); //alert('scroll');
+	scroll_to(id,'text_from_file_box', title=0); //alert('scroll');
 	scroll_to(id,'reader_zoom_box',title=1); //alert('scroll');
 	document.getElementById('word_i').value = document.getElementById(id).innerText; 
 	
 }	
+
 function zoom_set_text(){
 	n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
 	if (n_zoom_type==1){
 		text = document.getElementById(localStorage.getItem('latest_w')).innerHTML;
 	}if (n_zoom_type==2){
 		text = document.getElementById(localStorage.getItem('latest_s')).innerHTML;
-		//text = replace_all(text, 'id=','title='); //alert('text: '+text);
 	}
 	elem=document.getElementById('reader_zoom');
-	if (elem){elem.innerHTML=text; /*alert('set: '+elem.innerHTML);*/}
+	if (elem){elem.innerHTML=text; }
 }
 function highlite(){
 	//alert(id_prev);
@@ -181,7 +164,7 @@ function get_id(){
 	return(latest_id);
 }
 
-function reader_select_type(order=0){
+function reader_select_type(order){ 
 	n_select_type = JSON.parse(localStorage.getItem('reader_selecttype'));
 	var types = ['select word','select sentence','select paragr'];
 	if (order==1){
@@ -191,10 +174,11 @@ function reader_select_type(order=0){
 		localStorage.setItem('reader_iter', id_arr.indexOf(latest_id).toString() );
 	}
 	highlite(); zoom_set_text();
-	id=get_id(); localStorage.setItem('reader_id_curr', id); //alert('id: '+id);
+	id=get_id(); localStorage.setItem('reader_id_curr', id);
 	document.getElementById('reader_selecttype').innerHTML=types[n_select_type];
-}
-function reader_zoom_type(order=0){
+	}
+
+function reader_zoom_type(order){
 	n_zoom_type = JSON.parse(localStorage.getItem('reader_zoomtype'));
 	var types = ['no zoom', 'zoom word','zoom sentence'];
 	if (order==1){
@@ -209,7 +193,7 @@ function reader_zoom_type(order=0){
 	}else{
 		var elem = document.getElementById("reader_zoom_box");
 		if (elem!=null){ elem.parentNode.removeChild(elem); }
-		var elem=create_element('div', 'reader_zoom_box','reader_zoom_box');
+		var elem=create_element('div', 'reader_zoom_box','reader_zoom_box', '','','','','','');
 		inner_i = '<div id="reader_zoom" class="text_zoom">zoom word</div>';
 		elem.innerHTML = inner_i;
 		document.getElementById('text_from_file_box').style.height = textheight_zoom; //alert(textheight_zoom);
@@ -225,7 +209,7 @@ function reader_zoom_type(order=0){
 function reader_show_buttons(){
 	//var elem=create_element('div', 'reader_buttons_area', 'buttons_area');
 	var elem = document.getElementById('reader_buttons_area');
-	alert('buttons');
+	//alert('buttons');
 	inner_e = '<div id="reader_menu" class="buttons" onclick="show_reader_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
 	inner_e+= '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="'+reader_button_position(1)+'">zoom</div>' ;
 	inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);"  style="'+reader_button_position(2)+'">word</div>' ;
@@ -238,7 +222,7 @@ function show_reader_menu(){
 	if (iter==-1){ edit_function = ''; edit_class='buttons disabled'; }
 	else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
 	
-	var elem=create_element('div', 'reader_menu_area', '');
+	var elem=create_element('div', 'reader_menu_area', '','','','','','','');
 	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="reader_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	inner_e+= '<div id="reader_menu_appearance"        class="buttons disabled" onclick=""   style="left:15%; top:15%;">appearance</div>';
@@ -251,20 +235,8 @@ function show_reader_menu(){
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	menu_blur();
-}function show_menu_appearance_common(element_id='reader_menu_area'){
-	e = document.getElementById(element_id)
-	var inner_e = '<input id="reader_menu_appearance-common_reset" type="button" class="buttons" value="reset" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';
-	inner_e += '<input id="reader_menu_appearance-common_buttonsize" type="button" class="buttons" value="buttonsize" onclick="alert(123);" style="left:35%; top:15%; position:fixed; width:14%;">';
-	e.innerHTML = inner_e;
 }
-function show_menu_go(element_id='reader_menu_area'){
-	var elem=create_element('div', 'reader_go_area', '');
-	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
-	inner_e+= '<div id="reader_go_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<input id="reader_menu_go_file1" type="button" class="buttons" value="file1" onclick="goto_files();" style="left:35%; top:15%; position:fixed; width:14%;">';
-	inner_e+= '</div>';
-	elem.innerHTML = inner_e;
-	}
+
 function goto_files(){ window.location.href = '/index.html'; }
 	
 function reader_change_lang(){
@@ -287,3 +259,20 @@ function reader_editor(){
 	localStorage.setItem('editor_back', '/reader.html');
 	window.location.href = '/editor.html';
 }
+
+
+/*
+function show_menu_appearance_common(element_id='reader_menu_area'){
+	e = document.getElementById(element_id)
+	var inner_e = '<input id="reader_menu_appearance-common_reset" type="button" class="buttons" value="reset" onclick="alert(123);" style="left:15%; top:15%; position:fixed; width:14%;">';
+	inner_e += '<input id="reader_menu_appearance-common_buttonsize" type="button" class="buttons" value="buttonsize" onclick="alert(123);" style="left:35%; top:15%; position:fixed; width:14%;">';
+	e.innerHTML = inner_e;
+}
+function show_menu_go(element_id='reader_menu_area'){
+	var elem=create_element('div', 'reader_go_area', '','','','','','','');
+	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e+= '<div id="reader_go_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
+	inner_e+= '<input id="reader_menu_go_file1" type="button" class="buttons" value="file1" onclick="goto_files();" style="left:35%; top:15%; position:fixed; width:14%;">';
+	inner_e+= '</div>';
+	elem.innerHTML = inner_e;
+	}*/
