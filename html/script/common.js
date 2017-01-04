@@ -1,4 +1,6 @@
 //alert('common');
+var lang_arr = ['auto', 'ru', 'en'];
+
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
 var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
 var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
@@ -67,16 +69,30 @@ function editor_back(id){
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
 }
-function utter(txt, lang){
-	//var txt = document.getElementById(id).innerText;
+function utter_paragraph(id, id_all, id_all_w, lang, stop){
+	for (i=0; i<id_all.length; i++){
+		if (id_all[i].indexOf(id+'s')!=-1) {
+			id_i = id_all[i]; stop_s=0;
+			if (id_i==id+'s0'){ stop_s=stop; }
+			utter_sentence(id_i, id_all_w, lang, stop_s);
+	}	}	}
+function utter_sentence(id, id_all, lang, stop){
+	utter(document.getElementById(id).innerText, lang, stop);
+	//for (i=0; i<id_all.length; i++){
+	//	if (id_all[i].indexOf(id+'w')!=-1) {
+	//		id_i = id_all[i]; stop_w=0;
+	//		if (id_i==id+'w0'){ stop_w=stop; }
+	//		utter(document.getElementById(id_i).innerText, lang, stop_w);
+	//}	}   
+	}
+function utter(txt, lang, stop){
+	//lang_arr = ['auto', 'ru', 'en'];
 	var msg = new SpeechSynthesisUtterance(txt);
-	//lang = localStorage.getItem('reader_lang');
 	ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
-	if (lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
-	else{msg.lang=lang;}
-	msg.rate = 0.9; //msg.lang = 'ru';
-	window.speechSynthesis.pause()
-	window.speechSynthesis.cancel()
+	if (lang==0){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
+	else { msg.lang=lang_arr[lang]; }
+	msg.rate = 0.9; 
+	if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
 	window.speechSynthesis.speak(msg);	
 	}	
 	

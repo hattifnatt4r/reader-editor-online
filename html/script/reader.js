@@ -21,7 +21,7 @@ if (session!='started'){
 	localStorage.setItem('editor_back', '/reader.html');
 	
 	localStorage.setItem('ischanged_text', '0');
-	localStorage.setItem('reader_lang', 'ru');
+	localStorage.setItem('reader_lang', '0');
 	}
 
 //alert('reader');
@@ -108,8 +108,13 @@ function scrollbut_div(order){
 	//var name = document.getElementById(id).getAttribute("title");
 	//if (id.charAt(1)=='i'){ tts('рисунок номер '+'1'); }
 	//if (id.charAt(1)=='t'){ show_zoom(id); utter(id); }
-	lang = localStorage.getItem('reader_lang');
-	utter(document.getElementById(id).innerText, lang);  highlite();  zoom_set_text();  
+	lang = parseInt( localStorage.getItem('reader_lang') );
+	//utter(document.getElementById(id).innerText, lang);  
+	//utter(document.getElementById(id).innerHTML, lang);  
+	if (n_select_type==2){ utter_paragraph(id, sentence_id, word_id, lang, stop=1); }
+	if (n_select_type==1){ utter_sentence(id, word_id, lang, stop=1); }
+	if (n_select_type==0){ utter(document.getElementById(id).innerText, lang, stop=1); }
+	highlite();  zoom_set_text();  
 	scroll_to(id,'text_from_file_box', title=0); //alert('scroll');
 	scroll_to(id,'reader_zoom_box',title=1); //alert('scroll');
 	document.getElementById('word_i').value = document.getElementById(id).innerText; 
@@ -221,6 +226,7 @@ function show_reader_menu(){
 	iter = JSON.parse(localStorage.getItem('reader_iter'));
 	if (iter==-1){ edit_function = ''; edit_class='buttons disabled'; }
 	else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
+	lang = lang_arr[ parseInt( localStorage.getItem('reader_lang') ) ];
 	
 	var elem=create_element('div', 'reader_menu_area', '','','','','','','');
 	var inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
@@ -228,7 +234,7 @@ function show_reader_menu(){
 	inner_e+= '<div id="reader_menu_appearance"        class="buttons disabled" onclick=""   style="left:15%; top:15%;">appearance</div>';
 	//inner_e+= '<div id="reader_menu_appearance-common" class="buttons disabled" onclick=""   style="left:35%; top:15%;">appearance-common</div>';
 	inner_e+= '<div id="reader_menu_sound"             class="buttons disabled" onclick=""   style="left:15%; top:50%;">sound</div>';
-	inner_e+= '<div id="reader_menu_lang"              class="buttons"          onclick="reader_change_lang()"   style="left:35%; top:50%;">lang ru</div>';
+	inner_e+= '<div id="reader_menu_lang"              class="buttons"          onclick="reader_change_lang()"   style="left:35%; top:50%;">lang '+lang+'</div>';
 	inner_e+= '<div id="reader_go"                     class="buttons disabled" onclick=""   style="left:70%;top:50%;">go</div>' ;
 	inner_e+= '<div id="reader_menu_go-files"  class="buttons" onclick="goto_files();"                style="left:50%; top:15%;">go home</div>';
 	inner_e+= '<div id="reader_edit"           class="'+edit_class+'" '+edit_function+'  style="left:70%;top:15%;">edit</div>' ;
@@ -240,10 +246,13 @@ function show_reader_menu(){
 function goto_files(){ window.location.href = '/index.html'; }
 	
 function reader_change_lang(){
-	lang = localStorage.getItem('reader_lang');
-	if (lang=='ru'){lang_new='en';} else{lang_new='ru';}
+	lang_arr = ['auto', 'ru', 'en'];
+	lang = parseInt( localStorage.getItem('reader_lang') );
+	//if (lang=='ru'){lang_new='en';} 
+	//else if (lang=='en') {lang_new='ru';}
+	lang_new = (lang+1)%3;
 	localStorage.setItem('reader_lang', lang_new);
-	document.getElementById('reader_menu_lang').innerHTML = 'lang '+lang_new;
+	document.getElementById('reader_menu_lang').innerHTML = 'lang '+lang_arr[lang_new];
 	//document.getElementById('reader_menu_back').click();
 	}
 function reader_editor(){
