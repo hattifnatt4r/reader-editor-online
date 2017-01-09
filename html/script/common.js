@@ -1,4 +1,8 @@
-//alert('common');
+//var config = {};
+//config.readonlydir = ['books_txt',''];
+var readonlydir = ['/books_txt/'];
+
+
 var lang_arr = ['auto', 'ru', 'en'];
 
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
@@ -234,3 +238,5 @@ function merge_options(obj1,obj2){
     for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
     return obj3;
 }
+
+

@@ -27,8 +27,9 @@ if (isset($_POST['save_text_js'])) {
 } 
 
 //-- text -------------------------------------------------------------------
-$dir = substr($_SESSION["usr_dir"], strpos($_SESSION["usr_dir"], "/")); if ($dir==$_SESSION["usr_dir"]){$dir='';}
-$fname = substr($_SESSION["filename_opened"], strpos($_SESSION["filename_opened"], "/")+1);
+$dir = substr($_SESSION["usr_dir"], strpos($_SESSION["usr_dir"], "/")); 
+if ($dir==$_SESSION["usr_dir"]){$dir='';} 
+$fname = substr($_SESSION["filename_opened"], strrpos($_SESSION["filename_opened"], "/")+1);
 $name = '<em id="file_title" style="font-style:normal;"><em style="color:#008000;opacity:0.6;">&#160&#160'.$dir.'/ </em>'.$fname.'</em>';
 echo "<div id='text_from_file_box' class='text_scroll_box' >".  
 "<div class='text_scroll' align='left' >".$name."<div id='text_from_file' class='reader_text'></div>

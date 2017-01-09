@@ -1,5 +1,5 @@
 //alert('reader');
-
+//alert(is_readable());
 var session = localStorage.getItem('reader_session');
 if (session!='started'){
 	session = 'started';
@@ -105,15 +105,12 @@ function scrollbut_div(order){
 			}
 	}
 	
-	//var name = document.getElementById(id).getAttribute("title");
-	//if (id.charAt(1)=='i'){ tts('рисунок номер '+'1'); }
-	//if (id.charAt(1)=='t'){ show_zoom(id); utter(id); }
 	lang = parseInt( localStorage.getItem('reader_lang') );
-	//utter(document.getElementById(id).innerText, lang);  
-	//utter(document.getElementById(id).innerHTML, lang);  
-	if (n_select_type==2){ utter_paragraph(id, sentence_id, word_id, lang, stop=1); }
-	if (n_select_type==1){ utter_sentence(id, word_id, lang, stop=1); }
-	if (n_select_type==0){ utter(document.getElementById(id).innerText, lang, stop=1); }
+	if (n_select_type==0 || iter==-1 ){ utter(document.getElementById(id).innerText, lang, stop=1); }
+	else {
+		if (n_select_type==2){ utter_paragraph(id, sentence_id, word_id, lang, stop=1); }
+		if (n_select_type==1){ utter_sentence(id, word_id, lang, stop=1); }
+	}
 	highlite();  zoom_set_text();  
 	scroll_to(id,'text_from_file_box', title=0); //alert('scroll');
 	scroll_to(id,'reader_zoom_box',title=1); //alert('scroll');
@@ -224,7 +221,7 @@ function reader_show_buttons(){
 	}
 function show_reader_menu(){
 	iter = JSON.parse(localStorage.getItem('reader_iter'));
-	if (iter==-1){ edit_function = ''; edit_class='buttons disabled'; }
+	if (iter==-1 || is_readable()==false){ edit_function = ''; edit_class='buttons disabled'; }
 	else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
 	lang = lang_arr[ parseInt( localStorage.getItem('reader_lang') ) ];
 	
@@ -242,7 +239,15 @@ function show_reader_menu(){
 	elem.innerHTML = inner_e;
 	menu_blur();
 }
-
+function is_readable(){ 
+	readable = true;
+	fname = document.getElementById('file_title').innerText; 
+	for (i=0; i<readonlydir.length; i++){ if (fname.indexOf(readonlydir[i])==fname.indexOf('/')){readable = false;} 
+		//alert(fname.indexOf(readonlydir[i])); alert(readonlydir[i]); alert(fname); 
+		}
+	//alert(readable);
+	return(readable);
+}
 function goto_files(){ window.location.href = '/index.html'; }
 	
 function reader_change_lang(){
