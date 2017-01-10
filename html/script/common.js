@@ -1,8 +1,11 @@
 //var config = {};
 //config.readonlydir = ['books_txt',''];
 var readonlydir = ['/books_txt/'];
+var pdfdir = ['/books_pdf/'];
 
-
+//-----------------------------------------------------------------------------
+var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
+var div_end = ':nl:'; var div_end = '<br>'; 
 var lang_arr = ['auto', 'ru', 'en'];
 
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
@@ -127,9 +130,9 @@ function replace_all(text, a,b){
 
 function merge_text(text){
 	//alert('start: '+text);
-	var tag = 'em'; var tag_p = 'p';
-	closing = '</'+tag+'></'+tag+'></'+tag_p+'>';
-	text = replace_all(text, closing, ':nl:');
+	//var tag = 'em'; var tag_p = 'p';
+	//closing = '</'+ctag+'></'+ctag+'></'+tag_p+'>';
+	text = replace_all(text, '<br>', ':nl:');
 	text = replace_all(text, '<abbr>', ':lbr:');
 	text = replace_all(text, '</abbr>', ':rbr:');
 	//alert('replaced: '+text);
@@ -143,63 +146,120 @@ function merge_text(text){
 			}
 		}
 	//alert('merged: '+text);
+	text = replace_all(text, ':nl:', '<br>');
 	text = replace_all(text, ':lbr:', '<abbr>');
 	text = replace_all(text, ':rbr:', '</abbr>');
 	return (text);
-	}
+}
 
-function reader_parse_text(text_origin){
-	var div_end = '\n'; var div_start = '';
+function reader_parse_pdf(text_origin){
+	tag = 'div';
+	ii=0; ii_start=-1; ii_end=-1; ii_end_prev = 0;
+	n=0; pr0 = true; text_new = '';
+	idw=[]; ids=[]; idp=[];
+	while (pr0){
+		//alert(' i_end '+ii_end);
+		ii = text_origin.indexOf('<'+tag, ii_end+1); 
+		//alert('ii '+ii+' i_end '+ii_end);
+		if (ii==-1){pr0=false; }
 		
-	var arr = []; var i_start=0;
-	var proceed = 1; var k=0; var i=0; var word='';
+		else{
+			//ii_start = text_origin.indexOf('>',ii+1) + 1;
+			//ii_end = text_origin.indexOf('</'+tag+'>',ii+1);
+			iii = find_closing(text_origin, tag, ii); //alert(ii_start+' '+ii_end+' '+iii);
+			ii_start = iii[0]; ii_end = iii[1];
+			word_i = text_origin.substr(ii_start, ii_end-ii_start);  //alert('word = '+word_i);
+			parser = reader_parse_txt(word_i, n); 
+			word_new = parser[0]; 
+			idw=idw.concat(parser[1]); ids=ids.concat(parser[2]); idp=idp.concat(parser[3]); 
+			//alert(ii_start+' '+ii_end+' id '+idw+' '+ids+' '+idp);
+			text_new += text_origin.substr(ii_end_prev, ii_start-ii_end_prev);
+			text_new += word_new;
+			//alert( 'text '+ii_end_prev+' '+ii_start+' '+text_origin.substr(ii_end_prev, ii_start-ii_end_prev) );
+			//alert('word = '+word_i); alert('parser = '+parser); //alert('textnew = '+text_new);
+			ii_end_prev = ii_end; 
+			n = parseInt(parser[3][parser[3].length-1].substr(1))+1; //alert('n '+n);
+		} 
+	}
+	text_new += text_origin.substr(ii_end_prev);
+	return([text_new, idw, ids, idp]);
+}
+function find_closing(text, tag, i0){
+	i=i0*1; i_start=i0; i_end=i0;
+	pr1 = true;
+	while (pr1){
+		//alert('i '+i);
+		i1 = text.indexOf('<'+tag,i+1); //alert('i1 '+i1);
+		i_start = text.indexOf('>',i+1) + 1;
+		i_end = text.indexOf('</'+tag+'>',i+1);
+		//i2 = text.indexOf('</'+tag+'>',i+1);
+		//alert('find '+i_start+' '+i_end);
+		//i = text_origin.indexOf('<div',i_end+1);
+		if (i1==-1 || (i1>i_end && i1!=-1)){ 
+			pr1=false; 
+			i_start = text.indexOf('>',i+1) + 1;
+			i_end = text.indexOf('</'+tag+'>',i+1);
+			}
+		else{ 
+			i = i1*1;
+		}
+	}
+	return([i_start, i_end]);
+}
+
+function reader_parse_txt(text_origin, n_p){
+	div_start = '';		
+	arr = []; i_start=0;
+	proceed = 1; k=0; i=0; word='';
 	while (proceed==1){
 		i = text_origin.indexOf(' ',i_start+1);
 		if (i==-1){
 			word = text_origin.substr(i_start); proceed=0; }
 		else{
-			word = text_origin.substr(i_start, i-i_start); i_start = i; }
+			i1 = text_origin.indexOf('<',i_start+1);
+			i2 = text_origin.indexOf('>',i_start+1);
+			i3 = text_origin.indexOf('<br>',i_start+1);
+			//word = text_origin.substr(i_start, i-i_start); i_start = i; 
+			if (i1==-1 || i1>i || (i1<=i&&i1==i3) ){ word = text_origin.substr(i_start, i-i_start); i_start = i; 
+			}else{ word = text_origin.substr(i_start, i2-i_start); i_start = i2; }
+		}
 		arr.push(word);
 		}
 	
-	var tag = 'em'; var tag_p = 'p';
-	var tag = 'em class="text"'; var tag_p = 'p';
-	var text = "<"+tag_p+" id='p0'><"+tag+" id='p0s0'><"+tag+" id='p0s0w0'>";
-	var i_w = 0; var i_s = 0; var i_p = 0;
-	var arr_w=['p0s0w0']; var arr_s=['p0s0']; var arr_p=['p0'];
+	//otag = 'em class="text"'; ctag='em';  tag_p = 'div';
+	p0=n_p.toString();
+	text = "<"+tag_p+" id='p"+p0+"'><"+otag+" id='p"+p0+"s0'><"+otag+" id='p"+p0+"s0w0'>";
+	i_w = 0; i_s = 0; i_p = n_p; 
+	arr_w=['p'+p0+'s0w0']; arr_s=['p'+p0+'s0']; arr_p=['p'+p0];
 	//alert(arr);
 	//alert(arr.length);
 	for (k=0; k<arr.length; k++){
 		word=arr[k];
-		if (k==arr.length-1){ text = text+word+'</'+tag+'></'+tag+'></'+tag_p+'>'+  '<'+tag_p+'><br></'+tag_p+'>'; }
+		if (k==arr.length-1){ text = text+word+'</'+ctag+'></'+ctag+'></'+tag_p+'>'; }
 		else{
-			//id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
-			if ( word.indexOf(':nl:')!=-1 ){ 
-			//if ( word.indexOf('\n')!=-1 ){ 
-				i_p+=1; i_s=0; i_w=0;
-				id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
-				text = text+word+'</'+tag+'></'+tag+'></'+tag_p+'><'+tag_p+' id="'+id_p+'"><'+tag+' id="'+id_p+id_s+'"><'+tag+' id="'+id_p+id_s+id_w+'">';
-				arr_p.push(id_p); arr_s.push(id_p+id_s); arr_w.push(id_p+id_s+id_w);
-			}else if ( word.indexOf('.')!=-1 ){ 
-				i_s+=1; i_w=0;
-				id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
-				text = text+word+'</'+tag+'></'+tag+'><'+tag+' id="'+id_p+id_s+'"><'+tag+' id="'+id_p+id_s+id_w+'">';
-				arr_s.push(id_p+id_s); arr_w.push(id_p+id_s+id_w);
-			}else{ 
-				i_w+=1;
-				id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
-				text = text+word+'</'+tag+'><'+tag+' id="'+id_p+id_s+id_w+'">';
-				arr_w.push(id_p+id_s+id_w);
+			if (word.indexOf('<')!=-1 && word.indexOf('<br>')==-1){ text = text+word;}
+			else{
+				if ( word.indexOf(div_end)!=-1 || word.indexOf('\n')!=-1 ){ 
+					i_p+=1; i_s=0; i_w=0;
+					id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
+					text = text+word+'</'+ctag+'></'+ctag+'></'+tag_p+'><'+tag_p+' id="'+id_p+'"><'+otag+' id="'+id_p+id_s+'"><'+otag+' id="'+id_p+id_s+id_w+'">';
+					arr_p.push(id_p); arr_s.push(id_p+id_s); arr_w.push(id_p+id_s+id_w);
+				}else if ( word.indexOf('.')!=-1 ){ 
+					i_s+=1; i_w=0;
+					id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
+					text = text+word+'</'+ctag+'></'+ctag+'><'+ctag+' id="'+id_p+id_s+'"><'+otag+' id="'+id_p+id_s+id_w+'">';
+					arr_s.push(id_p+id_s); arr_w.push(id_p+id_s+id_w);
+				}else{ 
+					i_w+=1;
+					id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
+					text = text+word+'</'+ctag+'><'+otag+' id="'+id_p+id_s+id_w+'">';
+					arr_w.push(id_p+id_s+id_w);
+				}
 			}
 		} 
 	}
 	text = replace_all(text, ':nl:',''); 
-	//alert('parsed:'+text);
-	word_id = arr_w;
-	sentence_id = arr_s;
-	paragraph_id = arr_p;
-	//return (text);
-	return ([text, word_id, sentence_id, paragraph_id]);
+	return ([text, arr_w, arr_s, arr_p]);
 }
 
 
@@ -238,5 +298,5 @@ function merge_options(obj1,obj2){
     for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
     return obj3;
 }
-
+function concatenate_arr(arr1, arr2){ for (i=0; i<arr2.length; i++){ arr1.push(arr2[i]); } return(arr1);}
 
