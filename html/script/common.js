@@ -1,6 +1,6 @@
 //var config = {};
 //config.readonlydir = ['books_txt',''];
-var readonlydir = ['/books_txt/'];
+var readonlydir = ['/books_txt/', '/books_pdf/'];
 var pdfdir = ['/books_pdf/'];
 
 //-----------------------------------------------------------------------------
@@ -300,3 +300,19 @@ function merge_options(obj1,obj2){
 }
 function concatenate_arr(arr1, arr2){ for (i=0; i<arr2.length; i++){ arr1.push(arr2[i]); } return(arr1);}
 
+
+function get_cookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
