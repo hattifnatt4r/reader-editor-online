@@ -110,10 +110,10 @@ body {
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1%; top:2%; width:81%; height: 74%; 
+  left:1%; top:2%; width:80%; height: 74%; 
   /*-------------*/
   position:fixed; text-align:center; box-sizing:border-box;
-  left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); 
+  /*left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); */
   font-size:25px; line-height: 135%; color:rgba(0,0,0,0.8);
   background-color: white; 
   border: dashed 2px #8a8a5c;
@@ -138,10 +138,10 @@ body {
 
 /*-- zoom ----------------------------------------------------------------*/
 .reader_zoom_box{
-  left:1%; top:78%; width:81%; height: 20%; 
+  left:1%; top:78%; width:80%; height: 20%; 
   /*---------------------*/
   position:fixed; 
-  left:var(--reader-textleft); top:var(--reader-zoomtop); width:calc(var(--reader-textwidth)); height: var(--reader-zoomheight); 
+  /*left:var(--reader-textleft); top:var(--reader-zoomtop); width:calc(var(--reader-textwidth)); height: var(--reader-zoomheight);  */
   background-color: white; 
   border: dashed 2px #8a8a5c;  box-sizing:border-box;
 }.zoom_scroll_shadow{

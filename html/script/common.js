@@ -1,7 +1,7 @@
 //var config = {};
 //config.readonlydir = ['books_txt',''];
-var readonlydir = ['/books_txt/', '/books_pdf/'];
-var pdfdir = ['/books_pdf/'];
+var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'];
+var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
 //-----------------------------------------------------------------------------
 var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
@@ -17,6 +17,10 @@ var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#100
 var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
 var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
 var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
+var symbol_readall =     '<strong style="font-size:100%;line-height:115%;">&#9776;</strong>';
+var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#8883;</strong>';
+var symbol_stop =        '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
+var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
 
 var bodyStyles = window.getComputedStyle(document.body);
 var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
@@ -27,6 +31,19 @@ var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
 var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
 
 function reader_button_position(i){
+	yn=5; btop=2; bbot=98; yspace=4; 
+	xn=2; bleft=83; bright=99.5; xspace=2; xspace_bot=1; dx_side=0.4;
+	dy = (bbot-btop-(yn-1)*yspace )/yn; 
+	y = btop + (i%yn)*(yspace+dy*1);
+	//dx=100-bleft-2*xspace;
+	dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
+	x = bleft + (i-i%yn)/yn*(dx+xspace); 
+	//if (i>2 && i<yn ){ dx=bright-bleft-xspace_bot; }
+	if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }	
+	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
+	return(style); }
+	
+function files_button_position(i){
 	yn=5; btop=2; bbot=98; yspace=3; xspace=2; textright=82;
 	dy = (bbot-btop-(yn-1)*yspace )/yn; 
 	x = textright+xspace+0.4;  dx=100-textright-2*xspace;

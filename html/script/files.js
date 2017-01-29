@@ -72,7 +72,6 @@ function files_fill_zoom(){
 	//dir = '<em style="font-style:normal;color:#9fa6ad;opacity:1;">'+dir+' / </em>';
 	//dir = '<em style="font-style:normal;color:#8a8a5c;opacity:0.9;">'+dir+' / </em>';
 	document.getElementById('files_zoom').innerHTML = dir+document.getElementById('fileid_'+files_iter.toString()).innerHTML; 
-	
 	}
 //alert('scroll_test');
 function scroll_files(order){
@@ -97,6 +96,11 @@ function scroll_files(order){
 		elem = document.getElementById(fileid); title=elem.getAttribute('title'); 
 		if (title=='dir'){fclass='files-dir';} else{fclass='files-txt';}  elem.className = 'files '+fclass; 
 		}
+	
+	if (files_iter==0){fname_ii='..';}
+	else{fname_ii = document.getElementById('fileid_'+files_iter.toString()).innerText; }
+	fname_ii = replace_all(fname_ii,'_',' ')
+	utter(fname_ii,1,1);
 	}
 
 //-- show buttons ---------------------------------------------------------------------------
@@ -107,17 +111,17 @@ function files_show_buttons(){
 	//alert('alert b1');
 	//pos = reader_button_position(0);
 	//alert(pos);
-	inner_e = '<div id="files_menu" class="buttons" onclick="files_show_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
+	inner_e = '<div id="files_menu" class="buttons" onclick="files_show_menu();"  style="'+files_button_position(0)+'">menu</div>' ;
 	
-	inner_e=inner_e+ '<div id="files_button_options" class="buttons" onclick="files_show_options();"  style="'+reader_button_position(1)+'">options</div>';
+	inner_e=inner_e+ '<div id="files_button_options" class="buttons" onclick="files_show_options();"  style="'+files_button_position(1)+'">options</div>';
 	
 	inner_e+= '<div id="files_button_enter" style="left:84%;top:53%;position:fixed;">'; 
 	inner_e+= '<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">';
 	inner_e+= '<input hidden type="submit" id="files_enter_hidden" value="enter" name="enter_obj" "></div>';
-	inner_e+= '<div id="files_enter" class="buttons" style="'+reader_button_position(2)+'" onclick="files_click(0);">'+symbol_enter+'</div></div>';
+	inner_e+= '<div id="files_enter" class="buttons" style="'+files_button_position(2)+'" onclick="files_click(0);">'+symbol_enter+'</div></div>';
 	
-	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
-	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+reader_button_position(4)+'">'+symbol_next+'</div>' ;
+	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+files_button_position(3)+'">'+symbol_prev+'</div>' ;
+	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+files_button_position(4)+'">'+symbol_next+'</div>' ;
 	
 	//alert('alert');
 	elem.innerHTML=inner_e;
