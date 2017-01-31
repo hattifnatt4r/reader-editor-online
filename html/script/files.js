@@ -100,7 +100,7 @@ function scroll_files(order){
 	if (files_iter==0){fname_ii='..';}
 	else{fname_ii = document.getElementById('fileid_'+files_iter.toString()).innerText; }
 	fname_ii = replace_all(fname_ii,'_',' ')
-	utter(fname_ii,1,1);
+	utter(fname_ii,1,1, onend=0);
 	}
 
 //-- show buttons ---------------------------------------------------------------------------

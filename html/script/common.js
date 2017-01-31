@@ -7,6 +7,7 @@ var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
 var div_end = ':nl:'; var div_end = '<br>'; 
 var lang_arr = ['auto', 'ru', 'en'];
+var reader_play_counter=1;
 
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
 var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
@@ -19,8 +20,9 @@ var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#1
 var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
 var symbol_readall =     '<strong style="font-size:100%;line-height:115%;">&#9776;</strong>';
 var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#8883;</strong>';
-var symbol_stop =        '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
+var symbol_pause =        '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
 var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
+var symbols_play_pause = [symbol_play, symbol_pause];
 
 var bodyStyles = window.getComputedStyle(document.body);
 var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
@@ -31,20 +33,19 @@ var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
 var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
 
 function reader_button_position(i){
-	yn=5; btop=2; bbot=98; yspace=4; 
-	xn=2; bleft=83; bright=99.5; xspace=2; xspace_bot=1; dx_side=0.4;
+	yn=5; btop=2; bbot=98; yspace=4.5; 
+	xn=2; bleft=81; bright=99.5; xspace=3; xspace_bot=1; dx_side=0.5;
+	yn=4; yspace=7; xspace=4;
 	dy = (bbot-btop-(yn-1)*yspace )/yn; 
 	y = btop + (i%yn)*(yspace+dy*1);
-	//dx=100-bleft-2*xspace;
 	dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
 	x = bleft + (i-i%yn)/yn*(dx+xspace); 
-	//if (i>2 && i<yn ){ dx=bright-bleft-xspace_bot; }
 	if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }	
 	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
 	return(style); }
 	
 function files_button_position(i){
-	yn=5; btop=2; bbot=98; yspace=3; xspace=2; textright=82;
+	yn=5; btop=2; bbot=98; yspace=6; xspace=4; textright=78;
 	dy = (bbot-btop-(yn-1)*yspace )/yn; 
 	x = textright+xspace+0.4;  dx=100-textright-2*xspace;
 	y = btop + i*(yspace+dy*1);
@@ -93,36 +94,51 @@ function editor_back(id){
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
 }
-function utter_paragraph(id, id_all, id_all_w, lang, stop){
-	for (i=0; i<id_all.length; i++){
-		if (id_all[i].indexOf(id+'s')!=-1) {
-			id_i = id_all[i]; stop_s=0;
-			if (id_i==id+'s0'){ stop_s=stop; }
-			utter_sentence(id_i, id_all_w, lang, stop_s);
-	}	}	}
-function utter_sentence(id, id_all, lang, stop){
-	utter(document.getElementById(id).innerText, lang, stop);
-	//for (i=0; i<id_all.length; i++){
-	//	if (id_all[i].indexOf(id+'w')!=-1) {
-	//		id_i = id_all[i]; stop_w=0;
-	//		if (id_i==id+'w0'){ stop_w=stop; }
-	//		utter(document.getElementById(id_i).innerText, lang, stop_w);
-	//}	}   
-	}
-function utter(txt, lang, stop){
-	//lang_arr = ['auto', 'ru', 'en'];
-	var msg = new SpeechSynthesisUtterance(txt);
+function utter_paragraph(id, id_all, id_all_w, lang, stop, onend){
+	for (iii=0; iii<id_all.length; iii++){
+		id_i = id_all[iii]; stop_s=0; onend_i=0;
+		if (iii==0){ stop_s=stop; }
+		if (iii==id_all.length-1){onend_i=onend;}
+		utter_sentence(id_i, id_all_w, lang, stop_s, onend_i);
+	}	
+}	
+function utter_sentence(id, id_all, lang, stop, onend){
+	txt=document.getElementById(id).innerText;
+	//alert(txt);
+	/*
+	proceed=true; ii=0;
+	while(proceed){
+		if (txt.length>200){
+			txt_i=txt.substring(0,200);
+			i=txt_i.lastIndexOf(' ');
+			part_i=txt_i.substring(0,i);
+			txt=txt.substring(i);
+			if (ii==0){ stop_s=stop; }else{stop_s=0;}
+			utter(part_i, lang, stop_s, 0);
+			ii++;
+		}else{proceed=false; //alert(txt); 
+			utter(txt, lang, 0, onend); }
+	}*/
+	utter(txt, lang, stop, onend);
+	//alert(id);
+}
+function utter(txt, lang, stop, onend){
+	msg = new SpeechSynthesisUtterance(txt);
 	ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
 	if (lang==0){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
 	else { msg.lang=lang_arr[lang]; }
 	msg.rate = 0.9; 
 	if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
 	window.speechSynthesis.speak(msg);	
+	reader_play_counter=1;
+	msg.onstart=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[1]};
+	if (onend==0){ msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; }
+	else{ msg.onend=function(event){scrollbut_div(1,0,1)}; }
 	}	
 	
 function create_element(tag, id, cl, st, inner, value, name, onclick, t){
 	//alert('create');
-	var element = document.createElement(tag);
+	element = document.createElement(tag);
 	element.setAttribute('id', id);
 	element.setAttribute('class', cl);
 	element.setAttribute('style', st);
