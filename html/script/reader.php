@@ -18,7 +18,7 @@ if (isset($_POST['save_text_js'])) {
 	//echo $text;
 	$fname = $_SESSION["filename_opened"];
 	$myfile = fopen($fname, "w") or die("Unable to open file!");
-	chmod($full_name, 0666);
+	chmod($fname, 0666);
 	fwrite($myfile, $text);
 	fclose($myfile);
 	echo 'saved '.$fname;

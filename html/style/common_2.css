@@ -107,6 +107,9 @@ body {
   border-color: #c4cfd4; 
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
+.buttons_menu{
+width:12%; height:17%;
+}
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
@@ -196,3 +199,52 @@ body {
 @-webkit-keyframes "blink" { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
 @-ms-keyframes "blink"     { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
 @-o-keyframes "blink"      { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
+
+
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 10%;
+    top: 30%;
+    width: 80%; 
+    height: 40%; 
+    background-color: #fefefe;
+}
+/* Modal Content/Box */
+.modal-content {
+	position:fixed;
+    top:35%; left:15%;
+    width:70%; height:30%;
+}
+/* The Close Button */
+.close {
+    /* Position it in the top right corner outside of the modal */
+    position: absolute;
+    right: 25px;
+    top: 0; 
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+/* Close button on hover */
+.close:hover,
+.close:focus {
+    color: red;
+    cursor: pointer;
+}
+/* Add Zoom Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)} 
+    to {-webkit-transform: scale(1)}
+}
+@keyframes animatezoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}

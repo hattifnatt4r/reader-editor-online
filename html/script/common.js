@@ -9,9 +9,16 @@ var div_end = ':nl:'; var div_end = '<br>';
 var lang_arr = ['auto', 'ru', 'en'];
 var reader_play_counter=1;
 
+var login_messages_en = ['The name does not exists.', 'Wrong password.', ''];
+var login_messages_ru = ['Указанное имя не существует.', 'Неправильный пароль.', ''];
+var newlogin_messages_en = ['The new user is added successfully.', 'The name is busy.', ''];
+var newlogin_messages_ru = ['Новый аккаунт успешно создан.', 'Невозможно создать новый аккаунт. Указанное имя занято.', ''];
+
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
+var symbol_prev =        '<strong style="font-size:250%;line-height:80%;">&#8249;</strong>';
 var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
 var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
+var symbol_next =        '<strong style="font-size:250%;line-height:80%">&#8250;</strong>';
 var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
 var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
 var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
@@ -22,6 +29,7 @@ var symbol_readall =     '<strong style="font-size:100%;line-height:115%;">&#977
 var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#8883;</strong>';
 var symbol_pause =        '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
 var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
+var symbol_login =        '<strong style="font-size:200%;line-height:100%;">login</strong>';
 var symbols_play_pause = [symbol_play, symbol_pause];
 
 var bodyStyles = window.getComputedStyle(document.body);
@@ -93,6 +101,7 @@ function editor_back(id){
 	//}
 	var elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
+	localStorage.setItem('fastlogin','0');
 }
 function utter_paragraph(id, id_all, id_all_w, lang, stop, onend){
 	for (iii=0; iii<id_all.length; iii++){
@@ -349,3 +358,15 @@ function get_cookie(cname) {
     }
     return "";
 }
+
+function loadDocXML(url1, login_function) {
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      login_function(this);
+    }
+  };
+  xhttp.open("GET", "data/login.xml", true);
+  xhttp.send();
+}
+
