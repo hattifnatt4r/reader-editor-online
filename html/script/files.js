@@ -70,12 +70,19 @@ function edit_text_back(){
 	}
 }
 
+//alert('dir: '+files_get_dir());
 files_fill_zoom();
+function files_get_dir(){
+	dir0 = document.getElementById('hidden_files_dir').innerHTML; 
+	i = dir0.indexOf('/');
+	if (i!=-1) { dir = dir0.substr(i); } else{dir = '';}
+	return(dir);
+}
 function files_fill_zoom(){
 	files_iter = JSON.parse(localStorage.getItem('files_iter'));
 	dir0 = document.getElementById('hidden_files_dir').innerHTML; 
 	i = dir0.indexOf('/');
-	if (i!=-1) { dir = dir0.substr(i); } else{dir = ''}
+	if (i!=-1) { dir = dir0.substr(i); } else{dir = '';}
 	dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+' / </em>';
 	document.getElementById('files_zoom').innerHTML = dir+document.getElementById('fileid_'+files_iter.toString()).innerHTML; 
 	}
@@ -116,7 +123,7 @@ function files_show_buttons(){
 	//alert('alert b1');
 	inner_e = '<div id="files_menu" class="buttons" onclick="files_show_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
 	
-	inner_e=inner_e+ '<div id="files_button_options" class="buttons" onclick="files_show_options();"  style="'+reader_button_position(1)+'">opt</div>';
+	inner_e+= '<div id="files_button_options" class="buttons" onclick="files_show_options();"  style="'+reader_button_position(1)+'">opt</div>';
 	
 	inner_e+= '<div id="files_button_enter" style="left:84%;top:53%;position:fixed;">'; 
 	inner_e+= '<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">';
@@ -126,10 +133,33 @@ function files_show_buttons(){
 	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
 	inner_e+= '<div id="next" class="buttons" onclick="scroll_files(next);"  style="'+reader_button_position(7)+'">'+symbol_next+'</div>' ;
 	//inner_e+= '<div id="login" class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+'log in'+'</div>' ;
-	inner_e+= '<div id="files_login" class="buttons" onclick="files_show_login()"  style="'+reader_button_position(4)+'">'+'log in'+'</div>' ;
+	inner_e+= '<div id="files_login" class="buttons" onclick="files_show_login();"  style="'+reader_button_position(4)+'">'+'log in'+'</div>' ;
+	inner_e+= '<div id="files_upload_button" class="buttons" onclick="files_show_upload();"  style="'+reader_button_position(5)+'">'+symbol_upload+'</div>' ;
 	
 	elem.innerHTML=inner_e;
+	dir = files_get_dir();
+	if ( dir=='/common' || dir.indexOf('/common/')==0 ){
+		document.getElementById('files_upload_button').onclick=''; 
+		document.getElementById('files_upload_button').className='buttons disabled';
 	}
+}
+function files_show_upload(){
+	menu_blur();
+	elem=create_element('div', 'files_upload_area', '','','','','','','');
+	inner_e = '<div id="files_upload_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e+= '<div id="files_upload_area_2"  style="left:7%;top:5%; position:fixed; width:86%;height:90%; background-color:rgba(255,255,255,0.9);">';
+	
+	inner_e+= '<div hidden id="files_upload"> ';
+	inner_e+= '<form action="" method="post" enctype="multipart/form-data">';
+	inner_e+= '<input type="file"   id="upload_file_id"   name="upload_file_name" >';
+	inner_e+= '<input type="submit" id="upload_submit_id" name="upload_submit_name" value="empty" ></div>';
+	
+	inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files_click(8);"   style="left:20%; top:40%;">choose file</div>';
+	inner_e+= '<div id="files_upload_submit" class="buttons" onclick="files_click(9);" style="left:70%;top:40%;">upload file</div>';
+	
+	inner_e+= '</div>';
+	elem.innerHTML = inner_e;
+}
 function files_show_login(){
 	menu_blur();
 	name='name'; pass='----';
@@ -170,19 +200,15 @@ function files_login(xml){
 	if (localStorage.getItem('fastlogin')=='1'){
 		document.getElementById('loginname_text_id').value=document.getElementById('files_login_zoomname').value;
 		document.getElementById('loginpass_text_id').value=document.getElementById('files_login_zoompassword').value;
-		}
+	}
 	name=document.getElementById('loginname_text_id').value;
 	pass=document.getElementById('loginpass_text_id').value;	
 	user_access=0;
-	//users = xml.responseXML.getElementsByTagName("login_data")[0].getElementsByTagName("user");
 	data =  JSON.parse(xml.responseText); users = data.users;
     for (i=0; i<users.length; i++){
-		//name_i=users[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
 		name_i = users[i].name;
-		//alert(name, name_i);
 		if (name_i==name){
 			user_access=1;
-			//pass_i=users[i].getElementsByTagName("password")[0].childNodes[0].nodeValue;
 			pass_i = users[i].password;
 			if (pass_i==pass){
 				user_access=2;
@@ -239,7 +265,7 @@ function files_edittext_login(i){
 	}
 
 function files_click(n){ 
-	arr_names = ["files_enter_hidden", "files_delete_hidden", "files_edit_hidden", 'files_createdir_hidden', 'files_createtxt_hidden', 'newlogin_submit_id','login_submit_id'];
+	arr_names = ["files_enter_hidden", "files_delete_hidden", "files_edit_hidden", 'files_createdir_hidden', 'files_createtxt_hidden', 'newlogin_submit_id','login_submit_id', "mail_submit_id", 'upload_file_id','upload_submit_id', 'python_submit_id'];
 	document.getElementById(arr_names[n]).click();  }
 function files_show_options(){
 	//alert('show_options');
@@ -252,14 +278,12 @@ function files_show_options(){
 	inner_e+= '<div id="files_options_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
 	inner_e+= '<div id="files_options_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_options_zoom" class="text_zoom">'+fname+'</div></div>';
-	//inner_e+= '<div id="files_options_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_options_zoom" class="text_zoom"> empty </div></div>';
 	inner_e+= '<div id="files_options_edit-name" class="buttons" onclick="files_edittext_options();" style="left:40%; top:45%;">edit name</div>';
 	
 	inner_e+= '<div id="files_options_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">';
 	inner_e+= '<input type="text" id="files_options_n" name="files_options_n" value="'+iter.toString()+'" style="width:0%;height:0%;">';
 	inner_e+= '<input type="text" id="files_options_text" name="files_options_text" value="'+fname+'" style="width:0%;height:0%;">';
-	//inner_e+= '<input type="text" id="files_options_text" name="files_options_text" value="empty" style="width:0%;height:0%;">';
 	inner_e+= '<input hidden id="files_delete_hidden" type="submit" value="delete" name="files_options_submit">'; 
 	inner_e+= '<input hidden id="files_edit_hidden"   type="submit" value="edit"   name="files_options_submit"></div>';
 	inner_e+= '<div id="files_delete_id" class="buttons" onclick="files_click(1);" style="left:13%;top:45%;">delete</div>';
@@ -290,6 +314,12 @@ function files_show_menu(){
 	inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:15%;">appearance</div>';
 	inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
 	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
+	
+	inner_e+= '<div hidden id="files_mail" style="left:60%;top:15%;position:fixed;"> ';
+	inner_e+= '<form action="" method="post">';
+	inner_e+= '<input type="text"   id="mail_text_id"   name="mail_text_name"   value="empty" >';
+	inner_e+= '<input type="submit" id="mail_submit_id" name="mail_submit_name" value="empty" ></div>';
+	inner_e+= '<div id="files_mail_button" class="buttons" onclick="files_click(7)" style="left:60%;top:15%;">email</div>';
 	
 	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:60%; top:50%;">new file</div>';
 	inner_e+= '</div>';

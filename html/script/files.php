@@ -19,6 +19,8 @@ if ($_SESSION["session"]!=10){
 	}
 //echo 'USR-DIR'.$_SESSION['usr_dir'].' ';
 //echo '<div style="position:fixed;top:0%;left:10%;z-order:1;width:70%;">'.$_SESSION['usr_dir'].'</div>';
+//echo '<div style="position:fixed;top:0%;left:10%;z-order:1;width:70%;">'.'TEMP: '.ini_get('upload_tmp_dir').'</div>';
+getUserData();
 $entry=find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
 $filename = $_SESSION["usr_dir"].'/'.$entry;
 //echo '<div style="left: 25%; top: 78%;  position:fixed;">'.$_SESSION["file_counter"].' '.$filename.'</div>';
@@ -202,3 +204,101 @@ function recurse_copy($src,$dst) {
     } 
     closedir($dir); 
 } 
+
+//-- mail ------------------------------------------------------------------
+
+ if (isset($_REQUEST['mail_submit_name']))  {
+	echo '<div style="position:fixed;top:0.5%;left:0%;z-order:1">'.'MAIL '.'</div>';
+	//Email information
+	$admin_email = "dolgareva.ma@yandex.ru";
+	//$admin_email = "dolgareva.ma@gmail.com";
+	$email = $_REQUEST['mail_submit_name'];
+	$email = 'admin@hedgehoginafog.xyz';
+	$subject = 'test';
+	$comment = 'Text';
+	//send email
+	mail($admin_email, "test", $comment, "From:" . $email);
+	if (@mail($admin_email, "test", $comment)){
+		echo '<div style="position:fixed;top:2.5%;left:0%;z-order:1">'.'SUCCESS '.'</div>'; }
+	else{
+		echo '<div style="position:fixed;top:2.5%;left:0%;z-order:1">'.'FAIL '.'</div>'; }
+	//header('Location:/index.html');
+}
+
+//-- wipmania ----------------------------------------------------------------
+
+
+function getUserData(){	
+	$fname = "data/wipmania.txt";
+	$myfile = fopen($fname, "r") or die("UUUUnable to open file!");
+	$json = fread($myfile, filesize($fname));
+	chmod($fname, 0666);
+	fclose($myfile);
+	
+	$ip_i = getUserIP();
+	$country = file_get_contents('http://api.wipmania.com/'.$ip_i.'?google.com');
+	//$wipmania = file_get_contents('http://api.wipmania.com/jsonp?callback=?') ;
+	//$n = strpos($wipmania, '"country":"')+11;
+	//$country = substr($wipmania,$n, strpos($wipmania, '"',$n+1)-$n );
+	//echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:70%;">'.$ip_i.' '.$country.' '.gmdate("Y-m-d H:i:s").'</div>';
+	$text = $json.$ip_i.' '.$country.' '.gmdate("Y-m-d H:i:s")."\r\n";
+	$myfile = fopen($fname, "w") or die("UUUUnable to open file!");
+	fwrite($myfile, $text);
+	fclose($myfile);
+	//header('Location:/index.html');
+}
+
+
+function getUserIP(){
+    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
+    if(filter_var($client, FILTER_VALIDATE_IP)) { $ip = $client; }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP)) { $ip = $forward; }
+    else{ $ip = $remote; }
+    return $ip;
+}
+
+//-- upload file -------------------------------------------------------------
+
+if(isset($_POST["upload_submit_name"])) {
+	$target_dir = $_SESSION['usr_dir'];
+	$target_file = $target_dir .'/'. basename($_FILES["upload_file_name"]["name"]);
+	//echo '<div style="position:fixed;top:5%;left:0%;z-order:1;width:70%;">'.$target_file.'</div>';
+	$uploadOk = 1;
+	$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+    $check = filesize($_FILES["upload_file_name"]["tmp_name"]);
+    //echo '<div style="position:fixed;top:40%;left:0%;z-order:1;width:70%;">'.$target_file.' '.$_FILES["fileToUpload"]["size"].' '.$_FILES["fileToUpload"]["tmp_name"].'</div>';
+	//print_r($_FILES);
+    if($check !== false) {
+        echo "File is an image.";
+        $uploadOk = 1;
+    
+	    // Check if file already exists
+		if (file_exists($target_file)) {
+		    echo "Sorry, file already exists.";
+		    $uploadOk = 0;
+		}// Check file size
+		if ($_FILES["upload_file_name"]["size"] > 500000) {
+		    echo "Sorry, your file is too large.";
+		    $uploadOk = 0;
+		}// Allow certain file formats
+		if($imageFileType != "doc" && $imageFileType != "txt" ) {
+		    echo "Sorry, only DOC and TXT files are allowed.";
+		    $uploadOk = 0;
+		}
+    } else { $uploadOk = 0; echo "Bad size."; }
+
+	if ($uploadOk == 0) { echo "Sorry, your file was not uploaded."; } 
+	else {
+	    if (move_uploaded_file($_FILES["upload_file_name"]["tmp_name"], $target_file)) {
+	        echo "The file ". basename( $_FILES["upload_file_name"]["name"]). " has been uploaded.";
+	    } else {
+	        echo "Sorry, there was an error uploading your file.";
+	    }
+	}
+	header('Location:/index.html');
+}
+
+
+?>

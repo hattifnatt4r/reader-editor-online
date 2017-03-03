@@ -5,7 +5,8 @@ var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
 //-----------------------------------------------------------------------------
 var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
-var div_end = ':nl:'; var div_end = '<br>'; 
+var div_end = ':nl:'; 
+var div_end = '<br>'; 
 var lang_arr = ['auto', 'ru', 'en'];
 var reader_play_counter=1;
 
@@ -30,6 +31,7 @@ var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#88
 var symbol_pause =        '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
 var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
 var symbol_login =        '<strong style="font-size:200%;line-height:100%;">login</strong>';
+var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#8679;</strong>';
 var symbols_play_pause = [symbol_play, symbol_pause];
 
 var bodyStyles = window.getComputedStyle(document.body);
