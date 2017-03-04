@@ -124,9 +124,24 @@ if (isset($_POST["files_options_submit"])) {
 			header('Location:/index.html'); 
 		}
 		//header('Location:/index.html');
-		}
+	}elseif ($value=='html'){
+		$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
+		$filename = $_SESSION['usr_dir'].'/'.$entry;
+		echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:20%;">'.$filename.'</div>';
+		$myfile = fopen($filename, "r") or die("Unable to open file!");
+		$txt = fread($myfile, filesize($filename));
+		//fwrite($myfile, $txt);
+		fclose($myfile);
+		$txt = clean_html($txt);
+		$fname = substr($filename,0,strpos($filename,'.html')).'.txt';
+		echo '<div style="position:fixed;top:0%;left:15%;z-order:1;width:20%;">'.$fname.'</div>';
+		$myfile = fopen($fname, "w") or die("Unable to open file!");
+		chmod($fname, 0666);
+		fwrite($myfile, $txt);
+		fclose($myfile);
+		header('Location:/index.html'); 
+	}
 }
-
 
 //-- enter/options button ---------------------------------------------------
 
@@ -283,8 +298,8 @@ if(isset($_POST["upload_submit_name"])) {
 		    echo "Sorry, your file is too large.";
 		    $uploadOk = 0;
 		}// Allow certain file formats
-		if($imageFileType != "doc" && $imageFileType != "txt" ) {
-		    echo "Sorry, only DOC and TXT files are allowed.";
+		if($imageFileType != "html" && $imageFileType != "txt" ) {
+		    echo "Sorry, only HTML and TXT files are allowed.";
 		    $uploadOk = 0;
 		}
     } else { $uploadOk = 0; echo "Bad size."; }
@@ -300,5 +315,105 @@ if(isset($_POST["upload_submit_name"])) {
 	header('Location:/index.html');
 }
 
+if(isset($_POST["python_submit_name"])) {
+	echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:20%;">'.'PYTHON'.'</div>';
+	$fname = '/storage/h2/291/23291/public_html/script/test.py';
+	//$fname = 'script/test.py';
+	$fname_res = 'data/python_test.txt';
+	chmod($fname, 0777);
+	$myfile = fopen($fname_res, "w") or die("UUUUnable to open file!");
+	fclose($myfile);
+	chmod($fname_res, 0666);
+	
+	//$command = escapeshellcmd($fname);
+	//$output = shell_exec($command);
+	//$output = shell_exec("env -i $fname");
+	//$output = exec($fname);
+	//$output = exec($fname);
+	//$output = system("python $fname");
+	//var_dump(shell_exec('ls -l'));
+	//var_dump(shell_exec('whoami'));
+	//$output = shell_exec('ls -l 2>&1 1> /dev/null');
+	//$output = shell_exec('ls -l > /dev/null &');
+	//$output = exec('env -i pwd > /dev/null &');
+	//chmod($fname_res, 0666);
+	//$process = new Process('ls -al');
+	//if ($process.status()){echo "The process is currently running";}
+	//else {echo "The process is NOT running.";}
+	$output = shell_exec('ls -lart');
+	echo "<pre>$output</pre>";
+	echo '<div style="position:fixed;top:0%;left:20%;z-order:1;width:20%;">'.$output.'</div>';
+	//header('Location:/index.html');
+}
+
+//-- clean html ------------------------------------------------------------
+
+function clean_html($txt){
+	$nl = substr($txt, strpos($txt,'@page')-2,1);
+	$i1 = strpos($txt,'<body');
+	$i2 = strpos($txt,'>',$i1+1);
+	$txt = '<html><body><div>'.substr($txt,$i2+1);
+	//$txt = str_replace('<span',$nl.'<span',$txt);
+	
+	$arr1 = array('<span','style="','class="','id="','<!--');
+	$arr2 = array('>','"','"','"','-->');
+	
+	for ($i=0; $i<count($arr1); $i++){
+		$proceed=True;
+		while ($proceed){
+			if (strpos($txt,$arr1[$i])==null) { $proceed=False; }
+			else{
+				$i1 = strpos($txt,$arr1[$i]);
+				$i2 = strpos($txt,$arr2[$i],$i1+strlen($arr1[$i]));
+				$txt2 = substr($txt, 0, $i1).substr($txt, $i2+strlen($arr2[$i]));
+				$txt = $txt2;
+			}
+		}
+	}
+	$txt = str_replace('</span>','',$txt);
+	$txt = str_replace('<span',$nl.'<span',$txt);
+	$txt = replace_rec($txt,'  ',' ');
+	
+	
+	$txt = str_replace('> ','>',$txt);
+	$txt = str_replace(' >','>',$txt);
+	$txt = str_replace(' <','<',$txt);
+	$txt = str_replace('< ','<',$txt);
+	$txt = str_replace(' />','/>',$txt);
+	$txt = str_replace('<a>',' ',$txt);
+	$txt = str_replace('</a>',' ',$txt);
+	$txt = str_replace('<a/>',' ',$txt);
+	$txt = replace_rec($txt, '<div> </div>',' ');
+	
+	$txt = str_replace('<p','<div',$txt);
+	$txt = str_replace('</p','</div',$txt);
+	$txt = str_replace($nl,'',$txt);
+	
+	$txt = str_replace('</div>','</div><div>',$txt);
+	$txt = str_replace('<div>','</div><div>',$txt);
+	$txt = replace_rec($txt, '<div><div>','<div>');
+	$txt = replace_rec($txt, '</div></div>','</div>');
+	$txt = replace_rec($txt, '<div></div>','');
+	
+	$txt = str_replace('<body></div>','<body>',$txt);
+	$txt = str_replace('<div><body>','</body>',$txt);
+	
+	$txt = str_replace('</div>','<br> ',$txt);
+	$txt = str_replace('<div>','',$txt);
+	$txt = str_replace('<br>','<br>'.$nl,$txt);
+	
+	$txt = str_replace('<html><body>','',$txt);
+	$txt = str_replace('</body></html>','',$txt);
+	
+	return ($txt);
+}
+function replace_rec($txt,$a,$b){
+	$proceed=True;
+	while ($proceed){
+		$txt = str_replace($a,$b,$txt);
+		if (strpos($txt,$a)==null) { $proceed=False;}
+	}
+	return($txt);
+}
 
 ?>

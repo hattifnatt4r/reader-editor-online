@@ -60,7 +60,8 @@ body {
   color: rgba(0,0,0,0.45);
   background-color: var(--color-buttons-normal);  
   border: solid  calc(var(--button-bordewidth-pc)*var(--screen-height)/100 ) var(--color-buttons-normal);  border-radius:  var(--button-radius); 
-  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);  
+  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2); 
+  width:12%; height:17%; 
 }
 .buttons:hover{
   border: solid  10px #c4cfd4;  
@@ -106,9 +107,6 @@ body {
   background-color: #c4cfd4;
   border-color: #c4cfd4; 
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
-}
-.buttons_menu{
-width:12%; height:17%;
 }
 
 /*-- reader text ---------------------------------------------------------*/

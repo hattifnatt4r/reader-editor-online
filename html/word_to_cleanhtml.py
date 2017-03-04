@@ -34,7 +34,7 @@ def run():
 			
 	proceed=True
 	while proceed:
-		if txt.find('style=')==-1:
+		if txt.find('style="')==-1:
 			proceed=False
 		else:
 			i1 = txt.find('style="')
@@ -44,7 +44,7 @@ def run():
 	
 	proceed=True
 	while proceed:
-		if txt.find('class=')==-1:
+		if txt.find('class="')==-1:
 			proceed=False
 		else:
 			i1 = txt.find('class="')
