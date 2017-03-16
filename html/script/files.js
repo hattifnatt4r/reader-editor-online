@@ -47,10 +47,10 @@ function edit_text_back(){
 	text = localStorage.getItem('text_edit');             //alert('text: '+text);
 	varname = localStorage.getItem('editor_saveto_var');  //alert('var: '+varname);
 	if (varname!='0'){localStorage.setItem(varname, text);}
-	click_arr = parse_words(localStorage.getItem('click_arr'));
+	click_arr = parse_words(localStorage.getItem('click_arr')); //alert(click_arr);
 	setinner_id_arr =    parse_words(localStorage.getItem('setinner_id_arr'));
 	setvalue_id_arr =    parse_words(localStorage.getItem('setvalue_id_arr'));
-	if (click_arr.length!=0)      { for (i=0; i<click_arr.length; i++){ document.getElementById(click_arr[i]).click(); } }
+	if (click_arr.length!=0)      { for (i=0; i<click_arr.length; i++){ document.getElementById(click_arr[i]).click(); } } //alert('click done');
 	if (setinner_id_arr.length!=0){ for (i=0; i<setinner_id_arr.length; i++){ document.getElementById(setinner_id_arr[i]).innerHTML=text; } }
 	if (setvalue_id_arr.length!=0){ for (i=0; i<setvalue_id_arr.length; i++){ document.getElementById(setvalue_id_arr[i]).value=text; } }
 	exists=file_exists(text);  //alert(exists);
@@ -122,9 +122,9 @@ function files_show_buttons(){
 	
 	inner_e+= '<div id="files_button_options" class="buttons" onclick="files_show_options();"  style="'+reader_button_position(1)+'">opt</div>';
 	
-	inner_e+= '<div id="files_button_enter" style="left:84%;top:53%;position:fixed;">'; 
+	inner_e+= '<div hidden id="files_button_enter" style="left:84%;top:53%;position:fixed;">'; 
 	inner_e+= '<form action="" method="post">  <input type="text" id="file_n" name="file_n" value="Mouse" style="width:0%;height:0%;">';
-	inner_e+= '<input hidden type="submit" id="files_enter_id" value="enter" name="enter_obj" "></div>';
+	inner_e+= '<input type="submit" id="files_enter_id" value="enter" name="enter_obj" "></div>';
 	inner_e+= '<div id="files_enter" class="buttons" style="'+reader_button_position(2)+'" onclick="files_click(0);">'+symbol_enter+'</div></div>';
 	
 	inner_e+= '<div id="prev" class="buttons" onclick="scroll_files(prev);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
@@ -138,6 +138,30 @@ function files_show_buttons(){
 	elem.innerHTML=inner_e;
 	dir = files_get_dir();
 	if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload_button'); }
+	subdir = get_subdir(dir+'/'); //alert('sub: '+subdir);
+	if (subdir=='mail'){//alert('mail!');
+		id = 'fileid_'+nentry;
+		//alert(id);
+		document.getElementById(id).onclick=function() { files_show_addcontact(); } 
+		document.getElementById(id).innerHTML=symbol_newmail;
+		}
+}
+function files_show_addcontact(){
+	menu_blur();
+	elem=create_element('div', 'files_addcontact_area', '','','','','','','');
+	inner_e = '<div id="files_addcontact_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e+= '<div id="files_addcontact_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
+	
+	inner_e+= '<div id="files_addcontact_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_addcontact_zoom" class="text_zoom">file</div></div>';
+	inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_edittext_addcontact(123);" style="left:40%; top:45%;">edit name</div>';
+	
+	inner_e+= '<div hidden id="files_addcontact_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
+	inner_e+= '<form action="" method="post">';
+	inner_e+= '<input type="text"   id="addcontact_text_id"     name="addcontact_text_name"   value="file" style="width:0%;height:0%;">';
+	inner_e+= '<input type="submit" id="addcontact_submit_id"   name="addcontact_submit_name" value="create file" ></div>';
+	inner_e+= '<div id="files_addcontact_id" class="buttons" onclick="files_click(11);" style="left:13%;top:45%;">create file</div>';
+	inner_e+= '</div>';
+	elem.innerHTML = inner_e;
 }
 function files_show_upload(){
 	menu_blur();
@@ -202,7 +226,7 @@ function files_login(xml){
 	user_access=0;
 	data =  JSON.parse(xml.responseText); users = data.users;
     for (i=0; i<users.length; i++){
-		name_i = users[i].name;
+		name_i = users[i].name; //alert('NAME: '+name_i+' '+name);
 		if (name_i==name){
 			user_access=1;
 			pass_i = users[i].password;
@@ -261,7 +285,7 @@ function files_edittext_login(i){
 	}
 
 function files_click(n){ 
-	arr_names = ["files_enter_id", "files_delete_id", "files_edit_id", 'files_createdir_hidden', 'files_createtxt_hidden', 'newlogin_submit_id','login_submit_id', "mail_submit_id", 'upload_file_id','upload_submit_id', 'files_html_id'];
+	arr_names = ["files_enter_id", "files_delete_id", "files_edit_id", 'createdir_submit_id', 'createtxt_submit_id', 'newlogin_submit_id','login_submit_id', "mail_submit_id", 'upload_file_id','upload_submit_id', 'files_html_id', 'addcontact_submit_id'];
 	document.getElementById(arr_names[n]).click();  }
 function files_disable(id){
 	document.getElementById(id).onclick=''; 
@@ -317,17 +341,19 @@ function files_show_menu(){
 	inner_e = '<div id="files_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	
 	inner_e+= '<div id="files_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:15%;">appearance</div>';
-	inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:15%;">appearance-common</div>';
-	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:15%; top:50%;">sound</div>';
+	inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:17%;">appearance</div>';
+	inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:17%;">appearance-common</div>';
+	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:15%; top:55%;">sound</div>';
 	
 	inner_e+= '<div hidden id="files_mail" style="left:60%;top:15%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">';
 	inner_e+= '<input type="text"   id="mail_text_id"   name="mail_text_name"   value="empty" >';
-	inner_e+= '<input type="submit" id="mail_submit_id" name="mail_submit_name" value="empty" ></div>';
-	inner_e+= '<div id="files_mail_button" class="buttons" onclick="files_click(7)" style="left:60%;top:15%;">email</div>';
+	inner_e+= '<input type="submit" id="mail_submit_id" name="mail_submit_name" value="empty" >';
+	inner_e+= '<input type="submit" id="past_submit_id" name="mail_submit_name" value="empty" ></div>';
+	inner_e+= '<div id="files_mail_button" class="buttons" onclick="files_click(7)" style="left:68%;top:17%;">email</div>';
+	inner_e+= '<div id="files_past_button" class="buttons disabled" onclick="" style="left:50%;top:55%;">past</div>';
 	
-	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:60%; top:50%;">new file</div>';
+	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:68%; top:55%;">new file</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	menu_blur();
@@ -340,10 +366,11 @@ function files_show_create(){
 	inner_e+= '<div id="files_create_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_create_zoom" class="text_zoom">file</div></div>';
 	inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_edittext_create(123);" style="left:40%; top:45%;">edit name</div>';
 	
-	inner_e+= '<div id="files_create_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
-	inner_e+= '<form action="" method="post">  <input type="text" id="files_name_text" name="files_name_text" value="file" style="width:0%;height:0%;">';
-	inner_e+= '<input hidden id="files_createtxt_hidden" type="submit" value="create file" name="files_create_submit" >';
-	inner_e+= '<input hidden id="files_createdir_hidden" type="submit" value="create dir"  name="files_create_submit"></div>';
+	inner_e+= '<div hidden id="files_create_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
+	inner_e+= '<form action="" method="post">';
+	inner_e+= '<input type="text"   id="create_text_id"      name="create_text_name"   value="file" style="width:0%;height:0%;">';
+	inner_e+= '<input type="submit" id="createtxt_submit_id" name="create_submit_name" value="create file" >';
+	inner_e+= '<input type="submit" id="createdir_submit_id" name="create_submit_name" value="create dir"  ></div>';
 	inner_e+= '<div id="files_createtxt_id" class="buttons" onclick="files_click(4)" style="left:13%;top:45%;">create file</div>';
 	inner_e+= '<div id="files_createdir_id" class="buttons" onclick="files_click(3)" style="left:70%;top:45%;">create dir </div>';
 	inner_e+= '</div>';
@@ -357,27 +384,20 @@ function files_edittext_create(text){
 	localStorage.setItem('editor_back', '/index.html');
 	localStorage.setItem('click_arr', 'files_menu files_create' );
 	localStorage.setItem('setinner_id_arr', 'files_create_zoom');
-	localStorage.setItem('setvalue_id_arr', 'files_name_text');
+	localStorage.setItem('setvalue_id_arr', 'create_text_id');
+	window.location.href = '/editor.html';
+	}
+function files_edittext_addcontact(text){
+	localStorage.setItem('text_edit', text);
+	localStorage.setItem('editor_iter', '0');
+	localStorage.setItem('if_edit_text', '1');
+	localStorage.setItem('editor_back', '/index.html');
+	localStorage.setItem('click_arr', 'fileid_'+nentry );
+	localStorage.setItem('setinner_id_arr', 'files_addcontact_zoom');
+	localStorage.setItem('setvalue_id_arr', 'addcontact_text_id');
 	window.location.href = '/editor.html';
 	}
 	
-function parse_words(text){
-	arr = []; 
-	if (text!=''){
-		proceed = 1; i=0; i_start=0; word='';
-		while (proceed==1){
-			i = text.indexOf(' ',i_start+1);
-			if (i==-1){
-				word = text.substr(i_start); proceed=0; }
-			else{
-				word = text.substr(i_start, i-i_start); i_start = i; 
-			}
-			arr.push(word.replace(' ',''));
-		}
-	}
-	//alert(arr);
-	return(arr);
-}
 function file_exists(fname){
 	fname = fname.toString();
 	txt=0; dir=0; a='';

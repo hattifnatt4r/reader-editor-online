@@ -47,6 +47,8 @@ if ($handle = opendir($_SESSION['usr_dir'])) {
 	$i=0;
 	foreach($arr_entries as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
     echo "<div hidden id='hidden_files_nentry' style='position:fixed; top:67%; left:85%'>".$_SESSION['nentry']."</div>";
+    //$newmail = show_file(' ', $_SESSION['nentry']+1); //$show_arr=$show_arr.$newmail;
+    //echo "<div  id='hidden_newmail' >".$newmail."</div>";
 } else {echo "bad dir";}
 $_SESSION["files_arr"]=$arr_entries;
 
@@ -60,10 +62,13 @@ function show_file($entry, $i){
 		width:$xwidth%; height:$ywidth%;
 		" ;		
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
-	if (is_dir($filename)){$class='files files-dir';$title='dir';} else { $class='files files-txt';$title='txt'; }
-	//$class='files files-dir';$title='dir';
-	//$class='files';$title='txt';
-	//if ($entry=='readme.txt'){ $class = 'files attention'; }
+	if (file_exists($filename)){
+		if (is_dir($filename)){$class='files files-dir';$title='dir';} else { $class='files files-txt';$title='txt'; }
+		//if ($entry=='readme.txt'){ $class = 'files attention'; }
+	}//else{ $class='files attention'; $title=''; $entry='new <br> contact'; }
+	if (strpos($entry,'~')!==false){ 
+		$entry = str_replace('~','',$entry); $class='files attention';
+		 }
 	$file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="scroll_files('.$i.');"  style="'.$style.'" title="'.$title.'">'.$entry.'</div>' ;
 	return($file_i);
 }
@@ -88,9 +93,9 @@ function create_file($fname, $usr_dir) {
 	echo 'DIR: '.$full_name.' ';
 	mkdir($full_name, 0777);
 }
-if (isset($_POST['files_create_submit'])) {
-	$value = $_POST['files_create_submit'];
-	$text = $_POST["files_name_text"];
+if (isset($_POST['create_submit_name'])) {
+	$value = $_POST['create_submit_name'];
+	$text = $_POST["create_text_name"];
 	echo 'TEXT: '.$text.' '; 
 	if ($text!='' || $text!=' ' || $text!='  '){
 		if ($value=='create file') { create_file($text,$_SESSION['usr_dir']); }
@@ -99,6 +104,63 @@ if (isset($_POST['files_create_submit'])) {
 	}
 }
 
+if (isset($_POST['addcontact_submit_name'])) {
+	$value = $_POST['addcontact_submit_name'];
+	$contact_name = $_POST["addcontact_text_name"];
+	echo 'TEXT: '.$text.' '; 
+	
+	$usr_dir=$_SESSION['usr_dir'];
+	$usr_name = get_usrname();
+	/*
+	$arr = array(); 
+	array_push($arr, $usr_name); 
+	array_push($arr, $contact_name);
+	sort($arr); 
+	$full_name = "users_mail/".$arr[0].'_'.$arr[1]; */
+	$full_name = get_mail_fname($usr_name,$contact_name);
+	//$full_name = $usr_dir.'/'.$arr[0].'_'.$arr[1].".txt";
+	//$full_name = $usr_dir.'/new.txt';
+	if (!file_exists('users/'.$contact_name)){echo '<div style="position:fixed;top:0%;left:0%;">There is no user with this name</div>';}
+	elseif (!file_exists($full_name)){
+		$myfile = fopen($full_name, "w") or die("Unable to open file!");
+		chmod($full_name, 0666);
+		fclose($myfile);
+		echo '<div style="position:fixed;top:0%;left:0%;">'.$full_name.'</div>';
+		
+		$local_name = $usr_dir.'/'.$contact_name;
+		$myfile = fopen($local_name, "w") or die("Unable to open file!");
+		$name = get_usrname();
+		$text = ' <br> <div id="mail_temp_title" name="'.$name.'"> write your messsage </div> <div id="mail_temp_text" name="'.$name.'"> abc </div>';
+		fwrite($myfile, $text);
+		chmod($local_name, 0666);
+		fclose($myfile);
+		echo '<div style="position:fixed;top:0%;left:50%;">'.$local_name.'</div>';
+		
+		$local_name = 'users/'.$contact_name.'/mail/'.$usr_name;
+		$myfile = fopen($local_name, "w") or die("Unable to open file!");
+		$text = ' <br> <div id="mail_temp_title" name="'.$contact_name.'"> write your message </div> <div id="mail_temp_text" name="'.$contact_name.'"> abc </div>';
+		fwrite($myfile, $text);
+		chmod($local_name, 0666);
+		fclose($myfile);
+		//header('Location:/index.html'); 
+	}
+	//else{ echo '<div style="position:fixed;top:0%;">'.$full_name.' EXISTS</div>'; }
+	header('Location:/index.html'); 
+}
+function get_usrname(){
+	$usr_dir=$_SESSION['usr_dir'];
+	$i1 = strpos($usr_dir.'/','/');
+	$usr_name=substr($usr_dir.'/',$i1+1,strpos($usr_dir.'/','/',$i1+1)-$i1-1);
+	return($usr_name);
+}
+function get_mail_fname($a,$b){
+	$arr = array(); 
+	array_push($arr, $a); 
+	array_push($arr, $b);
+	sort($arr);
+	$full_name = "users_mail/".$arr[0].'_'.$arr[1];
+	return($full_name);
+	}
 //-- file options -----------------------------------------------------------
 
 if (isset($_POST["files_options_submit"])) {

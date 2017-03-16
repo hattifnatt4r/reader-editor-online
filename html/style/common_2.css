@@ -90,7 +90,7 @@ body {
 .files-txt{       border: solid 10px #acd2d2; background-color:#acd2d2;  --color:#acd2d2; background-color: var(--color); border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color); }
 .files-txt:hover{ border: solid 10px #70a9a9; background-color:#70a9a9;  --color:#70a9a9; background-color:var(--color);  border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color); }
 .files-txt-hover{ border: solid 10px #70a9a9; background-color:#70a9a9;  --color:#70a9a9; background-color:var(--color);  border: solid calc(0.2*0.8*var(--button-fontsize)) var(--color); }
-.attention{ border: solid 10px #a6ce7e; background-color: var(--color-buttons-attention); border-color:var(--color-buttons-attention); }
+.attention{ border: solid 10px #a6ce7e; background-color: var(--color-buttons-attention); border-color:var(--color-buttons-attention); background-color:#ffbf80; border-color:#ffbf80; }
 .buttons_editor{
   border: solid 10px #98acb3; border-radius: 1%;  font-size: 50px; 
   /*------------------*/
@@ -129,7 +129,7 @@ body {
   color:black; 
 }.text_scroll::-webkit-scrollbar-track {
   position:absolute; left:0%;
-  background-color: white;
+  /*background-color: white;*/
 }.text_scroll::-webkit-scrollbar-thumb {
   background-color: #c8ccd0;
 }.reader_text{
@@ -198,7 +198,22 @@ body {
 @-ms-keyframes "blink"     { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
 @-o-keyframes "blink"      { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
 
-
+/*-- */
+.mail{
+  left:2%; width:75%; 
+  /*-------------*/
+  position:relative; text-align:center; box-sizing:border-box;
+  /*left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); */
+  font-size:25px; line-height: 135%; color:rgba(0,0,0,0.8);
+  background-color: white;  background-color:#acd2d2; background-color:#ddeaee;
+  /*border: dashed 2px #8a8a5c;*/
+  border: solid 2px white;
+}
+.mail_out{
+  left:1.5%; text-align:left; background-color:#ddeaee;}
+.mail_in{
+  left:26.5%; text-align:right; background-color:#e6eedd;}
+.mail_temp{ background-color:#ffe6cc; background-color:#f7f7d4; background-color:#ddeaee; /*background-color:#bbd5dd;*/ }
 
 
 .modal {

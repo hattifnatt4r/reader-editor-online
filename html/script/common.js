@@ -1,10 +1,12 @@
 //var config = {};
 //config.readonlydir = ['books_txt',''];
+//alert('common');
 var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
 //-----------------------------------------------------------------------------
-var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
+//var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
+var otag = 'span class="text"'; var ctag='span';  var tag_p = 'span';
 var div_end = ':nl:'; 
 var div_end = '<br>'; 
 var lang_arr = ['auto', 'ru', 'en'];
@@ -32,6 +34,8 @@ var symbol_pause =        '<strong style="font-size:120%;line-height:115%;letter
 var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
 var symbol_login =        '<strong style="font-size:200%;line-height:100%;">login</strong>';
 var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#8679;</strong>';
+var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#9993;</strong>';
+var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
 var symbols_play_pause = [symbol_play, symbol_pause];
 
 var bodyStyles = window.getComputedStyle(document.body);
@@ -101,7 +105,7 @@ function editor_back(id){
 		$('.reader_zoom_box').foggy(false); 
 		$('#editor_buttons_area').foggy(false); 
 	//}
-	var elem = document.getElementById(id).parentNode;
+	elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
 	localStorage.setItem('fastlogin','0');
 }
@@ -163,7 +167,7 @@ function create_element(tag, id, cl, st, inner, value, name, onclick, t){
 	}
 
 function replace_all(text, a,b){
-	var proceed=1;
+	proceed=1;
 	while (proceed==1){
 		i = text.indexOf(a);
 		if (i==-1) { proceed=0; }
@@ -173,14 +177,12 @@ function replace_all(text, a,b){
 }
 
 function merge_text(text){
-	//alert('start: '+text);
-	//var tag = 'em'; var tag_p = 'p';
-	//closing = '</'+ctag+'></'+ctag+'></'+tag_p+'>';
+	//alert('merge 0 '+ctag+': '+text);
+	/*
 	text = replace_all(text, '<br>', ':nl:');
 	text = replace_all(text, '<abbr>', ':lbr:');
 	text = replace_all(text, '</abbr>', ':rbr:');
-	//alert('replaced: '+text);
-	var proceed = 1;
+	proceed = 1;
 	while (proceed==1){
 		i = text.indexOf('<');
 		if (i==-1){ proceed=0; }
@@ -189,10 +191,20 @@ function merge_text(text){
 			text = text_i;
 			}
 		}
-	//alert('merged: '+text);
 	text = replace_all(text, ':nl:', '<br>');
 	text = replace_all(text, ':lbr:', '<abbr>');
 	text = replace_all(text, ':rbr:', '</abbr>');
+	*/
+	proceed = 1;
+	while (proceed==1){
+		i = text.indexOf('<'+ctag);
+		if (i==-1){ proceed=0; }
+		else { i2 = text.indexOf('>',i+1);
+			//alert(i+' '+i2+'  '+text);
+			text = text.substr(0,i)+text.substr(i2+1); //alert(i+' '+i2+'  '+text);
+		}
+	} //alert('merge 1');
+	text = replace_all(text, '</'+ctag+'>', '');
 	return (text);
 }
 
@@ -205,9 +217,10 @@ function reader_parse_pdf(text_origin){
 		//alert(' i_end '+ii_end);
 		ii = text_origin.indexOf('<'+tag, ii_end+1); 
 		//alert('ii '+ii+' i_end '+ii_end);
-		if (ii==-1){pr0=false; }
-		
-		else{
+		if (ii==-1){
+			pr0=false; 
+			//word_i = text_origin.substr(ii_end_prev); 
+		}else{
 			//ii_start = text_origin.indexOf('>',ii+1) + 1;
 			//ii_end = text_origin.indexOf('</'+tag+'>',ii+1);
 			iii = find_closing(text_origin, tag, ii); //alert(ii_start+' '+ii_end+' '+iii);
@@ -249,6 +262,23 @@ function find_closing(text, tag, i0){
 		}
 	}
 	return([i_start, i_end]);
+}
+function parse_words(text){
+	arr = []; 
+	if (text!=''){
+		proceed = 1; i=0; i_start=0; word='';
+		while (proceed==1){
+			i = text.indexOf(' ',i_start+1);
+			if (i==-1){
+				word = text.substr(i_start); proceed=0; }
+			else{
+				word = text.substr(i_start, i-i_start); i_start = i; 
+			}
+			arr.push(word.replace(' ',''));
+		}
+	}
+	//alert(arr);
+	return(arr);
 }
 
 function reader_parse_txt(text_origin, n_p){
@@ -302,16 +332,16 @@ function reader_parse_txt(text_origin, n_p){
 			}
 		} 
 	}
-	text = replace_all(text, ':nl:',''); 
+	//text = replace_all(text, ':nl:',''); 
 	return ([text, arr_w, arr_s, arr_p]);
 }
 
 
 function text_from_file(text){
 	//alert('from file!');
-    var page_text = read_file('books_test/test_book_3.txt'); 
+    page_text = read_file('books_test/test_book_3.txt'); 
     //var page_text = 'test test test';
-	var text_place = d.getElementById('text_from_file');
+	text_place = d.getElementById('text_from_file');
 	text_place.innerHTML=page_text;
 	//alert('from file!');
 	//text_place.innerHTML='ghjgjhgjhgj hjhjhk hjkhjhkjhk';
@@ -319,8 +349,8 @@ function text_from_file(text){
 
 function read_file(file){	
 	//var file = 'test_book.txt';
-    var file_i = new XMLHttpRequest();
-    var allText = 'empty text';
+    file_i = new XMLHttpRequest();
+    allText = 'empty text';
     file_i.onreadystatechange = function ()
     {
 	if(file_i.readyState === 4)
@@ -337,20 +367,20 @@ function read_file(file){
 	}
 
 function merge_options(obj1,obj2){
-    var obj3 = {};
-    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    obj3 = {};
+    for (attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (attrname in obj2) { obj3[attrname] = obj2[attrname]; }
     return obj3;
 }
 function concatenate_arr(arr1, arr2){ for (i=0; i<arr2.length; i++){ arr1.push(arr2[i]); } return(arr1);}
 
 
 function get_cookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
+    name = cname + "=";
+    decodedCookie = decodeURIComponent(document.cookie);
+    ca = decodedCookie.split(';');
+    for( i = 0; i <ca.length; i++) {
+        c = ca[i];
         while (c.charAt(0) == ' ') {
             c = c.substring(1);
         }
@@ -372,3 +402,19 @@ function loadDocXML(url1, login_function) {
   xhttp.send();
 }
 
+function get_subdir(name){
+	i1 = name.indexOf('/',name.indexOf('/')+1);
+	i2 = name.indexOf('/',i1+1);
+	if (i2==-1) {dir='';}
+	else{ dir=name.substr(i1+1,i2-i1-1); }
+	//alert(i1+' '+i2+' '+dir);
+	return(dir);
+	}
+function get_usrname(fname_i){
+	i1 = fname_i.indexOf('/');
+	i2 = fname_i.indexOf('/',i1+1);
+	if (i2==-1) {dir='';}
+	else{ dir=fname_i.substr(i1+1,i2-i1-1); }
+	//alert(i1+' '+i2+' '+dir);
+	return(dir);
+	}

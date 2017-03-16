@@ -1,4 +1,4 @@
-
+//alert('editor 0');
 
 var editor_lang = 'en';
 var scroll_by = 'letter';
@@ -14,6 +14,7 @@ dict_1 = merge_options(dict_letters_en, dict_letters_ru);
 dict_2 = merge_options(dict_1, dict_symbols); 
 var dict_allchar = merge_options(dict_2, dict_symbols2);
 var dict_allchar_buttons = merge_options(dict_2, dict_symbols2_b);
+
 
 var letters_arr_en = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','dash','dot', 'comma','qmark','emark','quotes','space','newline'];
 var letters_arr_ru = ['newline','qmark','emark','quotes','pc','lbr','rbr','r7','plus',  'r26','r27','r28','r29','r31','r32','dot','comma','dash',   'r20','r21','r22','r23','r24','r25','r30','r32','r33',    'r11','r12','r13','r14','r15','r16','r17','r18','r19',   'r1','r2','r3','r4','r5','r6','r8','r9','r10',    'space'];
@@ -65,6 +66,7 @@ editor_set_cursor();
 editor_show_start();
 
 function editor_exit(){
+	//alert('editor exit');
 	localStorage.setItem('ischanged_text', '1');
 	window.location.href = localStorage.getItem('editor_back');
 	//alert(localStorage.getItem('text_edit'));
