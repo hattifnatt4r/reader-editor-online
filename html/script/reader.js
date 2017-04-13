@@ -69,14 +69,14 @@ if (ischanged=='0'){
 	localStorage.setItem('text_origin', text_i);
 	localStorage.setItem('text_parsed', text_parsed);
 }else{
-	text = localStorage.getItem('text_edit'); alert('text_edit: '+text);
+	text = localStorage.getItem('text_edit'); //alert('text_edit: '+text);
 	
 	text_parsed = localStorage.getItem('text_parsed'); //alert('text_parsed: '+text_parsed);
 	document.getElementById('temp').innerHTML = text_parsed;
 	id = get_cookie('id_curr_'+fname);               //alert('id '+id);
 	document.getElementById(id).innerHTML = text;    //alert(text);
 	
-	text_all_parsed = document.getElementById('temp').innerHTML; alert('text_all_parsed '+text_all_parsed);
+	text_all_parsed = document.getElementById('temp').innerHTML; //alert('text_all_parsed '+text_all_parsed);
 	text_all_origin = merge_text(text_all_parsed);  //alert('merged');
 	localStorage.setItem('text_origin', text_all_origin);
 	
@@ -89,12 +89,12 @@ if (ischanged=='0'){
 	localStorage.setItem('ischanged_text', '0');
 	
 	if (subdir=='mail'){
-		name = get_usrname(fname); alert('NAME: '+name);
+		name = get_usrname(fname); //alert('NAME: '+name);
 		text = '<br><div id="mail_temp_title" title="'+name+'" class="mail mail_out mail_temp">'+name+', '+'</div>';
 		text+= '<div id="mail_temp_text" title="'+name+'" class="mail mail_out">'+document.getElementById('mail_temp_text').innerHTML+'</div>';
 		text=merge_text(text);
 	}
-	else{text=localStorage.getItem('text_origin');} alert('SAVE: '+text);
+	else{text=localStorage.getItem('text_origin');} //alert('SAVE: '+text);
 	save_file(text);
 }function save_file(text){
 	//text = localStorage.getItem('text_origin');
