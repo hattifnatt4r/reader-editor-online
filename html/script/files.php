@@ -252,13 +252,13 @@ if (isset($_POST['login_submit_name'])) {
 	if ($value=='newlogin'){
 		//echo '<div style="position:fixed;top:0.5%;left:1%;z-order:1">'.'NEW LOGIN'.'</div>';
 		$fname = "data/login.json";
-		$myfile = fopen($fname, "r") or die("UUUUnable to open file!");
+		$myfile = fopen($fname, "r") or die("Unable to open $fname !");
 		$json = fread($myfile, filesize($fname));
 		fclose($myfile);
 		//echo '<div style="position:fixed;top:0.5%;left:10%;z-order:1">'.$json.'</div>';
 		$text = substr($json,0,strrpos($json, "]")).  ', {"name":"'.$name.'","password":"'.$pass.'"}' .']}';
 		//echo '<div style="position:fixed;top:2.5%;left:10%;z-order:0;width:70%;">'.$text.'</div>';
-		$myfile = fopen($fname, "w") or die("UUUUnable to open file!");
+		$myfile = fopen($fname, "w") or die("Unable to open $fname !");
 		fwrite($myfile, $text);
 		fclose($myfile);
 		recurse_copy('users/common_backup',"users/".$name);
@@ -383,7 +383,7 @@ if(isset($_POST["python_submit_name"])) {
 	//$fname = 'script/test.py';
 	$fname_res = 'data/python_test.txt';
 	chmod($fname, 0777);
-	$myfile = fopen($fname_res, "w") or die("UUUUnable to open file!");
+	$myfile = fopen($fname_res, "w") or die("Unable to open file!");
 	fclose($myfile);
 	chmod($fname_res, 0666);
 	
