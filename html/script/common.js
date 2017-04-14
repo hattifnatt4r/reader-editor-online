@@ -19,10 +19,10 @@ var newlogin_messages_ru = ['Новый аккаунт успешно созда
 
 var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
 var symbol_prev =        '<strong style="font-size:250%;line-height:80%;">&#8249;</strong>';
-var symbol_prev_editor = '<strong style="font-size:200%;line-height:80%;">&#8672;</strong>';
+var symbol_prev_editor = '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
 var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
 var symbol_next =        '<strong style="font-size:250%;line-height:80%">&#8250;</strong>';
-var symbol_next_editor = '<strong style="font-size:200%;line-height:80%">&#8674;</strong>';
+var symbol_next_editor = '<strong style="font-size:280%;line-height:30%">&#8250;</strong>';
 var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
 var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
 var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
@@ -36,6 +36,10 @@ var symbol_login =        '<strong style="font-size:200%;line-height:100%;">logi
 var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#8679;</strong>';
 var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#9993;</strong>';
 var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
+var symbol_nextpage =     '<strong style="font-size:250%;line-height:50%">&#8250;</strong>';
+var symbol_nextpage =     '<strong style="font-size:200%;opacity:0.8;line-height:70%">&#10150;</strong>';
+var symbol_cursor =     '<strong style="font-size:200%;line-height:50%"><em class="cursor" > | </em></strong>';
+var symbol_cursor =     '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';;
 var symbols_play_pause = [symbol_play, symbol_pause];
 
 var bodyStyles = window.getComputedStyle(document.body);

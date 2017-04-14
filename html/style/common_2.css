@@ -103,11 +103,33 @@ body {
   background-color: #98acb3;  
   border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #98acb3;  
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.05), 0 5px 15px 0 rgba(0,0,0,0.17);  
-}.buttons_editor:hover{ 
-  background-color: #c4cfd4;
-  border-color: #c4cfd4; 
+}/*
+.buttons_editor:hover{ 
+  background-color: #c4cfd4; border-color: #c4cfd4; 
+  opacity: 0.7;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
+}*/
+.buttons_editor:hover{ 
+  background-color: #a7b8be; border-color: #a7b8be; 
+  opacity: 0.6;
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
+.symbol{
+background-color: #99bd75;
+border-color: #99bd75;
+}
+.symbol:hover{ 
+  background-color: #c0d6a9; border-color: #c0d6a9; opacity: 0.6;
+}
+.symbol:hover{ 
+  background-color: #a6c587; border-color: #a6c587; opacity: 0.6;
+}
+/*
+.symbol{
+background-color: #a6c587;
+border: solid 10px #a6c587;
+border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c587;  
+} */
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
@@ -197,6 +219,7 @@ body {
 @-webkit-keyframes "blink" { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
 @-ms-keyframes "blink"     { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
 @-o-keyframes "blink"      { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
+
 
 /*-- */
 .mail{
