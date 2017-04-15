@@ -30,16 +30,21 @@ var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#1
 var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
 var symbol_readall =     '<strong style="font-size:100%;line-height:115%;">&#9776;</strong>';
 var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#8883;</strong>';
-var symbol_pause =        '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
+var symbol_pause =       '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
 var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
 var symbol_login =        '<strong style="font-size:200%;line-height:100%;">login</strong>';
 var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#8679;</strong>';
 var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#9993;</strong>';
 var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
-var symbol_nextpage =     '<strong style="font-size:250%;line-height:50%">&#8250;</strong>';
-var symbol_nextpage =     '<strong style="font-size:200%;opacity:0.8;line-height:70%">&#10150;</strong>';
-var symbol_cursor =     '<strong style="font-size:200%;line-height:50%"><em class="cursor" > | </em></strong>';
-var symbol_cursor =     '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';;
+var symbol_nextpage =   '<strong style="font-size:200%;opacity:0.8;line-height:70%">&#10150;</strong>';
+var symbol_navigate =   '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';
+var symbol_left  =      '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
+var symbol_right =      '<strong style="font-size:280%;line-height:30%;">&#8250;</strong>';
+var symbol_up =         '<strong style="font-size:300%;line-height:40%;">u</strong>';
+var symbol_down =       '<strong style="font-size:300%;line-height:40%;">d</strong>';
+var symbol_leftword  =  '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
+var symbol_rightword =  '<strong style="font-size:280%;line-height:30%;">&#8250;</strong>';
+
 var symbols_play_pause = [symbol_play, symbol_pause];
 
 var bodyStyles = window.getComputedStyle(document.body);
