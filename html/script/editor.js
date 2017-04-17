@@ -1,9 +1,9 @@
 //alert('editor 0');
 
 var editor_lang = 'en';
-var scroll_by = 'letter';
-var scroll_by = 'word';
-
+//var scroll_by = 'letter';
+//var scroll_by = 'word';
+var editor_sound_counter = 1;
 
 var dict_letters_ru = {r1:'а',r2:'б',r3:'в',r4:'г',r5:'д',r6:'е',r7:'ё',r8:'ж',r9:'з',r10:'и',r11:'й',r12:'к',r13:'л',r14:'м',r15:'н',r16:'о',r17:'п',r18:'р',r19:'с',r20:'т',r21:'у',r22:'ф',r23:'х',r24:'ц',r25:'ч',r26:'ш',r27:'щ',r28:'ъ',r29:'ы',r30:'ь',r31:'э',r32:'ю',r33:'я' };
 var dict_letters_en = { a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z'};
@@ -28,6 +28,7 @@ var b_left=3; var b_right=97; var b_top=38; var b_bottom=95;
 var b_rightwidth=null;
 var text_zoom = '900%';
 var box_class = 'text_zoom';
+var style_text = 'upper_twolines';
 //var e_style = 'top:2%; width:96%; left:2%;';
 document.body.style.setProperty('--editor-fontsize-pc', 7);
 document.body.style.setProperty('--editor-borderwidth-pc', 2);
@@ -48,6 +49,7 @@ function setstyle_upper_oneline(){                                       //alert
 	document.getElementById('editor_text_box').className='reader_zoom_box';
 	document.getElementById('editor_text_area').className='text_zoom';
 	document.getElementById('editor_text_area').style.fontSize='900%';
+	style_text = 'upper_oneline';                                        //alert(style_text);
 }function setstyle_upper_twolines(){                                     //alert('twolines');
 	b_nset=5; b_n=10; b_nx=6; b_ny=2; b_xspace=5; b_yspace=6; 
 	b_left=2; b_right=98; b_top=61.5; b_bottom=97; b_botheight=0.7;
@@ -55,6 +57,7 @@ function setstyle_upper_oneline(){                                       //alert
 	document.getElementById('editor_text_box').className='text_scroll_box';
 	document.getElementById('editor_text_area').className='text_scroll';
 	document.getElementById('editor_text_area').style.fontSize='650%';
+	style_text = 'upper_twolines';
 }
 elem=create_element('div', 'editor_text_box','reader_zoom_box', 'top:2%; width:96%; left:2%;','','','','','');  //alert(e_style);
 elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
@@ -96,7 +99,13 @@ function editor_set_cursor(){
 	cursor='<em id="cursor" style="position:relative;"><em class="blinking-cursor" >|</em></em>';
 	iter = parseInt(localStorage.getItem('editor_iter'));
 	text = localStorage.getItem('text_edit');
-	text_c = text.substr(0, iter)+cursor+text.substr(iter);
+	rspace = text.indexOf(' ',iter);
+	lspace = text.substr(0,iter).lastIndexOf(' ');                       //alert('|'+style_text+'|');
+	if (rspace>0 && lspace>0 && lspace<rspace){                      //alert('|'+lspace0+'|'+iter+'|'+rspace0+'|');
+		text_c = text.substr(0, lspace+1)+'<span style="white-space:nowrap;">'+text.substr(lspace+1,iter-lspace-1)+cursor+text.substr(iter,rspace-iter)+'</span>'+text.substr(rspace);
+	}else{ 
+		text_c = text.substr(0, iter)+cursor+text.substr(iter); 
+	}                                                                    //alert(text); alert(text_c);
 	document.getElementById('editor_text_area').innerHTML=text_c;
 	scroll_to('cursor','editor_text_box', title=0);                      //alert(text_c);
 	}
@@ -127,8 +136,8 @@ function editor_show_start(){
 	elem.innerHTML = inner_e0+inner_e1+inner_e2 + inner_e3 + inner_e4;
 	}
 var button_delete = ['<div id="editor_delete" class="buttons_editor" onclick="editor_delete();"   style="', '">'+symbol_delete_editor+'</div>'];
-var button_prev = [ '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="', '">'+symbol_prev_editor+'</div>' ];
-var button_next = [ '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);"  style="', '">'+symbol_next_editor+'</div>' ];
+var button_prev = [ '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="', '">'+symbol_left+'</div>' ];
+var button_next = [ '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);"  style="', '">'+symbol_right+'</div>' ];
 var button_navigate =    [ '<div id="editor_navigate"     class="buttons_editor" onclick="editor_show_navigate();"     style="', '">'+symbol_navigate+'</div>' ];
 var button_navigate_p0 = [ '<div id="editor_navigate_p0"  class="buttons_editor" onclick="editor_show_navigate_p0();"  style="', '">'+symbol_navigate+'</div>' ];
 var button_backto_start   = ['<div id="editor_backto_start"   class="buttons_editor" onclick="editor_backto_start();"    style="', '"> back </div>'];
@@ -139,6 +148,7 @@ var button_up   = [ '<div id="editor_up"   class="buttons_editor" onclick="edito
 var button_down = [ '<div id="editor_down" class="buttons_editor" onclick="editor_scrollvert(1);"  style="', '">'+symbol_down+'</div>' ];
 var button_prevword = [ '<div id="editor_prevword"  class="buttons_editor" onclick="editor_scrollword(0);"  style="', '">'+symbol_leftword+'</div>' ];
 var button_nextword = [ '<div id="editor_nextword"  class="buttons_editor" onclick="editor_scrollword(1);"  style="', '">'+symbol_rightword+'</div>' ];
+var button_sound = [ '<div id="editor_sound"   class="buttons_editor" onclick="editor_sound();"  style="', '">'+symbols_sound[editor_sound_counter]+'</div>' ];
 function editor_show_menu(){
 	menu_blur();
 	var elem=create_element('div', 'editor_menu_area', '','','','','','','');
@@ -151,46 +161,70 @@ function editor_show_menu(){
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}
-/*
-function editor_scroll_byword(order){
-	iter = parseInt(localStorage.getItem('editor_iter'));
-	text = localStorage.getItem('text_edit');
-	space = '<abbr>&#160 </abbr>';
-	lspace = text.substr(0,iter).lastIndexOf(space);
-	
-	proceed = 1;
-	while(proceed==1){
-		if text[iter]
-		}
+function editor_scrollvert(order){                                       //alert('scrollvert');
+	order = parseInt(order);
+	iter_prev = parseInt(localStorage.getItem('editor_iter')); 
+	iter_save = iter_prev; 
+	pos0 = parseInt(document.getElementById('cursor').offsetTop);        //alert(pos0);
+	proceed2 = 1;
+	while(proceed2==1){
+		editor_scrollword(order);
+		pos = parseInt(document.getElementById('cursor').offsetTop);     //alert('|'+pos0+'|'+pos+'|');
+		iter = parseInt(localStorage.getItem('editor_iter'));   
+		if (pos!=pos0 || iter==iter_prev) {proceed2=0;}
+		iter_prev = iter;
 	}
-	*/ 
-function editor_scrollvert(order){alert('scrollvert');}
+	if (order==1 && pos==pos0 && iter!=iter_save) {
+		iter=iter_save;
+		localStorage.setItem('editor_iter', iter.toString());
+		editor_set_cursor();
+		} 
+	if (order==0){
+		pos0 = parseInt(document.getElementById('cursor').offsetTop);    //alert(pos0);
+		proceed2 = 1;
+		while(proceed2==1){
+			editor_scrollword(0);
+			pos = parseInt(document.getElementById('cursor').offsetTop); //alert('|'+pos0+'|'+pos+'|');
+			iter = parseInt(localStorage.getItem('editor_iter'));   
+			if (pos!=pos0 || iter==iter_prev) {proceed2=0;}
+			iter_prev = iter;
+		}editor_scrollword(1);
+	}
+}
 function editor_scrollword(order){                                       //alert('scrollword '+order);
 	order = parseInt(order);
 	iter = parseInt(localStorage.getItem('editor_iter'));                //alert('iter '+iter);
 	text = localStorage.getItem('text_edit');
 	if (order==1 && iter<text.length-1){
+		iter_prev = text.substr(0,iter).lastIndexOf(' '); 
 		iter = text.indexOf(' ',iter);                                   //alert(iter); 
 		proceed = 1;
 		while(proceed==1){
 			if (iter<text.length-1 && text[iter]==' ' && iter>=0 ){iter+=1;} 
 			else{proceed=0;}                                             //alert(iter);
 		}
-	}if (order==0 && iter>0){
-		iter = text.substr(0,iter).lastIndexOf(' ');                     //alert(iter);
-		proceed = 1;
-		while(proceed==1){
-			if (iter>0 && text[iter]==' '){iter-=1;}
-			else{proceed=0;}                                             //alert(iter);
-		}
+	}if (order==0 && iter>0){                                            //alert('|'+text[iter]+'|');
+		if (text[iter-1]==' '){                                            
+			iter -=1;
+			iter_prev = iter;
+			//iter = text.substr(0,iter).lastIndexOf(' ');               //alert(iter);
+			proceed = 1;
+			while(proceed==1){
+				if (iter>1 && text[iter]==' '){iter=iter-1;}
+				else{proceed=0;}                                         //alert(iter);
+			}
+		}else{ iter_prev = text.indexOf(' ',iter);  }
 		iter = text.substr(0,iter).lastIndexOf(' ')+1;
 	}
 	localStorage.setItem('editor_iter', iter.toString());
 	editor_set_cursor();
+	i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
+	if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), editor_lang, 1, 0); }
 }
 function editor_scroll(order){
 	ltag = '<abbr>'; rtag = '</abbr>';
-	iter = parseInt(localStorage.getItem('editor_iter'));
+	iter = parseInt(localStorage.getItem('editor_iter'));                //alert(iter);
+	iter_prev = iter;
 	text = localStorage.getItem('text_edit');
 	max_iter = text.length;
 	if (order==1 && iter < max_iter){ 
@@ -215,6 +249,8 @@ function editor_scroll(order){
 	}  
 	localStorage.setItem('editor_iter', iter.toString());
 	editor_set_cursor();
+	i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
+	if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), editor_lang, 1, 0); }
 }function editor_delete(){
 	if (iter>0) { 
 		text = localStorage.getItem('text_edit');
@@ -337,6 +373,7 @@ function editor_show_symbols_p0(type){                                       //a
 	elem.style.visibility='visible';
 	inner_e = editor_make_symbols_p0(type);
 	elem.innerHTML = inner_e;
+	editor_set_cursor();
 }function editor_show_symbols_p1(type){
 	setstyle_upper_oneline();                                            //alert('setstyle');
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
@@ -361,6 +398,8 @@ function editor_show_navigate(){
 	inner_e+= button_next[0]+button_size_pos(10)[0]+button_next[1];
 	inner_e+= button_prevword[0]+button_size_pos(7)[0]+button_prevword[1];
 	inner_e+= button_nextword[0]+button_size_pos(11)[0]+button_nextword[1];
+	inner_e+= button_delete[0]+button_size_pos(5)[0]+button_delete[1];
+	inner_e+= button_sound[0]+button_size_pos(0)[0]+button_sound[1];
 	document.getElementById('editor_buttons_area_0').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_1');
 	elem.style.visibility='visible';
@@ -368,15 +407,22 @@ function editor_show_navigate(){
 }function editor_show_navigate_p0(){
 	setstyle_upper_twolines();
 	inner_e = button_backto_letters[0]+'1'+button_backto_letters[1]+button_size_pos(6)[0]+button_backto_letters[2];
+	inner_e+= button_up[0]+button_size_pos(3)[0]+button_up[1];
+	inner_e+= button_down[0]+button_size_pos(9)[0]+button_down[1];
 	inner_e+= button_prev[0]+button_size_pos(8)[0]+button_prev[1];
 	inner_e+= button_next[0]+button_size_pos(10)[0]+button_next[1];
 	inner_e+= button_prevword[0]+button_size_pos(7)[0]+button_prevword[1];
 	inner_e+= button_nextword[0]+button_size_pos(11)[0]+button_nextword[1];
+	inner_e+= button_delete[0]+button_size_pos(5)[0]+button_delete[1];
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_2');
 	elem.style.visibility='visible';
 	elem.innerHTML = inner_e;
 }
+function editor_sound(){
+	editor_sound_counter = (editor_sound_counter+1)%2;                   //alert(editor_sound_counter);
+	document.getElementById('editor_sound').innerHTML = symbols_sound[editor_sound_counter];
+	}
 
 function editor_backto_start(){
 	setstyle_upper_twolines();

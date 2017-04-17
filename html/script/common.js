@@ -17,14 +17,11 @@ var login_messages_ru = ['Указанное имя не существует.',
 var newlogin_messages_en = ['The new user is added successfully.', 'The name is busy.', ''];
 var newlogin_messages_ru = ['Новый аккаунт успешно создан.', 'Невозможно создать новый аккаунт. Указанное имя занято.', ''];
 
-var symbol_prev =        '<strong style="font-size:200%;line-height:105%;">&#8672;</strong>';
 var symbol_prev =        '<strong style="font-size:250%;line-height:80%;">&#8249;</strong>';
 var symbol_prev_editor = '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
-var symbol_next =        '<strong style="font-size:200%;line-height:105%">&#8674;</strong>';
 var symbol_next =        '<strong style="font-size:250%;line-height:80%">&#8250;</strong>';
 var symbol_next_editor = '<strong style="font-size:280%;line-height:30%">&#8250;</strong>';
 var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
-var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10008;</strong>';
 var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
 var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
 var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
@@ -35,17 +32,21 @@ var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#98
 var symbol_login =        '<strong style="font-size:200%;line-height:100%;">login</strong>';
 var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#8679;</strong>';
 var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#9993;</strong>';
+var symbol_mail =         '<strong style="font-size:90%;line-height:150%;">&#128386;</strong>';
 var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
 var symbol_nextpage =   '<strong style="font-size:200%;opacity:0.8;line-height:70%">&#10150;</strong>';
 var symbol_navigate =   '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';
-var symbol_left  =      '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
-var symbol_right =      '<strong style="font-size:280%;line-height:30%;">&#8250;</strong>';
-var symbol_up =         '<strong style="font-size:300%;line-height:40%;">u</strong>';
-var symbol_down =       '<strong style="font-size:300%;line-height:40%;">d</strong>';
-var symbol_leftword  =  '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
-var symbol_rightword =  '<strong style="font-size:280%;line-height:30%;">&#8250;</strong>';
+var symbol_left  =      '<strong style="font-size:190%;line-height:50%;opacity:0.8;">&#9668;</strong>';
+var symbol_right =      '<strong style="font-size:190%;line-height:50%;opacity:0.8;">&#9658;</strong>';
+var symbol_up =         '<strong style="font-size:190%;line-height:80%;opacity:0.8;">&#9650;</strong>';
+var symbol_down =       '<strong style="font-size:190%;line-height:55%;opacity:0.8;">&#9660;</strong>';
+var symbol_leftword  =      '<strong style="font-size:140%;line-height:70%;opacity:0.8;">&#9665;</strong>';
+var symbol_rightword =      '<strong style="font-size:140%;line-height:70%;opacity:0.8;">&#9655;</strong>';
+var symbol_mute  =      '<strong style="font-size:150%;line-height:120%;opacity:0.8;">&#128263;</strong>';
+var symbol_sound =      '<strong style="font-size:150%;line-height:120%;opacity:0.8;">&#128265;</strong>';
 
 var symbols_play_pause = [symbol_play, symbol_pause];
+var symbols_sound = [symbol_mute, symbol_sound];
 
 var bodyStyles = window.getComputedStyle(document.body);
 var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
