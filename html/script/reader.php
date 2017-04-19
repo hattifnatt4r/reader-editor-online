@@ -15,7 +15,7 @@ if (isset($_POST['reader_menu_go_file1'])) {
 
 if (isset($_POST['save_text_js'])) {
 	$text = $_POST["text_origin_js"];
-	//echo $text;
+	echo $text;
 	$fname = $_SESSION["filename_opened"];
 	$myfile = fopen($fname, "w") or die("Unable to open file!");
 	chmod($fname, 0666);

@@ -341,19 +341,19 @@ function files_show_menu(){
 	inner_e = '<div id="files_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	
 	inner_e+= '<div id="files_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:17%;">appearance</div>';
-	inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:17%;">appearance-common</div>';
-	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:15%; top:55%;">sound</div>';
+	//inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:17%;">appearance</div>';
+	//inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:17%;">appearance-common</div>';
+	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:20%; top:60%;">sound</div>';
 	
 	inner_e+= '<div hidden id="files_mail" style="left:60%;top:15%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">';
 	inner_e+= '<input type="text"   id="mail_text_id"   name="mail_text_name"   value="empty" >';
 	inner_e+= '<input type="submit" id="mail_submit_id" name="mail_submit_name" value="empty" >';
 	inner_e+= '<input type="submit" id="past_submit_id" name="mail_submit_name" value="empty" ></div>';
-	inner_e+= '<div id="files_mail_button" class="buttons" onclick="files_click(7)" style="left:68%;top:17%;">email</div>';
-	inner_e+= '<div id="files_past_button" class="buttons disabled" onclick="" style="left:50%;top:55%;">past</div>';
+	inner_e+= '<div id="files_mail_button" class="buttons" onclick="files_click(7)" style="left:68%;top:23%;">email</div>';
+	inner_e+= '<div id="files_past_button" class="buttons disabled" onclick="" style="left:44%;top:60%;">past</div>';
 	
-	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:68%; top:55%;">new file</div>';
+	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:68%; top:60%;">new file</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	menu_blur();

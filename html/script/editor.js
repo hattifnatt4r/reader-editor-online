@@ -1,15 +1,19 @@
 //alert('editor 0');
 
-var editor_lang = 'en';
+var editor_lang = 0;                                                     //lang_arr = ['auto', 'ru', 'en'];
 //var scroll_by = 'letter';
 //var scroll_by = 'word';
 var editor_sound_counter = 1;
+var editor_fontsize_arr = ['fontsize: 2 lines','fontsize: 3 lines'];
+var editor_fontsize = 1;
+var editor_buttonsound_arr = ['',''];
+var editor_buttonsound = 0;
 
 var dict_letters_ru = {r1:'а',r2:'б',r3:'в',r4:'г',r5:'д',r6:'е',r7:'ё',r8:'ж',r9:'з',r10:'и',r11:'й',r12:'к',r13:'л',r14:'м',r15:'н',r16:'о',r17:'п',r18:'р',r19:'с',r20:'т',r21:'у',r22:'ф',r23:'х',r24:'ц',r25:'ч',r26:'ш',r27:'щ',r28:'ъ',r29:'ы',r30:'ь',r31:'э',r32:'ю',r33:'я' };
 var dict_letters_en = { a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z'};
 var dict_symbols =    { 0:'0',1:'1',2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', colon:':', semicolon:';', quotes:'"', plus:'+', minus:'-', eq:'=', star:'*', divide:'/', lbr:'(', rbr:')', power:'^', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}'};
 var dict_symbols2 =   { space:' ', newline:' <br> ', pc:'<abbr>&#37</abbr>', less:'<abbr>&#60</abbr>', more:'<abbr>&#62</abbr>', leq:'<abbr>&#8804</abbr>', geq:'<abbr>&#8805</abbr>', ll:'<abbr>&#8810</abbr>', gg:'<abbr>&#8811</abbr>', approx:'<abbr>&#8776</abbr>', vert:'|', backslash:'<abbr>&#8726</abbr>', sum:'<abbr>&#8721</abbr>', prod:'<abbr>&#8719</abbr>', cap:'<abbr>&#8745</abbr>', cup:'<abbr>&#8746</abbr>', subset:'<abbr>&#8834</abbr>', supset:'<abbr>&#8835</abbr>', sim:'<abbr>~</abbr>', cdot:'<abbr>&#8729</abbr>', neq:'<abbr>&#8800</abbr>', quiv:'<abbr>&#8801</abbr>', sqrt:'<abbr>&#8730</abbr>'};
-var dict_symbols2_b = { space:'space',  newline:'line',  pc:'&#37', less:'&#60', more:'&#62', leq:'&#8804', geq:'&#8805', ll:'&#8810', gg:'&#8811', approx:'&#8776', vert:'|', backslash:'&#8726', sum:'&#8721', prod:'&#8719', cap:'&#8745', cup:'&#8746', subset:'&#8834', supset:'&#8835', sim:'~', cdot:'&#8729', neq:'&#8800', quiv:'&#8801', sqrt:'&#8730'};
+var dict_symbols2_b = { space:' ',  newline:'line',  pc:'&#37', less:'&#60', more:'&#62', leq:'&#8804', geq:'&#8805', ll:'&#8810', gg:'&#8811', approx:'&#8776', vert:'|', backslash:'&#8726', sum:'&#8721', prod:'&#8719', cap:'&#8745', cup:'&#8746', subset:'&#8834', supset:'&#8835', sim:'~', cdot:'&#8729', neq:'&#8800', quiv:'&#8801', sqrt:'&#8730'};
 dict_1 = merge_options(dict_letters_en, dict_letters_ru); 
 dict_2 = merge_options(dict_1, dict_symbols); 
 var dict_allchar = merge_options(dict_2, dict_symbols2);
@@ -25,7 +29,7 @@ var letters_arr = letters_arr_ru;
 var b_nset=5; var b_n=10;
 var b_nx=5; var b_ny=2; var b_xspace=5; var b_yspace=7; 
 var b_left=3; var b_right=97; var b_top=38; var b_bottom=95;
-var b_rightwidth=null;
+var b_leftwidth=null; var b_rightwidth=null;
 var text_zoom = '900%';
 var box_class = 'text_zoom';
 var style_text = 'upper_twolines';
@@ -44,20 +48,31 @@ function setstyle_left(){
 	} */
 function setstyle_upper_oneline(){                                       //alert('oneline');
 	b_nset=5; b_n=18; b_nx=6; b_ny=3; b_xspace=5; b_yspace=6; 
-	b_left=2; b_right=98; b_top=38; b_bottom=97; b_botheight=0.7;
+	b_left=2; b_right=98; b_top=42; b_bottom=97; b_botheight=0.7;
 	document.getElementById('editor_text_box').style.height=(b_top-8)+'%';
 	document.getElementById('editor_text_box').className='reader_zoom_box';
 	document.getElementById('editor_text_area').className='text_zoom';
-	document.getElementById('editor_text_area').style.fontSize='900%';
+	document.getElementById('editor_text_area').style.fontSize='920%';
 	style_text = 'upper_oneline';                                        //alert(style_text);
 }function setstyle_upper_twolines(){                                     //alert('twolines');
-	b_nset=5; b_n=10; b_nx=6; b_ny=2; b_xspace=5; b_yspace=6; 
-	b_left=2; b_right=98; b_top=61.5; b_bottom=97; b_botheight=0.7;
+	b_nset=5; b_n=12; b_nx=6; b_ny=2; b_xspace=5.5; b_yspace=6; 
+	b_left=2; b_right=98; b_top=64; b_bottom=97; b_botheight=0.7;
+	b_leftwidth=null; b_rightwidth=null;
 	document.getElementById('editor_text_box').style.height=(b_top-7)+'%';
 	document.getElementById('editor_text_box').className='text_scroll_box';
 	document.getElementById('editor_text_area').className='text_scroll';
-	document.getElementById('editor_text_area').style.fontSize='650%';
+	if (editor_fontsize==1){fontsize='500%';} else{fontsize='720%';}
+	document.getElementById('editor_text_area').style.fontSize=fontsize;
+	document.getElementById('editor_text_box').style.width='96%';
+	document.getElementById('editor_text_box').style.left='2%';
 	style_text = 'upper_twolines';
+}function setstyle_cut_leftright(){                                     //alert('twolines');
+	b_nx=7; b_xspace=5; b_n = 21;
+	b_left=1.5; b_right=98.5;
+	b_rightwidth=0.6; b_leftwidth=0.6;
+	document.getElementById('editor_text_box').style.width='97%';
+	document.getElementById('editor_text_box').style.left='1.5%';
+	//style_text = 'upper_twolines';
 }
 elem=create_element('div', 'editor_text_box','reader_zoom_box', 'top:2%; width:96%; left:2%;','','','','','');  //alert(e_style);
 elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
@@ -75,13 +90,20 @@ if (editor_type=='texttop_twolines_v1'){ setstyle_upper_twolines(); }
 function button_size_pos(i){     
 	ny = (i-i%b_nx)/b_nx;                                                //alert('pos: '+i+' '+ny);
 	dx = (b_right - b_left -(b_nx-1)*b_xspace)/b_nx; 
-	x = b_left + (dx+b_xspace)*(i%b_nx);     
+	if (b_rightwidth!=null && b_rightwidth!=null){ dx = dx/(b_nx-2+b_leftwidth+b_rightwidth)*b_nx; }
+	if (i<0) { x = b_left + (dx+b_xspace)*(b_nx+i%b_nx); } 
+	else{ x = b_left + (dx+b_xspace)*(i%b_nx); }
+	if (b_leftwidth!=null && b_rightwidth!=null && (i%b_nx)>0){x=x-dx*(1-b_leftwidth); }
 	dy = (b_bottom - b_top -(b_ny-1)*b_yspace )/b_ny;                    //alert('dy: '+dy);
 	if (b_botheight!=null){ dy = dy/(b_ny-1+b_botheight)*b_ny;  } 
-	y = b_top + (dy+b_yspace)*(i-i%b_nx)/b_nx;                           //alert('y: '+y);
-	if (b_botheight!=null && ny==b_ny-1){dy=dy*b_botheight;}
-	if (b_rightwidth!=null && (i%b_nx)==b_nx-1){dx=b_rightwidth;}
-	style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+dx.toString()+'%; height:'+dy.toString()+'%;'  ;  //alert(style);
+	if (i<0){ y = b_top - (dy+b_yspace)*(1+(-i+i%b_nx)/b_nx); }
+	else{ y = b_top + (dy+b_yspace)*(i-i%b_nx)/b_nx; }                   //alert('y: '+y);
+	style='';
+	if (b_botheight!=null &&   ny==b_ny-1        ){dy=dy*b_botheight; style='line-height:60%;'; }
+	if (b_botheight!=null && (-i+i%b_nx)/b_nx==1 ){y=y+dy*(1-b_botheight); dy=dy*b_botheight; style='line-height:60%;'; }
+	if (b_leftwidth!=null && (i%b_nx)==0){dx=dx*b_leftwidth;}
+	if (b_rightwidth!=null && (i%b_nx)==b_nx-1){dx=dx*b_rightwidth;}
+	style+= 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+dx.toString()+'%; height:'+dy.toString()+'%;'  ;  //alert(style);
 	return([style,x,y,dx,dy]);
 }
 
@@ -93,6 +115,12 @@ editor_show_start();
 function editor_exit(){                                                  //alert('editor exit');
 	localStorage.setItem('ischanged_text', '1');
 	window.location.href = localStorage.getItem('editor_back');          //alert(localStorage.getItem('text_edit'));
+}function editor_save(){                                                 //alert('editor_save');
+	if (localStorage.getItem('editor_back')=='/reader.html'){
+		localStorage.setItem('ischanged_text', '1');
+		localStorage.setItem('back_to_editor', '1');
+		window.location.href = '/reader.html';
+	}
 }
 
 function editor_set_cursor(){
@@ -117,17 +145,17 @@ function editor_show_start(){
 	elem = document.getElementById('editor_buttons_area');
 	if (elem==null){ var elem = create_element('div', 'editor_buttons_area', '','','','','','',''); }
 	inner_e0 = "<div id='editor_buttons_area_0'>";
-	inner_e0+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+button_size_pos(1)[0]+'">menu</div>';
-	inner_e0+= '<div id="editor_utter"   class="buttons_editor disabled" onclick="editor_utter_word();"     style="'+button_size_pos(8)[0]+'">utter</div>';
-	inner_e0+= '<div id="editor_select"  class="buttons_editor disabled" onclick="editor_select_word();"    style="'+button_size_pos(7)[0]+'">by word</div>';
-	inner_e0+= '<div id="editor_numbers" class="buttons_editor" onclick="editor_show_symbols_p0(1);"  style="'+button_size_pos(2)[0]+'">math</div>';
-	inner_e0+= '<div id="editor_letters" class="buttons_editor" onclick="editor_show_symbols_p0(0);"  style="'+button_size_pos(3)[0]+'">text</div>';
+	inner_e0+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+button_size_pos(7)[0]+'">menu</div>';
+	//inner_e0+= '<div id="editor_utter"   class="buttons_editor disabled" onclick="editor_utter_word();"     style="'+button_size_pos(8)[0]+'">utter</div>';
+	//inner_e0+= '<div id="editor_select"  class="buttons_editor disabled" onclick="editor_select_word();"    style="'+button_size_pos(7)[0]+'">by word</div>';
+	inner_e0+= '<div id="editor_numbers"    class="buttons_editor" onclick="editor_show_symbols_p0(1,0);"  style="'+button_size_pos(2)[0]+'">123</div>';
+	inner_e0+= '<div id="editor_letters_en" class="buttons_editor" onclick="editor_show_symbols_p0(0,0);"  style="'+button_size_pos(3)[0]+'">abc</div>';
+	inner_e0+= '<div id="editor_letters_ru" class="buttons_editor" onclick="editor_show_symbols_p0(0,1);"  style="'+button_size_pos(4)[0]+'">абв</div>';
 	inner_e0+= '<div id="editor_go"      class="buttons_editor disabled" onclick="show_menu_go();"          style="'+button_size_pos(0)[0]+'">go</div>';
 	inner_e0+= '<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();"           style="'+button_size_pos(6)[0]+'"> exit </div>';
-	inner_e0+= '<div id="editor_delete" class="buttons_editor" onclick="editor_delete();"   style="'+button_size_pos(5)[0]+'">'+symbol_delete_editor+'</div>';
-	//inner_e0+= '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="'+button_size_pos(10)[0]+'">'+symbol_prev_editor+'</div>';
-	//inner_e0+= '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);"  style="'+button_size_pos(11)[0]+'">'+symbol_next_editor+'</div>';
-	inner_e0+= '<div id="editor_navigate"   class="buttons_editor" onclick="editor_show_navigate();"  style="'+button_size_pos(11)[0]+'">'+symbol_navigate+'</div>';
+	inner_e0+= '<div id="editor_save"    class="buttons_editor" onclick="editor_save();"           style="'+button_size_pos(8)[0]+'"> save </div>';
+	inner_e0+= '<div id="editor_navigate"   class="buttons_editor" onclick="editor_show_navigate();"  style="'+button_size_pos(5)[0]+'">'+symbol_navigate+'</div>';
+	inner_e0+= '<div id="editor_lang"       class="buttons_editor" onclick="editor_change_lang();"    style="'+button_size_pos(11)[0]+'">'+lang_arr[editor_lang]+symbol_sound_sub+'</div>';
 	inner_e0+= "</div>"
 	inner_e1 = "<div id='editor_buttons_area_1'></div>";
 	inner_e2 = "<div id='editor_buttons_area_2'></div>";
@@ -149,15 +177,18 @@ var button_down = [ '<div id="editor_down" class="buttons_editor" onclick="edito
 var button_prevword = [ '<div id="editor_prevword"  class="buttons_editor" onclick="editor_scrollword(0);"  style="', '">'+symbol_leftword+'</div>' ];
 var button_nextword = [ '<div id="editor_nextword"  class="buttons_editor" onclick="editor_scrollword(1);"  style="', '">'+symbol_rightword+'</div>' ];
 var button_sound = [ '<div id="editor_sound"   class="buttons_editor" onclick="editor_sound();"  style="', '">'+symbols_sound[editor_sound_counter]+'</div>' ];
+var button_spell = [ '<div id="editor_spell"   class="buttons_editor" onclick="editor_spell();"  style="', '">spell</div>' ];
 function editor_show_menu(){
 	menu_blur();
 	var elem=create_element('div', 'editor_menu_area', '','','','','','','');
 	var inner_e = '<div id="editor_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="editor_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
 	inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
-	inner_e+= '<div id="editor_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:15%;"> appearance </div>';
+	inner_e+= '<div id="editor_fontsize"    class="buttons" onclick="editor_set_fontsize();" style="left:35%; top:15%;">'+editor_fontsize_arr[editor_fontsize]+'</div>';
 	inner_e+= '<div id="editor_sound"       class="buttons disabled" onclick=""    style="left:15%; top:50%;"> sound </div>';
 	inner_e+= '<div id="editor_read"        class="buttons disabled" onclick=""    style="left:60%; top:15%;"> read </div>';
+	inner_e+= '<div id="editor_lang_auto"   class="buttons" onclick="editor_change_langauto();"    style="left:60%; top:50%;">'+lang_auto_arr[lang_auto_prefer]+symbol_sound_sub2+'</div>';
+	inner_e+= '<div id="editor_sound_button"   class="buttons" onclick="editor_set_buttonsound();" style="left:35%; top:50%;">'+editor_buttonsound_arr[editor_buttonsound]+'</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
 	}
@@ -235,8 +266,7 @@ function editor_scroll(order){
 				iter = text.indexOf('>',iter) + 1; 
 			}else{iter+=1;}
 		}
-	}  
-	else if (order==0 && iter > 0) { 
+	}else if (order==0 && iter > 0) { 
 		i = text.substr(0,iter).lastIndexOf(rtag);
 		if (iter==i+rtag.length && i!=-1){
 			iter = text.substr(0,iter).lastIndexOf(ltag);                //alert('1:'+iter);
@@ -250,7 +280,10 @@ function editor_scroll(order){
 	localStorage.setItem('editor_iter', iter.toString());
 	editor_set_cursor();
 	i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
-	if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), editor_lang, 1, 0); }
+	letter = text.substr(i1, i2-i1);
+	if (editor_sound_counter==1) { utter(letter, editor_lang, 1, 0); }
+	if (letter==' '){letter='_';}
+	document.getElementById('editor_show_letter').innerHTML = letter;
 }function editor_delete(){
 	if (iter>0) { 
 		text = localStorage.getItem('text_edit');
@@ -272,10 +305,8 @@ function editor_scroll(order){
 		editor_set_cursor(); 
 	}
 }function editor_set_letter(n, back){
-	//if (type==0) { arr=letters_arr; }  else if (type==1) { arr=numbers_arr; } else if (type==2) { arr=symbols_arr; }
 	iter = parseInt(localStorage.getItem('editor_iter'));
 	text = localStorage.getItem('text_edit');
-	//letter = dict_allchar[arr[n]]; 
 	keys = Object.keys(dict_allchar);
 	letter = dict_allchar[keys[n]];                                       //alert(n+' '+arr[n]+'  '+letter);
 	text_c = text.substr(0, iter)+letter+text.substr(iter);
@@ -286,27 +317,17 @@ function editor_scroll(order){
 	if (back==1){ editor_backto_letters(); }
 }
 	
-/*
-function button_size_pos(i){ 
-	dx = (b_right - b_left -(b_nx-1)*b_xspace)/b_nx; 
-	x = b_left + (dx+b_xspace)*(i%b_nx); //alert(x);
-	dy = (b_bottom - b_top -(b_ny-1)*b_yspace )/b_ny; //alert(dy);
-	y = b_top + (dy+b_yspace)*(i-i%b_nx)/b_nx;   ny = (i-i%b_nx)/b_nx;
-	if (b_botheight!=null && ny==b_ny-1){dy=b_botheight;}
-	if (b_rightwidth!=null && (i%b_nx)==b_nx-1){dx=b_rightwidth;}
-	style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+dx.toString()+'%; height:'+dy.toString()+'%;'  ;
-	return([style,x,y,dx,dy]);
-	}*/
-function editor_make_symbols_p0(type){
-	//type = parseInt(type); alert(type);
-	if (type==0 && editor_lang=='en'){
-		key_arr = ['e','t','a','o', 'i','n','s','h', 'r','d','i','c','space'];               //alert(key_arr);
-	}if (type==0 && editor_lang=='ru'){
-		key_arr = ['r1','r2','r3','a','b','c','d','e','f','g','h','i','space']; 
+function editor_make_symbols_p0(type, lang){
+	if (type==0 && lang==0){
+		key_arr = ['e','t','a','o', 'i','n','s','h', 'r','d','l','c','space'];             
+		key_arr = ['e','t','a','o', 'i','n','s','h', 'r','d','l','c','u','m','w','space'];             
+	}if (type==0 && lang==1){
+		key_arr = ['r16','r6','r1','r10','r15','r20','r19','r18','r3','r13','r12','r14','space']; 
+		key_arr = ['r16','r6','r1','r10','r15','r20','r19','r18','r3','r13','r12','r14','r5','r17','r21','space']; 
 	}if (type==1){
 		key_arr = ['0','1','2','3','4','5','6','7','8','9','space']; 
 	}
-	inner_e = ''; i=0; reserved=[5,11,12,4,17];
+	inner_e = ''; i=0; reserved=[5,6, 13,14,20];
 	for (ii=0; ii<b_n; ii++){
 		if (reserved.indexOf(ii)==-1 && i<key_arr.length){
 			i_name = key_arr[i];
@@ -316,46 +337,49 @@ function editor_make_symbols_p0(type){
 			inner_e += '<div id="editor_letter_'+i_name+'" class="buttons_editor symbol" onclick="editor_set_letter('+nn+', 0);"  style="'+style+'">'+i_name_button+'</div>';
 			i+=1;
 		} 
-	}inner_e+= button_backto_start[0]+button_size_pos(12)[0]+button_backto_start[1];
-	inner_e+= button_delete[0]+button_size_pos(5)[0]+button_delete[1];
-	inner_e+= button_navigate_p0[0]+button_size_pos(4)[0]+button_navigate_p0[1];
-	inner_e+= button_p1[0]+type+button_p1[1]+button_size_pos(17)[0]+button_p1[2];
-	inner_e+= button_p2[0]+type+button_p2[1]+button_size_pos(11)[0]+button_p2[2];
-	//inner_e+= button_prev[0]+button_size_pos(16)[0]+button_prev[1];
-	//inner_e+= button_next[0]+button_size_pos(17)[0]+button_next[1];
+	}inner_e+= button_backto_start[0]+button_size_pos(14)[0]+button_backto_start[1];
+	inner_e+= button_delete[0]+button_size_pos(6)[0]+button_delete[1];
+	inner_e+= button_navigate_p0[0]+button_size_pos(5)[0]+button_navigate_p0[1];
+	inner_e+= button_p1[0]+type+','+lang+button_p1[1]+button_size_pos(20)[0]+button_p1[2];
+	inner_e+= button_p2[0]+type+','+lang+button_p2[1]+button_size_pos(13)[0]+button_p2[2];
 	return (inner_e);
-}function editor_make_symbols_p1(type){
-	//type = parseInt(type); alert(type);
-	if (type==0 && editor_lang=='en'){                                   //alert('0 en');
+}function editor_make_symbols_p1(type, lang){
+	if (type==0 && lang==0){                                   //alert('0 en');
 		key_arr = ['u','m','w','f', 'g','y','p','b', 'v','k','j','x', 'q','z','dot','comma','dash'];              
-	}if (type==0 && editor_lang=='ru'){ alert('0 ru');
-		key_arr = ['dot','comma','emark','qmark','newline','quotes','lbr','rbr','dash']; 
+		key_arr = ['f', 'g','y','p','b', 'v','k','j','x', 'q','z','dot','comma','dash','emark','qmark','newline','lbr','rbr'];              
+	}if (type==0 && lang==1){                                  //alert('0 ru');
+		key_arr = ['r31','r22','r28','r27', 'r2','r4','r8','r9','r11','r22','r23','r24','r25','r26','r29','r30','r33','dot','comma' ]; 
 	}if (type==1){
 		key_arr = ['dot','comma','emark','qmark','newline','quotes','lbr','rbr','dash']; 
 	}                                                                    //alert(key_arr)
-	inner_e = ''; i=0; 
+	inner_e = ''; i=0; reserved=[20];
 	for (ii=0; ii<b_n; ii++){
-		if (i<key_arr.length){
+		if (reserved.indexOf(ii)==-1 && i<key_arr.length){
 			i_name = key_arr[i];
 			i_name_button = dict_allchar_buttons[key_arr[i]];            //alert(i+' '+i_name+' '+i_name_button);
-			style = button_size_pos(ii)[0];                              //alert(ii, style);
+			style = button_size_pos(ii)[0];                              //if (ii<0){alert(ii+' '+style);}
 			keys = Object.keys(dict_allchar); nn=keys.indexOf(i_name).toString();
 			inner_e += '<div id="editor_letter_'+i_name+'" class="buttons_editor symbol" onclick="editor_set_letter('+nn+', 1);"  style="'+style+'">'+i_name_button+'</div>';
 			i+=1;
 		} 
-	}inner_e+= button_backto_letters[0]+'0'+button_backto_letters[1]+button_size_pos(17)[0]+button_backto_letters[2];
+	}inner_e+= button_backto_letters[0]+'1'+button_backto_letters[1]+button_size_pos(20)[0]+button_backto_letters[2];
 	return (inner_e);
-}function editor_make_symbols_p2(type){
-	if (type==0 && editor_lang=='en'){                                   //alert('0 en');
+}function editor_make_symbols_p2(type, lang){
+	//ii_start = 0;
+	if (type==0 && lang==0){                                   //alert('0 en');
 		key_arr = ['0','1','2','3','4','5','6','7','8','9','emark','qmark','newline','quotes','lbr','rbr'];               
-	}if (type==0 && editor_lang=='ru'){ alert('0 ru');
-		key_arr = ['0','1','2','3','4','5','6','7','8','9','plus','eq','dot','quotes']; 
+		key_arr = ['0','1','2','3','4','5','6','7','8','9','quotes','colon','semicolon','star'];               
+	}if (type==0 && lang==1){                                  //alert('0 ru');
+		key_arr = ['r7','lbr','rbr','0','1','2','3','4','5','6','7','8','9','emark','qmark','newline','dash']; 
+		key_arr = ['1','2','3','lbr','rbr','colon','semicolon', '4','5','6','0','quotes','newline','7','8','9','emark','qmark','dash' ]; 
+		//document.getElementById('editor_text_box').style.width='45.5%';
+		//ii_start = -3;
 	}if (type==1){
 		key_arr = ['dot','comma','emark','qmark','newline','quotes','lbr','rbr','dash']; 
 	}                                                                    //alert(key_arr)
-	inner_e = ''; i=0; 
+	inner_e = ''; i=0; reserved=[13,20];
 	for (ii=0; ii<b_n; ii++){
-		if (i<key_arr.length){
+		if (reserved.indexOf(ii)==-1 && i<key_arr.length){
 			i_name = key_arr[i];
 			i_name_button = dict_allchar_buttons[key_arr[i]];            //alert(i+' '+i_name+' '+i_name_button);
 			style = button_size_pos(ii)[0];                              //alert(ii, style);
@@ -363,34 +387,38 @@ function editor_make_symbols_p0(type){
 			inner_e += '<div id="editor_letter_'+i_name+'" class="buttons_editor symbol" onclick="editor_set_letter('+nn+', 1);"  style="'+style+'">'+i_name_button+'</div>';
 			i+=1;
 		} 
-	}inner_e+= button_backto_letters[0]+'0'+button_backto_letters[1]+button_size_pos(17)[0]+button_backto_letters[2];
+	}inner_e+= button_backto_letters[0]+'1'+button_backto_letters[1]+button_size_pos(20)[0]+button_backto_letters[2];
 	return (inner_e);
 }
-function editor_show_symbols_p0(type){                                       //alert('p0');
+function editor_show_symbols_p0(type, lang){                             //alert('p0');
 	setstyle_upper_oneline();                                            //alert('setstyle');
+	setstyle_cut_leftright();
 	document.getElementById('editor_buttons_area_0').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_1');
 	elem.style.visibility='visible';
-	inner_e = editor_make_symbols_p0(type);
+	inner_e = editor_make_symbols_p0(type, lang);
 	elem.innerHTML = inner_e;
 	editor_set_cursor();
-}function editor_show_symbols_p1(type){
+}function editor_show_symbols_p1(type, lang){
 	setstyle_upper_oneline();                                            //alert('setstyle');
+	setstyle_cut_leftright();
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_2');
 	elem.style.visibility='visible';
-	inner_e = editor_make_symbols_p1(type);
+	inner_e = editor_make_symbols_p1(type, lang);
 	elem.innerHTML = inner_e;
-}function editor_show_symbols_p2(type){
+}function editor_show_symbols_p2(type, lang){
 	setstyle_upper_oneline();                                            //alert('setstyle');
+	setstyle_cut_leftright();
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_2');
 	elem.style.visibility='visible';
-	inner_e = editor_make_symbols_p2(type);
+	inner_e = editor_make_symbols_p2(type, lang);
 	elem.innerHTML = inner_e;
 }
 
 function editor_show_navigate(){
+	//setstyle_upper_twolines();
 	inner_e = button_backto_start[0]+button_size_pos(6)[0]+button_backto_start[1];
 	inner_e+= button_up[0]+button_size_pos(3)[0]+button_up[1];
 	inner_e+= button_down[0]+button_size_pos(9)[0]+button_down[1];
@@ -400,6 +428,8 @@ function editor_show_navigate(){
 	inner_e+= button_nextword[0]+button_size_pos(11)[0]+button_nextword[1];
 	inner_e+= button_delete[0]+button_size_pos(5)[0]+button_delete[1];
 	inner_e+= button_sound[0]+button_size_pos(0)[0]+button_sound[1];
+	inner_e+= button_spell[0]+button_size_pos(1)[0]+button_spell[1];
+	inner_e+='<div id="editor_show_letter"   class="buttons_editor nobkg" style="'+button_size_pos(4)[0]+'">_</div>';
 	document.getElementById('editor_buttons_area_0').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_1');
 	elem.style.visibility='visible';
@@ -414,15 +444,44 @@ function editor_show_navigate(){
 	inner_e+= button_prevword[0]+button_size_pos(7)[0]+button_prevword[1];
 	inner_e+= button_nextword[0]+button_size_pos(11)[0]+button_nextword[1];
 	inner_e+= button_delete[0]+button_size_pos(5)[0]+button_delete[1];
+	inner_e+= button_sound[0]+button_size_pos(0)[0]+button_sound[1];
+	inner_e+= button_spell[0]+button_size_pos(1)[0]+button_spell[1];
+	inner_e+='<div id="editor_show_letter"   class="buttons_editor nobkg"  style="'+button_size_pos(4)[0]+'">_</div>';
 	document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 	elem = document.getElementById('editor_buttons_area_2');
 	elem.style.visibility='visible';
 	elem.innerHTML = inner_e;
 }
+
+
 function editor_sound(){
 	editor_sound_counter = (editor_sound_counter+1)%2;                   //alert(editor_sound_counter);
 	document.getElementById('editor_sound').innerHTML = symbols_sound[editor_sound_counter];
+}
+function editor_change_lang(){
+	editor_lang = (editor_lang+1)%3;
+	document.getElementById('editor_lang').innerHTML = lang_arr[editor_lang]+symbol_sound_sub;
+}function editor_change_langauto(){
+	lang_auto_prefer = (lang_auto_prefer+1)%2;                   //alert(editor_sound_counter);
+	document.getElementById('editor_lang_auto').innerHTML = lang_auto_arr[lang_auto_prefer]+symbol_sound_sub2;
+}
+function editor_set_fontsize(){
+	editor_fontsize= (editor_fontsize+1)%2;                   //alert(editor_sound_counter);
+	document.getElementById('editor_fontsize').innerHTML = editor_fontsize_arr[editor_fontsize];
+	if (editor_fontsize==1){fontsize='500%';} else{fontsize='720%';}
+	document.getElementById('editor_text_area').style.fontSize=fontsize;
+}
+function editor_spell(){
+	iter = parseInt(localStorage.getItem('editor_iter'));                //alert('iter '+iter);
+	text = localStorage.getItem('text_edit');
+	if (text[iter-1]!=' ' || text[iter]!=' '){ 
+		i1 = text.substr(0,iter).lastIndexOf(' '); 
+		i2 = text.indexOf(' ',iter);
+		if (i1==-1){i1=0;}
+		if (i2==-1){i2=text.length;}
+		utter(text.substr(i1, i2-i1), editor_lang, 1, 0);
 	}
+}
 
 function editor_backto_start(){
 	setstyle_upper_twolines();
@@ -434,4 +493,5 @@ function editor_backto_letters(change_style){
 	document.getElementById('editor_buttons_area_1').style.visibility='visible';
 	document.getElementById('editor_buttons_area_2').style.visibility='hidden';
 	document.getElementById('editor_buttons_area_3').style.visibility='hidden';
+	document.getElementById('editor_text_box').style.width='96%';
 	}

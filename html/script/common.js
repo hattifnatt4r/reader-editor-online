@@ -9,7 +9,9 @@ var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var otag = 'span class="text"'; var ctag='span';  var tag_p = 'span';
 var div_end = ':nl:'; 
 var div_end = '<br>'; 
-var lang_arr = ['auto', 'ru', 'en'];
+var lang_arr = ['aut', 'ru', 'en'];
+var lang_auto_arr = ['ru', 'en'];
+var lang_auto_prefer = 0;
 var reader_play_counter=1;
 
 var login_messages_en = ['The name does not exists.', 'Wrong password.', ''];
@@ -23,7 +25,7 @@ var symbol_next =        '<strong style="font-size:250%;line-height:80%">&#8250;
 var symbol_next_editor = '<strong style="font-size:280%;line-height:30%">&#8250;</strong>';
 var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
 var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
-var symbol_delete_editor = '<strong style="font-size:200%;line-height:106%;">&#10007;</strong>';
+var symbol_delete_editor = '<strong style="font-size:180%;line-height:106%;">&#10007;</strong>';
 var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
 var symbol_readall =     '<strong style="font-size:100%;line-height:115%;">&#9776;</strong>';
 var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#8883;</strong>';
@@ -34,16 +36,18 @@ var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#86
 var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#9993;</strong>';
 var symbol_mail =         '<strong style="font-size:90%;line-height:150%;">&#128386;</strong>';
 var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
-var symbol_nextpage =   '<strong style="font-size:200%;opacity:0.8;line-height:70%">&#10150;</strong>';
+var symbol_nextpage =   '<strong style="font-size:150%;opacity:0.8;line-height:70%">&#10150;</strong>';
 var symbol_navigate =   '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';
-var symbol_left  =      '<strong style="font-size:190%;line-height:50%;opacity:0.8;">&#9668;</strong>';
-var symbol_right =      '<strong style="font-size:190%;line-height:50%;opacity:0.8;">&#9658;</strong>';
-var symbol_up =         '<strong style="font-size:190%;line-height:80%;opacity:0.8;">&#9650;</strong>';
-var symbol_down =       '<strong style="font-size:190%;line-height:55%;opacity:0.8;">&#9660;</strong>';
-var symbol_leftword  =      '<strong style="font-size:140%;line-height:70%;opacity:0.8;">&#9665;</strong>';
-var symbol_rightword =      '<strong style="font-size:140%;line-height:70%;opacity:0.8;">&#9655;</strong>';
-var symbol_mute  =      '<strong style="font-size:150%;line-height:120%;opacity:0.8;">&#128263;</strong>';
-var symbol_sound =      '<strong style="font-size:150%;line-height:120%;opacity:0.8;">&#128265;</strong>';
+var symbol_left  =      '<strong style="font-size:150%;line-height:50%;">&#9668;</strong>';
+var symbol_right =      '<strong style="font-size:150%;line-height:50%;">&#9658;</strong>';
+var symbol_up =         '<strong style="font-size:150%;line-height:80%;">&#9650;</strong>';
+var symbol_down =       '<strong style="font-size:150%;line-height:55%;">&#9660;</strong>';
+var symbol_leftword  =      '<strong style="font-size:115%;line-height:70%;">&#9665;</strong>';
+var symbol_rightword =      '<strong style="font-size:115%;line-height:70%;">&#9655;</strong>';
+var symbol_mute  =      '<strong style="font-size:150%;line-height:120%;">&#128263;</strong>';
+var symbol_sound =      '<strong style="font-size:150%;line-height:120%;">&#128265;</strong>';
+var symbol_sound_sub =  '<sub><strong style="font-size:90%;"> &#128265;</strong></sub>';
+var symbol_sound_sub2 = '<sub><strong style="font-size:90%;"> &#128265;auto</strong></sub>';
 
 var symbols_play_pause = [symbol_play, symbol_pause];
 var symbols_sound = [symbol_mute, symbol_sound];
@@ -57,16 +61,19 @@ var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
 var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
 
 function reader_button_position(i){
-	yn=5; btop=2; bbot=98; yspace=4.5; 
-	xn=2; bleft=81; bright=99.5; xspace=3; xspace_bot=1; dx_side=0.5;
-	yn=4; yspace=7; xspace=4;
+	yn=4; btop=2; bbot=98; yspace=7; dy_bot=1;
+	xn=2; bleft=78; bright=99; xspace=3.5; xspace_bot=1; dx_side=0.8;
 	dy = (bbot-btop-(yn-1)*yspace )/yn; 
+	dy = dy*yn/(yn-1+dy_bot);
 	y = btop + (i%yn)*(yspace+dy*1);
+	if (i%yn==yn-1) {y=y;}
 	dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
 	x = bleft + (i-i%yn)/yn*(dx+xspace); 
 	if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }	
+	if (i%yn==yn-1){ dy = dy*dy_bot; }
 	style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
-	return(style); }
+	return(style); 
+}
 	
 function files_button_position(i){
 	yn=5; btop=2; bbot=98; yspace=6; xspace=4; textright=78;
@@ -152,6 +159,8 @@ function utter(txt, lang, stop, onend){
 	ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
 	if (lang==0){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
 	else { msg.lang=lang_arr[lang]; }
+	//if (!ru && !en){ msg.lang=lang_arr[lang]; }
+	if (!ru && !en && lang==0){ msg.lang=lang_auto_arr[lang_auto_prefer]; }
 	msg.rate = 0.9; 
 	if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
 	window.speechSynthesis.speak(msg);	

@@ -96,10 +96,10 @@ body {
   /*------------------*/
   position: fixed; box-sizing:border-box; width: 2%; height: 2%; 
   text-align: center; vertical-align:top; line-height:100%;
-  font-size: calc(var(--editor-fontsize-pc)*var(--screen-height)/100); 
+  font-size: calc(var(--editor-fontsize-pc)*var(--screen-height)/100);  font-size:300%;
   font-weight:600; word-break: var(--editor-wordbreak);
   border-radius:  var(--button-radius);
-  color: rgba(0,0,0,0.45);
+  color: rgba(0,0,0,0.4);
   background-color: #98acb3;  
   border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #98acb3;  
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.05), 0 5px 15px 0 rgba(0,0,0,0.17);  
@@ -114,16 +114,11 @@ body {
   opacity: 0.6;
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
-.symbol{
-background-color: #99bd75;
-border-color: #99bd75;
-}
-.symbol:hover{ 
-  background-color: #c0d6a9; border-color: #c0d6a9; opacity: 0.6;
-}
-.symbol:hover{ 
-  background-color: #a6c587; border-color: #a6c587; opacity: 0.6;
-}
+.nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
+  line-height:60%; font-size: 800%; color:#99bd75; color:#80ac53; color:#8cb464; }
+.nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
+.symbol{ background-color: #99bd75; border-color: #99bd75; font-size: 400%; }
+.symbol:hover{ background-color: #a6c587; border-color: #a6c587; opacity: 0.6; }
 /*
 .symbol{
 background-color: #a6c587;
@@ -133,7 +128,7 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1%; top:2%; width:78%; height: 74%; 
+  left:1%; top:2%; width:75.5%; height: 74%; 
   /*-------------*/
   position:fixed; text-align:center; box-sizing:border-box;
   /*left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); */
@@ -161,7 +156,7 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
 
 /*-- zoom ----------------------------------------------------------------*/
 .reader_zoom_box{
-  left:1%; top:78%; width:78%; height: 20%; 
+  left:1%; top:78%; width:75.5%; height: 20%; 
   /*---------------------*/
   position:fixed; 
   /*left:var(--reader-textleft); top:var(--reader-zoomtop); width:calc(var(--reader-textwidth)); height: var(--reader-zoomheight);  */

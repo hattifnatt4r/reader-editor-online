@@ -53,7 +53,7 @@ if ($handle = opendir($_SESSION['usr_dir'])) {
 $_SESSION["files_arr"]=$arr_entries;
 
 function show_file($entry, $i){
-	$left = 3; $right = 97; $xn=4; $xspace=5; $top=5;  $yspace=$xspace*1.8;
+	$left = 2; $right = 98; $xn=4; $xspace=5.5; $top=-1.5;  $yspace=$xspace*1.8;
 	$xwidth = ( $right-$left-($xn-1)*$xspace )/$xn;    $ywidth=$xwidth*1.5;
 	$x = $left + ($xspace+$xwidth)* ($i%$xn);
 	$y = $top +  ($yspace+$ywidth)*($i-$i%$xn)/$xn;
