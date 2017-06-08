@@ -19,6 +19,11 @@ if (files_session!='started'){
 	localStorage.setItem('loginpass', 'password');
 	localStorage.setItem('editor_saveto_var', '0');
 }
+if (get_cookie('isset_main')!='isset'){
+	document.cookie = "isset_main"+"=isset";
+	document.cookie = "lang_main"+"=en";
+	}
+
 //alert( document.cookie );
 //alert(get_cookie('PHPSESSID'));
 var bodyStyles = window.getComputedStyle(document.body);
@@ -38,6 +43,8 @@ var nentry = document.getElementById('hidden_files_nentry').innerHTML;
 //scroll_files(0);
 //alert('alert4');
 files_show_buttons(); 
+document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));
+document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_area"));
 
 if (localStorage.getItem('if_edit_text')=='1'){
 	edit_text_back();
@@ -110,7 +117,8 @@ function scroll_files(order){
 	if (files_iter==0){fname_ii='..';}
 	else{fname_ii = document.getElementById('fileid_'+files_iter.toString()).innerText; }
 	fname_ii = replace_all(fname_ii,'_',' ')
-	utter(fname_ii,1,1, onend=0);
+	lang = get_cookie('lang_main');                            //alert(lang);
+	utter(fname_ii,lang,1, onend=0);
 	}
 
 //-- show buttons ---------------------------------------------------------------------------
@@ -149,7 +157,7 @@ function files_show_buttons(){
 function files_show_addcontact(){
 	menu_blur();
 	elem=create_element('div', 'files_addcontact_area', '','','','','','','');
-	inner_e = '<div id="files_addcontact_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e = '<div id="files_addcontact_back"  onclick="editor_back(this.id, 1);" class="back_area"></div>';
 	inner_e+= '<div id="files_addcontact_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
 	inner_e+= '<div id="files_addcontact_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_addcontact_zoom" class="text_zoom">file</div></div>';
@@ -166,7 +174,7 @@ function files_show_addcontact(){
 function files_show_upload(){
 	menu_blur();
 	elem=create_element('div', 'files_upload_area', '','','','','','','');
-	inner_e = '<div id="files_upload_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e = '<div id="files_upload_back"  onclick="editor_back(this.id, 1);" class="back_area"></div>';
 	inner_e+= '<div id="files_upload_area_2"  style="left:7%;top:5%; position:fixed; width:86%;height:90%; background-color:rgba(255,255,255,0.9);">';
 	
 	inner_e+= '<div hidden id="files_upload"> ';
@@ -186,7 +194,7 @@ function files_show_login(){
 	name = localStorage.getItem('loginname');
 	pass = localStorage.getItem('loginpass');
 	elem=create_element('div', 'files_login_area', '','','','','','','');
-	inner_e = '<div id="files_login_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e = '<div id="files_login_back"  onclick="editor_back(this.id, 1);" class="back_area"></div>';
 	inner_e+= '<div id="files_login_area_2"  style="left:7%;top:5%; position:fixed; width:86%;height:90%; background-color:rgba(255,255,255,0.9);">';
 	
 	inner_e+= '<div id="files_login_zoomname_box"     class="reader_zoom_box" style="left:15%;top:15%;width:50%;border:solid 1px white;"><div onclick="files_edittext_login(0);" id="files_login_zoomname"     class="text_zoom">'+name+'</div></div>';
@@ -298,7 +306,7 @@ function files_show_options(){
 	if_i=localStorage.getItem('if_rename_file');
 	fname = document.getElementById('fileid_'+iter.toString()).innerHTML;
 	elem=create_element('div', 'files_options_area', '','','','','','','');
-	inner_e = '<div id="files_options_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e = '<div id="files_options_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
 	inner_e+= '<div id="files_options_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
 	inner_e+= '<div id="files_options_zoom_box" class="reader_zoom_box" style="left:14%;top:16%;width:52%;"><div id="files_options_zoom" class="text_zoom">'+fname+'</div></div>';
@@ -336,14 +344,19 @@ function files_edittext_options(){
 	}
 }
 
-function files_show_menu(){
+function files_show_menu(){	
+	menu_blur();
+	lang = get_cookie('lang_main');
 	elem=create_element('div', 'files_menu_area', '','','','','','','');
-	inner_e = '<div id="files_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e = '<div id="files_menu_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
 	
 	inner_e+= '<div id="files_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
 	//inner_e+= '<div id="files_appearance"        class="buttons disabled" onclick="alert(123);" style="left:15%; top:17%;">appearance</div>';
 	//inner_e+= '<div id="files_appearance-common" class="buttons disabled" onclick="show_menu_appearance_common();" style="left:35%; top:17%;">appearance-common</div>';
 	inner_e+= '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:20%; top:60%;">sound</div>';
+	
+	inner_e+= '<div id="files_lang_zoombox" class="reader_zoom_box" style="left:32%;top:23%;width:11%;height:17%;"><div id="files_lang_zoom_menu" class="text_zoom">'+lang+'</div></div>';
+	inner_e+= '<div id="files_menu_lang"         class="buttons"          onclick="files_show_langbase()"   style="left:44%; top:23%;">base lang</div>';
 	
 	inner_e+= '<div hidden id="files_mail" style="left:60%;top:15%;position:fixed;"> ';
 	inner_e+= '<form action="" method="post">';
@@ -356,11 +369,24 @@ function files_show_menu(){
 	inner_e+= '<div id="files_create" class="buttons" onclick="files_show_create();" style="left:68%; top:60%;">new file</div>';
 	inner_e+= '</div>';
 	elem.innerHTML = inner_e;
-	menu_blur();
+	//menu_blur();
 	}
+function files_show_langbase(){
+	lang = get_cookie('lang_main');
+	
+	elem=create_element('div', 'files_lang_area', '','','','','','','');
+	inner_e = '<div id="files_lang_back"  onclick="editor_back(this.id,0);" class="back_area"></div>';
+	inner_e+= '<div id="files_lang_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
+	inner_e+= '<div id="files_lang_zoombox" class="reader_zoom_box" style="left:14%;top:16%;width:52%;"><div id="files_lang_zoom" class="text_zoom">'+lang+'</div></div>';
+	inner_e+= '<div id="en"      class="buttons"     onclick="files_set_lang(this.id)"   style="left:20%; top:60%;">en</div>';
+	inner_e+= '<div id="ru"      class="buttons"     onclick="files_set_lang(this.id)"   style="left:44%; top:60%;">ru</div>';
+	inner_e+= '</div>';
+	elem.innerHTML = inner_e;
+	}
+	
 function files_show_create(){
 	elem=create_element('div', 'files_create_area', '','','','','','','');
-	inner_e = '<div id="files_create_back"  onclick="editor_back(this.id);" class="back_area"></div>';
+	inner_e = '<div id="files_create_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
 	inner_e+= '<div id="files_create_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
 	
 	inner_e+= '<div id="files_create_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_create_zoom" class="text_zoom">file</div></div>';
@@ -412,3 +438,13 @@ function file_exists(fname){
 	//alert(a + i_max +'\n'+txt+' '+dir);
 	return([txt,dir]);
 }
+
+function files_set_lang(lang){
+	//lang = parseInt(get_cookie('lang_main'));
+	//lang_new = 1+(lang)%2;
+	document.cookie = "lang_main"+"="+lang;                              //alert(lang);
+	lang_auto = lang;
+	document.getElementById('files_lang_zoom').innerHTML = lang;
+	document.getElementById('files_lang_zoom_menu').innerHTML = lang;
+	//document.getElementById('files_menu_lang').innerHTML = 'lang '+lang_arr[lang_new];
+	}

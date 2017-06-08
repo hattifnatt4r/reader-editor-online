@@ -9,9 +9,12 @@ var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var otag = 'span class="text"'; var ctag='span';  var tag_p = 'span';
 var div_end = ':nl:'; 
 var div_end = '<br>'; 
-var lang_arr = ['aut', 'ru', 'en'];
-var lang_auto_arr = ['ru', 'en'];
-var lang_auto_prefer = 0;
+//var lang_arr = ['aut', 'ru', 'en'];
+//var lang_auto_arr = ['ru', 'en'];
+//var lang_auto_prefer = 0;
+var zoomtype_arr = ['no zoom', 'by word', 'by sentence'];
+var lang_local = 'en';
+var lang_auto = 'en';
 var reader_play_counter=1;
 
 var login_messages_en = ['The name does not exists.', 'Wrong password.', ''];
@@ -107,21 +110,10 @@ function scroll_to(id, id_area, title){
 	}
 
 function menu_blur(){
-	$('.text_scroll_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-	$('.buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-	$('.reader_zoom_box').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-	$('#editor_buttons_area').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+	$('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 }
-function editor_back(id){
-	//var elem = document.getElementById('reader_buttons_area');
-	//var elem = $('#reader_buttons_area');
-	//if ( document.getElementById('reader_buttons_area') || document.getElementById('files_buttons_area') ){
-		//alert('unblur');
-		$('.text_scroll_box').foggy(false); 
-		$('.buttons_area').foggy(false); 
-		$('.reader_zoom_box').foggy(false); 
-		$('#editor_buttons_area').foggy(false); 
-	//}
+function editor_back(id, foggyoff){
+	if (foggyoff==1){ $('#base_elements').foggy(false);  }
 	elem = document.getElementById(id).parentNode;
 	elem.parentNode.removeChild(elem);
 	localStorage.setItem('fastlogin','0');
@@ -154,13 +146,14 @@ function utter_sentence(id, id_all, lang, stop, onend){
 	utter(txt, lang, stop, onend);
 	//alert(id);
 }
-function utter(txt, lang, stop, onend){
+function utter(txt, lang, stop, onend){                                  // 0-auto, 1-ru, 2-en
 	msg = new SpeechSynthesisUtterance(txt);
 	ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
-	if (lang==0){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
-	else { msg.lang=lang_arr[lang]; }
+	if (lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
+	else { msg.lang=lang; }
+	//else { msg.lang=lang_arr[lang]; }
 	//if (!ru && !en){ msg.lang=lang_arr[lang]; }
-	if (!ru && !en && lang==0){ msg.lang=lang_auto_arr[lang_auto_prefer]; }
+	if (!ru && !en && lang=='auto'){ msg.lang=lang_auto; }
 	msg.rate = 0.9; 
 	if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
 	window.speechSynthesis.speak(msg);	
@@ -181,7 +174,8 @@ function create_element(tag, id, cl, st, inner, value, name, onclick, t){
 	element.setAttribute('onclick', onclick);
 	element.setAttribute('type', t);
 	element.innerHTML=inner;
-	document.body.appendChild(element);
+	//document.body.appendChild(element);
+	document.getElementById('created_elements').appendChild(element);
 	return (element);
 	}
 

@@ -1,4 +1,9 @@
 //alert('editor 0');
+if (get_cookie('isset_editor')!='isset'){
+	document.cookie = "isset_editor"+"=isset";
+	document.cookie = "lang_editor"+"=en";
+	}
+
 
 var editor_lang = 0;                                                     //lang_arr = ['auto', 'ru', 'en'];
 //var scroll_by = 'letter';
@@ -74,8 +79,12 @@ function setstyle_upper_oneline(){                                       //alert
 	document.getElementById('editor_text_box').style.left='1.5%';
 	//style_text = 'upper_twolines';
 }
+//alert('editor 1');
 elem=create_element('div', 'editor_text_box','reader_zoom_box', 'top:2%; width:96%; left:2%;','','','','','');  //alert(e_style);
 elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
+elem = create_element('div', 'editor_buttons_area', '','','','','','',''); 
+document.getElementById("base_elements").appendChild(document.getElementById("editor_buttons_area"));
+document.getElementById("base_elements").appendChild(document.getElementById("editor_text_box"));
 
 editor_type = 'texttop_twolines_v1';
 //editor_type = 'texttop_oneline_v1';
@@ -107,10 +116,10 @@ function button_size_pos(i){
 	return([style,x,y,dx,dy]);
 }
 
-text = localStorage.getItem('text_edit'); 
-document.getElementById('editor_text_area').innerHTML=text; 
-editor_set_cursor();  
-editor_show_start();
+text = localStorage.getItem('text_edit');                                //alert('editor 2');
+document.getElementById('editor_text_area').innerHTML=text;              //alert('editor 3');
+editor_set_cursor();                                                     //alert('editor 4');
+editor_show_start();                                                     //alert('editor 5');
 
 function editor_exit(){                                                  //alert('editor exit');
 	localStorage.setItem('ischanged_text', '1');
@@ -129,7 +138,7 @@ function editor_set_cursor(){
 	text = localStorage.getItem('text_edit');
 	rspace = text.indexOf(' ',iter);
 	lspace = text.substr(0,iter).lastIndexOf(' ');                       //alert('|'+style_text+'|');
-	if (rspace>0 && lspace>0 && lspace<rspace){                      //alert('|'+lspace0+'|'+iter+'|'+rspace0+'|');
+	if (rspace>0 && lspace>0 && lspace<rspace){                          //alert('|'+lspace0+'|'+iter+'|'+rspace0+'|');
 		text_c = text.substr(0, lspace+1)+'<span style="white-space:nowrap;">'+text.substr(lspace+1,iter-lspace-1)+cursor+text.substr(iter,rspace-iter)+'</span>'+text.substr(rspace);
 	}else{ 
 		text_c = text.substr(0, iter)+cursor+text.substr(iter); 
@@ -138,12 +147,13 @@ function editor_set_cursor(){
 	scroll_to('cursor','editor_text_box', title=0);                      //alert(text_c);
 	}
 function set_button_appearance(id){ alert(id); }
-function editor_show_start(){
+function editor_show_start(){                                            //alert('editor_start');
+	lang = get_cookie('lang_editor');
 	app_button_html = '< div id="app_button" class="buttons" onclick="set_button_appearance(this.parentNode.id);" style="width:1.5%;height:3%;"> * </div>';
 	//app_button_html = '<div id="app_button" class="button_app" onclick="set_button_appearance(this.id);" > * </div>';
-	app = app_button_html; app='';
+	app = app_button_html; app='';                                       
 	elem = document.getElementById('editor_buttons_area');
-	if (elem==null){ var elem = create_element('div', 'editor_buttons_area', '','','','','','',''); }
+	//if (elem==null){ var elem = create_element('div', 'editor_buttons_area', '','','','','','',''); } 
 	inner_e0 = "<div id='editor_buttons_area_0'>";
 	inner_e0+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+button_size_pos(7)[0]+'">menu</div>';
 	//inner_e0+= '<div id="editor_utter"   class="buttons_editor disabled" onclick="editor_utter_word();"     style="'+button_size_pos(8)[0]+'">utter</div>';
@@ -155,13 +165,29 @@ function editor_show_start(){
 	inner_e0+= '<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();"           style="'+button_size_pos(6)[0]+'"> exit </div>';
 	inner_e0+= '<div id="editor_save"    class="buttons_editor" onclick="editor_save();"           style="'+button_size_pos(8)[0]+'"> save </div>';
 	inner_e0+= '<div id="editor_navigate"   class="buttons_editor" onclick="editor_show_navigate();"  style="'+button_size_pos(5)[0]+'">'+symbol_navigate+'</div>';
-	inner_e0+= '<div id="editor_lang"       class="buttons_editor" onclick="editor_change_lang();"    style="'+button_size_pos(11)[0]+'">'+lang_arr[editor_lang]+symbol_sound_sub+'</div>';
+	//inner_e0+= '<div id="editor_lang"       class="buttons_editor" onclick="editor_change_lang();"    style="'+button_size_pos(11)[0]+'">lang</div>';
+	//inner_e0+= '<div id="editor_lang_text"  class="buttons_text"                                    style="'+button_size_pos(10)[0]+'">'+lang+'</div>';
+	inner_e0+= '<div id="editor_lang_text"  class="buttons_editor nobkg" style="'+button_size_pos(10)[0]+'font-size:500%;line-height:30%;">'+lang+'</div>';
+	inner_e0+= '<div id="editor_lang"       class="buttons_editor" onclick="editor_show_lang();"    style="'+button_size_pos(11)[0]+'">lang</div>';
 	inner_e0+= "</div>"
 	inner_e1 = "<div id='editor_buttons_area_1'></div>";
 	inner_e2 = "<div id='editor_buttons_area_2'></div>";
 	inner_e3 = "<div id='editor_buttons_area_3'></div>";
 	inner_e4 = "<div id='editor_buttons_area_4'></div>";
 	elem.innerHTML = inner_e0+inner_e1+inner_e2 + inner_e3 + inner_e4;
+	}
+function editor_show_lang(){
+	//document.getElementById('reader_menu_area_2').style.backgroundColor = 'rgba(100,100,100,0.8)';
+	lang = get_cookie('lang_editor');
+	elem=create_element('div', 'editor_lang_area', '','','','','','','');
+	inner_e = '<div id="editor_lang_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
+	inner_e+= '<div id="editor_lang_area_2"  class="menu_area_lvl2">';
+	inner_e+= '<div id="editor_lang_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="editor_lang_zoom" class="text_zoom">'+lang+'</div></div>';
+	inner_e+= '<div id="en"      class="buttons"     onclick="editor_set_lang(this.id)"   style="left:20%; top:60%;">en</div>';
+	inner_e+= '<div id="ru"      class="buttons"     onclick="editor_set_lang(this.id)"   style="left:44%; top:60%;">ru</div>';
+	inner_e+= '</div>';
+	elem.innerHTML = inner_e;                                            //alert(elem.parentNode.id);
+	menu_blur();
 	}
 var button_delete = ['<div id="editor_delete" class="buttons_editor" onclick="editor_delete();"   style="', '">'+symbol_delete_editor+'</div>'];
 var button_prev = [ '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="', '">'+symbol_left+'</div>' ];
@@ -183,7 +209,7 @@ function editor_show_menu(){
 	var elem=create_element('div', 'editor_menu_area', '','','','','','','');
 	var inner_e = '<div id="editor_menu_back"  onclick="editor_back(this.id);" class="back_area"></div>';
 	inner_e+= '<div id="editor_menu_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,0.9);">';
-	inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
+	//inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
 	inner_e+= '<div id="editor_fontsize"    class="buttons" onclick="editor_set_fontsize();" style="left:35%; top:15%;">'+editor_fontsize_arr[editor_fontsize]+'</div>';
 	inner_e+= '<div id="editor_sound"       class="buttons disabled" onclick=""    style="left:15%; top:50%;"> sound </div>';
 	inner_e+= '<div id="editor_read"        class="buttons disabled" onclick=""    style="left:60%; top:15%;"> read </div>';
@@ -250,7 +276,8 @@ function editor_scrollword(order){                                       //alert
 	localStorage.setItem('editor_iter', iter.toString());
 	editor_set_cursor();
 	i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
-	if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), editor_lang, 1, 0); }
+	lang = get_cookie('lang_editor');
+	if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), lang, 1, 0); }
 }
 function editor_scroll(order){
 	ltag = '<abbr>'; rtag = '</abbr>';
@@ -281,7 +308,8 @@ function editor_scroll(order){
 	editor_set_cursor();
 	i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
 	letter = text.substr(i1, i2-i1);
-	if (editor_sound_counter==1) { utter(letter, editor_lang, 1, 0); }
+	lang = get_cookie('lang_editor');
+	if (editor_sound_counter==1) { utter(letter, lang, 1, 0); }
 	if (letter==' '){letter='_';}
 	document.getElementById('editor_show_letter').innerHTML = letter;
 }function editor_delete(){
@@ -458,13 +486,20 @@ function editor_sound(){
 	editor_sound_counter = (editor_sound_counter+1)%2;                   //alert(editor_sound_counter);
 	document.getElementById('editor_sound').innerHTML = symbols_sound[editor_sound_counter];
 }
-function editor_change_lang(){
-	editor_lang = (editor_lang+1)%3;
-	document.getElementById('editor_lang').innerHTML = lang_arr[editor_lang]+symbol_sound_sub;
-}function editor_change_langauto(){
+//function editor_change_lang(){
+//	editor_lang = (editor_lang+1)%3;
+//	document.getElementById('editor_lang').innerHTML = lang_arr[editor_lang]+symbol_sound_sub;
+//}
+function editor_change_langauto(){
 	lang_auto_prefer = (lang_auto_prefer+1)%2;                   //alert(editor_sound_counter);
 	document.getElementById('editor_lang_auto').innerHTML = lang_auto_arr[lang_auto_prefer]+symbol_sound_sub2;
 }
+function editor_set_lang(lang){                                          //alert(lang);
+	document.cookie = "lang_editor"+"="+lang;                            //alert('cookie');
+	//lang_auto = lang;
+	document.getElementById('editor_lang_text').innerHTML = lang;        //alert('1');
+	document.getElementById('editor_lang_zoom').innerHTML = lang;        //alert('2');
+	}
 function editor_set_fontsize(){
 	editor_fontsize= (editor_fontsize+1)%2;                   //alert(editor_sound_counter);
 	document.getElementById('editor_fontsize').innerHTML = editor_fontsize_arr[editor_fontsize];

@@ -10,7 +10,7 @@
 
 <body class='body_bkg' id='reader_body'>
 <?php require('script/reader.php'); ?>	
-<div id='reader_buttons_area' class='buttons_area'></div>
+<!-- <div id='reader_buttons_area' class='buttons_area'></div> -->
 
 <div hidden id='hidden_text_parsed' style='position:fixed; top:0%; left:0%'>0</div>
 <div hidden id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
@@ -21,6 +21,11 @@
 <input type="submit" id="save_text_submit_js" value="save" name="save_text_js" class="buttons"></div>
 
 <div hidden id='temp' style='position:fixed; top:50%; left:83%'>0</div>
+
+<div id='base_elements'>
+	<div id='reader_buttons_area' class='buttons_area'></div>
+</div>
+<div id='created_elements'></div>
 
 <script language=JavaScript type="text/javascript" src="script/common.js"></script> 
 <script language=JavaScript type="text/javascript" src="script/reader.js"></script>
