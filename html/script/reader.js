@@ -30,7 +30,7 @@ if (get_cookie('isset_'+fname)!='isset'){
 	document.cookie = "selecttype_"+fname+"=2";
 	document.cookie = "zoomtype_"+fname+"=0";
 	//document.cookie = "lang_"+fname+"=1";
-	document.cookie = "lang_"+fname+"="+ get_cookie('lang_main');        //alert(get_cookie('lang_'+fname));
+	document.cookie = "lang_"+fname+"="+ get_cookie('lang_common');      //alert(get_cookie('lang_'+fname));
 	
 	document.cookie = "mailtext_"+fname+"= ";                            //alert(document.cookie);
 	}
@@ -105,7 +105,6 @@ if (localStorage.getItem('back_to_editor')=='1' && ischanged=='0'){      //alert
 	localStorage.setItem('back_to_editor', '0');
 }
 function save_file(text){
-	//text = localStorage.getItem('text_origin');
 	document.getElementById('save_text_text_js').value = text; 
 	document.getElementById('save_text_submit_js').click();              //alert('saved '+text);
 }
@@ -174,7 +173,7 @@ function reader_utter(stop_i, onend){
 	id = get_id();
 	iter = parseInt(get_cookie('counter_'+fname));                       //alert('iter '+iter);
 	n_select_type = parseInt(get_cookie('selecttype_'+fname));
-	lang = parseInt(get_cookie('lang_'+fname));
+	lang = get_cookie('lang_common');
 	if (n_select_type==0 || iter==-1 ){ utter(document.getElementById(id).innerText, lang, stop=stop_i, onend); }
 	else {
 		if (n_select_type==2){ 
@@ -247,7 +246,6 @@ function reader_select_type(order){                                      //alert
 
 function reader_set_zoomtype(n_zoomtype){                
 	document.cookie = "zoomtype_"+fname+"="+n_zoomtype;                        //alert('zoom');
-	//n_zoomtype = parseInt(get_cookie('zoomtype_'+fname));
 	textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
 	elem = document.getElementById("reader_zoom_box");
 	if (n_zoomtype==0){ 
@@ -259,8 +257,6 @@ function reader_set_zoomtype(n_zoomtype){
 		elem.innerHTML = inner_i;
 		document.getElementById('text_from_file_box').style.height = textheight_zoom; //alert(textheight_zoom);
 	}
-	//elem = document.getElementById('reader_menu_back');
-	//if (elem!=null){elem.click();}
 	zoom_set_text();
 	document.getElementById('reader_zoomtype_zoom').innerHTML=zoomtype_arr[n_zoomtype];
 	document.getElementById('reader_menu_zoomtype_text').innerHTML=zoomtype_arr[n_zoomtype];
@@ -275,7 +271,6 @@ function reader_show_buttons(){                                          //alert
 	
 	elem = document.getElementById('reader_buttons_area');
 	inner_e = '<div id="reader_menu" class="buttons" onclick="reader_show_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
-	//inner_e+= '<div id="reader_zoomtype" class="buttons" onclick="reader_zoom_type(1);"  style="'+reader_button_position(1)+'">zoom</div>' ;
 	inner_e+= '<div id="reader_edit"     class="'+edit_class+'" '+edit_function+'        style="'+reader_button_position(1)+'">edit</div>' ;
 	inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);"  style="'+reader_button_position(2)+'">word</div>' ;
 	inner_e+= '<div id="prev" class="buttons" onclick="scrollbut_div(0,1,0);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
@@ -291,56 +286,30 @@ function reader_show_buttons(){                                          //alert
 	//alert(dir);
 	}
 function reader_show_menu(){
-	menu_blur();
 	iter = parseInt(get_cookie('counter_'+fname));
 	if (iter==-1 || is_inlist(readonlydir)){ edit_function = ''; edit_class='buttons disabled'; }
 	else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
-	lang = get_cookie('lang_'+fname);
+	lang = get_cookie('lang_common');
 	n_zoom = parseInt(get_cookie('zoomtype_'+fname));
-	
-	elem=create_element('div', 'reader_menu_area', '','','','','','','');
-	inner_e = '<div id="reader_menu_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
-	inner_e+= '<div id="reader_menu_area_2"  class="menu_area">';
-	inner_e+= '<div id="reader_menu_clearcookie"  class="buttons"          onclick="reader_clearcookie()"   style="left:15%; top:20%;">clear cookie</div>';
 	//inner_e+= '<div id="reader_menu_appearance"        class="buttons disabled" onclick=""   style="left:15%; top:20%;">appearance</div>';
 	//inner_e+= '<div id="reader_menu_appearance-common" class="buttons disabled" onclick=""   style="left:35%; top:15%;">appearance-common</div>';
+	inner_e = '<div id="reader_menu_clearcookie"  class="buttons"          onclick="reader_clearcookie()"   style="left:15%; top:20%;">clear cookie</div>';
 	inner_e+= '<div id="reader_menu_sound"        class="buttons disabled" onclick=""                        style="left:15%;top:60%;">sound</div>';
-	inner_e+= '<div id="reader_menu_lang_text"    class="buttons_text"                                       style="left:37%;top:20%;">'+lang+'</div>';
-	inner_e+= '<div id="reader_menu_lang"         class="buttons"          onclick="reader_show_lang()"      style="left:50%;top:20%;">local lang</div>';
+	inner_e+= '<div id="common_lang_zoom1"    class="buttons_text"                                       style="left:37%;top:20%;">'+lang+'</div>';
+	inner_e+= '<div id="common_lang"          class="buttons"          onclick="common_show_lang(1,0)"      style="left:50%;top:20%;">local lang</div>';
 	inner_e+= '<div id="reader_go"                class="buttons disabled" onclick=""                        style="left:70%;top:20%;">go</div>' ;
 	inner_e+= '<div id="reader_menu_go-files"     class="buttons"          onclick="goto_files();"           style="left:70%;top:60%;">go home</div>';
 	inner_e+= '<div id="reader_menu_zoomtype_text" class="buttons_text"                                      style="left:37%;top:60%;">'+zoomtype_arr[n_zoom]+'</div>' ;
 	inner_e+= '<div id="reader_menu_zoomtype"     class="buttons"          onclick="reader_show_zoomtype();" style="left:50%;top:60%;">zoom</div>' ;
-	inner_e+= '</div>';
-	elem.innerHTML = inner_e;                                            //alert(elem.parentNode.id);
+	common_create_menu('reader_menu', 0, inner_e);
 }
 function reader_show_zoomtype(){
 	n_zoom = parseInt(get_cookie('zoomtype_'+fname));
-	elem=create_element('div', 'reader_zoomtype_area', '','','','','','','');
-	inner_e = '<div id="reader_zoomtype_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
-	inner_e+= '<div id="reader_zoomtype_area_1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
-	inner_e+= '<div id="reader_zoomtype_area_2"  class="menu_area_lvl2">';
-	inner_e+= '<div id="reader_zoomtype_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="reader_zoomtype_zoom" class="text_zoom">'+zoomtype_arr[n_zoom]+'</div></div>';
+	inner_e = '<div id="reader_zoomtype_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="reader_zoomtype_zoom" class="text_zoom">'+zoomtype_arr[n_zoom]+'</div></div>';
 	inner_e+= '<div id="0"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:20%; top:60%;">no zoom</div>';
 	inner_e+= '<div id="1"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:45%; top:60%;">by word</div>';
 	inner_e+= '<div id="2"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:70%; top:60%;">by sentence</div>';
-	inner_e+= '</div>';
-	elem.innerHTML = inner_e;                                            //alert(elem.parentNode.id);
-	//menu_blur();
-	}
-function reader_show_lang(){
-	//document.getElementById('reader_menu_area_2').style.backgroundColor = 'rgba(100,100,100,0.8)';
-	lang = get_cookie('lang_'+fname);
-	elem=create_element('div', 'reader_lang_area', '','','','','','','');
-	inner_e = '<div id="reader_lang_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
-	inner_e+= '<div id="reader_lang_area_1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
-	inner_e+= '<div id="reader_lang_area_2"  class="menu_area_lvl2">';
-	inner_e+= '<div id="reader_lang_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="reader_lang_zoom" class="text_zoom">'+lang+'</div></div>';
-	inner_e+= '<div id="en"      class="buttons"     onclick="reader_set_lang(this.id)"   style="left:20%; top:60%;">en</div>';
-	inner_e+= '<div id="ru"      class="buttons"     onclick="reader_set_lang(this.id)"   style="left:44%; top:60%;">ru</div>';
-	inner_e+= '</div>';
-	elem.innerHTML = inner_e;                                            //alert(elem.parentNode.id);
-	//menu_blur();
+	common_create_menu('reader_zoomtype', 1, inner_e);
 	}
 function is_inlist(list){ 
 	inlist = false;
@@ -351,19 +320,7 @@ function is_inlist(list){
 	return(inlist);
 }
 function goto_files(){ window.location.href = '/index.html'; window.speechSynthesis.cancel(); }
-/*	
-function reader_set_lang(){
-	lang = parseInt(get_cookie('lang_'+fname));
-	lang_new = (lang+1)%3;
-	document.cookie = "lang_"+fname+"="+lang_new;
-	document.getElementById('reader_menu_lang').innerHTML = 'lang '+lang_arr[lang_new];
-	}*/
-function reader_set_lang(lang){
-	document.cookie = "lang_"+fname+"="+lang;                              //alert(lang);
-	//lang_auto = lang;
-	document.getElementById('reader_lang_zoom').innerHTML = lang;
-	document.getElementById('reader_menu_langtext').innerHTML = lang;
-	}
+
 function reader_editor(){
 	text_all = document.getElementById('text_from_file').innerHTML;
 	localStorage.setItem('text_parsed', text_all);
@@ -387,28 +344,20 @@ if (dir=='mail'){
 
 function reader_if_editable(){
 	id = get_cookie('latest_p_'+fname);
-	title = document.getElementById(id).getAttribute('title');
-	alert(parse_words(id+' '+title));
+	title = document.getElementById(id).getAttribute('title');           //alert(parse_words(id+' '+title));
 	if (parse_words(title).indexOf('editable')!=-1){editable=true;}
 	else {editable=false;}
 	return(editable);
 	}
 
 function reader_show_mail(){
-	elem=create_element('div', 'reader_mail_area', '','','','','','','');
-	inner_e = '<div id="reader_mail_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
-	inner_e+= '<div id="reader_mail_area_2"  style="left:10%;top:10%; position:fixed; width:80%;height:80%; background-color:rgba(255,255,255,1);">';
-	
-	inner_e+= '<div hidden id="files_sendmail_form"> ';
+	inner_e = '<div hidden id="files_sendmail_form"> ';
 	inner_e+= '<form action="" method="post">';
 	inner_e+= '<input type="text"   id="sendmail_text_id"     name="sendmail_text_name"   value="empty" style="width:0%;height:0%;">';
 	inner_e+= '<input type="submit" id="sendmail_submit_id"   name="sendmail_submit_name" value="empty" ></div>';
 	inner_e+= '<div id="reader_sendmail"  class="buttons" onclick="reader_mail_send();"   style="left:15%; top:50%;">send</div>';
-	
 	inner_e+= '<div id="reader_mail_update"   class="buttons disabled" onclick=""   style="left:40%; top:50%;">update</div>';
-	inner_e+= '</div>';
-	elem.innerHTML = inner_e;
-	menu_blur();
+	common_create_menu('reader_mail', 0, inner_e);
 	
 	name = get_usrname(fname);                                           //alert('NAME: '+name);
 	date = Date(); date=date.substr(date.indexOf(' ')); date = date.substr(0,date.indexOf('GMT')-1);

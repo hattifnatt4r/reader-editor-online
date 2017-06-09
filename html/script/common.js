@@ -5,15 +5,16 @@ var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'
 var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
 //-----------------------------------------------------------------------------
+// cookie used:  "langbase_editor", "lang_editor"
+//	
+//-----------------------------------------------------------------------------	
+
+//-----------------------------------------------------------------------------
 //var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
 var otag = 'span class="text"'; var ctag='span';  var tag_p = 'span';
 var div_end = ':nl:'; 
 var div_end = '<br>'; 
-//var lang_arr = ['aut', 'ru', 'en'];
-//var lang_auto_arr = ['ru', 'en'];
-//var lang_auto_prefer = 0;
 var zoomtype_arr = ['no zoom', 'by word', 'by sentence'];
-var lang_local = 'en';
 var lang_auto = 'en';
 var reader_play_counter=1;
 
@@ -109,15 +110,6 @@ function scroll_to(id, id_area, title){
 		{elem.scrollIntoView(true);} 
 	}
 
-function menu_blur(){
-	$('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-}
-function editor_back(id, foggyoff){
-	if (foggyoff==1){ $('#base_elements').foggy(false);  }
-	elem = document.getElementById(id).parentNode;
-	elem.parentNode.removeChild(elem);
-	localStorage.setItem('fastlogin','0');
-}
 function utter_paragraph(id, id_all, id_all_w, lang, stop, onend){
 	for (iii=0; iii<id_all.length; iii++){
 		id_i = id_all[iii]; stop_s=0; onend_i=0;
@@ -431,3 +423,56 @@ function get_usrname(fname_i){
 	//alert(i1+' '+i2+' '+dir);
 	return(dir);
 	}
+
+
+//-- show functions ------------------------------------------------------------
+//------------------------------------------------------------------------------
+function common_show_lang(lvl, if_base){                                 //alert('common_show_lang');
+	inner_e = ''; 
+	if (if_base==1){ 
+		lang = get_cookie('langbase_common');
+	}else{ 
+		lang = get_cookie('lang_common');
+		inner_e+= '<div id="auto"    class="buttons"     onclick="common_set_lang(this.id,'+if_base+');"   style="left:20%; top:60%;">auto</div>'; 
+	}
+	inner_e+=     '<div id="en"      class="buttons"     onclick="common_set_lang(this.id,'+if_base+');"   style="left:45%; top:60%;">en</div>';
+	inner_e+=     '<div id="ru"      class="buttons"     onclick="common_set_lang(this.id,'+if_base+');"   style="left:70%; top:60%;">ru</div>';
+	inner_e+=     '<div id="common_lang_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="common_lang_zoom2" class="text_zoom">'+lang+'</div></div>';
+	common_create_menu('common_lang',lvl,inner_e);
+}
+function common_set_lang(lang, if_base){                                 //alert(lang);
+	if (if_base==0){ document.cookie = "lang_common"+"="+lang;  }        
+	else{	document.cookie = "langbase_common"+"="+lang;    }           //alert('cookie');
+	document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
+	document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
+}
+
+function common_create_menu(id, lvl, buttons_html){                      //alert('create_menu');
+	if (lvl==0){                                                         //alert('lvl0');
+		menu_blur();
+		inner_e = '<div id="'+id+'_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
+		inner_e+= '<div id="'+id+'_area"  class="menu_area">';
+	}else{                                                               //alert('lvl1');
+		inner_e = '<div id="'+id+'_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
+		inner_e+= '<div id="'+id+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
+		inner_e+= '<div id="'+id+'_area2"  class="menu_area_lvl2">';
+		}                                                                //alert(inner_e);
+	element = document.createElement('div');
+	element.setAttribute('id', id);
+	element.innerHTML=inner_e+buttons_html+'</div>';
+	document.getElementById('created_elements').appendChild(element);
+	return (element);
+	}
+
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+function menu_blur(){
+	$('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+}
+function editor_back(id, foggyoff){                                      //alert(id);
+	if (foggyoff==1){ $('#base_elements').foggy(false);  }
+	elem = document.getElementById(id).parentNode;
+	elem.parentNode.removeChild(elem);
+	localStorage.setItem('fastlogin','0');
+}
