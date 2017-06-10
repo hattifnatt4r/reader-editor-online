@@ -102,7 +102,7 @@ if (ischanged=='0'){
     }
     else{text=localStorage.getItem('text_origin');}                      //alert('SAVE: '+text);
     save_file(text);
-}                                                                        //alert(word_id);//alert(sentence_id);alert(paragraph_id);
+}                                                                        //alert(word_id); alert(paragraph_id);
 if (localStorage.getItem('back_to_editor')=='1' && ischanged=='0'){      //alert('reader');
     document.getElementById('reader_menu').click();                      //alert('menu');
     document.getElementById('reader_edit').click();                    

@@ -12,7 +12,6 @@ var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 //-----------------------------------------------------------------------------
 //var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
 var otag = 'span class="text"'; var ctag='span';  var tag_p = 'span';
-var div_end = ':nl:'; 
 var div_end = '<br>'; 
 var zoomtype_arr = ['no zoom', 'by word', 'by sentence'];
 var lang_auto = 'en';
@@ -273,44 +272,83 @@ function parse_words(text){
     return(arr);
 }
 
-function reader_parse_txt(text_origin, n_p){
-    div_start = '';        
-    arr = []; i_start=0;
-    proceed = 1; k=0; i=0; word='';
-    while (proceed==1){
-        i = text_origin.indexOf(' ',i_start+1);
-        if (i==-1){
-            word = text_origin.substr(i_start); proceed=0; }
-        else{
-            i1 = text_origin.indexOf('<',i_start+1);
-            i2 = text_origin.indexOf('>',i_start+1);
-            i3 = text_origin.indexOf('<br>',i_start+1);
-            //word = text_origin.substr(i_start, i-i_start); i_start = i; 
-            if (i1==-1 || i1>i || (i1<=i&&i1==i3) ){ word = text_origin.substr(i_start, i-i_start); i_start = i; 
-            }else{ word = text_origin.substr(i_start, i2-i_start); i_start = i2; }
-        }
-        arr.push(word);
-        }
+
+function find_spaceend(txt, i_start){                                    //alert('spaceend: '+txt+', '+i_start);
+	if (i_start==txt.length ) { return(-1); }
+	if (txt[i_start]!=' ' ) { return(i_start); }
+	
+	if ( i_start === undefined ) { i_start = 0; }
+	var proceed = 1; var i=i_start+1;
+	while (proceed==1){
+		if ( i>=txt.length-1 ) { proceed=0; }
+		else if ( txt[i]!=' ' ) { proceed=0; }
+		else { i+=1; } 
+	}                                                                    //alert('spaceend i '+i);
+	return (i); 
+}
+
+function find_indexof(text_origin, arr, i_start, i_end){                 //alert(arr);
+	if ( i_start === undefined ) { i_start = 0; }                        //alert(i_start);
+	if ( i_end === undefined ) { i_end = text_origin.length; }           //alert(i_end);
+	var txt = text_origin.substring(i_start, i_end);                     //alert('indexof txt: '+txt);
+	var i=0, j=0, res=txt.length, symb='', success=0;
+	
+	for (i=0; i<arr.length; i++) {
+		j = txt.indexOf(arr[i]);
+		if ( j!=-1 && j<res ) { res=j; symb=arr[i]; success=1; }
+	}                                                                    //alert('indexof res: '+res+' '+symb);
+	if ( success == 0 ) { res = -1; }
+	else {res = res+i_start; }
+	return([res, symb]);
+}
+function reader_parse_txt(text_origin, n_p){       
+    text_origin = text_origin.replace('\n','<br>');
     
-    //otag = 'em class="text"'; ctag='em';  tag_p = 'div';
-    p0=n_p.toString();
-    text = "<"+tag_p+" id='p"+p0+"'><"+otag+" id='p"+p0+"s0'><"+otag+" id='p"+p0+"s0w0'>";
-    i_w = 0; i_s = 0; i_p = n_p; 
-    arr_w=['p'+p0+'s0w0']; arr_s=['p'+p0+'s0']; arr_p=['p'+p0];
-    //alert(arr);
-    //alert(arr.length);
+    var txt = text_origin;                                               //alert('txt: '+txt);
+    var endsentence = ['...', '!!!', '???', '.', '!', '?']; 
+    var endsymbol=['<br>', '...', '!!!', '???', '.', '!', '?', ',', ' '] ;
+    var proceed = 1, i = 0, i_end=0, j = [], arr = []; 
+    
+    if (txt[0]==' '){
+		i = find_spaceend(txt,0);
+		arr.push( txt.substring(0,i) );
+	}
+    while (proceed==1){                                                  //alert('i: '+i);
+		if ( i>=txt.length-1 ) { break; }                                //alert('no break');
+	
+		j = find_indexof(txt, endsymbol, i );                            //alert('j: '+j);
+		if ( j[0]+j[1].length == txt.length || j[0]==-1 ) { 
+			i_end = txt.length; 
+			proceed=0; 
+		} else if ( j[0]==i ) { i_end = find_spaceend(txt, j[0]+j[1].length); }  
+		else { 
+			if (j[1]==' ') { i_end = find_spaceend(txt, j[0]+1); }
+			else { i_end = j[0]; }                                       
+        }                                                                //alert('i_end: '+i_end);
+        arr.push( txt.substring(i,i_end) );                              //alert('words: |'+ txt.substring(i,i_end)+'|');
+        i = i_end;
+    }
+    
+    var p0=n_p.toString();  
+    var text = "<"+tag_p+" id='p"+p0+"'><"+otag+" id='p"+p0+"s0'><"+otag+" id='p"+p0+"s0w0'>";
+    var i_w = 0, i_s = 0, i_p = n_p; 
+    var arr_w=['p'+p0+'s0w0'], arr_s=['p'+p0+'s0'], arr_p=['p'+p0];
+    
+    var id_p='', id_s='', id_w='';
+    var word='', k=0;
+    
     for (k=0; k<arr.length; k++){
         word=arr[k];
         if (k==arr.length-1){ text = text+word+'</'+ctag+'></'+ctag+'></'+tag_p+'>'; }
         else{
             if (word.indexOf('<')!=-1 && word.indexOf('<br>')==-1){ text = text+word;}
             else{
-                if ( word.indexOf(div_end)!=-1 || word.indexOf('\n')!=-1 ){ 
+                if ( word.indexOf('<br>')!=-1 ){ 
                     i_p+=1; i_s=0; i_w=0;
                     id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
                     text = text+word+'</'+ctag+'></'+ctag+'></'+tag_p+'><'+tag_p+' id="'+id_p+'"><'+otag+' id="'+id_p+id_s+'"><'+otag+' id="'+id_p+id_s+id_w+'">';
                     arr_p.push(id_p); arr_s.push(id_p+id_s); arr_w.push(id_p+id_s+id_w);
-                }else if ( word.indexOf('.')!=-1 ){ 
+                }else if ( find_indexof(word, endsentence)[0] !=-1 ){    
                     i_s+=1; i_w=0;
                     id_p = 'p'+i_p.toString(); id_s='s'+i_s.toString(); id_w='w'+i_w.toString();
                     text = text+word+'</'+ctag+'></'+ctag+'><'+ctag+' id="'+id_p+id_s+'"><'+otag+' id="'+id_p+id_s+id_w+'">';
@@ -324,7 +362,6 @@ function reader_parse_txt(text_origin, n_p){
             }
         } 
     }
-    //text = replace_all(text, ':nl:',''); 
     return ([text, arr_w, arr_s, arr_p]);
 }
 
