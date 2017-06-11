@@ -67,10 +67,12 @@ if (subdir=='mail'){
 ischanged = localStorage.getItem('ischanged_text');
 if (ischanged=='0'){
     text_i = document.getElementById('hidden_text').innerHTML;
-    if (text_i.indexOf('<div')!=-1){ parser = reader_parse_pdf(text_i); }
-    else{ parser = reader_parse_txt(text_i, 0); }
+    //if (text_i.indexOf('<div')!=-1){ parser = reader_parse_pdf(text_i); }
+    //else{ parser = reader_parse_txt(text_i, 0); }
+    parser = reader_parse_txt(text_i, 0);
     text_parsed = parser[0];                                             //alert('parsed 0 '+text_parsed);
     var word_id=parser[1];     var sentence_id=parser[2]; var paragraph_id=parser[3];
+                                                                         //alert('id_final '+sentence_id);
                                                                          //alert('id_final '+word_id+' '+sentence_id+' '+paragraph_id);
     document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
     localStorage.setItem('text_origin', text_i);
