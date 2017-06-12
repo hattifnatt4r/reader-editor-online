@@ -1,4 +1,19 @@
 
+var filesys = {
+	iter: 0,
+	iter_prev: 0,
+	
+	iter_editor: 0,
+	path_editor: '/index.html',
+	
+	
+}
+//alert (filemanager.iter);
+
+window.onbeforeunload = cookie_save();
+
+function cookie_save(){ set_cookie('close','ok3'); }
+
 //-- run file manager -----------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 var files_session = localStorage.getItem('files_session');
@@ -21,35 +36,42 @@ if (files_session!='started'){
     localStorage.setItem('loginpass', 'password');
     localStorage.setItem('editor_saveto_var', '0');
 }
-if (get_cookie('isset_main')!='isset'){
-    document.cookie = "isset_main"+"=isset";
-    document.cookie = "lang_common"+"=en";
-    document.cookie = "langbase_common"+"=en";
-}
                                                                          //alert( document.cookie );
-                                                                         //alert(get_cookie('PHPSESSID'));
-var bodyStyles = window.getComputedStyle(document.body);
-screen_height = window.screen.height+'px';
-screen_width = window.screen.width+'px';                                 //alert('alert1');
-document.body.style.setProperty('--screen-height', screen_height);
-document.body.style.setProperty('--screen-width', screen_width);         //alert('alert2');
-textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
-document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
 
+if (get_cookie('isset_common')!='isset'){
+	set_cookie("isset_common", "isset");
+	set_cookie("langbase_", "en");
+    //document.cookie = "isset_common"+"=isset";
+    //document.cookie = "lang_common"+"=en";
+    //document.cookie = "langbase_common"+"=en";
+}
 var files_iter = JSON.parse(localStorage.getItem('files_iter'));
 var files_iter_prev = JSON.parse(localStorage.getItem('files_iter_prev'));
 var nentry = document.getElementById('hidden_files_nentry').innerHTML;   //alert('alert4');
-//scroll_files(0);
-
-files_show_buttons(); 
-document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));
-document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_area"));
-//alert(document.getElementById("base_elements").innerHTML);
-
-if (localStorage.getItem('if_edit_text')=='1'){
-    edit_text_back();
-    localStorage.setItem('if_edit_text','0');
+                                                                         //alert( document.cookie );
+                                                                         //alert(get_cookie('PHPSESSID'));    
+files_run();
+function files_run(){                                                    alert('files_run');                                                                                                               
+	var bodyStyles = window.getComputedStyle(document.body);
+	screen_height = window.screen.height+'px';
+	screen_width = window.screen.width+'px';                                 //alert('alert1');
+	document.body.style.setProperty('--screen-height', screen_height);
+	document.body.style.setProperty('--screen-width', screen_width);         //alert('alert2');
+	textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
+	document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
+	
+	files_show_buttons(); 
+	document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));
+	document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_area"));
+	//alert(document.getElementById("base_elements").innerHTML);
+	
+	if (localStorage.getItem('if_edit_text')=='1'){
+	    edit_text_back();
+	    localStorage.setItem('if_edit_text','0');
+	}
+	files_fill_zoom();
 }
+
 function edit_text_back(){
     text = localStorage.getItem('text_edit');                            //alert('text: '+text);
     varname = localStorage.getItem('editor_saveto_var');                 //alert('var: '+varname);
@@ -73,8 +95,6 @@ function edit_text_back(){
         files_disable('files_delete_button'); 
     }
 }                                                                        //alert('dir: '+files_get_dir());
-
-files_fill_zoom();
 
 //-- show buttons ---------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------
@@ -181,10 +201,10 @@ function files_show_options(){                                           //alert
     if (fname.indexOf('.html')==-1){files_disable('files_cleanhtml_button');}
 }
 function files_show_menu(){    
-    lang = get_cookie('langbase_common');
+    lang = get_cookie('langbase_');
     inner_e = '<div id="files_sound"             class="buttons disabled" onclick="alert(123);" style="left:20%; top:60%;">sound</div>';
     inner_e+= '<div id="common_lang_zoombox" class="reader_zoom_box" style="left:32%;top:23%;width:11%;height:17%;"><div id="common_lang_zoom1" class="text_zoom">'+lang+'</div></div>';
-    inner_e+= '<div id="common_lang"       class="buttons"          onclick="common_show_lang(1,1)"   style="left:44%; top:23%;">base lang</div>';
+    inner_e+= '<div id="common_lang"       class="buttons"          onclick="common_show_lang(1)"   style="left:44%; top:23%;">base lang</div>';
     
     inner_e+= '<div hidden id="files_mail" style="left:60%;top:15%;position:fixed;"> ';
     inner_e+= '<form action="" method="post">';
@@ -246,7 +266,7 @@ function scroll_files(order){
     if (files_iter==0){fname_ii='..';}
     else{fname_ii = document.getElementById('fileid_'+files_iter.toString()).innerText; }
     fname_ii = replace_all(fname_ii,'_',' ')
-    lang = get_cookie('langbase_common');                                //alert(lang);
+    lang = get_cookie('langbase_');                                //alert(lang);
     utter(fname_ii,lang,1, onend=0);
 }
 
@@ -305,10 +325,11 @@ function files_edittext_create(text){
     localStorage.setItem('editor_iter', '0');
     localStorage.setItem('if_edit_text', '1');
     localStorage.setItem('editor_back', '/index.html');
-    localStorage.setItem('click_arr', 'files_menu files_create' );
-    localStorage.setItem('setinner_id_arr', 'files_create_zoom');
-    localStorage.setItem('setvalue_id_arr', 'create_text_id');
-    window.location.href = '/editor.html';
+    //localStorage.setItem('click_arr', 'files_menu files_create' );
+    //localStorage.setItem('setinner_id_arr', 'files_create_zoom');
+    //localStorage.setItem('setvalue_id_arr', 'create_text_id');
+    //window.location.href = '/editor.html';
+    editor_run('files');
 }
 function files_edittext_options(){
     fname = document.getElementById('fileid_'+iter.toString()).innerHTML.replace('.txt','');

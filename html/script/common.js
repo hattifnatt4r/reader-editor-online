@@ -1,3 +1,19 @@
+
+var common = {
+	
+	
+	setstyle: function(){
+		var bodyStyles = window.getComputedStyle(document.body);
+		screen_height = window.screen.height+'px';
+		screen_width = window.screen.width+'px';                                 //alert('alert1');
+		document.body.style.setProperty('--screen-height', screen_height);
+		document.body.style.setProperty('--screen-width', screen_width);         //alert('alert2');
+		textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
+		document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
+	}
+		
+}
+
 //var config = {};
 //config.readonlydir = ['books_txt',''];
 //alert('common');
@@ -142,19 +158,13 @@ function utter(txt, lang, stop, onend){                                  // 0-au
     else{ msg.onend=function(event){scrollbut_div(1,0,1)}; }
 }    
     
-function create_element(tag, id, cl, st, inner, value, name, onclick, t){
+function create_element(id, cl, parent){
     //alert('create');
-    element = document.createElement(tag);
+    if (parent==undefined){ parent = 'created_elements'; }
+    var element = document.createElement('div');
     element.setAttribute('id', id);
     element.setAttribute('class', cl);
-    element.setAttribute('style', st);
-    element.setAttribute('value', value);
-    element.setAttribute('name', name);
-    element.setAttribute('onclick', onclick);
-    element.setAttribute('type', t);
-    element.innerHTML=inner;
-    //document.body.appendChild(element);
-    document.getElementById('created_elements').appendChild(element);
+    document.getElementById(parent).appendChild(element);
     return (element);
 }
 
@@ -302,7 +312,7 @@ function find_indexof(text_origin, arr, i_start, i_end){                 //alert
 	else {res = res+i_start; }
 	return([res, symb]);
 }
-function text_clean(text_origin){
+function text_clean(text_origin){                                        // only void tags allowed!  
 	var txt = text_origin.replace('\n','<br>');                          //alert('txt1: '+txt);
 	var proceed = 1, i = 0, j1=0, j2=0; 
 	i = txt.indexOf('<');
@@ -360,11 +370,9 @@ function reader_parse_txt(text_origin, n_p){
     
     var endsentence = ['...', '!!!', '???', '.', '!', '?'];
     var p0=n_p.toString();  
-    //var text = "<"+tag_p+" id='p"+p0+"'><"+otag+" id='p"+p0+"s0'><"+otag+" id='p"+p0+"s0w0'>";
     var text = '';
     var i_w = 0, i_s = 0, i_p = n_p; 
     var arr_w=['p'+p0+'s0w0'], arr_s=['p'+p0+'s0'], arr_p=['p'+p0];
-    //var arr_w=[], arr_s=['p'+p0+'s0'], arr_p=['p'+p0];
     
     var id_p='', id_s='', id_w='';
     var word='', word_start = '', word_end='';
@@ -462,9 +470,10 @@ function concatenate_arr(arr1, arr2){ for (i=0; i<arr2.length; i++){ arr1.push(a
 
 
 function get_cookie(cname) {
-    name = cname + "=";
+    var name = cname + "=";
     decodedCookie = decodeURIComponent(document.cookie);
-    ca = decodedCookie.split(';');
+    var ca = decodedCookie.split(';');  
+    var i;  var c;
     for( i = 0; i <ca.length; i++) {
         c = ca[i];
         while (c.charAt(0) == ' ') {
@@ -475,6 +484,29 @@ function get_cookie(cname) {
         }
     }
     return "";
+}
+
+function set_cookie(cname, cvalue, exdays){
+	if (exdays===undefined) {exdays=60;}
+	var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 3600 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function get_cookie_arr(name) {
+    decodedCookie = decodeURIComponent(document.cookie);
+    ca = decodedCookie.split(';');                                       //alert(ca);
+    arr = [];
+    for( i = 0; i <ca.length; i++) {
+        c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        } c1 = c.substring(0, c.indexOf('='));                           //alert(c);
+        if (c1.indexOf(name) >-1) {
+            arr.push(c.substring(c.indexOf('=')+1));                     //alert('!!'+ c.substring(c.indexOf('=')+1));
+        }
+    }
+    return arr;
 }
 
 function loadDocXML(url1, login_function) {
@@ -508,22 +540,28 @@ function get_usrname(fname_i){
 
 //-- show functions ------------------------------------------------------------
 //------------------------------------------------------------------------------
-function common_show_lang(lvl, if_base){                                 //alert('common_show_lang');
-    inner_e = ''; 
-    if (if_base==1){ 
-        lang = get_cookie('langbase_common');
+function common_show_lang(lvl, name){                                    //alert('common_show_lang '+name);
+    var inner_e = ''; var lang='';
+    //if (is_base==1){ 
+    if (name==undefined){ 
+        lang = get_cookie('langbase_');                                  //alert(lang);
     }else{ 
-        lang = get_cookie('lang_common');
-        inner_e+= '<div id="auto"    class="buttons"     onclick="common_set_lang(this.id,'+if_base+');"   style="left:20%; top:60%;">auto</div>'; 
+        //lang = get_cookie('lang_'+name);                               //alert('name '+name);
+        lang = get_cookie('lang_common');                                //alert('name '+name);
+        inner_e+= '<div id="auto"    class="buttons"     onclick="common_set_lang(this.id,'+name+');"   style="left:20%; top:60%;">auto</div>'; 
     }
-    inner_e+=     '<div id="en"      class="buttons"     onclick="common_set_lang(this.id,'+if_base+');"   style="left:45%; top:60%;">en</div>';
-    inner_e+=     '<div id="ru"      class="buttons"     onclick="common_set_lang(this.id,'+if_base+');"   style="left:70%; top:60%;">ru</div>';
+    inner_e+=     '<div id="en"      class="buttons"     onclick="common_set_lang(this.id,'+name+');"   style="left:45%; top:60%;">en</div>';
+    inner_e+=     '<div id="ru"      class="buttons"     onclick="common_set_lang(this.id,'+name+');"   style="left:70%; top:60%;">ru</div>';
     inner_e+=     '<div id="common_lang_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="common_lang_zoom2" class="text_zoom">'+lang+'</div></div>';
     common_create_menu('common_lang',lvl,inner_e);
 }
-function common_set_lang(lang, if_base){                                 //alert(lang);
-    if (if_base==0){ document.cookie = "lang_common"+"="+lang;  }        
-    else{    document.cookie = "langbase_common"+"="+lang;    }           //alert('cookie');
+function common_set_lang(lang, name){                                    //alert(lang);
+    //if (is_base==1){ set_cookie("langbase_", lang); }        
+    if (name==undefined){ set_cookie("langbase_", lang);                 //alert(name); 
+		}        
+    else{ //set_cookie("lang_"+name, lang); 
+		set_cookie("lang_common", lang);   }           //alert('cookie');
+    //else{ set_cookie("lang_common", lang); }           //alert('cookie');
     document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
     document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
 }
