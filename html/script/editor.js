@@ -14,7 +14,10 @@ var editor = {
 	var editor_buttonsound_arr = ['',''];
 	var editor_buttonsound = 0;
 	*/
-	parent: ''
+	parent: "",
+	destination: "",
+	iter: 0,
+	text_raw: ""
 };
 
 editor.dict = {
@@ -117,14 +120,20 @@ var editor_buttonsound = 0;
 
 //editor_run();
 
-function editor_run(parent){
+function editor_run(parent, text_raw, destination, iter){                //alert('editor_run');
+	if (text_raw==undefined) { text_raw=""; }
+	if (destination==undefined) { destination=""; }
+	if (iter==undefined) { iter=0; }
 	editor.parent = parent;
+	editor.destination = destination.toString();
+	editor.text_raw = text_raw.toString();
+	editor.iter = iter;
 	document.body.style.setProperty('--editor-fontsize-pc', 7);
 	document.body.style.setProperty('--editor-borderwidth-pc', 2);
 
     create_element('editor_area','body_bkg', 'editor_elements');
     
-	var elem=create_element('editor_text_box','reader_zoom_box', 'editor_area');  //alert(e_style);
+	var elem=create_element('editor_text_box','reader_zoom_box', 'editor_area'); 
 	elem.style = 'top:2%; width:96%; left:2%;';
 	elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
 	elem = create_element('editor_buttons_area', '', 'editor_area'); 
@@ -135,26 +144,25 @@ function editor_run(parent){
 	editor_type = 'upper_twolines';
 	editor.style.set_style(editor_type);
 	
-	var text = localStorage.getItem('text_edit');                                //alert('editor 2');
-	document.getElementById('editor_text_area').innerHTML=text;              //alert('editor 3');
+	document.getElementById('editor_text_area').innerHTML=editor.text_raw;   //alert('editor 3');
 	editor_set_cursor();                                                     //alert('editor 4');
 	editor_show_start();                                                     //alert('editor 5');
 }
 function editor_exit(){                                                  //alert('editor exit');
-    //window.location.href = localStorage.getItem('editor_back');          //alert(localStorage.getItem('text_edit'));
     //var elem = document.getElementById('editor_area').parentNode;
     var elem = document.getElementById('editor_area');
     elem.parentNode.removeChild(elem);
     if (editor.parent=="reader"){ 
 		localStorage.setItem('ischanged_text', '1');
+		reader.editor_text = editor.text_raw;
 		reader_run(); 
-	}else if (editor.parent=="files"){ files_run(); }
-    
+	}else if (editor.parent=="files"){ 
+		document.getElementById(editor.destination).innerHTML=editor.text_raw;
+		filesys.editor_text = "";
+	}  
 }function editor_save(){                                                 //alert('editor_save');
     if (editor.parent=='reader'){
         localStorage.setItem('ischanged_text', '1');
-        //localStorage.setItem('back_to_editor', '1');
-        //window.location.href = '/reader.html';
         reader_run(); 
         //document.getElementById('reader_edit').click();
     }
@@ -210,7 +218,7 @@ function editor_show_menu(){
     inner_e+= '<div id="common_lang_zoom1"  class="buttons_text"                   style="left:57%; top:50%;">'+lang+'</div>';
     inner_e+= '<div id="common_lang"   class="buttons" onclick="common_show_lang(1);"     style="left:70%; top:50%;">base lang</div>';
     inner_e+= '<div id="editor_sound_button"   class="buttons" onclick="editor_set_buttonsound();" style="left:35%; top:50%;">'+editor_buttonsound_arr[editor_buttonsound]+'</div>';
-    common_create_menu('editor_menu', 0, inner_e);
+    common_create_menu('editor_menu', 0, inner_e, 'editor_buttons_area');
 }
     
 function editor_show_symbols(lang, lvl){                                 //alert('show_symbols');
@@ -288,20 +296,20 @@ function editor_show_navigate(){
 //-- cursor functions -------------------------------------------------------
 function editor_scrollvert(order){                                       //alert('scrollvert');
     order = parseInt(order);
-    iter_prev = parseInt(localStorage.getItem('editor_iter')); 
+    var iter_prev = editor.iter;
     iter_save = iter_prev; 
     pos0 = parseInt(document.getElementById('cursor').offsetTop);        //alert(pos0);
     proceed2 = 1;
     while(proceed2==1){
         editor_scrollword(order);
         pos = parseInt(document.getElementById('cursor').offsetTop);     //alert('|'+pos0+'|'+pos+'|');
-        iter = parseInt(localStorage.getItem('editor_iter'));   
+        iter = editor.iter;
         if (pos!=pos0 || iter==iter_prev) {proceed2=0;}
         iter_prev = iter;
     }
     if (order==1 && pos==pos0 && iter!=iter_save) {
         iter=iter_save;
-        localStorage.setItem('editor_iter', iter.toString());
+        editor.iter = iter;
         editor_set_cursor();
         } 
     if (order==0){
@@ -310,7 +318,7 @@ function editor_scrollvert(order){                                       //alert
         while(proceed2==1){
             editor_scrollword(0);
             pos = parseInt(document.getElementById('cursor').offsetTop); //alert('|'+pos0+'|'+pos+'|');
-            iter = parseInt(localStorage.getItem('editor_iter'));   
+            var iter = editor.iter;  
             if (pos!=pos0 || iter==iter_prev) {proceed2=0;}
             iter_prev = iter;
         }editor_scrollword(1);
@@ -318,8 +326,8 @@ function editor_scrollvert(order){                                       //alert
 }
 function editor_scrollword(order){                                       //alert('scrollword '+order);
     order = parseInt(order);
-    iter = parseInt(localStorage.getItem('editor_iter'));                //alert('iter '+iter);
-    text = localStorage.getItem('text_edit');
+    var iter = editor.iter;
+    var text = editor.text_raw;
     if (order==1 && iter<text.length-1){
         iter_prev = text.substr(0,iter).lastIndexOf(' '); 
         iter = text.indexOf(' ',iter);                                   //alert(iter); 
@@ -340,7 +348,7 @@ function editor_scrollword(order){                                       //alert
         }else{ iter_prev = text.indexOf(' ',iter);  }
         iter = text.substr(0,iter).lastIndexOf(' ')+1;
     }
-    localStorage.setItem('editor_iter', iter.toString());
+    editor.iter = iter;
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
     lang = get_cookie('lang_common');
@@ -348,9 +356,9 @@ function editor_scrollword(order){                                       //alert
 }
 function editor_scroll(order){
     ltag = '<abbr>'; rtag = '</abbr>';
-    iter = parseInt(localStorage.getItem('editor_iter'));                //alert(iter);
-    iter_prev = iter;
-    text = localStorage.getItem('text_edit');
+    var iter = editor.iter;
+    var iter_prev = iter;
+    var text = editor.text_raw;
     max_iter = text.length;
     if (order==1 && iter < max_iter){ 
         if (iter==text.indexOf(ltag,iter) ){
@@ -371,7 +379,7 @@ function editor_scroll(order){
             }else{iter-=1;}     
         } 
     }  
-    localStorage.setItem('editor_iter', iter.toString());
+    editor.iter = iter;
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
     letter = text.substr(i1, i2-i1);
@@ -381,13 +389,13 @@ function editor_scroll(order){
     document.getElementById('editor_show_letter').innerHTML = letter;
 }
 
-function editor_set_cursor(){
-    cursor='<em id="cursor" style="position:relative;"><em class="blinking-cursor" >|</em></em>';
-    iter = parseInt(localStorage.getItem('editor_iter'));
-    text = localStorage.getItem('text_edit');
-    rspace = text.indexOf(' ',iter);
-    lspace = text.substr(0,iter).lastIndexOf(' ');                       //alert('|'+style_text+'|');
-    if (rspace>0 && lspace>0 && lspace<rspace){                          //alert('|'+lspace0+'|'+iter+'|'+rspace0+'|');
+function editor_set_cursor(){                                            //alert('set_cursor');
+    cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" >|</em></em>';   
+    var iter = editor.iter;                                              //alert('iter: '+iter);
+    var text = editor.text_raw;                                          //alert('text: '+text);
+    rspace = text.indexOf(' ',iter);                                     //alert('rspace: '+rspace);
+    lspace = text.substr(0,iter).lastIndexOf(' ');                       
+    if (rspace>0 && lspace>0 && lspace<rspace){                          //alert('|'+lspace+'|'+iter+'|'+rspace+'|');
         text_c = text.substr(0, lspace+1)+'<span style="white-space:nowrap;">'+text.substr(lspace+1,iter-lspace-1)+cursor+text.substr(iter,rspace-iter)+'</span>'+text.substr(rspace);
     }else{ 
         text_c = text.substr(0, iter)+cursor+text.substr(iter); 
@@ -400,9 +408,9 @@ function editor_set_cursor(){
 //--------------------------------------------------------------------------------
 function editor_delete(){
     if (iter>0) { 
-        text = localStorage.getItem('text_edit');
-        iter = parseInt(localStorage.getItem('editor_iter'));
-        
+        var iter = editor.iter;
+		var text = editor.text_raw;
+		
         i = text.substr(0,iter).lastIndexOf(rtag);
         if (iter==i+rtag.length && i!=-1){
             iter_l = text.substr(0,iter).lastIndexOf(ltag);
@@ -414,21 +422,19 @@ function editor_delete(){
         }
         
         text_c = text.substr(0, iter_l)+text.substr(iter);
-        localStorage.setItem('text_edit', text_c);
-        localStorage.setItem('editor_iter', (iter_l).toString());
+        editor.iter = iter_l;
+		editor.text_raw = text_c;	
         editor_set_cursor(); 
     }
 }function editor_set_letter(n, back){
-    iter = parseInt(localStorage.getItem('editor_iter'));
-    text = localStorage.getItem('text_edit');
-    //keys = Object.keys(dict_allchar);
+    var iter = editor.iter;
+	var text = editor.text_raw;
     keys = Object.keys( editor.dict.allchar() );
-    //letter = dict_allchar[keys[n]];                                       //alert(n+' '+arr[n]+'  '+letter);
     letter = editor.dict.allchar()[keys[n]];                                       //alert(n+' '+arr[n]+'  '+letter);
     text_c = text.substr(0, iter)+letter+text.substr(iter);
-    localStorage.setItem('text_edit', text_c);
+    editor.text_raw = text_c;
     iter_new = iter+letter.length;
-    localStorage.setItem('editor_iter', iter_new.toString());
+    editor.iter = iter_new;
     editor_set_cursor(); 
     if (back==1){ editor_backto_letters(); }
 }
@@ -446,8 +452,8 @@ function editor_set_fontsize(){
     document.getElementById('editor_text_area').style.fontSize=fontsize;
 }
 function editor_spell(){
-    iter = parseInt(localStorage.getItem('editor_iter'));                //alert('iter '+iter);
-    text = localStorage.getItem('text_edit');
+    var iter = editor.iter;
+	var text = editor.text_raw;
     if (text[iter-1]!=' ' || text[iter]!=' '){ 
         i1 = text.substr(0,iter).lastIndexOf(' '); 
         i2 = text.indexOf(' ',iter);

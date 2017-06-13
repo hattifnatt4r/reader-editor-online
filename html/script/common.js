@@ -566,7 +566,8 @@ function common_set_lang(lang, name){                                    //alert
     document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
 }
 
-function common_create_menu(id, lvl, buttons_html){                      //alert('create_menu');
+function common_create_menu(id, lvl, buttons_html, parent){                      //alert('create_menu');
+	if (parent==undefined) { parent='created_elements'; }
     if (lvl==0){                                                         //alert('lvl0');
         menu_blur();
         inner_e = '<div id="'+id+'_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
@@ -579,7 +580,7 @@ function common_create_menu(id, lvl, buttons_html){                      //alert
     element = document.createElement('div');
     element.setAttribute('id', id);
     element.innerHTML=inner_e+buttons_html+'</div>';
-    document.getElementById('created_elements').appendChild(element);
+    document.getElementById(parent).appendChild(element);
     return (element);
     }
 

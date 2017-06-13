@@ -13,6 +13,8 @@ var reader = {
     zoomtype: 0,
     lang: "auto",                             //alert(get_cookie('lang_'+fname));
     
+    editor_text: "",
+    editor_iter: 0,
     mailtext: ""  
 }
 var word_id=[], sentence_id=[], paragraph_id=[];
@@ -27,9 +29,7 @@ if (session!='started'){
      
     localStorage.setItem('text_origin', 'text_o');
     localStorage.setItem('text_parsed', 'text_p');
-    localStorage.setItem('text_edit', '0test0');
     
-    localStorage.setItem('editor_iter', '0');
     localStorage.setItem('editor_back', '/reader.html');
     localStorage.setItem('ischanged_text', '0');
     localStorage.setItem('back_to_editor', '0');
@@ -55,24 +55,21 @@ if (get_cookie('isset_'+fname)!='isset'){
     
     document.cookie = "mailtext_"+fname+"= ";                            //alert(document.cookie);
     }                                                                    //alert('start: '+get_cookie("latest_w_"+fname)+'  '+get_cookie("latest_s_"+fname)+'  '+get_cookie("latest_p_"+fname));
-//alert('reader 1');                                                   
 
 reader_run();
 
-function reader_run() {                                                  alert('reader_run');
+function reader_run() {                                                  //alert('reader_run');
 
     screen_height = window.screen.height+'px';
     screen_width = window.screen.width+'px';
     document.body.style.setProperty('--screen-height', screen_height);
-    document.body.style.setProperty('--screen-width', screen_width);
+    document.body.style.setProperty('--screen-width', screen_width);     //alert('reader 2');
     
-    //alert('reader 2');
     reader_show_buttons();                                               //alert('buttons');
     create_element('reader_zoom_box','reader_zoom_box', 'base_elements');
     document.getElementById("reader_zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
     document.getElementById("base_elements").appendChild(document.getElementById("text_from_file_box"));
     subdir=get_subdir(fname);                                            
-    //subdir='';
     name = get_usrname(fname);                                           //alert('NAME: '+name);
     if (subdir=='mail'){
         var text_allmail = document.getElementById('hidden_mail_all').innerHTML; //alert('allmail: '+text_allmail);
@@ -80,7 +77,7 @@ function reader_run() {                                                  alert('
         document.getElementById('hidden_text').innerHTML=text_allmail+text_i;
         e=document.getElementsByName(name);
         for (i=0; i<e.length; i++){e[i].className='mail mail_out';}
-        contact_name=fname.substr(fname.lastIndexOf('/')+1);                 //alert('CONTACT: '+contact_name);
+        contact_name=fname.substr(fname.lastIndexOf('/')+1);             //alert('CONTACT: '+contact_name);
         e=document.getElementsByName(contact_name);
         for (i=0; i<e.length; i++){e[i].className='mail mail_in';}
     }
@@ -93,35 +90,33 @@ function reader_run() {                                                  alert('
         document.getElementById('reader_edit').click();                    
         localStorage.setItem('back_to_editor', '0');
     }
-    */                                                                    //alert('reader 2');
+    */                                                                   //alert('reader 2');
     reader_select_type(order=0);                                         //alert('select_type');
     reader_set_zoomtype(0);                                              //alert('zoom_type');
      
 }
 
-function reader_text(){
+function reader_text(){                                                  //alert(reader.editor_text);
     var ischanged = localStorage.getItem('ischanged_text');              //alert('ischanged '+ischanged);
     if (ischanged=='0'){
         text_i = document.getElementById('hidden_text').innerHTML;
-        //if (text_i.indexOf('<div')!=-1){ parser = reader_parse_pdf(text_i); }
-        //else{ parser = reader_parse_txt(text_i, 0); }
         parser = reader_parse_txt(text_i, 0);
-        text_parsed = parser[0];                                             //alert('parsed 0 '+text_parsed);
+        text_parsed = parser[0];                                         //alert('parsed 0 '+text_parsed);
         word_id=parser[1]; sentence_id=parser[2]; paragraph_id=parser[3];
-                                                                             //alert('id_final '+sentence_id);
-                                                                             //alert('id_final '+word_id+' '+sentence_id+' '+paragraph_id);
+                                                                         //alert('id_final '+sentence_id);
+                                                                         //alert('id_final '+word_id+' '+sentence_id+' '+paragraph_id);
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
         localStorage.setItem('text_origin', text_i);
         localStorage.setItem('text_parsed', text_parsed);                //alert('reader 5');
     }else{
-        text = localStorage.getItem('text_edit');                            //alert('text_edit: '+text);
-        text_parsed = localStorage.getItem('text_parsed');                   //alert('text_parsed: '+text_parsed);
+        text = reader.editor_text;
+        text_parsed = localStorage.getItem('text_parsed');               //alert('text_parsed: '+text_parsed);
         document.getElementById('temp').innerHTML = text_parsed;
-        id = get_cookie('id_curr_'+fname);                                   //alert('id '+id);
-        document.getElementById(id).innerHTML = text;                        //alert(text);
+        id = get_cookie('id_curr_'+fname);                               //alert('id '+id);
+        document.getElementById(id).innerHTML = text;                    //alert(text);
         
-        text_all_parsed = document.getElementById('temp').innerHTML;         //alert('text_all_parsed '+text_all_parsed);
-        text_all_origin = merge_text(text_all_parsed);                       //alert('merged');
+        text_all_parsed = document.getElementById('temp').innerHTML;     //alert('text_all_parsed '+text_all_parsed);
+        text_all_origin = merge_text(text_all_parsed);                   //alert('merged');
         localStorage.setItem('text_origin', text_all_origin);
         
         parser = reader_parse_txt(text_all_origin, 0); 
@@ -133,12 +128,12 @@ function reader_text(){
         localStorage.setItem('ischanged_text', '0');
         
         if (subdir=='mail'){
-            name = get_usrname(fname);                                       //alert('NAME: '+name);
+            name = get_usrname(fname);                                   //alert('NAME: '+name);
             text = '<br><div id="mail_temp_title" title="'+name+'" class="mail mail_out mail_temp">'+name+', '+'</div>';
             text+= '<div id="mail_temp_text" title="'+name+'" class="mail mail_out">'+document.getElementById('mail_temp_text').innerHTML+'</div>';
             text=merge_text(text);
         }
-        else{text=localStorage.getItem('text_origin');}                      //alert('SAVE: '+text);
+        else{text=localStorage.getItem('text_origin');}                  //alert('SAVE: '+text);
         save_file(text);
     }
 }                   
@@ -146,7 +141,7 @@ function reader_text(){
 
 function save_file(text){
         document.getElementById('save_text_text_js').value = text; 
-        document.getElementById('save_text_submit_js').click();              //alert('saved '+text);
+        document.getElementById('save_text_submit_js').click();          //alert('saved '+text);
     }
  
 function reader_play_pause(){ 
@@ -204,7 +199,6 @@ function scrollbut_div(order,stop,onend){
     //if (n_zoom_type!=0){ scroll_to(id,'reader_zoom_box',title=1); zoom_set_text(); }
     //document.getElementById('word_i').value = document.getElementById(id).innerText; 
     //alert( document.getElementById(id).innerText );
-    //alert('scroll_end');
     //reader_if_editable();
     if (iter==-1){ edit_function = ''; edit_class='buttons disabled'; 
         document.getElementById('reader_edit').className='buttons disabled';
@@ -232,7 +226,6 @@ function reader_utter(stop_i, onend) {
         }
         if (n_select_type==1){ utter_sentence(id, word_id, lang, stop_i, onend); }
     }
-    //reader_play_pause();                                               //alert('utter_end');
 }
 
 function zoom_set_text(){                                                //alert('zoom_set_text');
@@ -373,11 +366,7 @@ function reader_editor(){
     id = get_id();
     text = document.getElementById(id).innerHTML;
     text_plane = merge_text(text);                                       //alert(text_plane);
-    localStorage.setItem('text_edit', text_plane);
-    localStorage.setItem('editor_iter', '0');
-    localStorage.setItem('editor_back', '/reader.html');
-    //window.location.href = '/editor.html';
-    editor_run('reader');
+    editor_run('reader', text_plane);
 }
 
 //-- mail --------------------------------------------------------------------
