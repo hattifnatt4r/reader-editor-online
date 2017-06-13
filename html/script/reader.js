@@ -1,60 +1,44 @@
 
 var reader = {
-    fname: document.getElementById('file_title').innerText.replace(' ',''),
-    //fname: function(){ return document.getElementById('file_title').innerText.replace(' ',''); }
-    iter: 0,
     latest_w: "p0s0w0",
     latest_s: "p0s0",
     latest_p: "p0",
     id_prev: "p0s0w0",
     id_curr: "p0s0w0",
+    ischanged_text: false,
+    ineditor: false,
     
+    iter: 0,
     selecttype: 2,
     zoomtype: 0,
-    lang: "auto",                             //alert(get_cookie('lang_'+fname));
+    lang: "auto",                             
     
+    text_origin: "",
     editor_text: "",
     editor_iter: 0,
-    mailtext: ""  
+    mailtext: "",
+    cookie_number: 15,
+    fname: "",
+    cookie_suffix: "_",
+    
+    text_parsed: ""
+    
 }
+reader.fname = document.getElementById('file_title').innerText.replace(' ','');
+reader.cookie_suffix = "_"+reader.fname;
+
 var word_id=[], sentence_id=[], paragraph_id=[];
 
 //-- run reader ---------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
+if (get_cookie('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
+	set_cookie("isset_"+reader.fname, "isset");
+	common.cookie_save.call(reader);
+} 
+common.cookie_load.call(reader);                                                                 
+window.onbeforeunload = common.cookie_save.call(reader);
 
-var session = localStorage.getItem('reader_session');
-if (session!='started'){
-    session = 'started';
-    localStorage.setItem('reader_session', session);
-     
-    localStorage.setItem('text_origin', 'text_o');
-    localStorage.setItem('text_parsed', 'text_p');
-    
-    localStorage.setItem('editor_back', '/reader.html');
-    localStorage.setItem('ischanged_text', '0');
-    localStorage.setItem('back_to_editor', '0');
-    }
-var fname = document.getElementById('file_title').innerText.replace(' ','');
-                                                                         //alert( document.cookie );
-function reader_clearcookie(){ document.cookie = "isset_"+fname+"=0"; }
-if (get_cookie('isset_'+fname)!='isset'){
-    document.cookie = "isset_"+fname+"=isset";
-    document.cookie = "counter_"+fname+"=0";
-    
-    document.cookie = "latest_w_"+fname+"=p0s0w0";
-    document.cookie = "latest_s_"+fname+"=p0s0";
-    document.cookie = "latest_p_"+fname+"=p0";
-    document.cookie = "id_prev_"+fname+"=p0s0w0";
-    document.cookie = "id_curr_"+fname+"=p0s0w0";
-    
-    document.cookie = "selecttype_"+fname+"=2";
-    document.cookie = "zoomtype_"+fname+"=0";
-    //document.cookie = "lang_"+fname+"=1";
-    document.cookie = "lang_"+fname+"=auto";                             //alert(get_cookie('lang_'+fname));
-    document.cookie = "lang_common"+"=auto";                             //alert(get_cookie('lang_'+fname));
-    
-    document.cookie = "mailtext_"+fname+"= ";                            //alert(document.cookie);
-    }                                                                    //alert('start: '+get_cookie("latest_w_"+fname)+'  '+get_cookie("latest_s_"+fname)+'  '+get_cookie("latest_p_"+fname));
+function reader_clearcookie(){ document.cookie = "isset_"+reader.fname+"=0"; }
 
 reader_run();
 
@@ -69,15 +53,15 @@ function reader_run() {                                                  //alert
     create_element('reader_zoom_box','reader_zoom_box', 'base_elements');
     document.getElementById("reader_zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
     document.getElementById("base_elements").appendChild(document.getElementById("text_from_file_box"));
-    subdir=get_subdir(fname);                                            
-    name = get_usrname(fname);                                           //alert('NAME: '+name);
+    subdir=get_subdir(reader.fname);                                            
+    name = get_usrname(reader.fname);                                           //alert('NAME: '+name);
     if (subdir=='mail'){
         var text_allmail = document.getElementById('hidden_mail_all').innerHTML; //alert('allmail: '+text_allmail);
         var text_i = document.getElementById('hidden_text').innerHTML;           //alert('newmail: '+text_i);
         document.getElementById('hidden_text').innerHTML=text_allmail+text_i;
         e=document.getElementsByName(name);
         for (i=0; i<e.length; i++){e[i].className='mail mail_out';}
-        contact_name=fname.substr(fname.lastIndexOf('/')+1);             //alert('CONTACT: '+contact_name);
+        contact_name=reader.fname.substr(reader.fname.lastIndexOf('/')+1);             //alert('CONTACT: '+contact_name);
         e=document.getElementsByName(contact_name);
         for (i=0; i<e.length; i++){e[i].className='mail mail_in';}
     }
@@ -97,8 +81,7 @@ function reader_run() {                                                  //alert
 }
 
 function reader_text(){                                                  //alert(reader.editor_text);
-    var ischanged = localStorage.getItem('ischanged_text');              //alert('ischanged '+ischanged);
-    if (ischanged=='0'){
+    if (reader.ischanged_text==false){
         text_i = document.getElementById('hidden_text').innerHTML;
         parser = reader_parse_txt(text_i, 0);
         text_parsed = parser[0];                                         //alert('parsed 0 '+text_parsed);
@@ -106,34 +89,34 @@ function reader_text(){                                                  //alert
                                                                          //alert('id_final '+sentence_id);
                                                                          //alert('id_final '+word_id+' '+sentence_id+' '+paragraph_id);
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
-        localStorage.setItem('text_origin', text_i);
-        localStorage.setItem('text_parsed', text_parsed);                //alert('reader 5');
+        reader.text_origin = text_i;
+        reader.text_parsed = text_parsed;
     }else{
         text = reader.editor_text;
-        text_parsed = localStorage.getItem('text_parsed');               //alert('text_parsed: '+text_parsed);
+        text_parsed = reader.text_parsed;
         document.getElementById('temp').innerHTML = text_parsed;
-        id = get_cookie('id_curr_'+fname);                               //alert('id '+id);
+        id = reader.id_curr;
         document.getElementById(id).innerHTML = text;                    //alert(text);
         
         text_all_parsed = document.getElementById('temp').innerHTML;     //alert('text_all_parsed '+text_all_parsed);
         text_all_origin = merge_text(text_all_parsed);                   //alert('merged');
-        localStorage.setItem('text_origin', text_all_origin);
+        reader.text_origin = text_all_origin;
         
         parser = reader_parse_txt(text_all_origin, 0); 
         text_parsed = parser[0]; 
         word_id=parser[1];  sentence_id=parser[2]; paragraph_id=parser[3];
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert(text_parsed);
-        localStorage.setItem('text_parsed', text_parsed);
+        reader.text_parsed = text_parsed;
         
-        localStorage.setItem('ischanged_text', '0');
+        reader.ischanged_text = false;
         
         if (subdir=='mail'){
-            name = get_usrname(fname);                                   //alert('NAME: '+name);
+            name = get_usrname(reader.fname);                                   //alert('NAME: '+name);
             text = '<br><div id="mail_temp_title" title="'+name+'" class="mail mail_out mail_temp">'+name+', '+'</div>';
             text+= '<div id="mail_temp_text" title="'+name+'" class="mail mail_out">'+document.getElementById('mail_temp_text').innerHTML+'</div>';
             text=merge_text(text);
         }
-        else{text=localStorage.getItem('text_origin');}                  //alert('SAVE: '+text);
+        else{text=reader.text_origin;}                  //alert('SAVE: '+text);
         save_file(text);
     }
 }                   
@@ -159,43 +142,55 @@ function reader_play_pause(){
 }
 
 function scrollbut_div(order,stop,onend){
-    iter = parseInt(get_cookie('counter_'+fname));                       //alert('iter '+iter);
-    n_select_type = parseInt(get_cookie('selecttype_'+fname));
+    iter = reader.iter;
+    n_select_type = reader.selecttype;
     id_arr = get_id_array();
     max_iter = id_arr.length;
     if (order==1 && iter < max_iter-1 ) { iter += 1; }
     else if (order==0 && iter > -1) { iter -=1; } 
     if (iter==-1){ id='file_title'; } 
     else { id=id_arr[iter]; }
-    document.cookie = "counter_"+fname+'='+iter.toString();              //alert(iter);
-    document.cookie = "id_curr_"+fname+"="+id;
+    reader.iter = iter;
+    reader.id_curr = id;
     
     if (iter==-1){
-        document.cookie = "latest_w_"+fname+"="+id;
-        document.cookie = "latest_s_"+fname+"="+id;
-        document.cookie = "latest_p_"+fname+"="+id;
+        //document.cookie = "latest_w_"+reader.fname+"="+id;
+        //document.cookie = "latest_s_"+reader.fname+"="+id;
+        //document.cookie = "latest_p_"+reader.fname+"="+id;
+        reader.latest_w  = id;
+        reader.latest_s  = id;
+        reader.latest_p  = id;
     }
     if ((order==1|| order==0) && iter>-1){
         if (n_select_type==0){ 
-            document.cookie = "latest_w_"+fname+"="+id;
-            document.cookie = "latest_s_"+fname+"="+id.substr(0,4);
-            document.cookie = "latest_p_"+fname+"="+id.substr(0,2);
+            //document.cookie = "latest_w_"+reader.fname+"="+id;
+            //document.cookie = "latest_s_"+reader.fname+"="+id.substr(0,4);
+            //document.cookie = "latest_p_"+reader.fname+"="+id.substr(0,2);
+            reader.latest_w = id;
+            reader.latest_s = id.substr(0,4);
+            reader.latest_p = id.substr(0,2);
         } else if (n_select_type==1){ 
-            document.cookie = "latest_w_"+fname+"="+id+'w0';
-            document.cookie = "latest_s_"+fname+"="+id;
-            document.cookie = "latest_p_"+fname+"="+id.substr(0,2);
+            //document.cookie = "latest_w_"+reader.fname+"="+id+'w0';
+            //document.cookie = "latest_s_"+reader.fname+"="+id;
+            //document.cookie = "latest_p_"+reader.fname+"="+id.substr(0,2);
+            reader.latest_w = id+"w0";
+            reader.latest_s = id;
+            reader.latest_p = id.substr(0,2);
         } else if (n_select_type==2){ 
-            document.cookie = "latest_w_"+fname+"="+id+'s0w0';
-            document.cookie = "latest_s_"+fname+"="+id+'s0';
-            document.cookie = "latest_p_"+fname+"="+id;
+            //document.cookie = "latest_w_"+reader.fname+"="+id+'s0w0';
+            //document.cookie = "latest_s_"+reader.fname+"="+id+'s0';
+            //document.cookie = "latest_p_"+reader.fname+"="+id;
+            reader.latest_w = id+"s0w0";
+            reader.latest_s = id+"s0";
+            reader.latest_p = id;
             }
-    }                                                                    //alert('iter: '+iter+' '+get_cookie("latest_w_"+fname)+'  '+get_cookie("latest_s_"+fname)+'  '+get_cookie("latest_p_"+fname));
+    }                                                                    //alert('iter: '+iter+' '+get_cookie("latest_w_"+fname)+'  '+get_cookie("latest_s_"+reader.fname)+'  '+get_cookie("latest_p_"+reader.fname));
     reader_utter(stop_i=stop, onend); 
     highlite(); 
     scroll_to(id,'text_from_file_box', title=0);                         //alert('scroll 1');
     //scroll_to(id,'reader_zoom_box',title=1); alert('scroll 2');
     zoom_set_text();  
-    //n_zoom_type = parseInt(get_cookie('zoomtype_'+fname));
+    //n_zoom_type = parseInt(get_cookie('zoomtype_'+reader.fname));
     //if (n_zoom_type!=0){ scroll_to(id,'reader_zoom_box',title=1); zoom_set_text(); }
     //document.getElementById('word_i').value = document.getElementById(id).innerText; 
     //alert( document.getElementById(id).innerText );
@@ -210,10 +205,9 @@ function scrollbut_div(order,stop,onend){
 }    
 function reader_utter(stop_i, onend) {
     id = get_id();
-    iter = parseInt(get_cookie('counter_'+fname));                       //alert('iter '+iter);
-    n_select_type = parseInt(get_cookie('selecttype_'+fname));           //alert('iter '+iter+' n '+n_select_type);
-    //lang = get_cookie('lang_'+fname);
-    lang = get_cookie('lang_common');
+    iter = reader.iter;
+    n_select_type = reader.selecttype;
+    lang = reader.lang;
     if (n_select_type==0 || iter==-1 ){ utter(document.getElementById(id).innerText, lang, stop=stop_i, onend); }
     else {
         if (n_select_type==2){ 
@@ -229,63 +223,63 @@ function reader_utter(stop_i, onend) {
 }
 
 function zoom_set_text(){                                                //alert('zoom_set_text');
-    var n_zoom_type = get_cookie('zoomtype_'+fname);                     //alert('n_zoom '+n_zoom_type);
+    var n_zoom_type = reader.zoomtype;
     var text='empty';
     if (n_zoom_type==1){
-        text = document.getElementById(get_cookie('latest_w_'+fname)).innerHTML;
+        text = document.getElementById(reader.latest_w).innerHTML;
     }else if (n_zoom_type==2){
-        text = document.getElementById(get_cookie('latest_s_'+fname)).innerHTML;
+        text = document.getElementById(reader.latest_s).innerHTML;
     }                                                                    //alert(text);
     var elem=document.getElementById('reader_zoom');
     elem.innerHTML=text;                                                 //alert('zoom_text '+text);
 }
 function highlite(){                                                     //alert('highlite');
-    id_prev = get_cookie('id_prev_'+fname);
+    id_prev = reader.id_prev;
     id = get_id()                                                        //alert('highlite 0 id '+id +' id_prev '+id_prev);
     document.getElementById(id_prev).className='text';
     div = document.getElementById(id);                                   //alert('highlite div '+ div + ' id '+id +' id_prev '+id_prev);
     div.className='text_highlite';                                       //alert('highlite 2');
-    document.cookie = "id_prev_"+fname+"="+id;                           //alert('highlite done');
+    reader.id_prev = id;
 }
 
 
 function get_id(){                                                       //alert('get_id()');
-    var iter = parseInt(get_cookie('counter_'+fname));                       //alert('get_id  iter='+iter+' fname '+fname);
+    var iter = reader.iter;
     var id_arr = get_id_array();                                             //alert(id_arr);
     if (iter==-1){ latest_id='file_title'; }
     else{ latest_id = id_arr[iter]; }                                    //alert('get_id() done');
     return(latest_id);
 }function get_id_array(){                                                //alert('get_id_array()');
-    var n_select_type = parseInt(get_cookie('selecttype_'+fname));       //alert(word_id);
+    var n_select_type = reader.selecttype;
     if (n_select_type == 1){ id_arr=sentence_id; }    
     else if (n_select_type == 2){ id_arr=paragraph_id; }    
     else if (n_select_type == 0){ id_arr=word_id; }                      //alert('get_id_array() done '+id_arr);
     return(id_arr);
 }function get_id_backup(){                                               //alert('get_id_backup()');
-    var n_select_type = parseInt(get_cookie('selecttype_'+fname));
-    if (n_select_type == 0){ latest_id=get_cookie('latest_w_'+fname); }    
-    else if (n_select_type == 1){ latest_id=get_cookie('latest_s_'+fname); }    
-    else if (n_select_type == 2){ latest_id=get_cookie('latest_p_'+fname); }    
+    var n_select_type = reader.selecttype;
+    if (n_select_type == 0){ latest_id=reader.latest_w; }    
+    else if (n_select_type == 1){ latest_id=reader.latest_s; }    
+    else if (n_select_type == 2){ latest_id=reader.latest_p; }    
     return(latest_id);
 }
 
 function reader_select_type(order){                                      //alert('select');
-    n_select_type = parseInt(get_cookie('selecttype_'+fname));
+    n_select_type = reader.selecttype;
     types = ['select <br> .','select <br> . .','select <br> . . .'];
     if (order==1){
         n_select_type = (n_select_type+1)%3;
-        document.cookie = "selecttype_"+fname+"="+n_select_type;
+        reader.selecttype = n_select_type;
         id_arr = get_id_array();  latest_id = get_id_backup();           //alert('selecttype '+iter);
-        document.cookie = "counter_"+fname+"="+id_arr.indexOf(latest_id).toString();  
+        reader.iter = id_arr.indexOf(latest_id);
     }        
     highlite(); zoom_set_text();                                         //alert('select 1');
     id=get_id(); 
-    document.cookie = "id_curr_"+fname+"="+id;
+    reader.id_curr = id;
     document.getElementById('reader_selecttype').innerHTML=types[n_select_type];
 }
 
 function reader_set_zoomtype(n_zoomtype){                
-    document.cookie = "zoomtype_"+fname+"="+n_zoomtype;                  //alert('zoom');
+    reader.zoomtype = n_zoomtype;
     var bodyStyles = window.getComputedStyle(document.body);
     textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
     var elem = document.getElementById("reader_zoom_box");               //alert('zoom2');
@@ -306,7 +300,7 @@ function reader_set_zoomtype(n_zoomtype){
 //-- buttons -------------------------------------------------------------------------
 
 function reader_show_buttons(){                                          //alert('buttons');
-    iter = parseInt(get_cookie('counter_'+fname));
+    iter = reader.iter;
     if (iter==-1 || is_inlist(readonlydir)){ edit_function = ''; edit_class='buttons disabled'; }
     else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
     
@@ -322,20 +316,20 @@ function reader_show_buttons(){                                          //alert
     inner_e+= '<div id="readall"     class="buttons" onclick="scrollbut_div(-1,1,1);"  style="'+reader_button_position(5)+'">'+symbol_readall+'</div>' ;
     inner_e+= '<div id="playpause"   class="buttons" onclick="reader_play_pause()"    style="'+reader_button_position(6)+'">'+symbol_play+'</div>' ;
     elem.innerHTML=inner_e;
-    //dir = get_subdir(fname);
-    //alert(fname,dir);
+    //dir = get_subdir(reader.fname);
+    //alert(reader.fname,dir);
     //alert(dir);
 }
 function reader_show_menu(){
-    //lang = get_cookie('lang_'+fname);
-    lang = get_cookie('lang_common');
-    n_zoom = parseInt(get_cookie('zoomtype_'+fname));
+    //lang = get_cookie('lang_'+reader.fname);
+    lang = reader.lang;
+    n_zoom = reader.zoomtype;
     //inner_e+= '<div id="reader_menu_appearance"        class="buttons disabled" onclick=""   style="left:15%; top:20%;">appearance</div>';
     //inner_e+= '<div id="reader_menu_appearance-common" class="buttons disabled" onclick=""   style="left:35%; top:15%;">appearance-common</div>';
     inner_e = '<div id="reader_menu_clearcookie"  class="buttons"          onclick="reader_clearcookie()"   style="left:15%; top:20%;">clear cookie</div>';
     inner_e+= '<div id="reader_menu_sound"        class="buttons disabled" onclick=""                        style="left:15%;top:60%;">sound</div>';
     inner_e+= '<div id="common_lang_zoom1"    class="buttons_text"                                       style="left:37%;top:20%;">'+lang+'</div>';
-    inner_e+= '<div id="common_lang"          class="buttons"          onclick="common_show_lang(1,fname)"      style="left:50%;top:20%;">local lang</div>';
+    inner_e+= '<div id="common_lang"          class="buttons"          onclick="common_show_lang(1,reader.fname)"      style="left:50%;top:20%;">local lang</div>';
     inner_e+= '<div id="reader_go"                class="buttons disabled" onclick=""                        style="left:70%;top:20%;">go</div>' ;
     inner_e+= '<div id="reader_menu_go-files"     class="buttons"          onclick="goto_files();"           style="left:70%;top:60%;">go home</div>';
     inner_e+= '<div id="reader_menu_zoomtype_text" class="buttons_text"                                      style="left:37%;top:60%;">'+zoomtype_arr[n_zoom]+'</div>' ;
@@ -343,7 +337,7 @@ function reader_show_menu(){
     common_create_menu('reader_menu', 0, inner_e);
 }
 function reader_show_zoomtype(){
-    n_zoom = parseInt(get_cookie('zoomtype_'+fname));
+    n_zoom = reader.zoomtype;
     inner_e = '<div id="reader_zoomtype_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="reader_zoomtype_zoom" class="text_zoom">'+zoomtype_arr[n_zoom]+'</div></div>';
     inner_e+= '<div id="0"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:20%; top:60%;">no zoom</div>';
     inner_e+= '<div id="1"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:45%; top:60%;">by word</div>';
@@ -362,7 +356,7 @@ function goto_files(){ window.location.href = '/index.html'; window.speechSynthe
 
 function reader_editor(){
     text_all = document.getElementById('text_from_file').innerHTML;
-    localStorage.setItem('text_parsed', text_all);
+    reader.text_parsed = text_all;
     id = get_id();
     text = document.getElementById(id).innerHTML;
     text_plane = merge_text(text);                                       //alert(text_plane);
@@ -370,7 +364,7 @@ function reader_editor(){
 }
 
 //-- mail --------------------------------------------------------------------
-dir = get_subdir(fname);
+dir = get_subdir(reader.fname);
 if (dir=='mail'){
     color = '#e0e2e4';
     document.getElementById('reader_mail').style.visibility = 'visible';
@@ -379,7 +373,7 @@ if (dir=='mail'){
 }
 
 function reader_if_editable(){
-    id = get_cookie('latest_p_'+fname);
+    id = reader.latest_p;
     title = document.getElementById(id).getAttribute('title');           //alert(parse_words(id+' '+title));
     if (parse_words(title).indexOf('editable')!=-1){editable=true;}
     else {editable=false;}
@@ -395,7 +389,7 @@ function reader_show_mail(){
     inner_e+= '<div id="reader_mail_update"   class="buttons disabled" onclick=""   style="left:40%; top:50%;">update</div>';
     common_create_menu('reader_mail', 0, inner_e);
     
-    name = get_usrname(fname);                                           //alert('NAME: '+name);
+    name = get_usrname(reader.fname);                                           //alert('NAME: '+name);
     date = Date(); date=date.substr(date.indexOf(' ')); date = date.substr(0,date.indexOf('GMT')-1);
     text2 = '<br><div name="'+name+'" class="mail mail_out">'+name+': '+date+'</div>';
     text2+= '<div name="'+name+'" class="mail mail_out">'+document.getElementById('mail_temp_text').innerHTML+'</div>';
@@ -406,9 +400,9 @@ function reader_mail_send(){
     /*
     //alert('mail');
     //id_arr=paragraph_id;
-    name = get_usrname(fname); alert(name);
+    name = get_usrname(reader.fname); alert(name);
     text_new = ' <br> <div id="mail_temp_title" title="'+name+'" class="mail mail_out mail_temp"> '+name+': not sent yet </div> <div id="mail_temp_text" title="'+name+'" class="mail mail_out"> abc </div>';
-    //document.cookie = "mailtext_"+fname+"= ";
+    //document.cookie = "mailtext_"+reader.fname+"= ";
     text = document.getElementById('hidden_text').innerHTML;
     //text = localStorage.getItem('text_origin');
     alert(text+text_new);

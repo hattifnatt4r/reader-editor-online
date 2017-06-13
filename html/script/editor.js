@@ -153,7 +153,7 @@ function editor_exit(){                                                  //alert
     var elem = document.getElementById('editor_area');
     elem.parentNode.removeChild(elem);
     if (editor.parent=="reader"){ 
-		localStorage.setItem('ischanged_text', '1');
+		reader.ischanged_text = true;
 		reader.editor_text = editor.text_raw;
 		reader_run(); 
 	}else if (editor.parent=="files"){ 
@@ -162,7 +162,7 @@ function editor_exit(){                                                  //alert
 	}  
 }function editor_save(){                                                 //alert('editor_save');
     if (editor.parent=='reader'){
-        localStorage.setItem('ischanged_text', '1');
+        reader.ischanged_text = true;
         reader_run(); 
         //document.getElementById('reader_edit').click();
     }

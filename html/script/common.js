@@ -1,22 +1,31 @@
 
 var common = {
-	
-	
-	setstyle: function(){
-		var bodyStyles = window.getComputedStyle(document.body);
-		screen_height = window.screen.height+'px';
-		screen_width = window.screen.width+'px';                                 //alert('alert1');
-		document.body.style.setProperty('--screen-height', screen_height);
-		document.body.style.setProperty('--screen-width', screen_width);         //alert('alert2');
-		textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
-		document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
+	cookie_number: 0,
+	cookie_suffix: "_",
+	cookie_save: function(){                                             //alert('save_cookies '+this.cookie_number);
+	    var keys = Object.keys(this);                                    //alert(keys);
+	    var i;
+	    for (i=0; i<this.cookie_number; i+=1){                           //alert(keys[i]+this.suffix);       
+	        set_cookie(keys[i]+this.cookie_suffix, this[keys[i]].toString() );                    
+		}
+	},
+	cookie_load: function(){                                             //alert('load_cookies '+this.cookie_number);
+	    var keys = Object.keys(this);                                    //alert(keys);
+	    var i; var v;
+	    for (i=0; i<this.cookie_number; i+=1){                           
+			v = get_cookie(keys[i]+this.cookie_suffix);                  //alert(v);
+			if (v == 'true') { v=true; }
+			if (v == 'false') { v=false; }
+			else if (v.match(/[a-z]/i)) { v=v; }             //alert(v);
+			else { v=parseInt(v); }             //alert(v);
+			this[keys[i]] = v;         
+		}
 	}
 		
 }
 
 //var config = {};
 //config.readonlydir = ['books_txt',''];
-//alert('common');
 var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
@@ -469,46 +478,6 @@ function merge_options(obj1,obj2){
 function concatenate_arr(arr1, arr2){ for (i=0; i<arr2.length; i++){ arr1.push(arr2[i]); } return(arr1);}
 
 
-function get_cookie(cname) {
-    var name = cname + "=";
-    decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');  
-    var i;  var c;
-    for( i = 0; i <ca.length; i++) {
-        c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function set_cookie(cname, cvalue, exdays){
-	if (exdays===undefined) {exdays=60;}
-	var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 3600 * 1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-function get_cookie_arr(name) {
-    decodedCookie = decodeURIComponent(document.cookie);
-    ca = decodedCookie.split(';');                                       //alert(ca);
-    arr = [];
-    for( i = 0; i <ca.length; i++) {
-        c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        } c1 = c.substring(0, c.indexOf('='));                           //alert(c);
-        if (c1.indexOf(name) >-1) {
-            arr.push(c.substring(c.indexOf('=')+1));                     //alert('!!'+ c.substring(c.indexOf('=')+1));
-        }
-    }
-    return arr;
-}
-
 function loadDocXML(url1, login_function) {
   xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -594,5 +563,48 @@ function editor_back(id, foggyoff){                                      //alert
     if (foggyoff==1){ $('#base_elements').foggy(false);  }
     elem = document.getElementById(id).parentNode;
     elem.parentNode.removeChild(elem);
-    localStorage.setItem('fastlogin','0');
 }
+
+//-- cookie ---------------------------------------------------------------------
+
+function get_cookie(cname) {
+    var name = cname + "=";
+    decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');  
+    var i;  var c;
+    for( i = 0; i <ca.length; i++) {
+        c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function set_cookie(cname, cvalue, exdays){
+	if (exdays===undefined) {exdays=60;}
+	var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 3600 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function get_cookie_arr(name) {
+    decodedCookie = decodeURIComponent(document.cookie);
+    ca = decodedCookie.split(';');                                       //alert(ca);
+    arr = [];
+    for( i = 0; i <ca.length; i++) {
+        c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        } c1 = c.substring(0, c.indexOf('='));                           //alert(c);
+        if (c1.indexOf(name) >-1) {
+            arr.push(c.substring(c.indexOf('=')+1));                     //alert('!!'+ c.substring(c.indexOf('=')+1));
+        }
+    }
+    return arr;
+}
+
+//-------------------------------------------------------------------------------

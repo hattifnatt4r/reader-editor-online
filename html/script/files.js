@@ -2,47 +2,31 @@
 var files = {
 	iter: 0,
 	iter_prev: 0,
-	nentry: 0,
-	
-	iter_editor: 0,
-	path_editor: '/index.html',
+	dir: "",
+	langbase: "en",
 	
 	editor_text: "",
+	cookie_number: 5,
+	cookie_suffix: "_",
+	
+	nentry: document.getElementById('hidden_files_nentry').innerHTML,
+	username: "",
+	userpass: ""
 }
-//alert (filemanager.iter);
-
-window.onbeforeunload = cookie_save();
-
-function cookie_save(){ set_cookie('close','ok3'); }
 
 //-- run file manager -----------------------------------------------------------------
 //-------------------------------------------------------------------------------------
-var files_session = localStorage.getItem('files_session');
-if (files_session!='started'){
-    files_session = 'started';
-    localStorage.setItem('files_session', files_session);
-    
-    localStorage.setItem('fastlogin', '0');
-    localStorage.setItem('loginname', 'name');
-    localStorage.setItem('loginpass', 'password');
-    localStorage.setItem('editor_saveto_var', '0');
+                                                                   //alert( document.cookie );
+if (get_cookie('isset_')!='isset'){        //alert('set_cookie');
+	set_cookie("isset_", "isset");
+	common.cookie_save.call(files);
 }
-                                                                         //alert( document.cookie );
-
-if (get_cookie('isset_common')!='isset'){
-	set_cookie("isset_common", "isset");
-	set_cookie("langbase_", "en");
-    //document.cookie = "isset_common"+"=isset";
-    //document.cookie = "lang_common"+"=en";
-    //document.cookie = "langbase_common"+"=en";
-}
-files.iter = 0;
-files.iter_prev = 0;
-files.nentry = document.getElementById('hidden_files_nentry').innerHTML;
-
+common.cookie_load.call(files); 
+window.onbeforeunload = common.cookie_save.call(files);
                                                                          //alert( document.cookie );
                                                                          //alert(get_cookie('PHPSESSID'));    
 files_run();
+
 function files_run(){                                                    //alert('files_run');                                                                                                               
 	var bodyStyles = window.getComputedStyle(document.body);
 	screen_height = window.screen.height+'px';
@@ -111,8 +95,8 @@ function files_show_upload(){
 }
 function files_show_login(){
     name='name'; pass='----';
-    name = localStorage.getItem('loginname');
-    pass = localStorage.getItem('loginpass');
+    name = files.username;
+    pass = files.userpass;
     
     inner_e= '<div id="files_login_zoomname_box"     class="reader_zoom_box" style="left:15%;top:15%;width:50%;border:solid 1px white;"><div onclick="files_edittext(this.id);" id="files_login_zoomname"     class="text_zoom">'+name+'</div></div>';
     inner_e+= '<div id="files_login_zoompassword_box" class="reader_zoom_box" style="left:15%;top:40%;width:50%;border:solid 1px white;"><div onclick="files_edittext(this.id);" id="files_login_zoompassword" class="text_zoom">'+pass+'</div></div>';
@@ -138,7 +122,7 @@ function files_show_login(){
     elem=document.getElementById('files_login_zoompassword_box');
     inner_e='<textarea id="files_login_zoompassword" name="comment" class="text_zoom" form="usrform">password</textarea>';
     elem.innerHTML = inner_e;
-    localStorage.setItem('fastlogin', '1');
+    //localStorage.setItem('fastlogin', '1');
 }
 function files_show_options(){                                           //alert('show_options');
     var iter = files.iter;
@@ -195,51 +179,47 @@ function files_show_create(){
 //-- text display functions ---------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 function files_fill_zoom(){
-    var files_iter = files.iter;
-    dir0 = document.getElementById('hidden_files_dir').innerHTML; 
+    var dir0 = document.getElementById('hidden_files_dir').innerHTML; 
     i = dir0.indexOf('/');
     if (i!=-1) { dir = dir0.substr(i); } else{dir = '';}
     dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+' / </em>';
-    document.getElementById('files_zoom').innerHTML = dir+document.getElementById('fileid_'+files_iter.toString()).innerHTML; 
+    document.getElementById('files_zoom').innerHTML = dir+document.getElementById('fileid_'+files.iter.toString()).innerHTML; 
 }                                                                       //alert('scroll_test');
 function scroll_files(order){
-    var files_iter = files.iter;
-    var files_iter_prev = files.iter_prev;
-    if (order==next){ if (files_iter<files.nentry) {files_iter+=1;} }
-    else if (order==prev){ if (files_iter>0) {files_iter-=1;} }
-    else ( files_iter = order );
-    files.iter_prev = files_iter;
-    files.iter = files_iter;
-    document.getElementById('hidden_file_iter').innerHTML=files_iter;
-    document.getElementById('file_n').value = files_iter; 
+    var iter = files.iter;
+    var iter_prev = files.iter_prev;
+    if (order==next){ if (iter<files.nentry) {files_iter+=1;} }
+    else if (order==prev){ if (iter>0) {iter-=1;} }
+    else ( iter = order );
+    files.iter_prev = iter;
+    files.iter = iter;
+    document.getElementById('hidden_file_iter').innerHTML=iter;
+    document.getElementById('file_n').value = iter; 
     files_fill_zoom();
     
-    var fileid = 'fileid_'+files_iter.toString();  scroll_to(fileid, 'files_area_box', title=0);
+    var fileid = 'fileid_'+iter.toString();  scroll_to(fileid, 'files_area_box', title=0);
     
     title=elem.getAttribute('title');
     if (title=='dir'){fclass='files-dir-hover';} else{fclass='files-txt-hover';}  elem.className = 'files '+fclass; 
-    if (files_iter!=files_iter_prev){
-        var fileid = 'fileid_'+files_iter_prev.toString();
+    if (iter!=iter_prev){
+        var fileid = 'fileid_'+iter_prev.toString();
         elem = document.getElementById(fileid); title=elem.getAttribute('title'); 
         if (title=='dir'){fclass='files-dir';} else{fclass='files-txt';}  elem.className = 'files '+fclass; 
         }
     
-    if (files_iter==0){fname_ii='..';}
-    else{fname_ii = document.getElementById('fileid_'+files_iter.toString()).innerText; }
+    if (iter==0){fname_ii='..';}
+    else{fname_ii = document.getElementById('fileid_'+iter.toString()).innerText; }
     fname_ii = replace_all(fname_ii,'_',' ')
     lang = get_cookie('langbase_');                                      //alert(lang);
     utter(fname_ii,lang,1, onend=0);
 }
 
-//-- accoun functions -------------------------------------------------------------------
+//-- account functions ------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 function files_login(xml){
-    if (localStorage.getItem('fastlogin')=='1'){
-        document.getElementById('loginname_text_id').value=document.getElementById('files_login_zoomname').value;
-        document.getElementById('loginpass_text_id').value=document.getElementById('files_login_zoompassword').value;
-    }
-    name=document.getElementById('loginname_text_id').value;
-    pass=document.getElementById('loginpass_text_id').value;    
+    var name = document.getElementById('loginname_text_id').value;
+    var pass = document.getElementById('loginpass_text_id').value;
+    files.username = name;
     user_access=0;
     data =  JSON.parse(xml.responseText); users = data.users;
     for (i=0; i<users.length; i++){
@@ -253,12 +233,9 @@ function files_login(xml){
     }}}                                                                  //alert(user_access);
     utter(login_messages_en[user_access],0,0,0);
 }function files_login_new(xml){
-    if (localStorage.getItem('fastlogin')=='1'){
-        document.getElementById('loginname_text_id').value=document.getElementById('files_login_zoomname').value;
-        document.getElementById('loginpass_text_id').value=document.getElementById('files_login_zoompassword').value;
-        }
     name=document.getElementById('loginname_text_id').value;
-    pass=document.getElementById('loginpass_text_id').value;    
+    pass=document.getElementById('loginpass_text_id').value; 
+    files.username = name;
     user_access=0;
     data =  JSON.parse(xml.responseText); users = data.users;
     for (i=0; i<users.length; i++){
@@ -268,11 +245,12 @@ function files_login(xml){
     if (user_access==0){ files_click(5); }
     utter(newlogin_messages_en[user_access],0,0,0);
 }
-function files_login_test(){
-    name=get_cookie('PHPSESSID'); pass='';
-    document.getElementById('login_text_id').value=name+' '+pass;
-    files_click(5);
-}
+
+//function files_login_test(){
+//    name=get_cookie('PHPSESSID'); pass='';
+//    document.getElementById('login_text_id').value=name+' '+pass;
+//    files_click(5);
+//}
 function files_logout(){
     document.getElementById('loginname_text_id').value='common';
     document.getElementById('loginpass_text_id').value='';
