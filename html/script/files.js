@@ -16,13 +16,15 @@ var files = {
 
 //-- run file manager -----------------------------------------------------------------
 //-------------------------------------------------------------------------------------
-                                                                   //alert( document.cookie );
-if (get_cookie('isset_')!='isset'){        //alert('set_cookie');
+                                                                         //alert( document.cookie );
+//set_cookie("isset_", "");                                        
+if (get_cookie('isset_')!='isset'){                                      //alert('set_cookie');
 	set_cookie("isset_", "isset");
 	common.cookie_save.call(files);
-}
-common.cookie_load.call(files); 
-window.onbeforeunload = common.cookie_save.call(files);
+}else { common.cookie_load.call(files); }
+window.onbeforeunload = files_beforunload;
+function files_beforunload() {common.cookie_save.call(files);}
+//cookie_delete_all();
                                                                          //alert( document.cookie );
                                                                          //alert(get_cookie('PHPSESSID'));    
 files_run();
@@ -40,7 +42,8 @@ function files_run(){                                                    //alert
 	document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));
 	document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_area"));
 	
-	files_fill_zoom();
+	scroll_files(files.iter);
+	//files_fill_zoom();
 }                                                                        //alert('dir: '+files_get_dir());
 
 //-- show buttons ---------------------------------------------------------------------------
@@ -98,13 +101,13 @@ function files_show_login(){
     name = files.username;
     pass = files.userpass;
     
-    inner_e= '<div id="files_login_zoomname_box"     class="reader_zoom_box" style="left:15%;top:15%;width:50%;border:solid 1px white;"><div onclick="files_edittext(this.id);" id="files_login_zoomname"     class="text_zoom">'+name+'</div></div>';
-    inner_e+= '<div id="files_login_zoompassword_box" class="reader_zoom_box" style="left:15%;top:40%;width:50%;border:solid 1px white;"><div onclick="files_edittext(this.id);" id="files_login_zoompassword" class="text_zoom">'+pass+'</div></div>';
+    inner_e= '<div id="files_login_zoomname_box"     class="reader_zoom_box" style="left:15%;top:15%;width:50%;border:solid 1px white;"><div onclick="files_edittext(this.id);" id="files_loginname_text"     class="text_zoom">'+name+'</div></div>';
+    inner_e+= '<div id="files_login_zoompassword_box" class="reader_zoom_box" style="left:15%;top:40%;width:50%;border:solid 1px white;"><div onclick="files_edittext(this.id);" id="files_loginpass_text" class="text_zoom">'+pass+'</div></div>';
     
     inner_e+= '<div id="files_login" style="left:13%;top:68%;position:fixed;">'; 
     inner_e+= '<form action="" method="post">  <input type="text" id="login_form_id" name="login_form_name" value="login_form_value" style="position:fixed;width:1%;height:1%;">';
-    inner_e+= '<input type="text" id="loginname_text_id"           name="loginname_text_name"    value="'+name+'" style="width:0%;height:0%;">';
-    inner_e+= '<input type="text" id="loginpass_text_id"           name="loginpass_text_name"    value="'+pass+'" style="width:0%;height:0%;">';
+    inner_e+= '<input type="text" id="files_loginname_text_formid"           name="loginname_text_name"    value="'+name+'" style="width:0%;height:0%;">';
+    inner_e+= '<input type="text" id="files_loginpass_text_formid"           name="loginpass_text_name"    value="'+pass+'" style="width:0%;height:0%;">';
     inner_e+= '<input hidden type="submit" id="login_submit_id"    name="login_submit_name"      value="login" >';
     inner_e+= '<input hidden type="submit" id="newlogin_submit_id" name="login_submit_name"      value="newlogin" > </div>';
     inner_e+= '<div id="files_login_button"     class="buttons" onclick="loadDoc(0,files_login);"      style="position:fixed;left:75%;top:68%;" >login</div></div>';
@@ -112,7 +115,7 @@ function files_show_login(){
     inner_e+= '<div id="files_logout_button"    class="buttons" onclick="files_logout();"              style="position:fixed;left:75%;top:40%;" >quit </div></div>';
     inner_e+= '<div id="files_loginemail_button" class="buttons disabled" onclick=""         style="position:fixed;left:40%;top:68%;" >email </div></div>';
     
-    inner_e+= '<div id="files_login_remember"   class="buttons disabled" onclick=""   style="left:75%; top:15%;">remember</div>';
+    inner_e+= '<div id="files_login_remember"   class="buttons disabled" onclick=""   style="left:75%; top:15%;">remem- ber me</div>';
     inner_e+= '<div id="files_login_normal" class="buttons" onclick="files_show_loginnormal();" style="left:10%;top:10%;width:3%;height:5%;line-height:70%;">*</div>';
     common_create_menu('files_lodin', 0, inner_e);
 }function files_show_loginnormal(){
@@ -130,13 +133,13 @@ function files_show_options(){                                           //alert
     fname = document.getElementById('fileid_'+iter.toString()).innerHTML;
     
     files.editor_text = fname;
-    inner_e = '<div id="files_options_zoom_box" class="reader_zoom_box" style="left:14%;top:16%;width:52%;"><div onclick="files_edittext(this.id);" id="files_options_zoom" class="text_zoom">'+fname+'</div></div>';
+    inner_e = '<div id="files_options_zoom_box" class="reader_zoom_box" style="left:14%;top:16%;width:52%;"><div onclick="files_edittext(this.id);" id="files_options_text" class="text_zoom">'+fname+'</div></div>';
     inner_e+= '<div id="files_options_copy" class="buttons disabled" onclick="" style="left:50%; top:60%;">copy</div>';
     
     inner_e+= '<div hidden id="files_options_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
     inner_e+= '<form action="" method="post">';
     inner_e+= '<input type="text"   id="files_options_n"    name="files_options_n" value="'+iter.toString()+'" style="width:0%;height:0%;">';
-    inner_e+= '<input type="text"   id="files_options_text" name="files_options_text" value="'+fname+'" style="width:0%;height:0%;">';
+    inner_e+= '<input type="text"   id="files_options_text_fomid" name="files_options_text" value="'+fname+'" style="width:0%;height:0%;">';
     inner_e+= '<input type="submit" id="files_delete_id"    name="files_options_submit" value="delete">'; 
     inner_e+= '<input type="submit" id="files_edit_id"      name="files_options_submit" value="edit">';
     inner_e+= '<input type="submit" id="files_html_id"      name="files_options_submit" value="html"></div>';
@@ -165,10 +168,10 @@ function files_show_menu(){
     common_create_menu('files_menu', 0, inner_e);
 }
 function files_show_create(){
-    inner_e= '<div id="files_create_zoom_box" class="reader_zoom_box" style="left:14%;top:16%;width:52%;"><div onclick="files_edittext(this.id);" id="files_create_zoom" class="text_zoom">file name</div></div>';    
+    inner_e= '<div id="files_create_zoom_box" class="reader_zoom_box" style="left:14%;top:16%;width:52%;"><div onclick="files_edittext(this.id);" id="files_create_text" class="text_zoom">file name</div></div>';    
     inner_e+= '<div hidden id="files_create_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
     inner_e+= '<form action="" method="post">';
-    inner_e+= '<input type="text"   id="create_text_id"      name="create_text_name"   value="file" style="width:0%;height:0%;">';
+    inner_e+= '<input type="text"   id="files_create_text_formid"      name="create_text_name"   value="file" style="width:0%;height:0%;">';
     inner_e+= '<input type="submit" id="createtxt_submit_id" name="create_submit_name" value="create file" >';
     inner_e+= '<input type="submit" id="createdir_submit_id" name="create_submit_name" value="create dir"  ></div>';
     inner_e+= '<div id="files_createtxt_id" class="buttons" onclick="files_click(4)" style="left:13%;top:45%;">create file</div>';
@@ -185,16 +188,21 @@ function files_fill_zoom(){
     dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+' / </em>';
     document.getElementById('files_zoom').innerHTML = dir+document.getElementById('fileid_'+files.iter.toString()).innerHTML; 
 }                                                                       //alert('scroll_test');
-function scroll_files(order){
-    var iter = files.iter;
-    var iter_prev = files.iter_prev;
-    if (order==next){ if (iter<files.nentry) {files_iter+=1;} }
+function scroll_files(order){                                            //alert('order '+order);
+    var iter = files.iter;                                               //alert(iter);
+    var iter_prev = files.iter_prev;                                     //alert(iter_prev);
+    if (order==next){ if (iter<files.nentry) {iter+=1;} }
     else if (order==prev){ if (iter>0) {iter-=1;} }
-    else ( iter = order );
-    files.iter_prev = iter;
+    else { iter = order };  
+    //if ( order<files.nentry && order>0 ) { iter=order;} 
+    iter_prev = files.iter;   
+    files.iter_prev = files.iter;
     files.iter = iter;
-    document.getElementById('hidden_file_iter').innerHTML=iter;
-    document.getElementById('file_n').value = iter; 
+    set_cookie('iter_', iter);
+    set_cookie('iter_prev_', iter_prev);
+                                              
+    document.getElementById('hidden_file_iter').innerHTML=files.iter;
+    document.getElementById('file_n').value = files.iter; 
     files_fill_zoom();
     
     var fileid = 'fileid_'+iter.toString();  scroll_to(fileid, 'files_area_box', title=0);

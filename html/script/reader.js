@@ -31,14 +31,16 @@ var word_id=[], sentence_id=[], paragraph_id=[];
 
 //-- run reader ---------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
+//set_cookie("isset_"+reader.fname, "");
 if (get_cookie('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
 	set_cookie("isset_"+reader.fname, "isset");
 	common.cookie_save.call(reader);
-} 
-common.cookie_load.call(reader);                                                                 
-window.onbeforeunload = common.cookie_save.call(reader);
+}else{ common.cookie_load.call(reader); }                                                               
+window.onbeforeunload = reader_beforunload;
+function reader_beforunload() {common.cookie_save.call(reader);}
 
-function reader_clearcookie(){ document.cookie = "isset_"+reader.fname+"=0"; }
+
+function reader_clearcookie(){ cookie_delete_all(); }
 
 reader_run();
 

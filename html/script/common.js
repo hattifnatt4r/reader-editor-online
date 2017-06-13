@@ -15,9 +15,8 @@ var common = {
 	    for (i=0; i<this.cookie_number; i+=1){                           
 			v = get_cookie(keys[i]+this.cookie_suffix);                  //alert(v);
 			if (v == 'true') { v=true; }
-			if (v == 'false') { v=false; }
-			else if (v.match(/[a-z]/i)) { v=v; }             //alert(v);
-			else { v=parseInt(v); }             //alert(v);
+			else if (v == 'false') { v=false; }
+			else if ( v.match(/\d+/g)!=null && v.match(/[a-z]/i)===null ) { v=parseInt(v); }             //alert(v);
 			this[keys[i]] = v;         
 		}
 	}
@@ -605,6 +604,17 @@ function get_cookie_arr(name) {
         }
     }
     return arr;
+}
+
+function cookie_delete_all() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
 }
 
 //-------------------------------------------------------------------------------

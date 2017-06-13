@@ -178,7 +178,7 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
   /*-----------------*/
   font-size: calc(0.108*var(--screen-height)); position:relative; width:100%; height:97.5%;  box-sizing:border-box;
   border-radius: var(--border-radius);
-  font-style:normal;  color: rgba(0,0,0,0.6);
+  font-style:normal;  color: rgba(0,0,0,0.58);
   overflow-x: scroll; overflow-y: hidden; white-space:nowrap; 
 }.text_zoom::-webkit-scrollbar {
   position:relative; 

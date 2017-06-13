@@ -156,8 +156,11 @@ function editor_exit(){                                                  //alert
 		reader.ischanged_text = true;
 		reader.editor_text = editor.text_raw;
 		reader_run(); 
-	}else if (editor.parent=="files"){ 
-		document.getElementById(editor.destination).innerHTML=editor.text_raw;
+	}else if (editor.parent=="files"){                                   //alert(editor.destination);
+		elem = document.getElementById(editor.destination);
+		if (elem) { elem.innerHTML = editor.text_raw; }
+		elem = document.getElementById(editor.destination+"_formid");
+		if (elem) { elem.value = editor.text_raw; }
 		filesys.editor_text = "";
 	}  
 }function editor_save(){                                                 //alert('editor_save');
