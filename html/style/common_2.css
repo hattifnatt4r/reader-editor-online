@@ -136,7 +136,7 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1%; top:2%; width:75.5%; height: 74%; 
+  left:1%; top:5%; width:75.5%; height: 74%; 
   /*-------------*/
   position:fixed; text-align:center; box-sizing:border-box;
   /*left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); */

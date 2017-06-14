@@ -166,12 +166,14 @@ function utter(txt, lang, stop, onend){                                  // 0-au
     else{ msg.onend=function(event){scrollbut_div(1,0,1)}; }
 }    
     
-function create_element(id, cl, parent){
+function create_element(id, cl, parent, style, inner){
     //alert('create');
-    if (parent==undefined){ parent = 'created_elements'; }
+    if (parent===undefined){ parent = 'created_elements'; }
     var element = document.createElement('div');
     element.setAttribute('id', id);
     element.setAttribute('class', cl);
+    if (style!=undefined) { element.setAttribute('style', style); }
+    if (inner!=undefined) { element.innerHTML=inner; }
     document.getElementById(parent).appendChild(element);
     return (element);
 }

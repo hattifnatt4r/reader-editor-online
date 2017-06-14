@@ -148,8 +148,8 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	editor_set_cursor();                                                     //alert('editor 4');
 	editor_show_start();                                                     //alert('editor 5');
 }
-function editor_exit(){                                                  //alert('editor exit');
-    //var elem = document.getElementById('editor_area').parentNode;
+function editor_exit(){                                                  //alert(editor.destination);
+    //var elem = document.getElementById('editor_area').parentNode;    
     var elem = document.getElementById('editor_area');
     elem.parentNode.removeChild(elem);
     if (editor.parent=="reader"){ 

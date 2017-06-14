@@ -12,7 +12,6 @@
 <body class='body_bkg' >
 <?php require('script/files.php'); ?>    
 
-<div hidden id='hidden_file_iter' style='position:fixed; top:63%; left:85%'>0</div>
 <div hidden id='hidden_files_nentry' style='position:fixed; top:66%; left:85%'>0</div>
 
 <div hidden id="files_python" style="left:90%;top:70%;position:fixed;width:10%;height:20%;">
@@ -24,6 +23,21 @@
 </div>
 <div id='created_elements'></div>
 <div id='editor_elements'></div>
+
+
+<div id="files_forms"> 
+<form hidden id="ffiles_editenter" action="" method="post">  
+	<input id="ffiles_iter"          type="text"   name="ffiles_iter"          value="empty" >
+	<input id="ffiles_edit_text"     type="text"   name="ffiles_edit_text"     value="empty" >
+	<input id="ffiles_edit_submit"   type="submit" name="ffiles_edit_submit"   value="empty" >
+	<input id="ffiles_enter_submit"  type="submit" name="ffiles_enter_submit"  value="empty" >
+	<input id="ffiles_delete_submit" type="submit" name="ffiles_delete_submit" value="empty" >
+	<input id="ffiles_cleanhtml_submit" type="submit" name="ffiles_cleanhtml_submit" value="empty" >
+	
+	<input id="ffiles_create_text"   type="text"   name="ffiles_create_text"   value="empty" >
+	<input id="ffiles_create_submit" type="submit" name="ffiles_create_submit" value="empty" >
+</form>
+</div>
 
 <script language=JavaScript type="text/javascript" src="script/common.js"></script>
 <script language=JavaScript type="text/javascript" src="script/files.js"></script>

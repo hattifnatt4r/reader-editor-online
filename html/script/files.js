@@ -14,6 +14,86 @@ var files = {
 	userpass: ""
 }
 
+var files_buttons = {
+	prev: { symbol: symbol_prev,
+		f: function() {  scroll_files('prev'); }
+	}, 
+	next: { symbol: symbol_next,
+		f: function() { scroll_files('next'); }
+	},
+	enter: { symbol: symbol_enter,
+		f: function() { document.getElementById("ffiles_enter_submit").click(); }
+	},
+	del: { symbol: "delete",
+		f: function() { document.getElementById("ffiles_delete_submit").click(); }
+	},
+	edit: { symbol: "edit name",
+		f: function() { document.getElementById("ffiles_edit_submit").click(); }
+	},
+	cleanhtml: { symbol: "clean html",
+		f: function() { document.getElementById("ffiles_cleanhtml_submit").click(); }
+	},
+	optionstext: { symbol: "",
+		f: function() { files_edittext("files_button_optionstext"); }
+	},
+	options: { symbol: "opt",
+		f: function() { files_create_buttons("lvl1", "files_options", [['del',4], ['cleanhtml',5], ['edit',7], ['optionstext',0,2]  ] ); }
+	},
+		
+}
+function common_buttonpos_menu(x_dim, y_dim, i, class_n){                         //alert('style');
+	var b_width = 11; var b_height = 17;
+	var b_left = 10; var b_right = 90; 
+	var b_top = 5; var b_bot = 95;
+	var b_xspace = (b_right-b_left-b_width*x_dim)/(x_dim+1);
+	var x = b_left + b_xspace + (b_xspace+b_width)*(i%(x_dim));
+	var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim+1);
+	var y = b_top + b_yspace + (b_yspace+b_height)*(i-i%(x_dim))/x_dim;
+	if (class_n===1) { x += b_xspace-1; }
+	if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
+	var style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);
+	return(style)
+	}
+
+function files_show_buttons2(){                                          //alert('show_buttons');
+	files_create_buttons("lvl0", "files_buttons", [['prev',3], ['next',7], ['enter',2], ['options',1]  ] );
+}
+
+function files_create_buttons(type, block_id, buttons_arr){     // arr = [ [button1_name, button1_position, button1_class_number], ... ]
+	var b_id="", b_parent = block_id+"_area";                            //alert('create');
+	var class_arr = ["buttons","reader_zoom_box", "reader_zoom_box" ];
+	var inner_html = "";
+	if (type==="lvl1") {
+		menu_blur();
+		inner_html = '<div id="'+block_id+'_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
+        inner_html+= '<div id="'+block_id+'_area1"  class="menu_area"></div>';
+        b_parent = block_id+"_area1";
+	}else if (type==="lvl2"){
+		inner_html= '<div id="'+block_id+'_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
+        inner_html+= '<div id="'+block_id+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
+        inner_html+= '<div id="'+block_id+'_area2"  class="menu_area_lvl2"></div>';
+        b_parent = block_id+"_area2";
+	}	
+	var elem = create_element(block_id+"_area");                                    //alert(b_parent);
+	elem.innerHTML = inner_html;
+	var i, b_name, b_class, b_style, b_id, b_inner;
+	for (i=0; i<buttons_arr.length; i+=1){                               //alert(buttons_arr[i]);
+		b_name = buttons_arr[i][0];
+		if (buttons_arr[i].length<3) { b_class = 0; }
+		else{ b_class = buttons_arr[i][2]; }
+		b_id = "files_button_"+b_name;                                   
+		if (type==="lvl0") { b_style = reader_button_position(buttons_arr[i][1]);    }                 
+		else { b_style = common_buttonpos_menu(4,2, buttons_arr[i][1], b_class);    }  //alert(b_style);         
+		elem = create_element(b_id, class_arr[b_class], b_parent, b_style); 
+		elem.onclick = files_buttons[b_name].f;
+		//if (b_class in [1,2]) {
+		//	   b_inner='<div id="'+b_id+'_text" class="text_zoom">'+files_buttons[b_name].symbol+'</div>';
+		//}else { b_inner = files_buttons[b_name].symbol; }
+		b_inner = files_buttons[b_name].symbol;
+		elem.innerHTML = b_inner;
+	}
+}
+
 //-- run file manager -----------------------------------------------------------------
 //-------------------------------------------------------------------------------------
                                                                          //alert( document.cookie );
@@ -38,11 +118,12 @@ function files_run(){                                                    //alert
 	textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
 	document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
 	
-	files_show_buttons(); 
+	//files_show_buttons(); 
+	files_show_buttons2(); 
 	document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));
 	document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_area"));
 	
-	scroll_files(files.iter);
+	scroll_files(files.iter, 'no');
 	//files_fill_zoom();
 }                                                                        //alert('dir: '+files_get_dir());
 
@@ -139,7 +220,7 @@ function files_show_options(){                                           //alert
     inner_e+= '<div hidden id="files_options_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
     inner_e+= '<form action="" method="post">';
     inner_e+= '<input type="text"   id="files_options_n"    name="files_options_n" value="'+iter.toString()+'" style="width:0%;height:0%;">';
-    inner_e+= '<input type="text"   id="files_options_text_fomid" name="files_options_text" value="'+fname+'" style="width:0%;height:0%;">';
+    inner_e+= '<input type="text"   id="files_options_text_formid" name="files_options_text" value="'+fname+'" style="width:0%;height:0%;">';
     inner_e+= '<input type="submit" id="files_delete_id"    name="files_options_submit" value="delete">'; 
     inner_e+= '<input type="submit" id="files_edit_id"      name="files_options_submit" value="edit">';
     inner_e+= '<input type="submit" id="files_html_id"      name="files_options_submit" value="html"></div>';
@@ -188,12 +269,12 @@ function files_fill_zoom(){
     dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+' / </em>';
     document.getElementById('files_zoom').innerHTML = dir+document.getElementById('fileid_'+files.iter.toString()).innerHTML; 
 }                                                                       //alert('scroll_test');
-function scroll_files(order){                                            //alert('order '+order);
+function scroll_files(order, i_utter){                                   //alert('order '+order);
     var iter = files.iter;                                               //alert(iter);
     var iter_prev = files.iter_prev;                                     //alert(iter_prev);
-    if (order==next){ if (iter<files.nentry) {iter+=1;} }
-    else if (order==prev){ if (iter>0) {iter-=1;} }
-    else { iter = order };  
+    if (order=='next'){ if (iter<files.nentry) {iter+=1;} }
+    else if (order=='prev'){ if (iter>0) {iter-=1;} }
+    else { iter = order };                                               //alert(iter);
     //if ( order<files.nentry && order>0 ) { iter=order;} 
     iter_prev = files.iter;   
     files.iter_prev = files.iter;
@@ -201,8 +282,9 @@ function scroll_files(order){                                            //alert
     set_cookie('iter_', iter);
     set_cookie('iter_prev_', iter_prev);
                                               
-    document.getElementById('hidden_file_iter').innerHTML=files.iter;
-    document.getElementById('file_n').value = files.iter; 
+    //elem = document.getElementById('file_n');
+    elem = document.getElementById('ffiles_iter');
+    if (elem) {elem.value = files.iter; } else{alert('!! no object "file_n"');}
     files_fill_zoom();
     
     var fileid = 'fileid_'+iter.toString();  scroll_to(fileid, 'files_area_box', title=0);
@@ -219,7 +301,7 @@ function scroll_files(order){                                            //alert
     else{fname_ii = document.getElementById('fileid_'+iter.toString()).innerText; }
     fname_ii = replace_all(fname_ii,'_',' ')
     lang = get_cookie('langbase_');                                      //alert(lang);
-    utter(fname_ii,lang,1, onend=0);
+    if (i_utter===undefined){ utter(fname_ii,lang,1, onend=0); }
 }
 
 //-- account functions ------------------------------------------------------------------

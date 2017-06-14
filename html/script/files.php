@@ -162,55 +162,58 @@ function get_mail_fname($a,$b){
     return($full_name);
     }
 //-- file options -----------------------------------------------------------
-
-if (isset($_POST["files_options_submit"])) {
-    $value = $_POST["files_options_submit"];
-    $_SESSION["file_counter"]=$_POST["files_options_n"];
-    if ($value=='delete'){
-        $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
-        $filename = $_SESSION['usr_dir'].'/'.$entry;
-        if (file_exists($filename)){ 
-            rename($filename, $_SESSION['usr_home'].'/trash/'.$entry);}
-        header('Location:/index.html');
-    }elseif ($value=='edit'){
-        //echo 'EDIT';
-        $text = $_POST["files_options_text"];
-        //echo 'TEXT: '.$text.' '; 
-        if ($text!='' || $text!=' ' || $text!='  '){
-            $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
-            $filename = $_SESSION['usr_dir'].'/'.$entry;
-            $filename_new = $_SESSION['usr_dir'].'/'.$text;
-            if (!is_dir($filename)){$filename_new=$filename_new.'.txt';}
-            if (file_exists($filename)){ 
-                rename($filename, $filename_new);}
-            header('Location:/index.html'); 
-        }
-        //header('Location:/index.html');
-    }elseif ($value=='html'){
-        $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
-        $filename = $_SESSION['usr_dir'].'/'.$entry;
-        echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:20%;">'.$filename.'</div>';
-        $myfile = fopen($filename, "r") or die("Unable to open file!");
-        $txt = fread($myfile, filesize($filename));
-        //fwrite($myfile, $txt);
-        fclose($myfile);
-        $txt = clean_html($txt);
-        $fname = substr($filename,0,strpos($filename,'.html')).'.txt';
-        echo '<div style="position:fixed;top:0%;left:15%;z-order:1;width:20%;">'.$fname.'</div>';
-        $myfile = fopen($fname, "w") or die("Unable to open file!");
-        chmod($fname, 0666);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-        header('Location:/index.html'); 
-    }
+if (isset($_POST["ffiles_delete_submit"])) {
+    $_SESSION["file_counter"]=$_POST["ffiles_iter"];
+	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
+	$filename = $_SESSION['usr_dir'].'/'.$entry;
+	if (file_exists($filename)){ 
+		rename($filename, $_SESSION['usr_home'].'/trash/'.$entry);}
+	header('Location:/index.html');
+}		
+if (isset($_POST["ffiles_edit_submit"])) {
+	$_SESSION["file_counter"]=$_POST["ffiles_iter"];	
+	//echo 'EDIT';
+	//$text = $_POST["files_options_text"];
+	$text = $_POST["ffiles_edit_text"];
+	//echo 'TEXT: '.$text.' '; 
+	if ($text!='' || $text!=' ' || $text!='  '){
+		$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
+		$filename = $_SESSION['usr_dir'].'/'.$entry;
+		$filename_new = $_SESSION['usr_dir'].'/'.$text;
+		if (!is_dir($filename)){$filename_new=$filename_new.'.txt';}
+		if (file_exists($filename)){ 
+			rename($filename, $filename_new);}
+		header('Location:/index.html'); 
+	}
+}
+if (isset($_POST["ffiles_cleanhtml_submit"])) {	
+	$_SESSION["file_counter"]=$_POST["ffiles_iter"];
+	$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
+	$filename = $_SESSION['usr_dir'].'/'.$entry;
+	echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:20%;">'.$filename.'</div>';
+	$myfile = fopen($filename, "r") or die("Unable to open file!");
+	$txt = fread($myfile, filesize($filename));
+	//fwrite($myfile, $txt);
+	fclose($myfile);
+	$txt = clean_html($txt);
+	$fname = substr($filename,0,strpos($filename,'.html')).'.txt';
+	echo '<div style="position:fixed;top:0%;left:15%;z-order:1;width:20%;">'.$fname.'</div>';
+	$myfile = fopen($fname, "w") or die("Unable to open file!");
+	chmod($fname, 0666);
+	fwrite($myfile, $txt);
+	fclose($myfile);
+	header('Location:/index.html'); 
 }
 
-//-- enter/options button ---------------------------------------------------
+//-- enter button ---------------------------------------------------
 
-if (isset($_POST['enter_obj'])) {
-    $value = $_POST['enter_obj'];
-    $_SESSION["file_counter"]=$_POST["file_n"];
-    //echo 'ENTER '.$_POST["file_n"];
+//if (isset($_POST['enter_obj'])) {
+//    $value = $_POST['enter_obj'];
+if (isset($_POST['ffiles_enter_submit'])) {
+    $value = $_POST['ffiles_enter_submit'];
+    //$_SESSION["file_counter"]=$_POST["file_n"];
+    $_SESSION["file_counter"]=$_POST["ffiles_iter"];
+    echo 'ENTER '.$_POST["ffiles_iter"];
     $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
     $filename = $_SESSION['usr_dir'].'/'.$entry;
     
