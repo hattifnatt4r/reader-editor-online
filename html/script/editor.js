@@ -120,7 +120,7 @@ var editor_buttonsound = 0;
 
 //editor_run();
 
-function editor_run(parent, text_raw, destination, iter){                //alert('editor_run');
+function editor_run(parent, text_raw, destination, iter){                //alert(destination);
 	if (text_raw==undefined) { text_raw=""; }
 	if (destination==undefined) { destination=""; }
 	if (iter==undefined) { iter=0; }
@@ -158,10 +158,10 @@ function editor_exit(){                                                  //alert
 		reader_run(); 
 	}else if (editor.parent=="files"){                                   //alert(editor.destination);
 		elem = document.getElementById(editor.destination);
-		if (elem) { elem.innerHTML = editor.text_raw; }
-		elem = document.getElementById(editor.destination+"_formid");
-		if (elem) { elem.value = editor.text_raw; }
-		filesys.editor_text = "";
+		if (elem) { elem.innerHTML = editor.text_raw; }                  //alert(elem);
+		elem = document.getElementById("ffiles_edit_text" );
+		if (elem) { elem.value = editor.text_raw; }                      //alert(editor.text_raw);
+		filesys.editor_text = "";                                        
 	}  
 }function editor_save(){                                                 //alert('editor_save');
     if (editor.parent=='reader'){

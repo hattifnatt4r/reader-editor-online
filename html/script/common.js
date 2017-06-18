@@ -166,7 +166,7 @@ function utter(txt, lang, stop, onend){                                  // 0-au
     else{ msg.onend=function(event){scrollbut_div(1,0,1)}; }
 }    
     
-function create_element(id, cl, parent, style, inner){
+function create_element(id, cl, parent, style, inner){                   //alert(id, cl, parent, style);
     //alert('create');
     if (parent===undefined){ parent = 'created_elements'; }
     var element = document.createElement('div');
@@ -512,11 +512,9 @@ function get_usrname(fname_i){
 //------------------------------------------------------------------------------
 function common_show_lang(lvl, name){                                    //alert('common_show_lang '+name);
     var inner_e = ''; var lang='';
-    //if (is_base==1){ 
     if (name==undefined){ 
         lang = get_cookie('langbase_');                                  //alert(lang);
     }else{ 
-        //lang = get_cookie('lang_'+name);                               //alert('name '+name);
         lang = get_cookie('lang_common');                                //alert('name '+name);
         inner_e+= '<div id="auto"    class="buttons"     onclick="common_set_lang(this.id,'+name+');"   style="left:20%; top:60%;">auto</div>'; 
     }
@@ -526,14 +524,16 @@ function common_show_lang(lvl, name){                                    //alert
     common_create_menu('common_lang',lvl,inner_e);
 }
 function common_set_lang(lang, name){                                    //alert(lang);
-    //if (is_base==1){ set_cookie("langbase_", lang); }        
-    if (name==undefined){ set_cookie("langbase_", lang);                 //alert(name); 
+    if (name==undefined){ //set_cookie("langbase_", lang);                 //alert(name); 
+		files.langbase = lang;
 		}        
-    else{ //set_cookie("lang_"+name, lang); 
-		set_cookie("lang_common", lang);   }           //alert('cookie');
-    //else{ set_cookie("lang_common", lang); }           //alert('cookie');
-    document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
-    document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
+    else{ //set_cookie("lang_common", lang);   
+		files.lang = lang;
+		}           //alert('cookie');
+    //document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
+    //document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
+    document.getElementById('bfiles_lang_zoom').innerHTML = lang;       //alert('zoom2');
+    document.getElementById('bfiles_langbase1_text').innerHTML = lang;       //alert('zoom2');
 }
 
 function common_create_menu(id, lvl, buttons_html, parent){                      //alert('create_menu');

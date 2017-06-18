@@ -3,6 +3,7 @@ var files = {
 	iter: 0,
 	iter_prev: 0,
 	dir: "",
+	lang: "auto",
 	langbase: "en",
 	
 	editor_text: "",
@@ -15,32 +16,175 @@ var files = {
 }
 
 var files_buttons = {
-	prev: { symbol: symbol_prev,
-		f: function() {  scroll_files('prev'); }
-	}, 
-	next: { symbol: symbol_next,
-		f: function() { scroll_files('next'); }
+	classes: ["buttons", "buttons_text", "reader_zoom_box"],
+	idprefix: "bfiles",
+	
+	prev: { class_id: 0,
+		inner: function() {return symbol_prev;}, 
+		f:     function() {  scroll_files('prev'); }
+	},next: { class_id: 0,
+		inner: function() {return symbol_next;}, 
+		f:     function() { scroll_files('next'); }
+	},enter: { class_id: 0,
+		inner: function() {return symbol_enter;}, 
+		f:     function() { document.getElementById("ffiles_enter_submit").click(); }
 	},
-	enter: { symbol: symbol_enter,
-		f: function() { document.getElementById("ffiles_enter_submit").click(); }
+	
+	
+	del: { class_id: 0, 
+		inner: function() {return "delete";}, 
+		f:     function() { document.getElementById("ffiles_delete_submit").click(); }
 	},
-	del: { symbol: "delete",
-		f: function() { document.getElementById("ffiles_delete_submit").click(); }
+	edit: { class_id: 0,
+		inner: function() {return "edit name";}, 
+		f:     function() { document.getElementById("ffiles_edit_submit").click(); }
 	},
-	edit: { symbol: "edit name",
-		f: function() { document.getElementById("ffiles_edit_submit").click(); }
+	cleanhtml: { class_id: 0,
+		inner: function() {return "clean html";}, 
+		f:     function() { document.getElementById("ffiles_cleanhtml_submit").click(); }
 	},
-	cleanhtml: { symbol: "clean html",
-		f: function() { document.getElementById("ffiles_cleanhtml_submit").click(); }
+	copy: { class_id: 0, disabled: true, 
+		inner: function() {return "copy";}, 
+		f:     function() { alert('empty'); }
 	},
-	optionstext: { symbol: "",
-		f: function() { files_edittext("files_button_optionstext"); }
+	optionstext: { class_id: 2,
+		inner: function() {
+			fname = document.getElementById('fileid_'+files.iter.toString()).innerHTML;
+			return '<div id="bfiles_optionstext_edit" class="text_zoom">'+fname+'</div>'; }, 
+		f:     function() { files_edittext(this.id+'_edit'); }
 	},
-	options: { symbol: "opt",
-		f: function() { files_create_buttons("lvl1", "files_options", [['del',4], ['cleanhtml',5], ['edit',7], ['optionstext',0,2]  ] ); }
+	options: { class_id: 0,
+		inner: function() {return "opt";}, 
+		f:     function() { files_create_buttons("lvl1", "options", [['del',4], ['cleanhtml',5], ['copy',6], ['edit',7], ['optionstext',0]  ] ); }
 	},
-		
+	
+	
+	lang_zoombox: { class_id: 2,
+		inner: function() { return '<div id="bfiles_lang_zoom" class="text_zoom">'+files.langbase+'</div>'; },  
+		f: ""
+	},lang_en: { class_id: 0,  
+		inner: function() { return "en"; }, 
+		f:     function() { common_set_lang("en"); }
+	},lang_ru: { class_id: 0,  
+		inner: function() { return "ru"; }, 
+		f:     function() { common_set_lang("ru"); }
+	},lang_auto: { class_id: 0, 
+		inner: function() { return "auto"; },  
+		f:     function() { common_set_lang("auto"); }
+	},langbase1_text: { class_id: 1,
+		inner: function() {return files.langbase;}, 
+		f: "",
+	},langbase1: { class_id: 0,
+		inner: function() { return "lang base"; }, 
+		f:     function() { files_create_buttons("lvl2", "langbase", [ ['lang_zoombox',0], ['lang_en',4], ['lang_ru',5], ['lang_auto',6]  ] ); }
+	},
+	
+	create_zoom: { class_id: 2, 
+		inner: function() { return '<div id="bfiles_create_zoom_edit" class="text_zoom"></div>'; }, 
+		f:     function() { files_edittext(this.id+"_edit"); }
+	},createdir: { class_id: 0,
+		inner: function() { return "create dir"; }, 
+		f:     function() { document.getElementById("ffiles_createdir_submit").click(); }
+	},createtxt: { class_id: 0,
+		inner: function() { return "create txt"; }, 
+		f:     function() { document.getElementById("ffiles_createtxt_submit").click(); }
+	},create: { class_id: 0,
+		inner: function() { return "new file"; }, 
+		f:     function() { files_create_buttons("lvl2", "create", [ ["create_zoom",0], ["createdir",4], ["createtxt",6] ] ); }
+	},
+	
+	sound: { class_id: 0,
+		inner: function() {return "sound";}, 
+		f:     function() { alert("123"); }
+	},
+	menu: { class_id: 0, 
+		inner: function() { return "menu"; }, 
+		f:     function() { files_create_buttons("lvl1", "menu", [['sound',0], ['langbase1_text',1], ['langbase1',2], ["create",4]  ] ); }
+	},	
+	
+	
+	username: { class_id: 2, 
+		inner: function() { return '<div id="bfiles_username_edit" class="text_zoom">name</div>'; }, 
+		f:     function() { files_edittext(this.id+"_edit"); }
+	},
+	userpass: { class_id: 2, 
+		inner: function() { return '<div id="bfiles_userpass_edit" class="text_zoom">password</div>'; }, 
+		f:     function() { files_edittext(this.id+"_edit"); }
+	},	
+	userlogin: { class_id: 0, 
+		inner: function() { return "login"; }, 
+		//f:     function() { document.getElementById("ffiles_userlogin_submit").click(); }
+		f:     function() { loadDoc(0,files_login); }
+		//f:     function() { files_login(); }
+	},	
+	userlogout: { class_id: 0, 
+		inner: function() { return "logout"; }, 
+		//f:     function() { document.getElementById("ffiles_userlogout_submit").click(); }
+		f:     function() { files_logout(); }
+	},	
+	userremember: { class_id: 0, 
+		inner: function() { return "remem-ber me"; }, 
+		f:     function() { alert("123"); }
+	},	
+	usernew: { class_id: 0, 
+		inner: function() { return "new"; }, 
+		//f:     function() { document.getElementById("ffiles_usernew_submit").click(); }
+		f:     function() { loadDoc(0,files_login_new);  }
+	},	
+	userdelete: { class_id: 0, 
+		inner: function() { return "delete"; }, 
+		f:     function() { alert("123"); }
+	},	
+	usermail: { class_id: 0, 
+		inner: function() { return "mail"; }, 
+		f:     function() { alert("123"); }
+	},	
+	user: { class_id: 0, 
+		inner: function() { return "log in"; }, 
+		f:     function() { files_create_buttons("lvl1", "user", [["username",0], ["userpass",4], 
+			                ["userlogin",11], ["userlogout",7], ["usernew",10], ["userremember",3], ["userdelete",8], ["usermail",9]  ], 4,3 ); }
+	},	
+	
+	
 }
+
+function files_create_buttons(type, block_name, buttons_arr, nx, ny){     // arr = [ [button1_name, button1_position, button1_class_number], ... ]
+	if (nx==undefined) { nx=4; ny=2; }
+	var b_id=""; 
+	var b_parent = files_buttons.idprefix+"_"+block_name;                //alert(b_parent);
+	var inner_html = "";
+	if (type==="lvl1") {
+		menu_blur();
+		inner_html = '<div id="'+b_parent+'_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
+        inner_html+= '<div id="'+b_parent+'_area1"  class="menu_area"></div>';
+        b_parent = b_parent+"_area1";
+	}else if (type==="lvl2"){
+		inner_html= '<div id="'+b_parent+'_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
+        inner_html+= '<div id="'+b_parent+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
+        inner_html+= '<div id="'+b_parent+'_area2"  class="menu_area_lvl2"></div>';
+        b_parent = b_parent+"_area2";
+	}else { b_parent = b_parent+"_area"; }
+	
+	var elem = create_element(files_buttons.idprefix+"_"+block_name+"_area");           //alert(b_parent);
+	elem.innerHTML = inner_html;
+	var i, b, b_name, b_classid, b_class, b_style, b_id;
+	for (i=0; i<buttons_arr.length; i+=1){                               //alert(buttons_arr[i]);
+		b_name = buttons_arr[i][0];
+		b_id   = files_buttons.idprefix+"_"+b_name;                        //alert(b_id);
+		b      = files_buttons[b_name];
+		b_classid = b.class_id;                      //alert(b_classid);
+		b_class   = files_buttons.classes[b_classid];                    //alert(b.disabled);  
+		      
+		if (b.disabled===true) { b_class += " disabled"; } 
+		if (type==="lvl0") { b_style = reader_button_position(buttons_arr[i][1]);    }                 
+		else { b_style = common_buttonpos_menu(nx,ny, buttons_arr[i][1], b_classid);    }  //alert(b_parent);   
+		      
+		elem = create_element(b_id, b_class, b_parent, b_style); //alert(elem);
+		if (b.disabled!=true) { elem.onclick = b.f; }
+		elem.innerHTML = b.inner();       
+	}
+}
+
 function common_buttonpos_menu(x_dim, y_dim, i, class_n){                         //alert('style');
 	var b_width = 11; var b_height = 17;
 	var b_left = 10; var b_right = 90; 
@@ -55,44 +199,9 @@ function common_buttonpos_menu(x_dim, y_dim, i, class_n){                       
 	return(style)
 	}
 
-function files_show_buttons2(){                                          //alert('show_buttons');
-	files_create_buttons("lvl0", "files_buttons", [['prev',3], ['next',7], ['enter',2], ['options',1]  ] );
-}
-
-function files_create_buttons(type, block_id, buttons_arr){     // arr = [ [button1_name, button1_position, button1_class_number], ... ]
-	var b_id="", b_parent = block_id+"_area";                            //alert('create');
-	var class_arr = ["buttons","reader_zoom_box", "reader_zoom_box" ];
-	var inner_html = "";
-	if (type==="lvl1") {
-		menu_blur();
-		inner_html = '<div id="'+block_id+'_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
-        inner_html+= '<div id="'+block_id+'_area1"  class="menu_area"></div>';
-        b_parent = block_id+"_area1";
-	}else if (type==="lvl2"){
-		inner_html= '<div id="'+block_id+'_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
-        inner_html+= '<div id="'+block_id+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
-        inner_html+= '<div id="'+block_id+'_area2"  class="menu_area_lvl2"></div>';
-        b_parent = block_id+"_area2";
-	}	
-	var elem = create_element(block_id+"_area");                                    //alert(b_parent);
-	elem.innerHTML = inner_html;
-	var i, b_name, b_class, b_style, b_id, b_inner;
-	for (i=0; i<buttons_arr.length; i+=1){                               //alert(buttons_arr[i]);
-		b_name = buttons_arr[i][0];
-		if (buttons_arr[i].length<3) { b_class = 0; }
-		else{ b_class = buttons_arr[i][2]; }
-		b_id = "files_button_"+b_name;                                   
-		if (type==="lvl0") { b_style = reader_button_position(buttons_arr[i][1]);    }                 
-		else { b_style = common_buttonpos_menu(4,2, buttons_arr[i][1], b_class);    }  //alert(b_style);         
-		elem = create_element(b_id, class_arr[b_class], b_parent, b_style); 
-		elem.onclick = files_buttons[b_name].f;
-		//if (b_class in [1,2]) {
-		//	   b_inner='<div id="'+b_id+'_text" class="text_zoom">'+files_buttons[b_name].symbol+'</div>';
-		//}else { b_inner = files_buttons[b_name].symbol; }
-		b_inner = files_buttons[b_name].symbol;
-		elem.innerHTML = b_inner;
+function files_buttons_disable(){
+	a=0;
 	}
-}
 
 //-- run file manager -----------------------------------------------------------------
 //-------------------------------------------------------------------------------------
@@ -119,7 +228,8 @@ function files_run(){                                                    //alert
 	document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
 	
 	//files_show_buttons(); 
-	files_show_buttons2(); 
+	//files_show_buttons2(); 
+	files_create_buttons("lvl0", "buttons", [['prev',3], ['next',7], ['enter',2], ['options',1], ["menu",0], ["user", 4]  ] );
 	document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));
 	document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_area"));
 	
@@ -279,8 +389,8 @@ function scroll_files(order, i_utter){                                   //alert
     iter_prev = files.iter;   
     files.iter_prev = files.iter;
     files.iter = iter;
-    set_cookie('iter_', iter);
-    set_cookie('iter_prev_', iter_prev);
+    //set_cookie('iter_', iter);
+    //set_cookie('iter_prev_', iter_prev);
                                               
     //elem = document.getElementById('file_n');
     elem = document.getElementById('ffiles_iter');
@@ -300,15 +410,19 @@ function scroll_files(order, i_utter){                                   //alert
     if (iter==0){fname_ii='..';}
     else{fname_ii = document.getElementById('fileid_'+iter.toString()).innerText; }
     fname_ii = replace_all(fname_ii,'_',' ')
-    lang = get_cookie('langbase_');                                      //alert(lang);
+    //lang = get_cookie('langbase_');                                      //alert(lang);
+    lang = files.langbase;
     if (i_utter===undefined){ utter(fname_ii,lang,1, onend=0); }
 }
 
 //-- account functions ------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 function files_login(xml){
-    var name = document.getElementById('loginname_text_id').value;
-    var pass = document.getElementById('loginpass_text_id').value;
+    var name = document.getElementById(files_buttons.idprefix+'loginname_edit').value;
+    var pass = document.getElementById(files_buttons.idprefix+'loginpass_edit').value;
+    document.getElementById('ffiles_username').value = name;
+    document.getElementById('ffiles_userpass').value = pass;
+    document.getElementById('ffiles_userlogin_submit').value = "login";
     files.username = name;
     user_access=0;
     data =  JSON.parse(xml.responseText); users = data.users;
@@ -319,12 +433,17 @@ function files_login(xml){
             pass_i = users[i].password;
             if (pass_i==pass){
                 user_access=2;
-                files_click(6);
+                //files_click(6);
+                document.getElementById("ffiles_userlogin_submit").click();
     }}}                                                                  //alert(user_access);
     utter(login_messages_en[user_access],0,0,0);
-}function files_login_new(xml){
-    name=document.getElementById('loginname_text_id').value;
-    pass=document.getElementById('loginpass_text_id').value; 
+}
+function files_login_new(xml){          alert('login');
+    var name = document.getElementById(files_buttons.idprefix+'loginname_edit').value;
+    var pass = document.getElementById(files_buttons.idprefix+'loginpass_edit').value;          alert(name, pass)
+    document.getElementById('ffiles_username').value = name;
+    document.getElementById('ffiles_userpass').value = pass; 
+    document.getElementById('ffiles_userlogin_submit').value = "new";
     files.username = name;
     user_access=0;
     data =  JSON.parse(xml.responseText); users = data.users;
@@ -332,19 +451,15 @@ function files_login(xml){
         name_i = users[i].name;
         if (name_i==name){ user_access=1; }
     }                                                                    //alert(user_access);
-    if (user_access==0){ files_click(5); }
+    if (user_access==0){ 
+		document.getElementById("ffiles_userlogin_submit").click();
+	}
     utter(newlogin_messages_en[user_access],0,0,0);
 }
-
-//function files_login_test(){
-//    name=get_cookie('PHPSESSID'); pass='';
-//    document.getElementById('login_text_id').value=name+' '+pass;
-//    files_click(5);
-//}
-function files_logout(){
-    document.getElementById('loginname_text_id').value='common';
-    document.getElementById('loginpass_text_id').value='';
-    files_click(6);
+function files_logout(){     alert('logout');
+    document.getElementById('ffiles_username').value = 'common';
+    document.getElementById('ffiles_userpass').value = '';         
+    document.getElementById("ffiles_userlogin_submit").click();
 }
 
 //-------------------------------------------------------------------------------
@@ -383,11 +498,11 @@ function files_disable(id){
     document.getElementById(id).className='buttons disabled';
 }
 
-function loadDoc(url1, login_function) {
+function loadDoc(url1, login_function) {  alert('loadDoc');
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        login_function(this);
+    if (this.readyState == 4 && this.status == 200) {  alert('load  '+ this.id);
+        login_function(this);   
     }
     };
     xhttp.open("GET", "data/login.json", true);

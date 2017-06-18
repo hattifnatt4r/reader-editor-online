@@ -93,13 +93,19 @@ function create_file($fname, $usr_dir) {
     echo 'DIR: '.$full_name.' ';
     mkdir($full_name, 0777);
 }
-if (isset($_POST['create_submit_name'])) {
-    $value = $_POST['create_submit_name'];
-    $text = $_POST["create_text_name"];
+if (isset($_POST['ffiles_createtxt_submit'])) {
+    $text = $_POST["ffiles_edit_text"];
     echo 'TEXT: '.$text.' '; 
     if ($text!='' || $text!=' ' || $text!='  '){
-        if ($value=='create file') { create_file($text,$_SESSION['usr_dir']); }
-        elseif ($value=='create dir') { create_dir($text,$_SESSION['usr_dir']); }
+        create_file($text,$_SESSION['usr_dir']); 
+        header('Location:/index.html'); 
+    }
+}
+if (isset($_POST['ffiles_createdir_submit'])) {
+    $text = $_POST["ffiles_edit_text"];
+    echo 'TEXT: '.$text.' '; 
+    if ($text!='' || $text!=' ' || $text!='  '){
+        create_dir($text,$_SESSION['usr_dir']); 
         header('Location:/index.html'); 
     }
 }
@@ -247,10 +253,12 @@ if (isset($_POST['ffiles_enter_submit'])) {
 
 //-- login ------------------------------------------------------------------
 
-if (isset($_POST['login_submit_name'])) {
-    $name = $_POST['loginname_text_name'];
-    $pass = $_POST['loginpass_text_name'];
-    $value = $_POST['login_submit_name'];
+if (isset($_POST['ffiles_userlogin_submit'])) {
+    //$name = $_POST['loginname_text_name'];
+    //$pass = $_POST['loginpass_text_name'];
+    $name = $_POST['ffiles_username'];
+    $pass = $_POST['ffiles_userpass'];
+    $value = $_POST['ffiles_userlogin_submit'];
     echo '<div style="position:fixed;top:0.5%;left:0%;z-order:1">'.'LOGIN '.$value.' name: '.$name.' pass: '.$pass.'</div>';
     if ($value=='newlogin'){
         //echo '<div style="position:fixed;top:0.5%;left:1%;z-order:1">'.'NEW LOGIN'.'</div>';
