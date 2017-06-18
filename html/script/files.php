@@ -349,16 +349,13 @@ function getUserIP(){
 
 //-- upload file -------------------------------------------------------------
 
-//if(isset($_POST["upload_submit_name"])) {
 if(isset($_POST["ffiles_upload_submit"])) {
     $target_dir = $_SESSION['usr_dir'];
-    $target_file = $target_dir .'/'. basename($_FILES["upload_file_name"]["name"]);
-    //echo '<div style="position:fixed;top:5%;left:0%;z-order:1;width:70%;">'.$target_file.'</div>';
+    $target_file = $target_dir .'/'. basename($_FILES["ffiles_upload_choose"]["name"]);
+    echo '<div style="position:fixed;top:5%;left:0%;z-order:1;width:70%;">'.$target_file.'</div>';
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-    $check = filesize($_FILES["upload_file_name"]["tmp_name"]);
-    //echo '<div style="position:fixed;top:40%;left:0%;z-order:1;width:70%;">'.$target_file.' '.$_FILES["fileToUpload"]["size"].' '.$_FILES["fileToUpload"]["tmp_name"].'</div>';
-    //print_r($_FILES);
+    $check = filesize($_FILES["ffiles_upload_choose"]["tmp_name"]);
     if($check !== false) {
         echo "File is an image.";
         $uploadOk = 1;
@@ -368,7 +365,7 @@ if(isset($_POST["ffiles_upload_submit"])) {
             echo "Sorry, file already exists.";
             $uploadOk = 0;
         }// Check file size
-        if ($_FILES["upload_file_name"]["size"] > 500000) {
+        if ($_FILES["ffiles_upload_choose"]["size"] > 500000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }// Allow certain file formats
@@ -380,8 +377,8 @@ if(isset($_POST["ffiles_upload_submit"])) {
 
     if ($uploadOk == 0) { echo "Sorry, your file was not uploaded."; } 
     else {
-        if (move_uploaded_file($_FILES["upload_file_name"]["tmp_name"], $target_file)) {
-            echo "The file ". basename( $_FILES["upload_file_name"]["name"]). " has been uploaded.";
+        if (move_uploaded_file($_FILES["ffiles_upload_choose"]["tmp_name"], $target_file)) {
+            echo "The file ". basename( $_FILES["ffiles_upload_choose"]["name"]). " has been uploaded.";
         } else {
             echo "Sorry, there was an error uploading your file.";
         }

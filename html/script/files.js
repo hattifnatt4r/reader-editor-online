@@ -22,8 +22,8 @@ var files = {
 		           "files_createdir": "ffiles_createdir_submit", 
 		           "files_mail": "ffiles_mail_submit", 
 		           "files_upload": "ffiles_upload_submit", 
-		           //"files_upload_choose": "ffiles_upload_file", 
-		           "files_upload_choose": "upload_file_name", 
+		           "files_upload_choose": "ffiles_upload_choose", 
+		           //"files_upload_choose": "upload_file_name", 
 		           },
 	click_php: function(id) { //alert(id+' '+this.buttons_php[id]); 
 		elem = document.getElementById(this.buttons_php[id]); //alert(elem);
@@ -102,20 +102,22 @@ function files_show_addcontact(){
 }
 function files_show_upload(){
     var inner_e = "";
-    
-    inner_e = '<div hidden id="files_upload"> ';
-    inner_e+= '<form action="" method="post" enctype="multipart/form-data">';
-    inner_e+= '<input type="file"   id="upload_file_id"   name="upload_file_name" >';
-    inner_e+= '<input type="submit" id="upload_submit_id" name="upload_submit_name" value="empty" ></div>';
-    
-    inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files_click(8);"   style="left:20%; top:40%;">choose file</div>';
-    inner_e+= '<div id="files_upload_submit" class="buttons" onclick="files_click(9);" style="left:70%;top:40%;">upload file</div>';
-    
-    //inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files.click_php(this.id);"   style="left:20%; top:40%;">choose file</div>';
-    //inner_e+= '<div id="files_upload" class="buttons" onclick="files.click_php(this.id);" style="left:70%;top:40%;">upload file</div>';
+    inner_e+= '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="files_upload_name" onclick="" class="text_zoom"></div></div>';
+    inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'>choose file</div>';
+    inner_e+= '<div id="files_upload" class="buttons" onclick="files.click_php(this.id);" '+common_buttonpos_menu(6,0)+'>upload file</div>';
     common_create_menu('files_upload', 0, inner_e);
+    document.getElementById('ffiles_upload_choose').onchange = uploadOnChange;
 }
-
+function uploadOnChange() {                                              //alert('file');
+    var filename = this.value;                                           //alert(filename);
+    var lastIndex = filename.lastIndexOf("\\");
+    if (lastIndex >= 0) {
+        filename = filename.substring(lastIndex + 1);
+    }document.getElementById('files_upload_name').innerHTML = filename;
+}
+function files_click(n){ 
+    arr_names = ["files_enter_id", "files_delete_id", "files_edit_id", 'createdir_submit_id', 'createtxt_submit_id', 'newlogin_submit_id','login_submit_id', "mail_submit_id", 'upload_file_id','upload_submit_id', 'files_html_id', 'addcontact_submit_id'];
+    document.getElementById(arr_names[n]).click();  }
 
 function files_show_menu(){  
 	var inner_e = "";  
