@@ -48,7 +48,7 @@ body {
 /*-- buttons -------------------------------------------------------------*/
 .buttons_area{}
 .buttons{
-  width:14%; height:17%;    
+  width:12%; height:17%;    
   border: solid 10px #8aa0a8;  border-radius: 1%; 
   background-color: #8aa0a8;   font-size: 50px; 
   /*---------------*/
@@ -136,7 +136,7 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1%; top:5%; width:75.5%; height: 74%; 
+  left:1%; top:2%; width:75.5%; height: 74%; 
   /*-------------*/
   position:fixed; text-align:center; box-sizing:border-box;
   /*left:var(--reader-textleft); top:var(--reader-texttop); width:calc(var(--reader-textright) - var(--reader-textleft) ); height: var(--reader-textheight); */

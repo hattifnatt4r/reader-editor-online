@@ -174,7 +174,7 @@ function editor_exit(){                                                  //alert
 //-- show buttons functions -----------------------------------------------------
 //-------------------------------------------------------------------------------
 function editor_show_start(){                                            //alert('editor_start');
-    lang = get_cookie('lang_common');                                     
+    lang = cookie_get('lang_common');                                     
     elem = document.getElementById('editor_buttons_area');
     inner_e0 = "<div id='editor_buttons_area_0'>";
     inner_e0+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+editor.style.get_button(7)[0]+'">menu</div>';
@@ -213,7 +213,7 @@ var button_nextword = [ '<div id="editor_nextword"  class="buttons_editor" oncli
 var button_sound = [ '<div id="editor_sound"   class="buttons_editor" onclick="editor_sound();"  style="', '">'+symbols_sound[editor_sound_counter]+'</div>' ];
 var button_spell = [ '<div id="editor_spell"   class="buttons_editor" onclick="editor_spell();"  style="', '">spell</div>' ];
 function editor_show_menu(){
-    lang = get_cookie('langbase_');
+    lang = cookie_get('langbase_');
     //inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
     inner_e = '<div id="editor_fontsize"    class="buttons" onclick="editor_set_fontsize();" style="left:35%; top:15%;">'+editor_fontsize_arr[editor_fontsize]+'</div>';
     inner_e+= '<div id="editor_sound"       class="buttons disabled" onclick=""    style="left:15%; top:50%;"> sound </div>';
@@ -354,7 +354,7 @@ function editor_scrollword(order){                                       //alert
     editor.iter = iter;
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
-    lang = get_cookie('lang_common');
+    lang = cookie_get('lang_common');
     if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), lang, 1, 0); }
 }
 function editor_scroll(order){
@@ -386,7 +386,7 @@ function editor_scroll(order){
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
     letter = text.substr(i1, i2-i1);
-    lang = get_cookie('lang_common');
+    lang = cookie_get('lang_common');
     if (editor_sound_counter==1) { utter(letter, lang, 1, 0); }
     if (letter==' '){letter='_';}
     document.getElementById('editor_show_letter').innerHTML = letter;
@@ -462,7 +462,7 @@ function editor_spell(){
         i2 = text.indexOf(' ',iter);
         if (i1==-1){i1=0;}
         if (i2==-1){i2=text.length;}
-        lang = get_cookie('lang_common');
+        lang = cookie_get('lang_common');
         utter(text.substr(i1, i2-i1), lang, 1, 0);
     }
 }

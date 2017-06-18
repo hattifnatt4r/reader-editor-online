@@ -32,8 +32,8 @@ var word_id=[], sentence_id=[], paragraph_id=[];
 //-- run reader ---------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
 //set_cookie("isset_"+reader.fname, "");
-if (get_cookie('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
-	set_cookie("isset_"+reader.fname, "isset");
+if (cookie_get('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
+	cookie_set("isset_"+reader.fname, "isset");
 	common.cookie_save.call(reader);
 }else{ common.cookie_load.call(reader); }                                                               
 window.onbeforeunload = reader_beforunload;
@@ -156,37 +156,25 @@ function scrollbut_div(order,stop,onend){
     reader.id_curr = id;
     
     if (iter==-1){
-        //document.cookie = "latest_w_"+reader.fname+"="+id;
-        //document.cookie = "latest_s_"+reader.fname+"="+id;
-        //document.cookie = "latest_p_"+reader.fname+"="+id;
         reader.latest_w  = id;
         reader.latest_s  = id;
         reader.latest_p  = id;
     }
     if ((order==1|| order==0) && iter>-1){
         if (n_select_type==0){ 
-            //document.cookie = "latest_w_"+reader.fname+"="+id;
-            //document.cookie = "latest_s_"+reader.fname+"="+id.substr(0,4);
-            //document.cookie = "latest_p_"+reader.fname+"="+id.substr(0,2);
             reader.latest_w = id;
             reader.latest_s = id.substr(0,4);
             reader.latest_p = id.substr(0,2);
         } else if (n_select_type==1){ 
-            //document.cookie = "latest_w_"+reader.fname+"="+id+'w0';
-            //document.cookie = "latest_s_"+reader.fname+"="+id;
-            //document.cookie = "latest_p_"+reader.fname+"="+id.substr(0,2);
             reader.latest_w = id+"w0";
             reader.latest_s = id;
             reader.latest_p = id.substr(0,2);
         } else if (n_select_type==2){ 
-            //document.cookie = "latest_w_"+reader.fname+"="+id+'s0w0';
-            //document.cookie = "latest_s_"+reader.fname+"="+id+'s0';
-            //document.cookie = "latest_p_"+reader.fname+"="+id;
             reader.latest_w = id+"s0w0";
             reader.latest_s = id+"s0";
             reader.latest_p = id;
             }
-    }                                                                    //alert('iter: '+iter+' '+get_cookie("latest_w_"+fname)+'  '+get_cookie("latest_s_"+reader.fname)+'  '+get_cookie("latest_p_"+reader.fname));
+    }
     reader_utter(stop_i=stop, onend); 
     highlite(); 
     scroll_to(id,'text_from_file_box', title=0);                         //alert('scroll 1');
@@ -307,16 +295,16 @@ function reader_show_buttons(){                                          //alert
     else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
     
     elem = document.getElementById('reader_buttons_area');
-    inner_e = '<div id="reader_menu" class="buttons" onclick="reader_show_menu();"  style="'+reader_button_position(0)+'">menu</div>' ;
-    inner_e+= '<div id="reader_edit"     class="'+edit_class+'" '+edit_function+'        style="'+reader_button_position(1)+'">edit</div>' ;
-    inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);"  style="'+reader_button_position(2)+'">word</div>' ;
-    inner_e+= '<div id="prev" class="buttons" onclick="scrollbut_div(0,1,0);"  style="'+reader_button_position(3)+'">'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="next" class="buttons" onclick="scrollbut_div(1,1,0);"  style="'+reader_button_position(7)+'">'+symbol_next+'</div>' ;
+    inner_e = '<div id="reader_menu" class="buttons" onclick="reader_show_menu();" '+common_buttonpos(0)+'>menu</div>' ;
+    inner_e+= '<div id="reader_edit"     class="'+edit_class+'" '+edit_function+' '+common_buttonpos(1)+'>edit</div>' ;
+    inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);" '+common_buttonpos(2)+'>word</div>' ;
+    inner_e+= '<div id="prev" class="buttons" onclick="scrollbut_div(0,1,0);" '+common_buttonpos(3)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="next" class="buttons" onclick="scrollbut_div(1,1,0);" '+common_buttonpos(7)+'>'+symbol_next+'</div>' ;
     
     //inner_e+= '<div id="reader_speed"     class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+symbol_speed+'</div>' ;
-    inner_e+= '<div id="reader_mail" class="buttons" onclick="reader_show_mail();"  style="'+reader_button_position(4)+'visibility:hidden;">'+symbol_mail+'</div>' ;
-    inner_e+= '<div id="readall"     class="buttons" onclick="scrollbut_div(-1,1,1);"  style="'+reader_button_position(5)+'">'+symbol_readall+'</div>' ;
-    inner_e+= '<div id="playpause"   class="buttons" onclick="reader_play_pause()"    style="'+reader_button_position(6)+'">'+symbol_play+'</div>' ;
+    inner_e+= '<div id="reader_mail" class="buttons" onclick="reader_show_mail();" '+common_buttonpos(4)+'>'+symbol_mail+'</div>' ;
+    inner_e+= '<div id="readall"     class="buttons" onclick="scrollbut_div(-1,1,1);"  '+common_buttonpos(5)+'>'+symbol_readall+'</div>' ;
+    inner_e+= '<div id="playpause"   class="buttons" onclick="reader_play_pause()"    '+common_buttonpos(6)+'>'+symbol_play+'</div>' ;
     elem.innerHTML=inner_e;
     //dir = get_subdir(reader.fname);
     //alert(reader.fname,dir);

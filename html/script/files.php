@@ -69,7 +69,7 @@ function show_file($entry, $i){
     if (strpos($entry,'~')!==false){ 
         $entry = str_replace('~','',$entry); $class='files attention';
          }
-    $file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="scroll_files('.$i.');"  style="'.$style.'" title="'.$title.'">'.$entry.'</div>' ;
+    $file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'">'.$entry.'</div>' ;
     return($file_i);
 }
 echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >
@@ -259,8 +259,8 @@ if (isset($_POST['ffiles_userlogin_submit'])) {
     $name = $_POST['ffiles_username'];
     $pass = $_POST['ffiles_userpass'];
     $value = $_POST['ffiles_userlogin_submit'];
-    echo '<div style="position:fixed;top:0.5%;left:0%;z-order:1">'.'LOGIN '.$value.' name: '.$name.' pass: '.$pass.'</div>';
-    if ($value=='newlogin'){
+    //echo '<div style="position:fixed;top:0.5%;left:0%;z-order:1">'.'LOGIN '.$value.' name: '.$name.' pass: '.$pass.'</div>';
+    if ($value=='new'){
         //echo '<div style="position:fixed;top:0.5%;left:1%;z-order:1">'.'NEW LOGIN'.'</div>';
         $fname = "data/login.json";
         $myfile = fopen($fname, "r") or die("Unable to open $fname !");
@@ -295,7 +295,7 @@ function recurse_copy($src,$dst) {
 
 //-- mail ------------------------------------------------------------------
 
- if (isset($_REQUEST['mail_submit_name']))  {
+ if (isset($_REQUEST['ffiles_mail_submit']))  {
     echo '<div style="position:fixed;top:0.5%;left:0%;z-order:1">'.'MAIL '.'</div>';
     //Email information
     $admin_email = "dolgareva.ma@yandex.ru";
@@ -349,7 +349,8 @@ function getUserIP(){
 
 //-- upload file -------------------------------------------------------------
 
-if(isset($_POST["upload_submit_name"])) {
+//if(isset($_POST["upload_submit_name"])) {
+if(isset($_POST["ffiles_upload_submit"])) {
     $target_dir = $_SESSION['usr_dir'];
     $target_file = $target_dir .'/'. basename($_FILES["upload_file_name"]["name"]);
     //echo '<div style="position:fixed;top:5%;left:0%;z-order:1;width:70%;">'.$target_file.'</div>';
