@@ -22,7 +22,8 @@ var files = {
 		           "files_createdir": "ffiles_createdir_submit", 
 		           "files_mail": "ffiles_mail_submit", 
 		           "files_upload": "ffiles_upload_submit", 
-		           "files_uploadchoose": "ffiles_uploadchoose_submit", 
+		           //"files_upload_choose": "ffiles_upload_file", 
+		           "files_upload_choose": "upload_file_name", 
 		           },
 	click_php: function(id) { //alert(id+' '+this.buttons_php[id]); 
 		elem = document.getElementById(this.buttons_php[id]); //alert(elem);
@@ -100,15 +101,18 @@ function files_show_addcontact(){
     common_create_menu('files_addcontact', 0, inner_e);
 }
 function files_show_upload(){
+    var inner_e = "";
+    
     inner_e = '<div hidden id="files_upload"> ';
     inner_e+= '<form action="" method="post" enctype="multipart/form-data">';
     inner_e+= '<input type="file"   id="upload_file_id"   name="upload_file_name" >';
     inner_e+= '<input type="submit" id="upload_submit_id" name="upload_submit_name" value="empty" ></div>';
     
-    //inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files_click(8);"   style="left:20%; top:40%;">choose file</div>';
-    inner_e+= '<div id="files_uploadchoose" class="buttons" onclick=""files.click_php(this.id);""   style="left:20%; top:40%;">choose file</div>';
-    //inner_e+= '<div id="files_upload_submit" class="buttons" onclick="files_click(9);" style="left:70%;top:40%;">upload file</div>';
-    inner_e+= '<div id="files_upload" class="buttons" onclick=""files.click_php(this.id);"" style="left:70%;top:40%;">upload file</div>';
+    inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files_click(8);"   style="left:20%; top:40%;">choose file</div>';
+    inner_e+= '<div id="files_upload_submit" class="buttons" onclick="files_click(9);" style="left:70%;top:40%;">upload file</div>';
+    
+    //inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files.click_php(this.id);"   style="left:20%; top:40%;">choose file</div>';
+    //inner_e+= '<div id="files_upload" class="buttons" onclick="files.click_php(this.id);" style="left:70%;top:40%;">upload file</div>';
     common_create_menu('files_upload', 0, inner_e);
 }
 

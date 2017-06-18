@@ -26,7 +26,7 @@
 
 
 <div hidden id="files_forms"> 
-<form hidden id="ffiles_editenter" action="" method="post">  
+<form action="" method="post">  
 	<input id="ffiles_iter"          type="text"   name="ffiles_iter"          value="empty" >
 	<input id="ffiles_edit_text"     type="text"   name="ffiles_edit_text"     value="empty" >
 	<input id="ffiles_edit_submit"   type="submit" name="ffiles_edit_submit"   value="empty" >
@@ -37,13 +37,17 @@
 	<input id="ffiles_createtxt_submit" type="submit" name="ffiles_createtxt_submit" value="empty" >
 	<input id="ffiles_createdir_submit" type="submit" name="ffiles_createdir_submit" value="empty" >
 	
+	<input id="ffiles_mail_submit"     type="submit" name="ffiles_usermail_submit"     value="empty" >
+</form>
+<form action="" method="post">  
 	<input id="ffiles_username"    type="text" name="ffiles_username"    value="empty" >
 	<input id="ffiles_userpass"    type="text" name="ffiles_userpass"    value="empty" >
 	<input id="ffiles_userlogin_submit"    type="submit" name="ffiles_userlogin_submit"    value="empty" >
 	<input id="ffiles_usermail_submit"     type="submit" name="ffiles_usermail_submit"     value="empty" >
-	
-	<input id="ffiles_upload_submit"     type="submit" name="ffiles_upload_submit"     value="empty" >
-	<input id="ffiles_mail_submit"     type="submit" name="ffiles_usermail_submit"     value="empty" >
+</form>	
+<form action="" method="post" enctype="multipart/form-data">
+	<input id="ffiles_upload_file"     type="file"   name="upload_file_name"     value="empty" >
+	<input id="ffiles_upload_submit"   type="submit" name="ffiles_upload_submit"     value="empty" >
 </form>
 </div>
 
