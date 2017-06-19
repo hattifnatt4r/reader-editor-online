@@ -1,6 +1,10 @@
 
 var common = {
-	cookie_number: 0,
+	langbase: "en",
+	lang: "auto",
+	editor_nlines: 3,
+	
+	cookie_number: 3,
 	cookie_suffix: "_",
 	cookie_save: function(){                                             //alert('save_cookies '+this.cookie_number);
 	    var keys = Object.keys(this);                                    //alert(keys);
@@ -39,7 +43,6 @@ var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var otag = 'span'; var ctag='span';  var tag_p = 'span';
 var div_end = '<br>'; 
 var zoomtype_arr = ['no zoom', 'by word', 'by sentence'];
-var lang_auto = 'en';
 var reader_play_counter=1;
 
 var login_messages_en = ['The name does not exists.', 'Wrong password.', ''];
@@ -106,15 +109,15 @@ function scroll_to(id, id_area, title){
         {elem.scrollIntoView(true);} 
 }
 
-function utter_paragraph(id, id_all, id_all_w, lang, stop, onend){
+function utter_paragraph(id, id_all, id_all_w, stop, onend){
     for (iii=0; iii<id_all.length; iii++){
         id_i = id_all[iii]; stop_s=0; onend_i=0;
         if (iii==0){ stop_s=stop; }
         if (iii==id_all.length-1){onend_i=onend;}
-        utter_sentence(id_i, id_all_w, lang, stop_s, onend_i);
+        utter_sentence(id_i, id_all_w, stop_s, onend_i);
     }    
 }    
-function utter_sentence(id, id_all, lang, stop, onend){
+function utter_sentence(id, id_all, stop, onend){
     txt=document.getElementById(id).innerText;
     //alert(txt);
     /*
@@ -126,22 +129,19 @@ function utter_sentence(id, id_all, lang, stop, onend){
             part_i=txt_i.substring(0,i);
             txt=txt.substring(i);
             if (ii==0){ stop_s=stop; }else{stop_s=0;}
-            utter(part_i, lang, stop_s, 0);
+            utter(part_i, stop_s, 0);
             ii++;
         }else{proceed=false; //alert(txt); 
-            utter(txt, lang, 0, onend); }
+            utter(txt, onend); }
     }*/
-    utter(txt, lang, stop, onend);
-    //alert(id);
+    utter(txt, stop, onend);
 }
-function utter(txt, lang, stop, onend){                                  // 0-auto, 1-ru, 2-en
+function utter(txt, stop, onend){                                  // 0-auto, 1-ru, 2-en
     msg = new SpeechSynthesisUtterance(txt);
     ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
-    if (lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
-    else { msg.lang=lang; }
-    //else { msg.lang=lang_arr[lang]; }
-    //if (!ru && !en){ msg.lang=lang_arr[lang]; }
-    if (!ru && !en && lang=='auto'){ msg.lang=lang_auto; }
+    if (common.lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
+    else { msg.lang=common.lang; }
+    if (!ru && !en && common.lang=='auto'){ msg.lang=common.langbase; }
     msg.rate = 0.9; 
     if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
     window.speechSynthesis.speak(msg);    
@@ -495,26 +495,21 @@ function get_usrname(fname_i){
 
 //-- show functions ------------------------------------------------------------
 //------------------------------------------------------------------------------
-function common_show_lang(lvl, name){                                    //alert('common_show_lang '+name);
+function common_show_lang(lvl, is_base, parent){                         alert('common_show_lang '+parent);
     var inner_e = ''; var lang='';
-    if (name==undefined){ 
-        lang = cookie_get('langbase_');                                  //alert(lang);
-    }else{ 
-        lang = cookie_get('lang_common');                                //alert('name '+name);
-        inner_e+= '<div id="auto"  class="buttons"  onclick="common_set_lang(this.id,'+name+');" '+common_buttonpos_menu(5,0,3,2)+'>auto</div>'; 
+    if (is_base===true){ lang = common.langbase; }
+    else{ 
+		lang = common.lang;                                //alert('name '+name);
+        inner_e+= '<div id="auto"  class="buttons"  onclick="common_set_lang(this.id,'+is_base+');" '+common_buttonpos_menu(5,0,3,2)+'>auto</div>'; 
     }
-    inner_e+=     '<div id="en"    class="buttons"  onclick="common_set_lang(this.id,'+name+');" '+common_buttonpos_menu(3,0,3,2)+'>en</div>';
-    inner_e+=     '<div id="ru"    class="buttons"  onclick="common_set_lang(this.id,'+name+');" '+common_buttonpos_menu(4,0,3,2)+'>ru</div>';
+    inner_e+=     '<div id="en"    class="buttons"  onclick="common_set_lang(this.id,'+is_base+');" '+common_buttonpos_menu(3,0,3,2)+'>en</div>';
+    inner_e+=     '<div id="ru"    class="buttons"  onclick="common_set_lang(this.id,'+is_base+');" '+common_buttonpos_menu(4,0,3,2)+'>ru</div>';
     inner_e+=     '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2,3,2)+'><div id="common_lang_zoom2" class="text_zoom">'+lang+'</div></div>';
-    common_create_menu('common_lang',lvl,inner_e);
+    common_create_menu('common_lang',lvl, inner_e, parent);
 }
-function common_set_lang(lang, name){                                    //alert(lang);
-    if (name==undefined){ //set_cookie("langbase_", lang);                 //alert(name); 
-		files.langbase = lang;
-		}        
-    else{ //set_cookie("lang_common", lang);   
-		files.lang = lang;
-		}           //alert('cookie');
+function common_set_lang(lang, is_base){                                 alert(lang+' '+is_base);
+    if (is_base===true){ common.langbase = lang; }        
+    else{ common.lang = lang; }          
     document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
     document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
 }

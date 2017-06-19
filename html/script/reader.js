@@ -11,13 +11,12 @@ var reader = {
     iter: 0,
     selecttype: 2,
     zoomtype: 0,
-    lang: "auto",                             
     
     text_origin: "",
     editor_text: "",
     editor_iter: 0,
     mailtext: "",
-    cookie_number: 15,
+    cookie_number: 14,
     fname: "",
     cookie_suffix: "_",
     
@@ -35,9 +34,10 @@ var word_id=[], sentence_id=[], paragraph_id=[];
 if (cookie_get('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
 	cookie_set("isset_"+reader.fname, "isset");
 	common.cookie_save.call(reader);
-}else{ common.cookie_load.call(reader); }                                                               
+}else{ common.cookie_load.call(reader); }   
+common.cookie_load();                                                            
 window.onbeforeunload = reader_beforunload;
-function reader_beforunload() {common.cookie_save.call(reader);}
+function reader_beforunload() { common.cookie_save.call(reader); common.cookie_save(); }
 
 
 function reader_clearcookie(){ cookie_delete_all(); }
@@ -197,18 +197,17 @@ function reader_utter(stop_i, onend) {
     id = get_id();
     iter = reader.iter;
     n_select_type = reader.selecttype;
-    lang = reader.lang;
-    if (n_select_type==0 || iter==-1 ){ utter(document.getElementById(id).innerText, lang, stop=stop_i, onend); }
+    if (n_select_type==0 || iter==-1 ){ utter(document.getElementById(id).innerText, stop=stop_i, onend); }
     else {
         if (n_select_type==2){ 
             first_iter = sentence_id.indexOf(id+'s0');                   //alert('first '+first_iter);
             if ( iter==paragraph_id.length-1 ){ last_iter=sentence_id.length; }
             else { last_iter = sentence_id.indexOf(paragraph_id[iter+1]+'s0'); }  //alert('last '+last_iter);
             sentence_id_part = sentence_id.slice(first_iter,last_iter);  //alert(sentence_id_part);
-            utter_paragraph(id, sentence_id_part, word_id, lang, stop_i, onend); 
+            utter_paragraph(id, sentence_id_part, word_id, stop_i, onend); 
              
         }
-        if (n_select_type==1){ utter_sentence(id, word_id, lang, stop_i, onend); }
+        if (n_select_type==1){ utter_sentence(id, word_id, stop_i, onend); }
     }
 }
 
@@ -311,15 +310,13 @@ function reader_show_buttons(){                                          //alert
     //alert(dir);
 }
 function reader_show_menu(){
-    //lang = get_cookie('lang_'+reader.fname);
-    lang = reader.lang;
     n_zoom = reader.zoomtype;
     //inner_e+= '<div id="reader_menu_appearance"        class="buttons disabled" onclick=""   style="left:15%; top:20%;">appearance</div>';
     //inner_e+= '<div id="reader_menu_appearance-common" class="buttons disabled" onclick=""   style="left:35%; top:15%;">appearance-common</div>';
     inner_e = '<div id="reader_menu_clearcookie"  class="buttons"          onclick="reader_clearcookie()"   style="left:15%; top:20%;">clear cookie</div>';
     inner_e+= '<div id="reader_menu_sound"        class="buttons disabled" onclick=""                        style="left:15%;top:60%;">sound</div>';
-    inner_e+= '<div id="common_lang_zoom1"    class="buttons_text"                                       style="left:37%;top:20%;">'+lang+'</div>';
-    inner_e+= '<div id="common_lang"          class="buttons"          onclick="common_show_lang(1,reader.fname)"      style="left:50%;top:20%;">local lang</div>';
+    inner_e+= '<div id="common_lang_zoom1"    class="buttons_text"                                       style="left:37%;top:20%;">'+common.lang+'</div>';
+    inner_e+= '<div id="common_lang"          class="buttons"          onclick="common_show_lang(1, false)"      style="left:50%;top:20%;">local lang</div>';
     inner_e+= '<div id="reader_go"                class="buttons disabled" onclick=""                        style="left:70%;top:20%;">go</div>' ;
     inner_e+= '<div id="reader_menu_go-files"     class="buttons"          onclick="goto_files();"           style="left:70%;top:60%;">go home</div>';
     inner_e+= '<div id="reader_menu_zoomtype_text" class="buttons_text"                                      style="left:37%;top:60%;">'+zoomtype_arr[n_zoom]+'</div>' ;

@@ -7,17 +7,13 @@ var editor = {
 	dict: {},
 	style: {},
 	
-	/*
-	var editor_sound_counter = 1;
-	var editor_fontsize_arr = ['fontsize: 2 lines','fontsize: 3 lines'];
-	var editor_fontsize = 1;
-	var editor_buttonsound_arr = ['',''];
-	var editor_buttonsound = 0;
-	*/
 	parent: "",
 	destination: "",
 	iter: 0,
-	text_raw: ""
+	text_raw: "",
+	
+	sound_navigator: 1,
+	sound_buttons: 0,
 };
 
 editor.dict = {
@@ -43,64 +39,76 @@ editor.dict = {
 		['0','1','2','3','4','5','6','7','8','9','space'],
 		['dot','comma','emark','qmark','newline','quotes','lbr','rbr','dash'],
 		['dot','comma','emark','qmark','newline','quotes','lbr','rbr','dash'] 
-	],	                               
-	symbolset_all: function(){ return [this.symbolset_math, this.symbolset_en, this.symbolset_ru] ; }
+	],	symbolset_files: [ 
+		['e','t','a','o', 'i','n','s','h', 'r','d','l','c','u','m','w', 'f'],
+	    ['g','y','p','b', 'v','k','j','x', 'q','z', '0','1','2','3','4','5','6','7','8','9'],              
+	    ['0','1','2','3','4','5','6','7','8','9']  
+	],                               
+	symbolset_all: function(){ return [this.symbolset_math, this.symbolset_en, this.symbolset_ru, this.symbolset_files] ; }
 };                                                                       //alert(editor.dict.symbolset_all());
 
 editor.style = {
-	b_nset: 5, b_n: 10,
-	b_nx: 5, b_ny: 2, b_xspace: 5, b_yspace: 7, 
+	window_height: window.innerHeight,
+	b_nx: 5, b_ny: 2, 
+	b_height: 15, b_width:12,
+	b_xratio: 0.4, b_yratio: 0.5,
 	b_left: 3, b_right: 97, b_top: 38, b_bottom: 95,
-	b_leftwidth: null, b_rightwidth: null,
+	b_leftwidth: 1, b_rightwidth: 1, b_botheight: 1,
+	font_size : '900%',
 	text_zoom :  '900%',
 	box_class :  'text_zoom',
+	zoomspace : 5,
+	nlines_lvl0: 3,
 	
-	get_button: function (i){                                           //alert('pos: '+i);
-	    ny = (i-i%this.b_nx)/this.b_nx;                                  //alert('pos: '+i+' '+ny);
-	    dx = (this.b_right - this.b_left -(this.b_nx-1)*this.b_xspace)/this.b_nx; 
-	    if (this.b_rightwidth!=null && this.b_rightwidth!=null){ dx = dx/(this.b_nx-2+this.b_leftwidth+this.b_rightwidth)*this.b_nx; }
+	get_button: function (i){                                            //alert('pos: '+this.b_top);
+		var style="";
+	    var ny = (i-i%this.b_nx)/this.b_nx;                              //alert('pos: '+i+' '+ny);
+	    var nx = i % this.b_nx;
+	   
+	    var b_yspace = (this.b_bottom - this.b_top) / ( this.b_ny-1 + (this.b_ny-1+this.b_botheight) / this.b_yratio ); 
+	    var b_xspace = (this.b_right - this.b_left) / ( this.b_nx-1 + (this.b_nx-2+this.b_leftwidth+this.b_rightwidth) / this.b_xratio ); 
+	    var b_height = b_yspace/this.b_yratio;
+	    var b_width  = b_xspace/this.b_xratio;
 	    
-	    if (i<0) { x = this.b_left + (dx+this.b_xspace)*(this.b_nx+i%this.b_nx); } 
-	    else{ x = this.b_left + (dx+this.b_xspace)*(i%this.b_nx); }
-	    if (this.b_leftwidth!=null && this.b_rightwidth!=null && (i%this.b_nx)>0){x=x-dx*(1-this.b_leftwidth); }
+	    var y = this.b_top + (b_height+b_yspace)* ny;
+	    var x = this.b_left + (b_width+b_xspace)* nx;
 	    
-	    dy = (this.b_bottom - this.b_top -(this.b_ny-1)*this.b_yspace )/this.b_ny;                    //alert('dy: '+dy);
-	    if (this.b_botheight!=null){ dy = dy/(this.b_ny-1+this.b_botheight)*this.b_ny;  } 
-	    if (i<0){ y = this.b_top - (dy+this.b_yspace)*(1+(-i+i%this.b_nx)/this.b_nx); }
-	    else{ y = this.b_top + (dy+this.b_yspace)*(i-i%this.b_nx)/this.b_nx; }                   //alert('y: '+y);
-	    style='';
-	    if (this.b_botheight!=null &&   ny==this.b_ny-1        ){dy=dy*this.b_botheight; style='line-height:60%;'; }
-	    if (this.b_botheight!=null && (-i+i%this.b_nx)/this.b_nx==1 ){y=y+dy*(1-this.b_botheight); dy=dy*this.b_botheight; style='line-height:60%;'; }
-	    if (this.b_leftwidth!=null && (i%this.b_nx)==0){dx=dx*this.b_leftwidth;}
-	    if (this.b_rightwidth!=null && (i%this.b_nx)==this.b_nx-1){dx=dx*this.b_rightwidth;}
-	    style+= 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+dx.toString()+'%; height:'+dy.toString()+'%;'  ;  //alert(style);
-	    return([style,x,y,dx,dy]);
+	    if ( nx>0 )   { x -= b_width*(1-this.b_leftwidth); }
+	    if ( nx===0 )           { b_width = b_width*this.b_leftwidth; }
+	    if ( nx===this.b_nx-1 ) { b_width = b_width*this.b_rightwidth; }
+	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight; style+='line-height:60%;'; }
+	    
+	    style+= 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);
+	    return('style="'+style+'"');
 	},
 	
-	set_style: function (stylename){                                         //alert(stylename);
+	set_style: function (stylename){                                     //alert(stylename);
 		if (stylename==='upper_oneline') {                               //alert(stylename);
-		    this.b_nset=5; this.b_n=18; this.b_nx=6; this.b_ny=3; this.b_xspace=5; this.b_yspace=6; 
-		    this.b_left=2; this.b_right=98; this.b_top=42; this.b_bottom=97; this.b_botheight=0.7;
-		    this.b_leftwidth=null; this.b_rightwidth=null;
-		    document.getElementById('editor_text_box').style.height=(this.b_top-8)+'%';
+		    this.b_nx=6; this.b_ny=3; 
+		    this.b_yratio=0.5; this.b_xratio=0.5;
+		    this.b_left=2; this.b_right=98; this.b_top=35; this.b_bottom=97; this.b_botheight=0.7;
+		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 6;
+		    var zoomheight = this.b_top - 2 - this.zoomspace;
+		    document.getElementById('editor_text_box').style.height=zoomheight+'%';
 		    document.getElementById('editor_text_box').className='reader_zoom_box';
 		    document.getElementById('editor_text_area').className='text_zoom';
-		    document.getElementById('editor_text_area').style.fontSize='920%';
+		    document.getElementById('editor_text_area').style.fontSize = this.window_height*zoomheight / 100 * 0.7;
 		     
-		}else if (stylename==='upper_twolines') {                        //alert('twolines');
-		    this.b_nset=5; this.b_n=12; this.b_nx=6; this.b_ny=2; this.b_xspace=5.5; this.b_yspace=6; 
+		}else if (stylename==='upper_twolines') {                        alert('twolines');
+		    this.b_nx=6; this.b_ny=2; 
+		    this.b_yratio=0.5; this.b_xratio=0.55;
 		    this.b_left=2; this.b_right=98; this.b_top=64; this.b_bottom=97; this.b_botheight=0.7;
-		    this.b_leftwidth=null; this.b_rightwidth=null;
-		    document.getElementById('editor_text_box').style.height=(this.b_top-7)+'%';
+		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 5;
+		    var zoomheight = this.b_top - 2 - this.zoomspace;
+		    document.getElementById('editor_text_box').style.height = zoomheight+'%';
 		    document.getElementById('editor_text_box').className='text_scroll_box';
 		    document.getElementById('editor_text_area').className='text_scroll';
-		    if (editor_fontsize==1){fontsize='500%';} else{fontsize='720%';}
-		    document.getElementById('editor_text_area').style.fontSize=fontsize;
 		    document.getElementById('editor_text_box').style.width='96%';
 		    document.getElementById('editor_text_box').style.left='2%';
-		    
+		    editor_set_fontsize(this.nlines_lvl0);                       alert(this.b_top);
+		    		    
 		}else if (stylename==='cut_leftright') {                         //alert(stylename);
-		    this.b_nx=7; this.b_xspace=5; this.b_n = 21;
+		    this.b_nx=7; 
 		    this.b_left=1.5; this.b_right=98.5;
 		    this.b_rightwidth=0.6; this.b_leftwidth=0.6;
 		    document.getElementById('editor_text_box').style.width='97%';
@@ -112,15 +120,11 @@ editor.style = {
 
 //-- run editor -----------------------------------------------------------------
 //-------------------------------------------------------------------------------
-var editor_sound_counter = 1;
-var editor_fontsize_arr = ['fontsize: 2 lines','fontsize: 3 lines'];
-var editor_fontsize = 1;
-var editor_buttonsound_arr = ['',''];
-var editor_buttonsound = 0;
 
 //editor_run();
 
 function editor_run(parent, text_raw, destination, iter){                //alert(destination);
+	editor.style.nlines_lvl0 = common.editor_nlines;
 	if (text_raw==undefined) { text_raw=""; }
 	if (destination==undefined) { destination=""; }
 	if (iter==undefined) { iter=0; }
@@ -147,6 +151,7 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	document.getElementById('editor_text_area').innerHTML=editor.text_raw;   //alert('editor 3');
 	editor_set_cursor();                                                     //alert('editor 4');
 	editor_show_start();                                                     //alert('editor 5');
+	if (parent==='files') { editor_show_symbols(3,0); }
 }
 function editor_exit(){                                                  //alert(editor.destination);
     //var elem = document.getElementById('editor_area').parentNode;    
@@ -174,21 +179,18 @@ function editor_exit(){                                                  //alert
 //-- show buttons functions -----------------------------------------------------
 //-------------------------------------------------------------------------------
 function editor_show_start(){                                            //alert('editor_start');
-    lang = cookie_get('lang_common');                                     
     elem = document.getElementById('editor_buttons_area');
     inner_e0 = "<div id='editor_buttons_area_0'>";
-    inner_e0+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();"      style="'+editor.style.get_button(7)[0]+'">menu</div>';
-    //inner_e0+= '<div id="editor_utter"   class="buttons_editor disabled" onclick="editor_utter_word();"     style="'+button_size_pos(8)[0]+'">utter</div>';
-    //inner_e0+= '<div id="editor_select"  class="buttons_editor disabled" onclick="editor_select_word();"    style="'+button_size_pos(7)[0]+'">by word</div>';
-    inner_e0+= '<div id="editor_numbers"    class="buttons_editor" onclick="editor_show_symbols(0,0);"  style="'+editor.style.get_button(2)[0]+'">123</div>';
-    inner_e0+= '<div id="editor_letters_en" class="buttons_editor" onclick="editor_show_symbols(1,0);"  style="'+editor.style.get_button(3)[0]+'">abc</div>';
-    inner_e0+= '<div id="editor_letters_ru" class="buttons_editor" onclick="editor_show_symbols(2,0);"  style="'+editor.style.get_button(4)[0]+'">абв</div>';
-    inner_e0+= '<div id="editor_go"      class="buttons_editor disabled" onclick="show_menu_go();"          style="'+editor.style.get_button(0)[0]+'">go</div>';
-    inner_e0+= '<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();"           style="'+editor.style.get_button(6)[0]+'"> exit </div>';
-    inner_e0+= '<div id="editor_save"    class="buttons_editor" onclick="editor_save();"           style="'+editor.style.get_button(8)[0]+'"> save </div>';
-    inner_e0+= '<div id="editor_navigate"    class="buttons_editor" onclick="editor_show_navigate();"  style="'+editor.style.get_button(5)[0]+'">'+symbol_navigate+'</div>';
-    inner_e0+= '<div id="common_lang_zoom1"  class="buttons_editor nobkg" style="'+editor.style.get_button(10)[0]+'font-size:500%;line-height:30%;">'+lang+'</div>';
-    inner_e0+= '<div id="common_lang"        class="buttons_editor" onclick="common_show_lang(0,0);"    style="'+editor.style.get_button(11)[0]+'">lang</div>';
+    inner_e0+= '<div id="editor_menu"    class="buttons_editor" onclick="editor_show_menu();" '+editor.style.get_button(7)+'>menu</div>';
+    inner_e0+= '<div id="editor_numbers"    class="buttons_editor" onclick="editor_show_symbols(0,0);" '+editor.style.get_button(2)+'>123</div>';
+    inner_e0+= '<div id="editor_letters_en" class="buttons_editor" onclick="editor_show_symbols(1,0);" '+editor.style.get_button(3)+'>abc</div>';
+    inner_e0+= '<div id="editor_letters_ru" class="buttons_editor" onclick="editor_show_symbols(2,0);" '+editor.style.get_button(4)+'>абв</div>';
+    inner_e0+= '<div id="editor_go"      class="buttons_editor disabled" onclick="show_menu_go();" '+editor.style.get_button(0)+'>go</div>';
+    inner_e0+= '<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();" '+editor.style.get_button(6)+'> exit </div>';
+    inner_e0+= '<div id="editor_save"    class="buttons_editor" onclick="editor_save();" '+editor.style.get_button(8)+'> save </div>';
+    inner_e0+= '<div id="editor_navigate"    class="buttons_editor" onclick="editor_show_navigate(0);" '+editor.style.get_button(5)+'>'+symbol_navigate+'</div>';
+    inner_e0+= '<div id="common_lang_zoom1"  class="buttons_editor nobkg" '+editor.style.get_button(10)+'>'+common.lang+'</div>';
+    inner_e0+= '<div id="common_lang"        class="buttons_editor" onclick="common_show_lang(0,false,this.parentElement.id);" '+editor.style.get_button(11)+'>lang</div>';
     inner_e0+= "</div>"
     inner_e1 = "<div id='editor_buttons_area_1'></div>";
     inner_e2 = "<div id='editor_buttons_area_2'></div>";
@@ -197,57 +199,73 @@ function editor_show_start(){                                            //alert
     elem.innerHTML = inner_e0+inner_e1+inner_e2 + inner_e3 + inner_e4;
     }
 
-var button_delete = ['<div id="editor_delete" class="buttons_editor" onclick="editor_delete();"   style="', '">'+symbol_delete_editor+'</div>'];
-var button_prev = [ '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);"  style="', '">'+symbol_left+'</div>' ];
-var button_next = [ '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);"  style="', '">'+symbol_right+'</div>' ];
-var button_navigate =    [ '<div id="editor_navigate"     class="buttons_editor" onclick="editor_show_navigate();"     style="', '">'+symbol_navigate+'</div>' ];
-var button_navigate_p0 = [ '<div id="editor_navigate_p0"  class="buttons_editor" onclick="editor_show_navigate_p0();"  style="', '">'+symbol_navigate+'</div>' ];
-var button_backto_start   = ['<div id="editor_backto_start"   class="buttons_editor" onclick="editor_backto_start();"    style="', '"> back </div>'];
-var button_backto_letters = ['<div id="editor_backto_letters" class="buttons_editor" onclick="editor_backto_letters(', ');"  style="', '"> back </div>'];
-var button_p1 = ['<div id="editor_letters_p1" class="buttons_editor" onclick="editor_show_symbols(', ');"  style="', '">'+symbol_nextpage+'</div>'];
-var button_p2 = ['<div id="editor_letters_p2" class="buttons_editor" onclick="editor_show_symbols(', ');"  style="', '">'+symbol_nextpage+'</div>'];
-var button_up   = [ '<div id="editor_up"   class="buttons_editor" onclick="editor_scrollvert(0);"  style="', '">'+symbol_up+'</div>' ];
-var button_down = [ '<div id="editor_down" class="buttons_editor" onclick="editor_scrollvert(1);"  style="', '">'+symbol_down+'</div>' ];
-var button_prevword = [ '<div id="editor_prevword"  class="buttons_editor" onclick="editor_scrollword(0);"  style="', '">'+symbol_leftword+'</div>' ];
-var button_nextword = [ '<div id="editor_nextword"  class="buttons_editor" onclick="editor_scrollword(1);"  style="', '">'+symbol_rightword+'</div>' ];
-var button_sound = [ '<div id="editor_sound"   class="buttons_editor" onclick="editor_sound();"  style="', '">'+symbols_sound[editor_sound_counter]+'</div>' ];
-var button_spell = [ '<div id="editor_spell"   class="buttons_editor" onclick="editor_spell();"  style="', '">spell</div>' ];
+var button_exit = ['<div id="editor_exit"    class="buttons_editor" onclick="editor_exit();" ', '> exit </div>']
+var button_delete = ['<div id="editor_delete" class="buttons_editor" onclick="editor_delete();" ', '>'+symbol_delete_editor+'</div>'];
+var button_prev = [ '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);" ', '>'+symbol_left+'</div>' ];
+var button_next = [ '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);" ', '>'+symbol_right+'</div>' ];
+var button_navigate =    [ '<div id="editor_navigate"     class="buttons_editor" onclick="editor_show_navigate(', ');" ', '>'+symbol_navigate+'</div>' ];
+//var button_navigate_p0 = [ '<div id="editor_navigate_p0"  class="buttons_editor" onclick="editor_show_navigate_p0();" ', '>'+symbol_navigate+'</div>' ];
+var button_backto_start   = ['<div id="editor_backto_start"   class="buttons_editor" onclick="editor_backto_start();" ', '> back </div>'];
+var button_backto_letters = ['<div id="editor_backto_letters" class="buttons_editor" onclick="editor_backto_letters(', ');" ', '> back </div>'];
+var button_p1 = ['<div id="editor_letters_p1" class="buttons_editor" onclick="editor_show_symbols(', ');" ', '>'+symbol_nextpage+'</div>'];
+var button_p2 = ['<div id="editor_letters_p2" class="buttons_editor" onclick="editor_show_symbols(', ');" ', '>'+symbol_nextpage+'</div>'];
+var button_up   = [ '<div id="editor_up"   class="buttons_editor" onclick="editor_scrollvert(0);" ', '>'+symbol_up+'</div>' ];
+var button_down = [ '<div id="editor_down" class="buttons_editor" onclick="editor_scrollvert(1);" ', '>'+symbol_down+'</div>' ];
+var button_prevword = [ '<div id="editor_prevword"  class="buttons_editor" onclick="editor_scrollword(0);" ', '>'+symbol_leftword+'</div>' ];
+var button_nextword = [ '<div id="editor_nextword"  class="buttons_editor" onclick="editor_scrollword(1);" ', '>'+symbol_rightword+'</div>' ];
+var button_sound = [ '<div id="editor_sound"   class="buttons_editor" onclick="editor_sound();" ', '>'+symbols_sound[editor.sound_navigator]+'</div>' ];
+var button_spell = [ '<div id="editor_spell"   class="buttons_editor" onclick="editor_spell();" ', '>spell</div>' ];
 function editor_show_menu(){
-    lang = cookie_get('langbase_');
+    var inner_e = "";
     //inner_e+= '<div id="editor_appearance"  class="buttons disabled" onclick=""    style="left:15%; top:15%;"> appearance-common </div>';
-    inner_e = '<div id="editor_fontsize"    class="buttons" onclick="editor_set_fontsize();" style="left:35%; top:15%;">'+editor_fontsize_arr[editor_fontsize]+'</div>';
-    inner_e+= '<div id="editor_sound"       class="buttons disabled" onclick=""    style="left:15%; top:50%;"> sound </div>';
-    inner_e+= '<div id="editor_read"        class="buttons disabled" onclick=""    style="left:60%; top:15%;"> read </div>';
-    inner_e+= '<div id="common_lang_zoom1"  class="buttons_text"                   style="left:57%; top:50%;">'+lang+'</div>';
-    inner_e+= '<div id="common_lang"   class="buttons" onclick="common_show_lang(1);"     style="left:70%; top:50%;">base lang</div>';
-    inner_e+= '<div id="editor_sound_button"   class="buttons" onclick="editor_set_buttonsound();" style="left:35%; top:50%;">'+editor_buttonsound_arr[editor_buttonsound]+'</div>';
+    inner_e+= '<div class="reader_zoom_box" '+common_buttonpos_menu(6,1)+'><div id="common_lang_zoom1" class="text_zoom">'+common.langbase+'</div></div>';
+    //inner_e+= '<div id="common_lang_zoom1"   '+common_buttonpos_menu(6,1)+'>'+lang+'</div>';
+    inner_e+= '<div id="common_lang"         class="buttons"  onclick="common_show_lang(1, true, this.parentElement.id);" '   +common_buttonpos_menu(7,0)+'> base lang </div>';
+    inner_e+= '<div id="editor_fontsize"     class="buttons"  onclick="editor_show_fontsize();" '+common_buttonpos_menu(3,0)+'> font size </div>';
+    inner_e+= '<div id="editor_sound"        class="buttons disabled" onclick="" '+common_buttonpos_menu(0,0)+'> sound </div>';
+    inner_e+= '<div id="editor_read"         class="buttons disabled" onclick="" '+common_buttonpos_menu(4,0)+'> read </div>';
+    inner_e+= '<div id="editor_sound_button" class="buttons disabled" onclick="" '+common_buttonpos_menu(5,0)+'> sound </div>';
     common_create_menu('editor_menu', 0, inner_e, 'editor_buttons_area');
+}
+function editor_show_fontsize(){
+	var inner_e = "";
+    inner_e += '<div id="5"  class="buttons" onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(4,0)+'> 5 lines </div>';
+    inner_e += '<div id="4"  class="buttons" onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(5,0)+'> 4 lines </div>';
+    inner_e += '<div id="3"  class="buttons" onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(6,0)+'> 3 lines </div>';
+    inner_e += '<div id="2"  class="buttons" onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(7,0)+'> 2 lines </div>';
+    common_create_menu('editor_fontsize', 1, inner_e, 'editor_buttons_area');
 }
     
 function editor_show_symbols(lang, lvl){                                 //alert('show_symbols');
     editor.style.set_style('upper_oneline');
-    editor.style.set_style('cut_leftright');
+    //editor.style.set_style('cut_leftright');
+    editor.style.b_nx=7;
     
     key_arr = editor.dict.symbolset_all()[lang][lvl];                    //alert(key_arr);
     inner_e = ''; i=0; 
     if (lvl==0){                                                         //alert('lvl=0');
-        inner_e+= button_backto_start[0]+editor.style.get_button(14)[0]+button_backto_start[1];
-        inner_e+= button_delete[0]+editor.style.get_button(6)[0]+button_delete[1];
-        inner_e+= button_navigate_p0[0]+editor.style.get_button(5)[0]+button_navigate_p0[1];             //alert('1: '+inner_e);
-        inner_e+= button_p1[0]+lang+',1'+button_p1[1]+editor.style.get_button(20)[0]+button_p1[2];
-        inner_e+= button_p2[0]+lang+',2'+button_p2[1]+editor.style.get_button(13)[0]+button_p2[2];
+        inner_e+= button_delete[0]+editor.style.get_button(6)+button_delete[1];
+        inner_e+= button_navigate[0]+'1'+button_navigate[1]+editor.style.get_button(5)+button_navigate[2];             //alert('1: '+inner_e);
+        inner_e+= button_p1[0]+lang+',1'+button_p1[1]+editor.style.get_button(20)+button_p1[2];
+        inner_e+= button_p2[0]+lang+',2'+button_p2[1]+editor.style.get_button(13)+button_p2[2];
+        if (editor.parent==="files"){
+			inner_e+= button_exit[0]+editor.style.get_button(14)+button_exit[1];
+		}else{
+			inner_e+= button_backto_start[0]+editor.style.get_button(14)+button_backto_start[1];
+		}
         reserved=[5,6, 13,14,20];                                        //alert('2: '+inner_e);
     }else {
-        inner_e+= button_backto_letters[0]+'1'+button_backto_letters[1]+editor.style.get_button(20)[0]+button_backto_letters[2];
+        inner_e+= button_backto_letters[0]+'1'+button_backto_letters[1]+editor.style.get_button(20)+button_backto_letters[2];
         reserved=[13,20];
+        if (editor.parent==="files"){reserved=[20];}
     }                                                                    //alert('3: '+inner_e);
-    for (ii=0; ii<editor.style.b_n; ii++){
+    for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){
         if (reserved.indexOf(ii)==-1 && i<key_arr.length){
             i_name = key_arr[i];
             i_name_button = editor.dict.allchar_buttons()[key_arr[i]];   //alert(i+' '+i_name+' '+i_name_button);
-            style = editor.style.get_button(ii)[0];                      //alert(ii, style);
+            style = editor.style.get_button(ii);                      //alert(ii, style);
             keys = Object.keys(editor.dict.allchar() ); nn=keys.indexOf(i_name).toString();
-            inner_e += '<div id="editor_letter_'+i_name+'" class="buttons_editor symbol" onclick="editor_set_letter('+nn+', 1);"  style="'+style+'">'+i_name_button+'</div>';
+            inner_e += '<div id="editor_letter_'+i_name+'" class="buttons_editor symbol" onclick="editor_set_letter('+nn+', 1);"  '+style+'>'+i_name_button+'</div>';
             i+=1;
         } 
     }
@@ -261,40 +279,51 @@ function editor_show_symbols(lang, lvl){                                 //alert
     elem.innerHTML = inner_e;
 }
 
-function editor_show_navigate(){
-    inner_e = button_backto_start[0]+editor.style.get_button(6)[0]+button_backto_start[1];
-    inner_e+= button_up[0]+editor.style.get_button(3)[0]+button_up[1];
-    inner_e+= button_down[0]+editor.style.get_button(9)[0]+button_down[1];
-    inner_e+= button_prev[0]+editor.style.get_button(8)[0]+button_prev[1];
-    inner_e+= button_next[0]+editor.style.get_button(10)[0]+button_next[1];
-    inner_e+= button_prevword[0]+editor.style.get_button(7)[0]+button_prevword[1];
-    inner_e+= button_nextword[0]+editor.style.get_button(11)[0]+button_nextword[1];
-    inner_e+= button_delete[0]+editor.style.get_button(5)[0]+button_delete[1];
-    inner_e+= button_sound[0]+editor.style.get_button(0)[0]+button_sound[1];
-    inner_e+= button_spell[0]+editor.style.get_button(1)[0]+button_spell[1];
-    inner_e+='<div id="editor_show_letter"   class="buttons_editor nobkg" style="'+editor.style.get_button(4)[0]+'">_</div>';
-    document.getElementById('editor_buttons_area_0').style.visibility='hidden';
-    elem = document.getElementById('editor_buttons_area_1');
+function editor_show_navigate(lvl){
+	var inner_e = ""; var elem;
+    inner_e+= button_up[0]+editor.style.get_button(3)+button_up[1];
+    inner_e+= button_down[0]+editor.style.get_button(9)+button_down[1];
+    inner_e+= button_prev[0]+editor.style.get_button(8)+button_prev[1];
+    inner_e+= button_next[0]+editor.style.get_button(10)+button_next[1];
+    inner_e+= button_prevword[0]+editor.style.get_button(7)+button_prevword[1];
+    inner_e+= button_nextword[0]+editor.style.get_button(11)+button_nextword[1];
+    inner_e+= button_delete[0]+editor.style.get_button(5)+button_delete[1];
+    inner_e+= button_sound[0]+editor.style.get_button(0)+button_sound[1];
+    inner_e+= button_spell[0]+editor.style.get_button(1)+button_spell[1];
+    inner_e+='<div id="editor_show_letter"   class="buttons_editor nobkg" '+editor.style.get_button(4)+'>_</div>';
+    if (lvl===0){ 
+		inner_e+= button_backto_start[0]+editor.style.get_button(6)+button_backto_start[1]; 
+		document.getElementById('editor_buttons_area_0').style.visibility='hidden';
+		elem = document.getElementById('editor_buttons_area_1');
+	}else{ 
+		inner_e+= button_backto_letters[0]+'1'+button_backto_letters[1]+editor.style.get_button(6)+button_backto_letters[2]; 
+		editor.style.set_style('upper_twolines');
+		document.getElementById('editor_buttons_area_1').style.visibility='hidden';
+		elem = document.getElementById('editor_buttons_area_2');
+	}
     elem.style.visibility='visible';
     elem.innerHTML = inner_e;
-}function editor_show_navigate_p0(){
+}
+/*
+function editor_show_navigate_p0(){
     editor.style.set_style('upper_twolines');
-    inner_e = button_backto_letters[0]+'1'+button_backto_letters[1]+editor.style.get_button(6)[0]+button_backto_letters[2];
-    inner_e+= button_up[0]+editor.style.get_button(3)[0]+button_up[1];
-    inner_e+= button_down[0]+editor.style.get_button(9)[0]+button_down[1];
-    inner_e+= button_prev[0]+editor.style.get_button(8)[0]+button_prev[1];
-    inner_e+= button_next[0]+editor.style.get_button(10)[0]+button_next[1];
-    inner_e+= button_prevword[0]+editor.style.get_button(7)[0]+button_prevword[1];
-    inner_e+= button_nextword[0]+editor.style.get_button(11)[0]+button_nextword[1];
-    inner_e+= button_delete[0]+editor.style.get_button(5)[0]+button_delete[1];
-    inner_e+= button_sound[0]+editor.style.get_button(0)[0]+button_sound[1];
-    inner_e+= button_spell[0]+editor.style.get_button(1)[0]+button_spell[1];
-    inner_e+='<div id="editor_show_letter"   class="buttons_editor nobkg"  style="'+editor.style.get_button(4)[0]+'">_</div>';
+    inner_e = button_backto_letters[0]+'1'+button_backto_letters[1]+editor.style.get_button(6)+button_backto_letters[2];
+    inner_e+= button_up[0]+editor.style.get_button(3)+button_up[1];
+    inner_e+= button_down[0]+editor.style.get_button(9)+button_down[1];
+    inner_e+= button_prev[0]+editor.style.get_button(8)+button_prev[1];
+    inner_e+= button_next[0]+editor.style.get_button(10)+button_next[1];
+    inner_e+= button_prevword[0]+editor.style.get_button(7)+button_prevword[1];
+    inner_e+= button_nextword[0]+editor.style.get_button(11)+button_nextword[1];
+    inner_e+= button_delete[0]+editor.style.get_button(5)+button_delete[1];
+    inner_e+= button_sound[0]+editor.style.get_button(0)+button_sound[1];
+    inner_e+= button_spell[0]+editor.style.get_button(1)+button_spell[1];
+    inner_e+='<div id="editor_show_letter"   class="buttons_editor nobkg"  style="'+editor.style.get_button(4)+'">_</div>';
+    
     document.getElementById('editor_buttons_area_1').style.visibility='hidden';
     elem = document.getElementById('editor_buttons_area_2');
     elem.style.visibility='visible';
     elem.innerHTML = inner_e;
-}
+}*/
 
 //-- cursor functions -------------------------------------------------------
 function editor_scrollvert(order){                                       //alert('scrollvert');
@@ -354,8 +383,7 @@ function editor_scrollword(order){                                       //alert
     editor.iter = iter;
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
-    lang = cookie_get('lang_common');
-    if (editor_sound_counter==1) { utter(text.substr(i1, i2-i1), lang, 1, 0); }
+    if (editor.sound_navigator==1) { utter(text.substr(i1, i2-i1), 1, 0); }
 }
 function editor_scroll(order){
     ltag = '<abbr>'; rtag = '</abbr>';
@@ -386,8 +414,7 @@ function editor_scroll(order){
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
     letter = text.substr(i1, i2-i1);
-    lang = cookie_get('lang_common');
-    if (editor_sound_counter==1) { utter(letter, lang, 1, 0); }
+    if (editor.sound_navigator==1) { utter(letter, 1, 0); }
     if (letter==' '){letter='_';}
     document.getElementById('editor_show_letter').innerHTML = letter;
 }
@@ -445,14 +472,16 @@ function editor_delete(){
 //-- menu functions ------------------------------------------------------------
 //------------------------------------------------------------------------------
 function editor_sound(){
-    editor_sound_counter = (editor_sound_counter+1)%2;                   //alert(editor_sound_counter);
-    document.getElementById('editor_sound').innerHTML = symbols_sound[editor_sound_counter];
+    editor.sound_navigator = (editor.sound_navigator+1)%2;                   //alert(editor_sound_counter);
+    document.getElementById('editor_sound').innerHTML = symbols_sound[editor.sound_navigator];
 }
-function editor_set_fontsize(){
-    editor_fontsize= (editor_fontsize+1)%2;                   //alert(editor_sound_counter);
-    document.getElementById('editor_fontsize').innerHTML = editor_fontsize_arr[editor_fontsize];
-    if (editor_fontsize==1){fontsize='500%';} else{fontsize='720%';}
-    document.getElementById('editor_text_area').style.fontSize=fontsize;
+function editor_set_fontsize(id){
+    var zoomheight = editor.style.b_top - 2 - editor.style.zoomspace;    //alert(zoomheight+' '+id); 
+    editor.style.nlines_lvl0 = parseInt(id);                                   //alert(editor.nlines_lvl0);             
+    common.editor_nlines = parseInt(id);                                   //alert(editor.nlines_lvl0);             
+    var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / editor.style.nlines_lvl0;  //alert(fontsize);
+	document.getElementById('editor_text_area').style.fontSize = fontsize.toString()+'px';
+    
 }
 function editor_spell(){
     var iter = editor.iter;
@@ -462,8 +491,7 @@ function editor_spell(){
         i2 = text.indexOf(' ',iter);
         if (i1==-1){i1=0;}
         if (i2==-1){i2=text.length;}
-        lang = cookie_get('lang_common');
-        utter(text.substr(i1, i2-i1), lang, 1, 0);
+        utter(text.substr(i1, i2-i1), 1, 0);
     }
 }
 

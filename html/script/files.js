@@ -3,12 +3,10 @@ var files = {
 	iter: 0,
 	iter_prev: 0,
 	dir: "",
-	lang: "auto",
-	langbase: "en",
 	
-	editor_text: "",
-	cookie_number: 5,
+	cookie_number: 3,
 	cookie_suffix: "_",
+	editor_text: "",
 	
 	nentry: document.getElementById('hidden_files_nentry').innerHTML,
 	username: "",
@@ -23,13 +21,8 @@ var files = {
 		           "files_mail": "ffiles_mail_submit", 
 		           "files_upload": "ffiles_upload_submit", 
 		           "files_upload_choose": "ffiles_upload_choose", 
-		           //"files_upload_choose": "upload_file_name", 
 		           },
-	click_php: function(id) { //alert(id+' '+this.buttons_php[id]); 
-		elem = document.getElementById(this.buttons_php[id]); //alert(elem);
-		document.getElementById(this.buttons_php[id]).click(); 
-		//alert(id+' '+this.buttons_php[id]); 
-	},
+	click_php: function(id) { document.getElementById(this.buttons_php[id]).click(); },
 	get_fname: function(){ return document.getElementById('fileid_'+this.iter.toString()).innerHTML; },
 	get_dir: function() { a=0; },
 }
@@ -38,12 +31,16 @@ var files = {
 //-- run file manager -----------------------------------------------------------------
 //-------------------------------------------------------------------------------------
                                                                          //alert( document.cookie );
-if (cookie_get('isset_')!='isset'){                                      //alert('set_cookie');
-	cookie_set("isset_", "isset");
+if (cookie_get('isset_files_')!='isset'){                                      //alert('set_cookie');
+	cookie_set("isset_files_", "isset");
 	common.cookie_save.call(files);
 }else { common.cookie_load.call(files); }
+if (cookie_get('isset_common_')!='isset'){                                      //alert('set_cookie');
+	cookie_set("isset_common_", "isset");
+	common.cookie_save();
+}else { common.cookie_load(); }
 window.onbeforeunload = files_beforunload;
-function files_beforunload() {common.cookie_save.call(files);}
+function files_beforunload() {common.cookie_save.call(files); common.cookie_save(); }
 //cookie_delete_all();
                                                                          //alert( document.cookie );
                                                                          //alert(get_cookie('PHPSESSID'));    
@@ -121,8 +118,8 @@ function files_click(n){
 
 function files_show_menu(){  
 	var inner_e = "";  
-    inner_e += '<div class="reader_zoom_box" '+common_buttonpos_menu(1,1)+'><div id="common_lang_zoom1" class="text_zoom">'+files.langbase+'</div></div>';
-    inner_e += '<div id="common_lang"    class="buttons"  onclick="common_show_lang(1)" '+     common_buttonpos_menu(2,0)+'>base lang</div>';
+    inner_e += '<div class="reader_zoom_box" '+common_buttonpos_menu(1,1)+'><div id="common_lang_zoom1" class="text_zoom">'+common.langbase+'</div></div>';
+    inner_e += '<div id="common_lang"    class="buttons"  onclick="common_show_lang(1,true)" '+     common_buttonpos_menu(2,0)+'>base lang</div>';
     inner_e += '<div id="files_mail"     class="buttons"  onclick="files.click_php(this.id)" '+common_buttonpos_menu(4,0)+'>email</div>';
     inner_e += '<div id="files_create"   class="buttons"  onclick="files_show_create();" '+    common_buttonpos_menu(6,0)+'>new file</div>';
     inner_e += '<div id="files_past"     class="buttons disabled" onclick="" '+common_buttonpos_menu(5,0)+'>past</div>';
@@ -197,8 +194,7 @@ function files_scroll(order, i_utter){                                   //alert
     if (iter==0){fname_ii='..';}
     else{fname_ii = document.getElementById('fileid_'+iter.toString()).innerText; }
     fname_ii = replace_all(fname_ii,'_',' ')
-    lang = files.langbase;
-    if (i_utter===undefined){ utter(fname_ii,lang,1, onend=0); }
+    if (i_utter===undefined){ utter(fname_ii, 1, onend=0); }
 }
 
 //-- account functions ------------------------------------------------------------------
