@@ -215,14 +215,11 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
  left:12%;top:12.3%; position:fixed; 
  width:80%;height:80%; 
  background-color:rgba(255,255,255,0.95);
- /*border: dashed 2px #8a8a5c;  box-sizing:border-box; */
 }
 /*-- caret ---------------------------------------------------------------*/ 
 .blinking-cursor {
-  left: -50px;
-  /*---------------------*/
   font-size:104%;  opacity:0.5; 
-  position:absolute; left: calc(-0.021*var(--screen-width)); 
+  position:absolute; 
   -webkit-animation: 1.3s blink step-end infinite;
   -moz-animation: 1.3s blink step-end infinite;
   -ms-animation: 1.3s blink step-end infinite;
@@ -252,50 +249,3 @@ border: solid  calc(var(--editor-borderwidth-pc)*var(--screen-height)/100 ) #a6c
 .mail_in{
   left:26.5%; text-align:right; background-color:#e6eedd;}
 .mail_temp{ background-color:#ffe6cc; background-color:#f7f7d4; background-color:#ddeaee; /*background-color:#bbd5dd;*/ }
-
-
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 10%;
-    top: 30%;
-    width: 80%; 
-    height: 40%; 
-    background-color: #fefefe;
-}
-/* Modal Content/Box */
-.modal-content {
-	position:fixed;
-    top:35%; left:15%;
-    width:70%; height:30%;
-}
-/* The Close Button */
-.close {
-    /* Position it in the top right corner outside of the modal */
-    position: absolute;
-    right: 25px;
-    top: 0; 
-    color: #000;
-    font-size: 35px;
-    font-weight: bold;
-}
-/* Close button on hover */
-.close:hover,
-.close:focus {
-    color: red;
-    cursor: pointer;
-}
-/* Add Zoom Animation */
-.animate {
-    -webkit-animation: animatezoom 0.6s;
-    animation: animatezoom 0.6s
-}
-@-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0)} 
-    to {-webkit-transform: scale(1)}
-}
-@keyframes animatezoom {
-    from {transform: scale(0)} 
-    to {transform: scale(1)}
-}

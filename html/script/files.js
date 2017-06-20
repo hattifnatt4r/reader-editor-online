@@ -136,7 +136,7 @@ function files_show_create(){
 function files_show_options(){                                           //alert('show_options');
     var fname = files.get_fname();
     var text = fname;
-    if (fname.indexOf('.')!=-1) { text = fname.substring(0, fname.indexOf('.')); }
+    if (fname.lastIndexOf('.')!=-1) { text = fname.substring(0, fname.indexOf('.')); }
     files.editor_text = text;
     var inner_e = ""; 
     inner_e += '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="files_options_edit" onclick="files_edittext(this.id);" class="text_zoom">'+text+'</div></div>';

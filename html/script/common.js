@@ -68,6 +68,7 @@ var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#99
 var symbol_mail =         '<strong style="font-size:90%;line-height:150%;">&#128386;</strong>';
 var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
 var symbol_nextpage =   '<strong style="font-size:150%;opacity:0.8;line-height:70%">&#10150;</strong>';
+//var symbol_nextpage =   '<strong style="font-size:150%;opacity:0.8;line-height:70%">+</strong>';
 var symbol_navigate =   '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';
 var symbol_left  =      '<strong style="font-size:150%;line-height:50%;">&#9668;</strong>';
 var symbol_right =      '<strong style="font-size:150%;line-height:50%;">&#9658;</strong>';

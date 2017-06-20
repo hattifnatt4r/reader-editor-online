@@ -28,20 +28,20 @@ editor.dict = {
 		return( Object.assign({}, this.letters_en, this.letters_ru, this.symbols1, this.symbols2_b )); },
 	
 	symbolset7_en: [ 
-		['w','m','u','l','d',  'c','r','h','s','n','i',  'o','a','t','e','space'],
-	    ['lbr','rbr','z','q','x','j',  'k','v','b','p','y','g',  'f','dash','emark','qmark','dot','comma'],             
-	    ['space','star','quotes','colon','semicolon','space',  '1','2','3','4','5','newline',  '6','7','8','9','0','space']
+		['m','u','l','d',  'c','r','h','s','n','i',  'o','a','t','e','space'],
+	    ['z','q','x','j','k','v',  'b','p','y','g','f','w',  'newline','dash','emark','qmark','dot','comma'],             
+	    ['lbr','rbr','star','quotes','colon','semicolon',  '1','2','3','4','5','space',  '6','7','8','9','0','space']
 	], symbolset7_ru: [ 
-		['r21','r17','r5','r14','r12',  'r13','r3','r18','r19','r20','r15',  'r10','r1','r6','r16','space'],    
-        ['r22','r31','r27','r24','r32','r26',  'r8','r23','r11','r25','r2','r9',  'r4','r30','r29','r33','dot','comma'],    
+		['r17','r5','r14','r12',  'r13','r3','r18','r19','r20','r15',  'r10','r1','r6','r16','space'],    
+        ['r22','r31','r27','r24','r32','r26',  'r8','r23','r11','r25','r2','r9',  'r4','r30','r29','r33','r21','dot','comma'],    
 		['r28','colon','semicolon','emark','qmark','space',  '1','2','3','4','5','dash',  '6','7','8','9','0','space']
 	], symbolset7_math: [
-		['minus','plus','comma','dot','space',  'eq','1','2','3','4','5',  '6','7','8','9','0'],    
-		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'emark','qmark','star','power','less','more',  'sqrt','newline','slash','cdot','lbr','rbr'],    
+		['minus','plus','comma','dot','space',  '1','2','3','4','5',  '6','7','8','9','0'],    
+		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'emark','qmark','sqrt','power','less','more',  'newline','eq','slash','cdot','lbr','rbr'],    
 		['i','j','k','l','underscore','space',  'd','e','f','g','h','space',  'a','b','c','x','y','z']  
 	],	symbolset7_files: [ 
-		['w','m','u','l','d',  'c','r','h','s','n','i',  'space','o','a','t','e'],
-	    ['space','space','space','z','space','space',  'q','x','j','k','v','dash',  'b','p','y','g','f','underscore'],             
+		['m','u','l','d',  'c','r','h','s','n','i',  'space','o','a','t','e'],
+	    ['space','space','space','space','z',  'q','x','j','k','v','b',  'dash','p','y','g','f','w','underscore'],             
 	    ['space','space','space','space','space','space',  'space','1','2','3','4','5', 'space','6','7','8','9','0']
 	],                               
 	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_en, this.symbolset7_ru, this.symbolset7_files] ; },
@@ -93,6 +93,8 @@ editor.style = {
 	box_class :  'text_zoom',
 	zoomspace : 5,
 	nlines_lvl0: 3,
+	fontsize: 0,
+	cursorshift: 0,
 	
 	get_button: function (i){                                            //alert('pos: '+this.b_top);
 		var style="";
@@ -123,10 +125,11 @@ editor.style = {
 		    this.b_left=2; this.b_right=98; this.b_top=35; this.b_bottom=97; this.b_botheight=0.7;
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 6;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
+		    this.fontsize = this.window_height*zoomheight / 100 * 0.7;
 		    document.getElementById('editor_text_box').style.height=zoomheight+'%';
 		    document.getElementById('editor_text_box').className='reader_zoom_box';
 		    document.getElementById('editor_text_area').className='text_zoom';
-		    document.getElementById('editor_text_area').style.fontSize = this.window_height*zoomheight / 100 * 0.7;
+		    document.getElementById('editor_text_area').style.fontSize = this.fontsize;
 		     
 		}else if (stylename==='upper_twolines') {                        //alert('twolines');
 		    this.b_nx=6; this.b_ny=2; 
@@ -285,18 +288,22 @@ function editor_show_symbols(lang, lvl){                                 //alert
     inner_e = ''; i=0; 
     if (lvl==0){                                                         //alert('lvl=0');
         inner_e+= button_delete[0]+editor.style.get_button(6)+button_delete[1];
-        inner_e+= button_navigate[0]+'1'+button_navigate[1]+editor.style.get_button(5)+button_navigate[2];             //alert('1: '+inner_e);
-        inner_e+= button_p1[0]+lang+',1'+button_p1[1]+editor.style.get_button(20)+button_p1[2];
-        inner_e+= button_p2[0]+lang+',2'+button_p2[1]+editor.style.get_button(13)+button_p2[2];
+        inner_e+= button_prev[0]+editor.style.get_button(19)+button_prev[1];
+        inner_e+= button_next[0]+editor.style.get_button(20)+button_next[1];
+        //inner_e+= button_navigate[0]+'1'+button_navigate[1]+editor.style.get_button(5)+button_navigate[2];             //alert('1: '+inner_e);
+        inner_e+= button_p1[0]+lang+',1'+button_p1[1]+editor.style.get_button(13)+button_p1[2];
+        inner_e+= button_p2[0]+lang+',2'+button_p2[1]+editor.style.get_button(7)+button_p2[2];
         if (editor.parent==="files"){
-			inner_e+= button_exit[0]+editor.style.get_button(14)+button_exit[1];
+			inner_e+= button_exit[0]+editor.style.get_button(0)+button_exit[1];
 		}else{
-			inner_e+= button_backto_start[0]+editor.style.get_button(14)+button_backto_start[1];
+			inner_e+= button_backto_start[0]+editor.style.get_button(0)+button_backto_start[1];
 		}
         reserved=[5,6, 13,14,20];                                        //alert('2: '+inner_e);
+        reserved=[6,7, 13,0,20,19];                                        //alert('2: '+inner_e);
     }else {
         inner_e+= button_backto_letters[0]+'1'+button_backto_letters[1]+editor.style.get_button(20)+button_backto_letters[2];
         reserved=[6,13,20];
+        if (lang===2 && lvl===1) { reserved=[13,20]; }
         //if (editor.parent==="files"){reserved=[20];}
     }                                                                    //alert('3: '+inner_e);
     for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){
@@ -440,7 +447,8 @@ function editor_scroll(order){
 }
 
 function editor_set_cursor(){                                            //alert('set_cursor');
-    cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" >|</em></em>';   
+	var cursorshift = editor.style.fontsize*0.15;                        //alert(cursorshift);
+    var cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" style="left:-'+cursorshift.toString()+'px" >|</em></em>'; 
     var iter = editor.iter;                                              //alert('iter: '+iter);
     var text = editor.text_raw;                                          //alert('text: '+text);
     rspace = text.indexOf(' ',iter);                                     //alert('rspace: '+rspace);
@@ -456,12 +464,13 @@ function editor_set_cursor(){                                            //alert
 
 //-- delete / add functions ------------------------------------------------------
 //--------------------------------------------------------------------------------
-function editor_delete(){
-    if (iter>0) { 
+function editor_delete(){                                                //alert(editor.iter);
+    if (editor.iter>0) { 
+		var rtag = "</abbr>"; var ltag = "<abbr>";                  
         var iter = editor.iter;
-		var text = editor.text_raw;
+		var text = editor.text_raw;                                      //alert(iter+'  '+text);
 		
-        i = text.substr(0,iter).lastIndexOf(rtag);
+        var i = text.substr(0,iter).lastIndexOf(rtag);                       //alert(iter+' '+i);
         if (iter==i+rtag.length && i!=-1){
             iter_l = text.substr(0,iter).lastIndexOf(ltag);
         }else{
@@ -501,6 +510,8 @@ function editor_set_fontsize(id){
     common.editor_nlines = parseInt(id);                                   //alert(editor.nlines_lvl0);             
     var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / editor.style.nlines_lvl0;  //alert(fontsize);
 	document.getElementById('editor_text_area').style.fontSize = fontsize.toString()+'px';
+	editor.style.fontsize = fontsize;
+	//editor.style.cursorshift = fontsize*0.15;  alert(editor.style.cursorshift);
     
 }
 function editor_spell(){
