@@ -6,6 +6,10 @@ var common = {
 	
 	cookie_number: 3,
 	cookie_suffix: "_",
+	
+	symbol_ltag: '<abbr>',
+	symbol_rtag: '</abbr>',
+	
 	cookie_save: function(){                                             //alert('save_cookies '+this.cookie_number);
 	    var keys = Object.keys(this);                                    //alert(keys);
 	    var i;
@@ -293,6 +297,18 @@ function find_spaceend(txt, i_start){                                    //alert
 	}                                                                    //alert('spaceend i '+i);
 	return (i); 
 }
+function find_spacestart(txt, i_start){                                  //alert('spaceend: '+txt+', '+i_start+', '+txt[i_start]);
+	//if ( (txt[i_start]!=' ') || i_start===0 ) { alert('return'); return(i_start); }
+	
+	if ( i_start === undefined ) { i_start = txt.length-1; }
+	var proceed = 1; var i=i_start;
+	while (proceed==1){
+		if ( i<=0 ) { proceed=0; }
+		else if ( txt[i-1]!=' ' ) { proceed=0; }
+		else { i-=1; } 
+	}                                                                    //alert('spaceend i '+i);
+	return (i); 
+}
 
 function find_indexof(text_origin, arr, i_start, i_end){                 //alert(arr);
 	if ( i_start === undefined ) { i_start = 0; }                        //alert(i_start);
@@ -308,6 +324,13 @@ function find_indexof(text_origin, arr, i_start, i_end){                 //alert
 	else {res = res+i_start; }
 	return([res, symb]);
 }
+function common_textto_read(text){
+	text = text.replace('<br>', ' new line ');
+	text = text.replace('<abbr>', '');
+	text = text.replace('</abbr>', '');
+	return(text);
+}
+
 function text_clean(text_origin){                                        // only void tags allowed!  
 	var txt = text_origin.replace('\n','<br>');                          //alert('txt1: '+txt);
 	var proceed = 1, i = 0, j1=0, j2=0; 

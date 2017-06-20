@@ -39,12 +39,16 @@ editor.dict = {
 		['minus','plus','comma','dot','space',  '1','2','3','4','5',  '6','7','8','9','0'],    
 		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'emark','qmark','sqrt','power','less','more',  'newline','eq','slash','cdot','lbr','rbr'],    
 		['i','j','k','l','underscore','space',  'd','e','f','g','h','space',  'a','b','c','x','y','z']  
+	], symbolset7_math2: [
+		['a','b','slash','comma','dot',  '2','3','minus','plus','space',  'lbr','rbr','x','y','z'],    
+		['less','more','sqrt','power','cdot','eq',  '1','2','3','4','5','newline',  '6','7','8','9','0','space'],    
+		['space','space','space','space','space','space',  'lbrf','rbrf','lbrsq','rbrsq','less','pc', 'underscore','c','d','e','f','g','h']  
 	],	symbolset7_files: [ 
 		['m','u','l','d',  'c','r','h','s','n','i',  'space','o','a','t','e'],
 	    ['space','space','space','space','z',  'q','x','j','k','v','b',  'dash','p','y','g','f','w','underscore'],             
 	    ['space','space','space','space','space','space',  'space','1','2','3','4','5', 'space','6','7','8','9','0']
 	],                               
-	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_en, this.symbolset7_ru, this.symbolset7_files] ; },
+	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_en, this.symbolset7_ru, this.symbolset7_files, this.symbolset7_math2] ; },
 	
 	/*
 	symbolset6_en: [ 
@@ -122,7 +126,7 @@ editor.style = {
 		if (stylename==='upper_oneline') {                               //alert(stylename);
 		    this.b_nx=6; this.b_ny=3; 
 		    this.b_yratio=0.5; this.b_xratio=0.5;
-		    this.b_left=2; this.b_right=98; this.b_top=35; this.b_bottom=97; this.b_botheight=0.7;
+		    this.b_left=2; this.b_right=98; this.b_top=35; this.b_bottom=97; this.b_botheight=0.8;
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 6;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
 		    this.fontsize = this.window_height*zoomheight / 100 * 0.7;
@@ -221,7 +225,7 @@ function editor_exit(){                                                  //alert
 function editor_show_start(){                                            //alert('editor_start');
     elem = document.getElementById('editor_buttons_area');
     inner_e0 = "<div id='editor_buttons_area_0'>";
-    inner_e0+= '<div id="editor_numbers"    class="buttons_editor symbol0" onclick="editor_show_symbols(0,0);" '+editor.style.get_button(3)+'>xyz</div>';
+    inner_e0+= '<div id="editor_numbers"    class="buttons_editor symbol0" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(3)+'>xyz</div>';
     inner_e0+= '<div id="editor_numbers"    class="buttons_editor symbol0" onclick="editor_show_symbols(0,0);" '+editor.style.get_button(9)+'>123</div>';
     inner_e0+= '<div id="editor_letters_en" class="buttons_editor symbol0" onclick="editor_show_symbols(1,0);" '+editor.style.get_button(4)+'>abc</div>';
     inner_e0+= '<div id="editor_letters_ru" class="buttons_editor symbol0" onclick="editor_show_symbols(2,0);" '+editor.style.get_button(10)+'>абв</div>';
@@ -247,8 +251,8 @@ var button_delete = ['<div id="editor_delete" class="buttons_editor" onclick="ed
 var button_prev = [ '<div id="editor_prev"   class="buttons_editor" onclick="editor_scroll(0);" ', '>'+symbol_left+'</div>' ];
 var button_next = [ '<div id="editor_next"   class="buttons_editor" onclick="editor_scroll(1);" ', '>'+symbol_right+'</div>' ];
 var button_navigate =    [ '<div id="editor_navigate"     class="buttons_editor" onclick="editor_show_navigate(', ');" ', '>'+symbol_navigate+'</div>' ];
-var button_backto_start   = ['<div id="editor_backto_start"   class="buttons_editor" onclick="editor_backto_start();" ', '> back </div>'];
-var button_backto_letters = ['<div id="editor_backto_letters" class="buttons_editor" onclick="editor_backto_letters(', ');" ', '> back </div>'];
+var button_backto_start   = ['<div id="editor_backto_start"   class="buttons_editor" onclick="editor_backto_start();" ', '> bck </div>'];
+var button_backto_letters = ['<div id="editor_backto_letters" class="buttons_editor" onclick="editor_backto_letters(', ');" ', '> bck </div>'];
 var button_p1 = ['<div id="editor_letters_p1" class="buttons_editor" onclick="editor_show_symbols(', ');" ', '>'+symbol_nextpage+'</div>'];
 var button_p2 = ['<div id="editor_letters_p2" class="buttons_editor" onclick="editor_show_symbols(', ');" ', '>'+symbol_nextpage+'</div>'];
 var button_up   = [ '<div id="editor_up"   class="buttons_editor" onclick="editor_scrollvert(0);" ', '>'+symbol_up+'</div>' ];
@@ -356,14 +360,14 @@ function editor_show_navigate(lvl){
 function editor_scrollvert(order){                                       //alert('scrollvert');
     order = parseInt(order);
     var iter_prev = editor.iter;
-    iter_save = iter_prev; 
-    pos0 = parseInt(document.getElementById('cursor').offsetTop);        //alert(pos0);
-    proceed2 = 1;
-    while(proceed2==1){
+    var iter_save = iter_prev; 
+    var pos0 = parseInt(document.getElementById('cursor').offsetTop);        //alert(pos0);
+    var proceed = 1;
+    while(proceed==1){
         editor_scrollword(order);
         pos = parseInt(document.getElementById('cursor').offsetTop);     //alert('|'+pos0+'|'+pos+'|');
         iter = editor.iter;
-        if (pos!=pos0 || iter==iter_prev) {proceed2=0;}
+        if (pos!=pos0 || iter==iter_prev) {proceed=0;}
         iter_prev = iter;
     }
     if (order==1 && pos==pos0 && iter!=iter_save) {
@@ -373,47 +377,52 @@ function editor_scrollvert(order){                                       //alert
         } 
     if (order==0){
         pos0 = parseInt(document.getElementById('cursor').offsetTop);    //alert(pos0);
-        proceed2 = 1;
-        while(proceed2==1){
+        proceed = 1;
+        while(proceed==1){
             editor_scrollword(0);
             pos = parseInt(document.getElementById('cursor').offsetTop); //alert('|'+pos0+'|'+pos+'|');
             var iter = editor.iter;  
-            if (pos!=pos0 || iter==iter_prev) {proceed2=0;}
+            if (pos!=pos0 || iter==iter_prev) {proceed=0;}
             iter_prev = iter;
         }editor_scrollword(1);
     }
+    var text_read = common_textto_read( editor.text_raw.substring(iter_save, iter) );
+	if (editor.sound_navigator==1) { utter(text_read, 1, 0); }   
 }
 function editor_scrollword(order){                                       //alert('scrollword '+order);
     order = parseInt(order);
     var iter = editor.iter;
     var text = editor.text_raw;
-    if (order==1 && iter<text.length-1){
-        iter_prev = text.substr(0,iter).lastIndexOf(' '); 
-        iter = text.indexOf(' ',iter);                                   //alert(iter); 
-        proceed = 1;
-        while(proceed==1){
-            if (iter<text.length-1 && text[iter]==' ' && iter>=0 ){iter+=1;} 
-            else{proceed=0;}                                             //alert(iter);
-        }
-    }if (order==0 && iter>0){                                            //alert('|'+text[iter]+'|');
-        if (text[iter-1]==' '){                                            
-            iter -=1;
-            iter_prev = iter;
-            proceed = 1;
-            while(proceed==1){
-                if (iter>1 && text[iter]==' '){iter=iter-1;}
-                else{proceed=0;}                                         //alert(iter);
-            }
-        }else{ iter_prev = text.indexOf(' ',iter);  }
-        iter = text.substr(0,iter).lastIndexOf(' ')+1;
-    }
-    editor.iter = iter;
-    editor_set_cursor();
-    i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
-    if (editor.sound_navigator==1) { utter(text.substr(i1, i2-i1), 1, 0); }
+    
+    var i_left=iter, i_right=iter, i=0;
+    if (order==1){ 
+		if (text[iter]!=' '){
+			i = text.lastIndexOf(' ', iter-1);
+			if (i!=-1) { i_left = i+1; } else{i_left=0;}
+			
+			if (text.indexOf(' ', iter)!=-1) { iter = text.indexOf(' ', iter); }
+			else {iter = text.length;}
+		}
+		iter = find_spaceend(text, iter);	
+		i_right = iter;	
+	}
+	if (order==0){
+		if (text[iter]!=' ') { i_right = text.indexOf(' ', iter); if (i_right==-1){i_right=text.length;} }
+		if (text[iter-1]===' ' && iter>0){ iter = find_spacestart(text,iter-1) }
+		if (iter>0){ 
+			i = text.lastIndexOf(' ', iter-1);
+			if (i!=-1) { iter = i+1; } else{iter=0;}
+		}
+		i_left = iter;
+	}
+	editor.iter = iter;
+	editor_set_cursor();
+	var text_read = common_textto_read( text.substring(i_left, i_right) );
+	if (editor.sound_navigator==1) { utter(text_read, 1, 0); }   
 }
 function editor_scroll(order){
-    ltag = '<abbr>'; rtag = '</abbr>';
+    //ltag = '<abbr>'; rtag = '</abbr>';
+    var ltag = common.symbol_ltag, rtag = common.symbol_rtag; 
     var iter = editor.iter;
     var iter_prev = iter;
     var text = editor.text_raw;
@@ -440,10 +449,12 @@ function editor_scroll(order){
     editor.iter = iter;
     editor_set_cursor();
     i1 = Math.min(iter_prev, iter); i2 = Math.max(iter_prev, iter); 
-    letter = text.substr(i1, i2-i1);
-    if (editor.sound_navigator==1) { utter(letter, 1, 0); }
+    var letter = text.substr(i1, i2-i1);
+    var text_read = common_textto_read(letter);
+    if (editor.sound_navigator==1) { utter(text_read, 1, 0); }
     if (letter==' '){letter='_';}
     document.getElementById('editor_show_letter').innerHTML = letter;
+    return (iter);
 }
 
 function editor_set_cursor(){                                            //alert('set_cursor');
@@ -466,7 +477,8 @@ function editor_set_cursor(){                                            //alert
 //--------------------------------------------------------------------------------
 function editor_delete(){                                                //alert(editor.iter);
     if (editor.iter>0) { 
-		var rtag = "</abbr>"; var ltag = "<abbr>";                  
+		//var rtag = "</abbr>"; var ltag = "<abbr>";    
+		var ltag = common.symbol_ltag, rtag = common.symbol_rtag;              
         var iter = editor.iter;
 		var text = editor.text_raw;                                      //alert(iter+'  '+text);
 		
@@ -510,9 +522,7 @@ function editor_set_fontsize(id){
     common.editor_nlines = parseInt(id);                                   //alert(editor.nlines_lvl0);             
     var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / editor.style.nlines_lvl0;  //alert(fontsize);
 	document.getElementById('editor_text_area').style.fontSize = fontsize.toString()+'px';
-	editor.style.fontsize = fontsize;
-	//editor.style.cursorshift = fontsize*0.15;  alert(editor.style.cursorshift);
-    
+	editor.style.fontsize = fontsize;    
 }
 function editor_spell(){
     var iter = editor.iter;
