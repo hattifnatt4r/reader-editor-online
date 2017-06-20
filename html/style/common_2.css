@@ -127,6 +127,8 @@ body {
 .nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
 .symbol{ background-color: #99bd75; border-color: #99bd75; font-size: 400%; }
 .symbol:hover{ background-color: #a6c587; border-color: #a6c587; opacity: 0.6; }
+.symbol0{ background-color: #99bd75; border-color: #99bd75; }
+.symbol0:hover{ background-color: #a6c587; border-color: #a6c587; }
 /*
 .symbol{
 background-color: #a6c587;

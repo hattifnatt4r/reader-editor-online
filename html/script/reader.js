@@ -70,42 +70,38 @@ function reader_run() {                                                  //alert
     
     reader_text();                                                       //alert(word_id); //alert(paragraph_id);
      
-    /*                                                                     
-    if (localStorage.getItem('back_to_editor')=='1' && ischanged=='0'){  //alert('reader');
-        //document.getElementById('reader_menu').click();                //alert('menu');
-        document.getElementById('reader_edit').click();                    
-        localStorage.setItem('back_to_editor', '0');
-    }
-    */                                                                   //alert('reader 2');
     reader_select_type(order=0);                                         //alert('select_type');
     reader_set_zoomtype(0);                                              //alert('zoom_type');
+    
+    //alert(reader.ineditor);
+    //if (reader.ineditor) {reader_editor();}
      
 }
 
-function reader_text(){                                                  //alert(reader.editor_text);
+function reader_text(){                                                  //alert(reader.editor_text+',   '+reader.ischanged_text);
     if (reader.ischanged_text==false){
-        text_i = document.getElementById('hidden_text').innerHTML;
-        parser = reader_parse_txt(text_i, 0);
-        text_parsed = parser[0];                                         //alert('parsed 0 '+text_parsed);
+        var text = document.getElementById('hidden_text').innerHTML;
+        var parser = reader_parse_txt(text, 0);
+        var text_parsed = parser[0];                                     //alert('parsed 0 '+text_parsed);
         word_id=parser[1]; sentence_id=parser[2]; paragraph_id=parser[3];
                                                                          //alert('id_final '+sentence_id);
                                                                          //alert('id_final '+word_id+' '+sentence_id+' '+paragraph_id);
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
-        reader.text_origin = text_i;
+        reader.text_origin = text;
         reader.text_parsed = text_parsed;
     }else{
-        text = reader.editor_text;
-        text_parsed = reader.text_parsed;
-        document.getElementById('temp').innerHTML = text_parsed;
-        id = reader.id_curr;
+        var text = reader.editor_text;
+        var text_parsed = reader.text_parsed;
+        document.getElementById('temp').innerHTML = text_parsed;         //alert(text_parsed);
+        var id = reader.id_curr;                                         //alert(id);
         document.getElementById(id).innerHTML = text;                    //alert(text);
         
-        text_all_parsed = document.getElementById('temp').innerHTML;     //alert('text_all_parsed '+text_all_parsed);
-        text_all_origin = merge_text(text_all_parsed);                   //alert('merged');
+        var text_all_parsed = document.getElementById('temp').innerHTML; //alert('text_all_parsed: '+text_all_parsed);
+        var text_all_origin = merge_text(text_all_parsed);               //alert('merged: '+text_all_origin);
         reader.text_origin = text_all_origin;
         
-        parser = reader_parse_txt(text_all_origin, 0); 
-        text_parsed = parser[0]; 
+        var parser = reader_parse_txt(text_all_origin, 0); 
+        var text_parsed = parser[0]; 
         word_id=parser[1];  sentence_id=parser[2]; paragraph_id=parser[3];
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert(text_parsed);
         reader.text_parsed = text_parsed;
@@ -341,12 +337,13 @@ function is_inlist(list){
 }
 function goto_files(){ window.location.href = '/index.html'; window.speechSynthesis.cancel(); }
 
-function reader_editor(){
+function reader_editor(){                                                //alert('to_editor');
     text_all = document.getElementById('text_from_file').innerHTML;
     reader.text_parsed = text_all;
     id = get_id();
     text = document.getElementById(id).innerHTML;
-    text_plane = merge_text(text);                                       //alert(text_plane);
+    text_plane = merge_text(text); 
+    reader.ineditor = true;                                      //alert(text_plane);
     editor_run('reader', text_plane);
 }
 
