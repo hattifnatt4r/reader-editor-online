@@ -575,7 +575,10 @@ function cookie_delete_all() {
 
 //-- button position -----------------------------------------------------------------------------
 
-function common_buttonpos(i){
+function common_buttonpos(i, class_n){
+	if (class_n===undefined) {class_n=0;}
+	var class_arr = ["buttons", "buttons disabled"];
+	var class_name = class_arr[class_n];
     var yn=4, btop=2,   bbot=98,   yspace=9,   dy_bot=1;
     var xn=2, bleft=73, bright=99, xspace=3.5, dx_side=1;
     
@@ -588,10 +591,14 @@ function common_buttonpos(i){
     if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
     if (i%yn==yn-1){ dy = dy*dy_bot; }
     var style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
-    return('style="'+style+'"'); 
+    return('class="'+class_name+'" style="'+style+'"'); 
 }
 
 function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){                         //alert('style');
+	if (class_n===undefined) {class_n=0;}
+	var class_arr = ["buttons", "reader_zoom_box", "reader_zoom_box", "buttons disabled"];
+	var class_name = class_arr[class_n];
+	
 	if (shift_nleft===undefined) {shift_nleft=0; shift_n=0;}
 	if (x_dim===undefined) {x_dim=4; y_dim=2;}
 	var b_width = 12; var b_height = 17;
@@ -601,6 +608,8 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	var b_sspace = 1;
 	var nx = i%(x_dim); var ny = (i-i%(x_dim))/x_dim;
 	
+	var class_arr = ["buttons"]
+	
 	var b_xspace = (b_right-b_left-b_width*x_dim - b_sspace*shift_n)/(x_dim-1-shift_n);
 	var x = b_left + b_width*nx + b_xspace*(nx-shift_nleft) + b_sspace*shift_nleft;
 	var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim-1);
@@ -608,5 +617,5 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	if (class_n===1) { x += b_xspace-1; }
 	if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
 	var style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);
-	return('style="'+style+'"')
+	return('class="'+class_name+'" style="'+style+'"')
 	}
