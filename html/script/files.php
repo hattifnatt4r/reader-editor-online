@@ -1,65 +1,80 @@
 <?php
-//echo '<script language=JavaScript type="text/javascript" src="script/files.js"></script>';
 
 session_start();
 if ($_SESSION["session"]!=10){
+	 //echo 'SESSION_START';
+	getUserData();
+    $_SESSION["session"] = 10;
+    
     $_SESSION['usr_dir'] = "users/common";
     $_SESSION['usr_home'] = "users/common";
     $_SESSION["file_counter"] = 0;
     $_SESSION["word_i"] = 'HHEELLOO';
     $_SESSION['nentry'] = 0;
     $_SESSION["letter_i"] = 'a';
-    //echo 'SESSION_START';
-    $_SESSION["session"] = 10;
     $_SESSION["file_text"] = '';
     $_SESSION["editor_exit"] = '';
     
     $_SESSION["filename_opened"] = '';
     $_SESSION["files_arr"] = array();
-    }
-//echo 'USR-DIR'.$_SESSION['usr_dir'].' ';
-//echo '<div style="position:fixed;top:0%;left:10%;z-order:1;width:70%;">'.$_SESSION['usr_dir'].'</div>';
-//echo '<div style="position:fixed;top:0%;left:10%;z-order:1;width:70%;">'.'TEMP: '.ini_get('upload_tmp_dir').'</div>';
-getUserData();
-$entry=find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
-$filename = $_SESSION["usr_dir"].'/'.$entry;
-//echo '<div style="left: 25%; top: 78%;  position:fixed;">'.$_SESSION["file_counter"].' '.$filename.'</div>';
-echo "<div hidden id='hidden_files_dir' style='position:fixed; top:60%; left:85%'>".$_SESSION['usr_dir']."</div>";
-//echo '<div style="left: 25%; top: 85%;  position:fixed;">'.$_SESSION["word_i"].' '.'</div>';
-//echo '<div style="left: 25%; top: 90%;  position:fixed;">'.session_status().' '.'</div>';
+    
+    $_SESSION["form_done"] = 0;
+}
+//run_files();
 
 //-- files ------------------------------------------------------------------
-echo '<div id="files_zoom_area" class="reader_zoom_box">  
- <div id="files_zoom" class="text_zoom">..</div> </div>';
-$arr_dir=array(); $arr_file=array(); $arr_entries=array(); array_push($arr_dir, '..');
-if ($handle = opendir($_SESSION['usr_dir'])) {
-    $i = 1; 
-    foreach(scandir($_SESSION['usr_dir']) as $entry) {
-        if ($entry!=".." && $entry!=".") { 
-            $i = $i+1; 
-            $filename = $_SESSION['usr_dir'].'/'.$entry;
-            if (is_dir($filename)){array_push($arr_dir,$entry);} else{array_push($arr_file,$entry);}    
-            } 
-    }
-    $_SESSION['nentry'] = $i-1;
-    closedir($handle);
-    $arr_entries = array_merge($arr_dir,$arr_file);
-    $i=0;
-    foreach($arr_entries as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
-    echo "<div hidden id='hidden_files_nentry' style='position:fixed; top:67%; left:85%'>".$_SESSION['nentry']."</div>";
-    //$newmail = show_file(' ', $_SESSION['nentry']+1); //$show_arr=$show_arr.$newmail;
-    //echo "<div  id='hidden_newmail' >".$newmail."</div>";
-} else {echo "bad dir";}
-$_SESSION["files_arr"]=$arr_entries;
+function run_files(){
+	//$_SESSION['file_counter'] = 0;
+	//unset($_POST);
+	make_files_array();
+	echo "<div hidden id='hidden_files_nentry' style='position:fixed; top:67%; left:85%'>".$_SESSION['nentry']."</div>";
+	echo "<div hidden id='hidden_files_dir' style='position:fixed; top:60%; left:85%'>".$_SESSION['usr_dir']."</div>";
+	
+	$show_arr = ""; $i=0;
+	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
+	
+	echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >
+	<div id='files_area' class='reader_text'>".$show_arr."</div></div></div>";
+	echo "<div hidden style='position:fixed; top:0%; left:15%'>".$_SESSION["file_counter"]."</div>";
+	
+	echo '<div id="files_zoom_box" class="reader_zoom_box">  
+	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
+	
+	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
+	//echo " | usr_dir1: ".$_SESSION['usr_dir']." ".$entry." ".$_SESSION["file_counter"]." | ";
+	//echo " | FILES_ARR: ".$_SESSION["files_arr"][0]." | ";
+}
+function make_files_array(){
+	$arr_dir=array(); $arr_file=array(); $arr_entries=array(); 
+	array_push($arr_dir, '..');
+	if ($handle = opendir($_SESSION['usr_dir'])) {
+	    $i = 1; 
+	    foreach(scandir($_SESSION['usr_dir']) as $entry) {
+	        if ($entry!=".." && $entry!=".") { 
+	            $i = $i+1; 
+	            $filename = $_SESSION['usr_dir'].'/'.$entry;
+	            if (is_dir($filename)){array_push($arr_dir,$entry);} else{array_push($arr_file,$entry);}    
+	            } 
+	    }
+	    $_SESSION['nentry'] = $i-1;
+	    closedir($handle);
+	    $arr_entries = array_merge($arr_dir,$arr_file);
+	    $i=0;
+	    //$newmail = show_file(' ', $_SESSION['nentry']+1); //$show_arr=$show_arr.$newmail;
+	    //echo "<div  id='hidden_newmail' >".$newmail."</div>";
+	} else {echo "bad dir";}
+	$_SESSION["files_arr"]=$arr_entries;
+}
 
 function show_file($entry, $i){
-    $left = 2; $right = 98; $xn=4; $xspace=5.5; $top=-1.5;  $yspace=$xspace*1.8;
-    $xwidth = ( $right-$left-($xn-1)*$xspace )/$xn;    $ywidth=$xwidth*1.5;
+    $left = 1; $right = 64.5; $xn=4; $top=-7; 
+    $xwidth=14; $ywidth=20; $yspace=6;
+    $xspace = ( $right-$left-$xn*$xwidth )/($xn-1); 
     $x = $left + ($xspace+$xwidth)* ($i%$xn);
     $y = $top +  ($yspace+$ywidth)*($i-$i%$xn)/$xn;
     $style = "position:absolute;
-        left: $x%; top: $y%;
-        width:$xwidth%; height:$ywidth%;
+        left: ".$x."vw; top: ".$y."vh;
+        width:".$xwidth."vw; height:".$ywidth."vh;
         " ;        
     $filename = $_SESSION['usr_dir'].'/'.$entry;
     if (file_exists($filename)){
@@ -72,14 +87,12 @@ function show_file($entry, $i){
     $file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'">'.$entry.'</div>' ;
     return($file_i);
 }
-echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >
-<div id='files_area' class='reader_text'>".$show_arr."</div></div></div>";
-echo "<div hidden style='position:fixed; top:0%; left:15%'>".$_SESSION["file_counter"]."</div>";
 //---------------------------------------------------------------------------
 function find_object($i_obj, $usr_dir){
     $entry = $_SESSION["files_arr"][$i_obj];
     //echo '<div style="position:fixed;top:97%;">'.$entry.'</div>';
-    return $entry;}
+    return $entry;
+}
 
 //-- new file/folder --------------------------------------------------------
 function create_file($fname, $usr_dir) {
@@ -213,42 +226,40 @@ if (isset($_POST["ffiles_cleanhtml_submit"])) {
 
 //-- enter button ---------------------------------------------------
 
-//if (isset($_POST['enter_obj'])) {
-//    $value = $_POST['enter_obj'];
 if (isset($_POST['ffiles_enter_submit'])) {
-    $value = $_POST['ffiles_enter_submit'];
-    //$_SESSION["file_counter"]=$_POST["file_n"];
     $_SESSION["file_counter"]=$_POST["ffiles_iter"];
-    echo 'ENTER '.$_POST["ffiles_iter"];
     $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
     $filename = $_SESSION['usr_dir'].'/'.$entry;
+    //echo ' | ENTER '.$_SESSION["file_counter"]." ".$entry." | ";
+    //unset($_POST);
     
-        if ($_SESSION["file_counter"]==0){
-            if ($_SESSION["usr_dir"]!=$_SESSION['usr_home']){
-                $new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
-                $_SESSION["usr_dir"] = $new_dir;
-                //$_SESSION['file_counter'] = 0;
-                header('Location:/index.html');
-                }
-        }else{
-            if (is_dir($filename)){ 
-                $_SESSION['usr_dir'] = $filename;
-                //$_SESSION['file_counter'] = 0;
-                //echo 'NEW-DIR'.$_SESSION['usr_dir'];
-                header('Location:/index.html');
-            }else{
-                $myfile = fopen($filename, "r") or die("Unable to open file!");
-                $txt = fread($myfile, filesize($filename));
-                //fwrite($myfile, $txt);
-                fclose($myfile);
-                $_SESSION["file_text"] = $txt;
-                //echo filesize($filename).$filename.'TEXT:'.$txt;
-                //isset($_POST['enter_obj'])=False;
-                $_SESSION["filename_opened"] = $filename;
-                header('Location:/reader.html');
-                //header('Location:/index.html');
-                }
-            }
+	if ($_SESSION["file_counter"]==0){
+		if ($_SESSION["usr_dir"]!=$_SESSION['usr_home']){
+			$new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
+			$_SESSION["usr_dir"] = $new_dir;
+			//echo '  | GO-BCK: '.$_SESSION['usr_dir'];
+			//$_SESSION['file_counter'] = 0;
+			header('Location:/index.html');
+			//run_files();
+		}
+	}else{
+		if (is_dir($filename)){ 
+			$_SESSION['usr_dir'] = $filename;
+			//echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
+			$_SESSION['file_counter'] = 0;
+			header('Location:/index.html');
+			//run_files();
+		}else{
+			$myfile = fopen($filename, "r") or die("Unable to open file!");
+			$txt = fread($myfile, filesize($filename));
+			fclose($myfile);
+			$_SESSION["file_text"] = $txt;
+			//echo filesize($filename).$filename.'TEXT:'.$txt;
+			$_SESSION["filename_opened"] = $filename;
+			header('Location:/reader.html');
+		}
+	}
+	//echo '  | NEW-DIR2: '.$_SESSION['usr_dir']." | ";
 }
 
 //-- login ------------------------------------------------------------------
@@ -487,4 +498,5 @@ function replace_rec($txt,$a,$b){
     return($txt);
 }
 
+run_files();
 ?>

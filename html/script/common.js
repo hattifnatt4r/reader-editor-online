@@ -3,9 +3,11 @@ var common = {
 	langbase: "en",
 	lang: "auto",
 	editor_nlines: 3,
+	fontsize: 1,
 	
-	cookie_number: 3,
+	cookie_number: 4,
 	cookie_suffix: "_",
+	name: "common",
 	
 	symbol_ltag: '<abbr>',
 	symbol_rtag: '</abbr>',
@@ -24,7 +26,10 @@ var common = {
 			v = cookie_get(keys[i]+this.cookie_suffix);                  //alert(v);
 			if (v == 'true') { v=true; }
 			else if (v == 'false') { v=false; }
-			else if ( v.match(/\d+/g)!=null && v.match(/[a-z]/i)===null ) { v=parseInt(v); }             //alert(v);
+			else if ( v.match(/\d+/g)!=null && v.match(/[a-z]/i)===null ) { 
+				if (v.indexOf('.')==-1) { v=parseInt(v); }
+				else { v=parseFloat(v); }   
+			}          //alert(v);
 			this[keys[i]] = v;         
 		}
 	}
@@ -84,6 +89,16 @@ var symbol_mute  =      '<strong style="font-size:150%;line-height:120%;">&#1282
 var symbol_sound =      '<strong style="font-size:150%;line-height:120%;">&#128265;</strong>';
 var symbol_sound_sub =  '<sub><strong style="font-size:90%;"> &#128265;</strong></sub>';
 var symbol_sound_sub2 = '<sub><strong style="font-size:90%;"> &#128265;auto</strong></sub>';
+
+var symbol_play =        '<strong style="font-size:115%;line-height:115%;"> &#9199;</strong>';
+//var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#10704;</strong>';
+var symbol_pause =       '<strong style="font-size:115%;line-height:115%;"> &#9208;</strong>';
+var symbol_prev =        '<strong style="font-size:125%;line-height:130%;"> &#9204;</strong>';
+var symbol_next =        '<strong style="font-size:125%;line-height:130%;"> &#9205;</strong>';
+var symbol_readall =     '<strong style="font-size:170%;line-height:115%;"> &#119218;</strong>';
+var symbol_readall =     '<strong style="font-size:140%;line-height:130%;"> &#8967;</strong>';
+var symbol_readall =     ' read all ';
+var symbol_upload =     ' up load ';
 
 var symbols_play_pause = [symbol_play, symbol_pause];
 var symbols_sound = [symbol_mute, symbol_sound];
@@ -210,39 +225,6 @@ function merge_text(text){
     return (text);
 }
 
-function reader_parse_pdf(text_origin){
-    tag = 'div';
-    ii=0; ii_start=-1; ii_end=-1; ii_end_prev = 0;
-    n=0; pr0 = true; text_new = '';
-    idw=[]; ids=[]; idp=[];
-    while (pr0){
-        //alert(' i_end '+ii_end);
-        ii = text_origin.indexOf('<'+tag, ii_end+1); 
-        //alert('ii '+ii+' i_end '+ii_end);
-        if (ii==-1){
-            pr0=false; 
-            //word_i = text_origin.substr(ii_end_prev); 
-        }else{
-            //ii_start = text_origin.indexOf('>',ii+1) + 1;
-            //ii_end = text_origin.indexOf('</'+tag+'>',ii+1);
-            iii = find_closing(text_origin, tag, ii); //alert(ii_start+' '+ii_end+' '+iii);
-            ii_start = iii[0]; ii_end = iii[1];
-            word_i = text_origin.substr(ii_start, ii_end-ii_start);  //alert('word = '+word_i);
-            parser = reader_parse_txt(word_i, n); 
-            word_new = parser[0]; 
-            idw=idw.concat(parser[1]); ids=ids.concat(parser[2]); idp=idp.concat(parser[3]); 
-            //alert(ii_start+' '+ii_end+' id '+idw+' '+ids+' '+idp);
-            text_new += text_origin.substr(ii_end_prev, ii_start-ii_end_prev);
-            text_new += word_new;
-            //alert( 'text '+ii_end_prev+' '+ii_start+' '+text_origin.substr(ii_end_prev, ii_start-ii_end_prev) );
-            //alert('word = '+word_i); alert('parser = '+parser); //alert('textnew = '+text_new);
-            ii_end_prev = ii_end; 
-            n = parseInt(parser[3][parser[3].length-1].substr(1))+1; //alert('n '+n);
-        } 
-    }
-    text_new += text_origin.substr(ii_end_prev);
-    return([text_new, idw, ids, idp]);
-}
 function find_closing(text, tag, i0){
     i=i0*1; i_start=i0; i_end=i0;
     pr1 = true;
@@ -385,7 +367,8 @@ function reader_parse_txt(text_origin, n_p){
         }                                                                //alert('i_end: '+i_end);
         arr.push( txt.substring(i,i_end) );                              //alert('words: |'+ txt.substring(i,i_end)+'|');
         i = i_end;
-    }                                                                    //alert('empty_tag: '+tag_arr);
+    }                                                                    //alert('words: '+arr+' '+arr.length);
+    if (arr.length===0){ arr=[" "]; }
     
     var endsentence = ['...', '!!!', '???', '.', '!', '?'];
     var p0=n_p.toString();  
@@ -519,7 +502,7 @@ function get_usrname(fname_i){
 
 //-- show functions ------------------------------------------------------------
 //------------------------------------------------------------------------------
-function common_show_lang(lvl, is_base, parent){                         alert('common_show_lang '+parent);
+function common_show_lang(lvl, is_base, parent){                         //alert('common_show_lang '+parent);
     var inner_e = ''; var lang='';
     if (is_base===true){ lang = common.langbase; }
     else{ 
@@ -531,11 +514,36 @@ function common_show_lang(lvl, is_base, parent){                         alert('
     inner_e+=     '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2,3,2)+'><div id="common_lang_zoom2" class="text_zoom">'+lang+'</div></div>';
     common_create_menu('common_lang',lvl, inner_e, parent);
 }
-function common_set_lang(lang, is_base){                                 alert(lang+' '+is_base);
+function common_set_lang(lang, is_base){                                 //alert(lang+' '+is_base);
     if (is_base===true){ common.langbase = lang; }        
     else{ common.lang = lang; }          
     document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
     document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
+}
+
+function common_show_fontsize(obj){                                      //alert('obj_name: '+obj.name+ ' '+obj.fontsize);
+    var inner_e = ''; 
+    inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(3,0)+'> x 1 </div>';
+    inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(7,0)+'> x 1.2 </div>';
+    inner_e+=     '<div id="1.4"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(6,0)+'> x 1.5 </div>';
+    inner_e+=     '<div id="1.9"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(5,0)+'> x 2 </div>';
+    inner_e+=     '<div id="2.4"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(4,0)+'> x 2.5 </div>';
+    inner_e+=     '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom" style="font-size:'+obj.fontsize*3.5+'vh;">text example</div></div>';
+    common_create_menu('common_fontsize',1, inner_e);
+}
+function common_set_fontsize(id, obj){                                   //alert('obj_name 2: '+obj);
+	var classname = ''; var lineheight = 1.1; var alpha_def=0.6;
+	if (obj.name==='files'){ classname = 'files'; lineheight = 1.1; alpha_def=0.6;}
+	if (obj.name==='common'){ classname = 'text_scroll'; lineheight = 1.35; alpha_def=0.8;}             //alert('class: '+class_name);
+	var font_default = 3.5;             
+	var scale = parseFloat(id);                                          //alert(scale);
+	var elem = document.getElementById('common_fontsize_zoom');
+    if (elem) {elem.style.fontSize = (font_default*scale)+'vh'; }
+    var alpha = alpha_def-0.3*scale/3;
+    $('.'+classname).css('font-size', (font_default*scale)+'vmin');
+    $('.'+classname).css('line-height', (lineheight*font_default*scale)+'vmin');
+    $('.'+classname).css('color', 'rgba(0,0,0,'+alpha+')');
+    obj.fontsize = scale;                                                //alert('obj_name 2: '+obj.name+' '+obj.fontsize);
 }
 
 function common_create_menu(id, lvl, buttons_html, parent){                      //alert('create_menu');
@@ -607,8 +615,8 @@ function cookie_delete_all() {
 //-------------------------------------------------------------------------------
 
 function common_buttonpos(i){
-    yn=4; btop=2; bbot=98; yspace=7; dy_bot=1;
-    xn=2; bleft=78; bright=99; xspace=3.5; xspace_bot=1; dx_side=0.8;
+    yn=4; btop=2; bbot=98; yspace=9; dy_bot=1;
+    xn=2; bleft=73; bright=99; xspace=3.5; xspace_bot=1; dx_side=1;
     dy = (bbot-btop-(yn-1)*yspace )/yn; 
     dy = dy*yn/(yn-1+dy_bot);
     y = btop + (i%yn)*(yspace+dy*1);

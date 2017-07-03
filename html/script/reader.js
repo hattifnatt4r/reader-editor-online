@@ -1,3 +1,4 @@
+//alert('reader');
 
 var reader = {
     latest_w: "p0s0w0",
@@ -19,6 +20,7 @@ var reader = {
     cookie_number: 14,
     fname: "",
     cookie_suffix: "_",
+    name: 'reader',
     
     text_parsed: ""
     
@@ -30,7 +32,8 @@ var word_id=[], sentence_id=[], paragraph_id=[];
 
 //-- run reader ---------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
-//set_cookie("isset_"+reader.fname, "");
+//set_cookie("isset_"+reader.fname, "");                                 
+                                                                         //alert( document.cookie );
 if (cookie_get('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
 	cookie_set("isset_"+reader.fname, "isset");
 	common.cookie_save.call(reader);
@@ -72,6 +75,7 @@ function reader_run() {                                                  //alert
      
     reader_select_type(order=0);                                         //alert('select_type');
     reader_set_zoomtype(0);                                              //alert('zoom_type');
+    common_set_fontsize(common.fontsize, common);
     
     //alert(reader.ineditor);
     //if (reader.ineditor) {reader_editor();}
@@ -306,13 +310,12 @@ function reader_show_buttons(){                                          //alert
     //alert(dir);
 }
 function reader_show_menu(){
-    n_zoom = reader.zoomtype;
-    //inner_e+= '<div id="reader_menu_appearance"        class="buttons disabled" onclick=""   style="left:15%; top:20%;">appearance</div>';
-    //inner_e+= '<div id="reader_menu_appearance-common" class="buttons disabled" onclick=""   style="left:35%; top:15%;">appearance-common</div>';
-    inner_e = '<div id="reader_menu_clearcookie"  class="buttons"          onclick="reader_clearcookie()"   style="left:15%; top:20%;">clear cookie</div>';
-    inner_e+= '<div id="reader_menu_sound"        class="buttons disabled" onclick=""                        style="left:15%;top:60%;">sound</div>';
-    inner_e+= '<div id="common_lang_zoom1"    class="buttons_text"                                       style="left:37%;top:20%;">'+common.lang+'</div>';
-    inner_e+= '<div id="common_lang"          class="buttons"          onclick="common_show_lang(1, false)"      style="left:50%;top:20%;">local lang</div>';
+    var n_zoom = reader.zoomtype; var obj='common';
+    inner_e = '';
+    inner_e+= '<div id="reader_fontsize"     class="buttons"  onclick="common_show_fontsize('+obj+');" '+    common_buttonpos_menu(0,0)+'> font size </div>';    
+    inner_e+= '<div id="reader_menu_sound"   class="buttons disabled" onclick=""                        style="left:15%;top:60%;">sound</div>';
+    inner_e+= '<div id="common_lang_zoom1"   class="buttons_text"                                       style="left:37%;top:20%;">'+common.lang+'</div>';
+    inner_e+= '<div id="common_lang"         class="buttons"          onclick="common_show_lang(1, false)"      style="left:50%;top:20%;">local lang</div>';
     inner_e+= '<div id="reader_go"                class="buttons disabled" onclick=""                        style="left:70%;top:20%;">go</div>' ;
     inner_e+= '<div id="reader_menu_go-files"     class="buttons"          onclick="goto_files();"           style="left:70%;top:60%;">go home</div>';
     inner_e+= '<div id="reader_menu_zoomtype_text" class="buttons_text"                                      style="left:37%;top:60%;">'+zoomtype_arr[n_zoom]+'</div>' ;
