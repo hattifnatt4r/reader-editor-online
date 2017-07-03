@@ -3,14 +3,18 @@ var common = {
 	langbase: "en",
 	lang: "auto",
 	editor_nlines: 3,
-	fontsize: 1,
+	fontsize: 0.8,
 	
 	cookie_number: 4,
 	cookie_suffix: "_",
 	name: "common",
+	play_counter: 1,
 	
 	symbol_ltag: '<abbr>',
 	symbol_rtag: '</abbr>',
+	otag: "span",
+	ctag: "span",
+	ptag: "span",
 	
 	cookie_save: function(){                                             //alert('save_cookies '+this.cookie_number);
 	    var keys = Object.keys(this);                                    //alert(keys);
@@ -42,17 +46,6 @@ var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'
 var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
 //-----------------------------------------------------------------------------
-// cookie used:  "langbase_editor", "lang_editor"
-//    
-//-----------------------------------------------------------------------------    
-
-//-----------------------------------------------------------------------------
-//var otag = 'em class="text"'; var ctag='em';  var tag_p = 'div';
-//var otag = 'span class="text"'; var ctag='span';  var tag_p = 'span';
-var otag = 'span'; var ctag='span';  var tag_p = 'span';
-var div_end = '<br>'; 
-var zoomtype_arr = ['no zoom', 'by word', 'by sentence'];
-var reader_play_counter=1;
 
 var login_messages_en = ['The name does not exists.', 'Wrong password.', ''];
 var login_messages_ru = ['Указанное имя не существует.', 'Неправильный пароль.', ''];
@@ -103,21 +96,6 @@ var symbol_upload =     ' up load ';
 var symbols_play_pause = [symbol_play, symbol_pause];
 var symbols_sound = [symbol_mute, symbol_sound];
 
-var bodyStyles = window.getComputedStyle(document.body);
-var yn = parseInt(bodyStyles.getPropertyValue('--reader-buttons-ny'));
-var btop = parseInt(bodyStyles.getPropertyValue('--reader-texttop-pc'));
-var bbot = parseInt(bodyStyles.getPropertyValue('--reader-textbottom-pc'));
-var yspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-yspace'));
-var xspace = parseInt(bodyStyles.getPropertyValue('--reader-buttons-xspace'));
-var textright = parseInt(bodyStyles.getPropertyValue('--reader-textright-pc'));
-    
-function files_button_position(i){
-    yn=5; btop=2; bbot=98; yspace=6; xspace=4; textright=78;
-    dy = (bbot-btop-(yn-1)*yspace )/yn; 
-    x = textright+xspace+0.4;  dx=100-textright-2*xspace;
-    y = btop + i*(yspace+dy*1);
-    style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
-    return(style); }
 
 function scroll_to(id, id_area, title){
     if (title==0){ elem = document.getElementById(id);  }
@@ -165,10 +143,10 @@ function utter(txt, stop, onend){                                  // 0-auto, 1-
     msg.rate = 0.9; 
     if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
     window.speechSynthesis.speak(msg);    
-    reader_play_counter=1;
+    common.play_counter=1;
     msg.onstart=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[1]};
     if (onend==0){ msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; }
-    else{ msg.onend=function(event){scrollbut_div(1,0,1)}; }
+    else{ msg.onend=function(event){reader_scroll(1,0,1)}; }
 }    
     
 function create_element(id, cl, parent, style, inner){                   //alert(id, cl, parent, style);
@@ -194,34 +172,16 @@ function replace_all(text, a,b){
 }
 
 function merge_text(text){
-    //alert('merge 0 '+ctag+': '+text);
-    /*
-    text = replace_all(text, '<br>', ':nl:');
-    text = replace_all(text, '<abbr>', ':lbr:');
-    text = replace_all(text, '</abbr>', ':rbr:');
     proceed = 1;
     while (proceed==1){
-        i = text.indexOf('<');
+        i = text.indexOf('<'+common.ctag);
         if (i==-1){ proceed=0; }
-        else { i2 = text.indexOf('>');
-            text_i = text.substr(0,i)+text.substr(i2+1);
-            text = text_i;
-            }
+        else { 
+			i2 = text.indexOf('>',i+1);                                  //alert(i+' '+i2+'  '+text);
+            text = text.substr(0,i)+text.substr(i2+1);                   //alert(i+' '+i2+'  '+text);
         }
-    text = replace_all(text, ':nl:', '<br>');
-    text = replace_all(text, ':lbr:', '<abbr>');
-    text = replace_all(text, ':rbr:', '</abbr>');
-    */
-    proceed = 1;
-    while (proceed==1){
-        i = text.indexOf('<'+ctag);
-        if (i==-1){ proceed=0; }
-        else { i2 = text.indexOf('>',i+1);
-            //alert(i+' '+i2+'  '+text);
-            text = text.substr(0,i)+text.substr(i2+1); //alert(i+' '+i2+'  '+text);
-        }
-    } //alert('merge 1');
-    text = replace_all(text, '</'+ctag+'>', '');
+    }                                                                    //alert('merge 1');
+    text = replace_all(text, '</'+common.ctag+'>', '');
     return (text);
 }
 
@@ -378,6 +338,7 @@ function reader_parse_txt(text_origin, n_p){
     
     var id_p='', id_s='', id_w='';
     var word='', word_start = '', word_end='';
+    var otag=common.otag, ctag=common.ctag, tag_p=common.ptag;
     
     word_start = "<"+tag_p+" id='p"+p0+"'><"+otag+" id='p"+p0+"s0'><"+otag+" id='p"+p0+"s0w0'>";
     
@@ -534,7 +495,7 @@ function common_show_fontsize(obj){                                      //alert
 function common_set_fontsize(id, obj){                                   //alert('obj_name 2: '+obj);
 	var classname = ''; var lineheight = 1.1; var alpha_def=0.6;
 	if (obj.name==='files'){ classname = 'files'; lineheight = 1.1; alpha_def=0.6;}
-	if (obj.name==='common'){ classname = 'text_scroll'; lineheight = 1.35; alpha_def=0.8;}             //alert('class: '+class_name);
+	if (obj.name==='common'){ classname = 'text_scroll'; lineheight = 1.38; alpha_def=0.8;}             //alert('class: '+class_name);
 	var font_default = 3.5;             
 	var scale = parseFloat(id);                                          //alert(scale);
 	var elem = document.getElementById('common_fontsize_zoom');
@@ -550,10 +511,10 @@ function common_create_menu(id, lvl, buttons_html, parent){                     
 	if (parent==undefined) { parent='created_elements'; }
     if (lvl==0){                                                         //alert('lvl0');
         menu_blur();
-        inner_e = '<div id="'+id+'_back"  onclick="editor_back(this.id,1);" class="back_area"></div>';
+        inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,1);" class="back_area"></div>';
         inner_e+= '<div id="'+id+'_area"  class="menu_area">';
     }else{                                                               //alert('lvl1');
-        inner_e = '<div id="'+id+'_back"  onclick="editor_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
+        inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
         inner_e+= '<div id="'+id+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
         inner_e+= '<div id="'+id+'_area2"  class="menu_area_lvl2">';
         }                                                                //alert(inner_e);
@@ -570,7 +531,7 @@ function common_create_menu(id, lvl, buttons_html, parent){                     
 function menu_blur(){
     $('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 }
-function editor_back(id, foggyoff){                                      //alert(id);
+function menu_back(id, foggyoff){                                      //alert(id);
     if (foggyoff==1){ $('#base_elements').foggy(false);  }
     elem = document.getElementById(id).parentNode;
     elem.parentNode.removeChild(elem);
@@ -612,33 +573,38 @@ function cookie_delete_all() {
     }
 }
 
-//-------------------------------------------------------------------------------
+//-- button position -----------------------------------------------------------------------------
 
 function common_buttonpos(i){
-    yn=4; btop=2; bbot=98; yspace=9; dy_bot=1;
-    xn=2; bleft=73; bright=99; xspace=3.5; xspace_bot=1; dx_side=1;
-    dy = (bbot-btop-(yn-1)*yspace )/yn; 
+    var yn=4, btop=2,   bbot=98,   yspace=9,   dy_bot=1;
+    var xn=2, bleft=73, bright=99, xspace=3.5, dx_side=1;
+    
+    var dy = (bbot-btop-(yn-1)*yspace )/yn; 
     dy = dy*yn/(yn-1+dy_bot);
-    y = btop + (i%yn)*(yspace+dy*1);
+    var y = btop + (i%yn)*(yspace+dy*1);
     if (i%yn==yn-1) {y=y;}
-    dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
-    x = bleft + (i-i%yn)/yn*(dx+xspace); 
+    var dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
+    var x = bleft + (i-i%yn)/yn*(dx+xspace); 
     if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
     if (i%yn==yn-1){ dy = dy*dy_bot; }
-    style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
+    var style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
     return('style="'+style+'"'); 
 }
 
-function common_buttonpos_menu(i, class_n, x_dim, y_dim){                         //alert('style');
+function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){                         //alert('style');
+	if (shift_nleft===undefined) {shift_nleft=0; shift_n=0;}
 	if (x_dim===undefined) {x_dim=4; y_dim=2;}
 	var b_width = 12; var b_height = 17;
-	var b_left = 7; var b_right = 93; 
-	if (y_dim===3) { b_left=5; b_right=95; }
-	var b_top = 5; var b_bot = 95;
-	var b_xspace = (b_right-b_left-b_width*x_dim)/(x_dim+1);
-	var x = b_left + b_xspace + (b_xspace+b_width)*(i%(x_dim));
-	var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim+1);
-	var y = b_top + b_yspace + (b_yspace+b_height)*(i-i%(x_dim))/x_dim;
+	var b_left = 16;  var b_right = 84; 
+	var b_top = 25; var b_bot = 75;
+	if (y_dim===3) { b_left=15; b_right=85; b_top=18; b_bot=82; }
+	var b_sspace = 1;
+	var nx = i%(x_dim); var ny = (i-i%(x_dim))/x_dim;
+	
+	var b_xspace = (b_right-b_left-b_width*x_dim - b_sspace*shift_n)/(x_dim-1-shift_n);
+	var x = b_left + b_width*nx + b_xspace*(nx-shift_nleft) + b_sspace*shift_nleft;
+	var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim-1);
+	var y = b_top + (b_yspace+b_height)*ny;
 	if (class_n===1) { x += b_xspace-1; }
 	if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
 	var style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);

@@ -1,7 +1,4 @@
-//alert('editor 0');
-
-//-- config -------------------------------------------------------------------
-//-----------------------------------------------------------------------------
+//-- editor variables -------------------------------------------------------------------
 
 var editor = {
 	dict: {},
@@ -160,7 +157,6 @@ editor.style = {
 
 
 //-- run editor -----------------------------------------------------------------
-//-------------------------------------------------------------------------------
 
 //editor_run();
 if (typeof reader!=='undefined' && reader.ineditor===true) { reader_editor();}
@@ -285,7 +281,6 @@ function editor_show_fontsize(){
     
 function editor_show_symbols(lang, lvl){                                 //alert('show_symbols');
     editor.style.set_style('upper_oneline');
-    //editor.style.set_style('cut_leftright');
     editor.style.b_nx=7;
     
     key_arr = editor.dict.symbolset7_all()[lang][lvl];                    //alert(key_arr);
@@ -421,7 +416,6 @@ function editor_scrollword(order){                                       //alert
 	if (editor.sound_navigator==1) { utter(text_read, 1, 0); }   
 }
 function editor_scroll(order){
-    //ltag = '<abbr>'; rtag = '</abbr>';
     var ltag = common.symbol_ltag, rtag = common.symbol_rtag; 
     var iter = editor.iter;
     var iter_prev = iter;
@@ -548,11 +542,6 @@ function editor_backto_letters(change_style){
     document.getElementById('editor_buttons_area_3').style.visibility='hidden';
     document.getElementById('editor_text_box').style.width='96%';
     }
-
-function set_button_appearance(id){ alert(id); }
-
-//-- save / exit ------------------------------------------------------------------
-//---------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------

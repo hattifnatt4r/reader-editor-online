@@ -1,4 +1,6 @@
 
+//-- files variables ---------------------------------------------------------------
+
 var files = {
 	iter: 0,
 	iter_prev: 0,
@@ -27,7 +29,7 @@ var files = {
 		           "files_upload_choose": "ffiles_upload_choose", 
 		           },
 	click_php: function(id) { //alert('click: '+id);
-		if (id==="files_enter") { this.iter=0; this.iter_prev=0; }
+		if (id==="files_enter" && this.get_ftype()=="dir" ) { this.iter=0; this.iter_prev=0; }
 		document.getElementById(this.buttons_php[id]).click(); 
 	},
 	set_dir: function() {
@@ -55,29 +57,26 @@ var files = {
 		if (elem) { type=elem.getAttribute('title'); }
 		return type;
 	},
-}
-files.set_dir();                                                         //alert(files.dir);
-
-
-//-- run file manager -----------------------------------------------------------------
-//-------------------------------------------------------------------------------------
-                                                                         //alert( document.cookie );
-if (cookie_get('isset_files_')!='isset'){                                      //alert('set_cookie');
-	cookie_set("isset_files_", "isset");
-	common.cookie_save.call(files);
-}else { common.cookie_load.call(files); }
-if (cookie_get('isset_common_')!='isset'){                                      //alert('set_cookie');
-	cookie_set("isset_common_", "isset");
-	common.cookie_save();
-}else { common.cookie_load(); }
+}                                                        //alert(files.dir);
 window.onbeforeunload = files_beforunload;
 function files_beforunload() {common.cookie_save.call(files); common.cookie_save(); }
-//cookie_delete_all();
-                                                                         //alert( document.cookie );
-                                                                         //alert(get_cookie('PHPSESSID'));    
+
+//-- run files -------------------------------------------------------------------
+
 files_run();
 
-function files_run(){                                                    //alert('files_run');                                                                                                               
+function files_run(){                                                    //alert('files_run');  
+	files.set_dir(); 
+	
+	if (cookie_get('isset_files_')!='isset'){                            //alert('set_cookie');
+		cookie_set("isset_files_", "isset");
+		common.cookie_save.call(files);
+	}else { common.cookie_load.call(files); }
+	if (cookie_get('isset_common_')!='isset'){                           //alert('set_cookie');
+		cookie_set("isset_common_", "isset");
+		common.cookie_save();
+	}else { common.cookie_load(); }                                      //alert( document.cookie );
+	                                                                                                             
 	var bodyStyles = window.getComputedStyle(document.body);
 	screen_height = window.screen.height+'px';
 	screen_width = window.screen.width+'px';                             //alert('alert1');
@@ -96,7 +95,7 @@ function files_run(){                                                    //alert
 }                                                                        //alert('dir: '+files_get_dir());
 
 //-- show buttons ---------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------
+
 function files_show_buttons(){                                           //alert('alert b0');
     var elem = document.getElementById('files_buttons_area');                //alert('alert b1');
     var inner_e="";
@@ -117,44 +116,18 @@ function files_show_buttons(){                                           //alert
         document.getElementById(id).innerHTML=symbol_newmail;
         }
 }
-function files_show_addcontact(){
-	var inner_e="";
-    inner_e+= '<div id="files_addcontact_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_addcontact_zoom" class="text_zoom">file</div></div>';
-    inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_edittext_addcontact(123);" style="left:40%; top:45%;">edit name</div>';
-    
-    inner_e+= '<div hidden id="files_addcontact_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
-    inner_e+= '<form action="" method="post">';
-    inner_e+= '<input type="text"   id="addcontact_text_id"     name="addcontact_text_name"   value="file" style="width:0%;height:0%;">';
-    inner_e+= '<input type="submit" id="addcontact_submit_id"   name="addcontact_submit_name" value="create file" ></div>';
-    inner_e+= '<div id="files_addcontact_id" class="buttons" onclick="files_click(11);" style="left:13%;top:45%;">create file</div>';
-    common_create_menu('files_addcontact', 0, inner_e);
-}
-function files_show_upload(){
-    var inner_e = "";
-    inner_e+= '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="files_upload_name" onclick="" class="text_zoom"></div></div>';
-    inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'>choose file</div>';
-    inner_e+= '<div id="files_upload"        class="buttons" onclick="files.click_php(this.id);" '+common_buttonpos_menu(6,0)+'>upload file</div>';
-    common_create_menu('files_upload', 0, inner_e);
-    document.getElementById('ffiles_upload_choose').onchange = uploadOnChange;
-}
-function uploadOnChange() {                                              //alert('file');
-    var filename = this.value;                                           //alert(filename);
-    var lastIndex = filename.lastIndexOf("\\");
-    if (lastIndex >= 0) {
-        filename = filename.substring(lastIndex + 1);
-    }document.getElementById('files_upload_name').innerHTML = filename;
-}
 function files_show_menu(){  
 	var inner_e = "";  var obj = 'files';
     inner_e += '<div class="reader_zoom_box" '+common_buttonpos_menu(1,1)+'><div id="common_lang_zoom1" class="text_zoom">'+common.langbase+'</div></div>';
     inner_e += '<div id="common_lang"    class="buttons"  onclick="common_show_lang(1,true)" ' +common_buttonpos_menu(2,0)+'>base lang</div>';
-    inner_e += '<div id="files_mail"     class="buttons"  onclick="files.click_php(this.id)" ' +common_buttonpos_menu(4,0)+'>email</div>';
-    inner_e += '<div id="files_create"   class="buttons"  onclick="files_show_create();" '     +common_buttonpos_menu(6,0)+'>new file</div>';
+    //inner_e += '<div id="files_mail"     class="buttons"  onclick="files.click_php(this.id)" ' +common_buttonpos_menu(4,0)+'>email</div>';
+    inner_e += '<div id="files_create"   class="buttons"  onclick="files_show_create();" '     +common_buttonpos_menu(7,0)+'>new file</div>';
     inner_e += '<div id="files_zoom"     class="buttons"  onclick="files_set_zoom();" '        +common_buttonpos_menu(3,0)+'>'+files.zoom_arr[files.zoom]+'</div>';
-    inner_e += '<div id="files_fontsize" class="buttons"  onclick="common_show_fontsize('+obj+');" '+common_buttonpos_menu(7,0)+'> font size </div>';
+    inner_e += '<div id="files_fontsize" class="buttons"  onclick="common_show_fontsize('+obj+');" '+common_buttonpos_menu(0,0)+'> font size </div>';
     //inner_e += '<div id="files_fontsize" class="buttons"  onclick="common_show_fontsize();" '+    common_buttonpos_menu(7,0)+'> font size </div>';
-    inner_e += '<div id="files_past"     class="buttons disabled" onclick="" '+common_buttonpos_menu(5,0)+'>past</div>';
-    inner_e += '<div id="files_sound"    class="buttons disabled" onclick="" '+common_buttonpos_menu(0,0)+'>sound</div>';
+    inner_e += '<div id="files_past"     class="buttons disabled" onclick="" '+common_buttonpos_menu(5,0)+'> past </div>';
+    inner_e += '<div id="files_sound"    class="buttons disabled" onclick="" '+common_buttonpos_menu(4,0)+'> sound </div>';
+    inner_e += '<div id="files_download" class="buttons disabled" onclick="" '+common_buttonpos_menu(6,0)+'> down load </div>';
     common_create_menu('files_menu', 0, inner_e);
 }
 function files_show_create(){
@@ -189,6 +162,34 @@ function files_show_login(){
     inner_e+= '<div id="files_userremember" class="buttons disabled" onclick="" '+common_buttonpos_menu(8,0,4,3)+'> remem- ber me</div>';
     common_create_menu('files_lodin', 0, inner_e);
 }
+function files_show_addcontact(){
+	var inner_e="";
+    inner_e+= '<div id="files_addcontact_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_addcontact_zoom" class="text_zoom">file</div></div>';
+    inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_edittext_addcontact(123);" style="left:40%; top:45%;">edit name</div>';
+    
+    inner_e+= '<div hidden id="files_addcontact_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
+    inner_e+= '<form action="" method="post">';
+    inner_e+= '<input type="text"   id="addcontact_text_id"     name="addcontact_text_name"   value="file" style="width:0%;height:0%;">';
+    inner_e+= '<input type="submit" id="addcontact_submit_id"   name="addcontact_submit_name" value="create file" ></div>';
+    inner_e+= '<div id="files_addcontact_id" class="buttons" onclick="files_click(11);" style="left:13%;top:45%;">create file</div>';
+    common_create_menu('files_addcontact', 0, inner_e);
+}
+function files_show_upload(){
+    var inner_e = "";
+    inner_e+= '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="files_upload_name" onclick="" class="text_zoom"></div></div>';
+    inner_e+= '<div id="files_upload_choose" class="buttons" onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'>choose file</div>';
+    inner_e+= '<div id="files_upload"        class="buttons" onclick="files.click_php(this.id);" '+common_buttonpos_menu(6,0)+'>upload file</div>';
+    common_create_menu('files_upload', 0, inner_e);
+    document.getElementById('ffiles_upload_choose').onchange = uploadOnChange;
+}
+function uploadOnChange() {                                              //alert('file');
+    var filename = this.value;                                           //alert(filename);
+    var lastIndex = filename.lastIndexOf("\\");
+    if (lastIndex >= 0) {
+        filename = filename.substring(lastIndex + 1);
+    }document.getElementById('files_upload_name').innerHTML = filename;
+}
+
 //-- text display functions ---------------------------------------------------------------
 
 function files_scroll(order, i_utter){                                   //alert('order '+order);

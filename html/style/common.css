@@ -5,8 +5,11 @@
   background-color: #e0e2e4;  
   position: fixed; left:0;top:0; width:100%;height:100%;
   font-weight:400; font-size:20px; text-align:center; 
-  font-family: "Times New Roman", Georgia, Serif;
-  /*font-family: "Ubuntu"; */
+  
+  font-family: Rockwell, "Courier Bold", Courier, Georgia, Times, "Times New Roman", serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-family: "Open Sans";
+  font-family: "Times New Roman", Georgia, Serif;  
 }
 .text{
   font-style:normal; 
@@ -18,19 +21,18 @@
 /*-- buttons -------------------------------------------------------------*/
 .buttons_area{}
 .buttons{
-  width:12%; height:17%;    
-  border: solid 10px #8aa0a8;  border-radius: 1%; 
-  background-color: #8aa0a8;   font-size: 6vmin; line-height: 7.5vmin;
+  width:12vw; height:17vh;    
+  background-color: #8aa0a8;   
+  font-size: 6vmin; line-height: 7.5vmin;
   position:fixed; box-sizing:border-box;
   text-align: center; vertical-align:center; 
   word-break: normal; white-space: normal;
   color: rgba(0,0,0,0.45);
+  border: solid 10px #8aa0a8;  border-radius: 0.25vmin; 
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);
 }
 .buttons:hover{
-  border: solid  10px #c4cfd4;  
   border: solid  10px #6c8893;  
-  background-color: #c4cfd4;
   background-color: #6c8893;
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
@@ -39,6 +41,7 @@
   width:12%; height:17%;  position:fixed;  
   word-break: normal; white-space: normal;
   background-color: white;  color: rgba(0,0,0,0.52);
+  border-radius: 0.25vmin; 
   border: dashed 2px #8a8a5c;  box-sizing:border-box;
 }
 .disabled{ opacity:0.4; }
@@ -48,7 +51,7 @@
   font-size:3.2vh; color:rgba(0,0,0,0.6); 
   word-break: break-all; overflow-y: hidden; white-space: normal;
   box-sizing: border-box;
-  background-color: #afdf9f; 
+  background-color: #afdf9f;  border-radius: 0.25vmin; 
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.03), 0 5px 15px 0 rgba(0,0,0,0.15);  
 }
 .files-dir{       border: solid 10px #a6ce7e; background-color:#a6ce7e;  --color:#a6ce7e; }
@@ -62,14 +65,13 @@
   border: solid 10px #98acb3; border-radius: 1%;  font-size: 50px; 
   position: fixed; box-sizing:border-box; width: 2%; height: 2%; 
   text-align: center; vertical-align:top; line-height:100%;
-  word-break: var(--editor-wordbreak);
   color: rgba(0,0,0,0.4);
   background-color: #98acb3;  
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.05), 0 5px 15px 0 rgba(0,0,0,0.17);  
 }
 .buttons_editor:hover{ 
   background-color: #a7b8be; border-color: #a7b8be; 
-  opacity: 0.6;
+  opacity: 0.6; border-radius: 0.25vmin; 
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
 .nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
@@ -87,17 +89,17 @@
   position:fixed; text-align:center; box-sizing:border-box;
   font-size:3vh; color:rgba(0,0,0,0.8);
   line-height: 5vh; 
-  background-color: white; 
+  background-color: white;  border-radius: 0.25vmin; 
   border: dashed 2px #8a8a5c;
 }.text_scroll{
   position:relative; left:0%;top:0%; width:99.5%;height:100%;  box-sizing:border-box;
   white-space:pre-wrap; overflow-y: scroll; overflow-x: hidden;
 }.text_scroll::-webkit-scrollbar {
-  color:black; 
+  color:black;  border-radius: 0.25vmin; 
 }.text_scroll::-webkit-scrollbar-track {
-  position:absolute; left:0%;
+  position:absolute; left:0%; border-radius: 0.25vmin; 
 }.text_scroll::-webkit-scrollbar-thumb {
-  background-color: #c8ccd0;
+  background-color: #c8ccd0; border-radius: 0.25vmin; 
 }.reader_text{
   position:relative; left:2.5%;top:2%; width:93.5%;height:90%; 
   background-color: rgba(255,255,255,0.9);
@@ -105,12 +107,12 @@
 
 /*-- zoom ----------------------------------------------------------------*/
 .reader_zoom_box{
-  left:1%; top:78%; width:70%; height: 20%; 
+  left:1vw; top:78vh; width:70vw; height: 20vh; 
   position:fixed; 
-  background-color: white; 
+  background-color: white;  border-radius: 0.25vmin; 
   border: dashed 2px #8a8a5c;  box-sizing:border-box;
 }.text_zoom{
-  font-size: 90px;  border-radius: 1%;
+  border-radius: 1%; font-size: 14vmin; line-height: 19vmin;
   position:relative; width:100%; height:97.5%;  box-sizing:border-box;
   font-style:normal;  color: rgba(0,0,0,0.58);
   overflow-x: scroll; overflow-y: hidden; white-space:nowrap; 
@@ -138,12 +140,12 @@
 }
 .menu_area{
  left:10%;top:10%; position:fixed; 
- width:80%;height:80%; 
+ width:80%;height:80%; border-radius: 0.25vmin; 
  background-color:rgba(255,255,255,0.9);
 }
 .menu_area_lvl2{
  left:12%;top:12.3%; position:fixed; 
- width:80%;height:80%; 
+ width:80%;height:80%;  border-radius: 0.25vmin; 
  background-color:rgba(255,255,255,0.95);
 }
 /*-- caret ---------------------------------------------------------------*/ 
@@ -156,11 +158,11 @@
   -o-animation: 1.3s blink step-end infinite;
   animation: 1.3s blink step-end infinite;
 }
-@keyframes "blink"         { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
-@-moz-keyframes blink      { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
-@-webkit-keyframes "blink" { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
-@-ms-keyframes "blink"     { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
-@-o-keyframes "blink"      { from, to {color:#59aa09; color: var(--color-cursor);} 50% {color: transparent;} }
+@keyframes "blink"         { from, to {color:#59aa09;} 50% {color: transparent;} }
+@-moz-keyframes blink      { from, to {color:#59aa09;} 50% {color: transparent;} }
+@-webkit-keyframes "blink" { from, to {color:#59aa09;} 50% {color: transparent;} }
+@-ms-keyframes "blink"     { from, to {color:#59aa09;} 50% {color: transparent;} }
+@-o-keyframes "blink"      { from, to {color:#59aa09;} 50% {color: transparent;} }
 
 
 /*-- */

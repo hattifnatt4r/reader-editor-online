@@ -1,14 +1,11 @@
-//alert('reader');
+//-- reader variables ----------------------------------------------------------------
 
 var reader = {
-    latest_w: "p0s0w0",
-    latest_s: "p0s0",
-    latest_p: "p0",
+    latest_w: "p0s0w0", latest_s: "p0s0", latest_p: "p0",
     id_prev: "p0s0w0",
     id_curr: "p0s0w0",
     ischanged_text: false,
     ineditor: false,
-    
     iter: 0,
     selecttype: 2,
     zoomtype: 0,
@@ -18,46 +15,60 @@ var reader = {
     editor_iter: 0,
     mailtext: "",
     cookie_number: 14,
+    
     fname: "",
     cookie_suffix: "_",
     name: 'reader',
+    text_parsed: "",
+    word_id: [], sentence_id: [], paragraph_id: [],
     
-    text_parsed: ""
+    zoomtype_arr: ['no zoom', 'by word', 'by sentence'],
+    
+    get_id_array: function(){
+        var id_arr = [];
+        if (this.selecttype == 1){ id_arr=this.sentence_id; }    
+        else if (this.selecttype == 2){ id_arr=this.paragraph_id; }    
+        else if (this.selecttype == 0){ id_arr=this.word_id; }                      
+        return(id_arr);
+    },
+    get_id: function(){
+        var latest_id;
+        var id_arr = this.get_id_array();                                         
+        if (this.iter==-1){ latest_id='file_title'; }
+        else{ latest_id = id_arr[this.iter]; }                              
+        return(latest_id);
+    },
+    get_id_backup: function(){
+        var latest_id;
+        if (this.selecttype == 0){ latest_id=this.latest_w; }    
+        else if (this.selecttype == 1){ latest_id=this.latest_s; }    
+        else if (this.selecttype == 2){ latest_id=this.latest_p; }    
+        return(latest_id);
+    },
     
 }
+window.onbeforeunload = reader_beforunload;
+function reader_beforunload() { common.cookie_save.call(reader); common.cookie_save(); }
+//function reader_clearcookie(){ cookie_delete_all(); }
+
+//-- run reader ---------------------------------------------------------------------
 reader.fname = document.getElementById('file_title').innerText.replace(' ','');
 reader.cookie_suffix = "_"+reader.fname;
 
-var word_id=[], sentence_id=[], paragraph_id=[];
-
-//-- run reader ---------------------------------------------------------------------
-//-----------------------------------------------------------------------------------
-//set_cookie("isset_"+reader.fname, "");                                 
-                                                                         //alert( document.cookie );
-if (cookie_get('isset_'+reader.fname)!='isset'){        //alert('set_cookie');
-	cookie_set("isset_"+reader.fname, "isset");
-	common.cookie_save.call(reader);
-}else{ common.cookie_load.call(reader); }   
-common.cookie_load();                                                            
-window.onbeforeunload = reader_beforunload;
-function reader_beforunload() { common.cookie_save.call(reader); common.cookie_save(); }
-
-
-function reader_clearcookie(){ cookie_delete_all(); }
+if (cookie_get('isset_'+reader.fname)!='isset'){                         //alert('set_cookie');
+    cookie_set("isset_"+reader.fname, "isset");
+    common.cookie_save.call(reader);
+}else{ common.cookie_load.call(reader); }                                //alert( document.cookie )
+common.cookie_load();
 
 reader_run();
 
 function reader_run() {                                                  //alert('reader_run');
-
-    screen_height = window.screen.height+'px';
-    screen_width = window.screen.width+'px';
-    document.body.style.setProperty('--screen-height', screen_height);
-    document.body.style.setProperty('--screen-width', screen_width);     //alert('reader 2');
-    
     reader_show_buttons();                                               //alert('buttons');
     create_element('reader_zoom_box','reader_zoom_box', 'base_elements');
     document.getElementById("reader_zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
     document.getElementById("base_elements").appendChild(document.getElementById("text_from_file_box"));
+    
     subdir=get_subdir(reader.fname);                                            
     name = get_usrname(reader.fname);                                           //alert('NAME: '+name);
     if (subdir=='mail'){
@@ -73,7 +84,7 @@ function reader_run() {                                                  //alert
     
     reader_text();                                                       //alert(word_id); //alert(paragraph_id);
      
-    reader_select_type(order=0);                                         //alert('select_type');
+    reader_set_selecttype(order=0);                                         //alert('select_type');
     reader_set_zoomtype(0);                                              //alert('zoom_type');
     common_set_fontsize(common.fontsize, common);
     
@@ -87,9 +98,8 @@ function reader_text(){                                                  //alert
         var text = document.getElementById('hidden_text').innerHTML;
         var parser = reader_parse_txt(text, 0);
         var text_parsed = parser[0];                                     //alert('parsed 0 '+text_parsed);
-        word_id=parser[1]; sentence_id=parser[2]; paragraph_id=parser[3];
-                                                                         //alert('id_final '+sentence_id);
-                                                                         //alert('id_final '+word_id+' '+sentence_id+' '+paragraph_id);
+        reader.word_id=parser[1]; reader.sentence_id=parser[2]; reader.paragraph_id=parser[3];
+                                                                        
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
         reader.text_origin = text;
         reader.text_parsed = text_parsed;
@@ -106,7 +116,7 @@ function reader_text(){                                                  //alert
         
         var parser = reader_parse_txt(text_all_origin, 0); 
         var text_parsed = parser[0]; 
-        word_id=parser[1];  sentence_id=parser[2]; paragraph_id=parser[3];
+        reader.word_id=parser[1];  reader.sentence_id=parser[2]; reader.paragraph_id=parser[3];
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert(text_parsed);
         reader.text_parsed = text_parsed;
         
@@ -119,34 +129,21 @@ function reader_text(){                                                  //alert
             text=merge_text(text);
         }
         else{text=reader.text_origin;}                  //alert('SAVE: '+text);
-        save_file(text);
+        reader_save(text);
     }
 }                   
 
-
-function save_file(text){
+function reader_save(text){
         document.getElementById('save_text_text_js').value = text; 
         document.getElementById('save_text_submit_js').click();          //alert('saved '+text);
-    }
- 
-function reader_play_pause(){ 
-    if (reader_play_counter==0){                                         //alert('paused');
-        window.speechSynthesis.resume(); 
-        document.getElementById('playpause').innerHTML=symbols_play_pause[1];
-        reader_play_counter=1; 
-        }
-    else if (window.speechSynthesis.speaking ){                          //alert('speaking'); 
-        window.speechSynthesis.pause(); 
-        document.getElementById('playpause').innerHTML=symbols_play_pause[0];
-        reader_play_counter=0; 
-    }
-    else{reader_utter(1, 0); reader_play_counter=1;}
 }
-
-function scrollbut_div(order,stop,onend){
+ 
+//-- reader scroll functions -------------------------------------------------------------------
+ 
+function reader_scroll(order,stop,onend){                                //alert('scroll: '+order+' '+stop+' '+onend);
     iter = reader.iter;
     n_select_type = reader.selecttype;
-    id_arr = get_id_array();
+    id_arr = reader.get_id_array();
     max_iter = id_arr.length;
     if (order==1 && iter < max_iter-1 ) { iter += 1; }
     else if (order==0 && iter > -1) { iter -=1; } 
@@ -176,15 +173,10 @@ function scrollbut_div(order,stop,onend){
             }
     }
     reader_utter(stop_i=stop, onend); 
-    highlite(); 
+    reader_highlite(); 
     scroll_to(id,'text_from_file_box', title=0);                         //alert('scroll 1');
     //scroll_to(id,'reader_zoom_box',title=1); alert('scroll 2');
-    zoom_set_text();  
-    //n_zoom_type = parseInt(get_cookie('zoomtype_'+reader.fname));
-    //if (n_zoom_type!=0){ scroll_to(id,'reader_zoom_box',title=1); zoom_set_text(); }
-    //document.getElementById('word_i').value = document.getElementById(id).innerText; 
-    //alert( document.getElementById(id).innerText );
-    //reader_if_editable();
+    reader_fill_zoom();  
     if (iter==-1){ edit_function = ''; edit_class='buttons disabled'; 
         document.getElementById('reader_edit').className='buttons disabled';
         document.getElementById('reader_edit').setAttribute( "onclick", '' );
@@ -194,24 +186,23 @@ function scrollbut_div(order,stop,onend){
     }
 }    
 function reader_utter(stop_i, onend) {
-    id = get_id();
+    id = reader.get_id();
     iter = reader.iter;
     n_select_type = reader.selecttype;
     if (n_select_type==0 || iter==-1 ){ utter(document.getElementById(id).innerText, stop=stop_i, onend); }
     else {
         if (n_select_type==2){ 
-            first_iter = sentence_id.indexOf(id+'s0');                   //alert('first '+first_iter);
-            if ( iter==paragraph_id.length-1 ){ last_iter=sentence_id.length; }
-            else { last_iter = sentence_id.indexOf(paragraph_id[iter+1]+'s0'); }  //alert('last '+last_iter);
-            sentence_id_part = sentence_id.slice(first_iter,last_iter);  //alert(sentence_id_part);
-            utter_paragraph(id, sentence_id_part, word_id, stop_i, onend); 
+            first_iter = reader.sentence_id.indexOf(id+'s0');                   //alert('first '+first_iter);
+            if ( iter==reader.paragraph_id.length-1 ){ last_iter=reader.sentence_id.length; }
+            else { last_iter = reader.sentence_id.indexOf(reader.paragraph_id[iter+1]+'s0'); }  //alert('last '+last_iter);
+            sentence_id_part = reader.sentence_id.slice(first_iter,last_iter);  //alert(sentence_id_part);
+            utter_paragraph(id, sentence_id_part, reader.word_id, stop_i, onend); 
              
         }
-        if (n_select_type==1){ utter_sentence(id, word_id, stop_i, onend); }
+        if (n_select_type==1){ utter_sentence(id, reader.word_id, stop_i, onend); }
     }
 }
-
-function zoom_set_text(){                                                //alert('zoom_set_text');
+function reader_fill_zoom(){                                                //alert('reader_fill_zoom');
     var n_zoom_type = reader.zoomtype;
     var text='empty';
     if (n_zoom_type==1){
@@ -222,47 +213,43 @@ function zoom_set_text(){                                                //alert
     var elem=document.getElementById('reader_zoom');
     elem.innerHTML=text;                                                 //alert('zoom_text '+text);
 }
-function highlite(){                                                     //alert('highlite');
+function reader_highlite(){                                                     //alert('reader_highlite');
     id_prev = reader.id_prev;
-    id = get_id()                                                        //alert('highlite 0 id '+id +' id_prev '+id_prev);
+    id = reader.get_id()                                                        //alert('reader_highlite 0 id '+id +' id_prev '+id_prev);
     document.getElementById(id_prev).className='text';
-    div = document.getElementById(id);                                   //alert('highlite div '+ div + ' id '+id +' id_prev '+id_prev);
+    div = document.getElementById(id);                                   //alert('reader_highlite div '+ div + ' id '+id +' id_prev '+id_prev);
     div.className='text_highlite';                                       //alert('highlite 2');
     reader.id_prev = id;
 }
 
+//-- reader play ----------------------------------------------------------------------------------
 
-function get_id(){                                                       //alert('get_id()');
-    var iter = reader.iter;
-    var id_arr = get_id_array();                                             //alert(id_arr);
-    if (iter==-1){ latest_id='file_title'; }
-    else{ latest_id = id_arr[iter]; }                                    //alert('get_id() done');
-    return(latest_id);
-}function get_id_array(){                                                //alert('get_id_array()');
-    var n_select_type = reader.selecttype;
-    if (n_select_type == 1){ id_arr=sentence_id; }    
-    else if (n_select_type == 2){ id_arr=paragraph_id; }    
-    else if (n_select_type == 0){ id_arr=word_id; }                      //alert('get_id_array() done '+id_arr);
-    return(id_arr);
-}function get_id_backup(){                                               //alert('get_id_backup()');
-    var n_select_type = reader.selecttype;
-    if (n_select_type == 0){ latest_id=reader.latest_w; }    
-    else if (n_select_type == 1){ latest_id=reader.latest_s; }    
-    else if (n_select_type == 2){ latest_id=reader.latest_p; }    
-    return(latest_id);
+function reader_play_pause(){ 
+    if (common.play_counter==0){                                         //alert('paused');
+        window.speechSynthesis.resume(); 
+        document.getElementById('playpause').innerHTML=symbols_play_pause[1];
+        common.play_counter=1; 
+        }
+    else if (window.speechSynthesis.speaking ){                          //alert('speaking'); 
+        window.speechSynthesis.pause(); 
+        document.getElementById('playpause').innerHTML=symbols_play_pause[0];
+        common.play_counter=0; 
+    }
+    else{reader_utter(1, 0); common.play_counter=1;}
 }
+//-- reader menu functions -----------------------------------------------------------
 
-function reader_select_type(order){                                      //alert('select');
+function reader_set_selecttype(order){                                      //alert('select');
     n_select_type = reader.selecttype;
     types = ['select <br> .','select <br> . .','select <br> . . .'];
     if (order==1){
         n_select_type = (n_select_type+1)%3;
         reader.selecttype = n_select_type;
-        id_arr = get_id_array();  latest_id = get_id_backup();           //alert('selecttype '+iter);
+        id_arr = reader.get_id_array();  latest_id = reader.get_id_backup();           //alert('selecttype '+iter);
         reader.iter = id_arr.indexOf(latest_id);
     }        
-    highlite(); zoom_set_text();                                         //alert('select 1');
-    id=get_id(); 
+    reader_highlite(); reader_fill_zoom();                                         //alert('select 1');
+    id=reader.get_id(); 
     reader.id_curr = id;
     document.getElementById('reader_selecttype').innerHTML=types[n_select_type];
 }
@@ -279,11 +266,11 @@ function reader_set_zoomtype(n_zoomtype){
         elem.style.visibility='visible';
         document.getElementById('text_from_file_box').style.height = textheight_zoom; //alert(textheight_zoom);
     }                                                                    //alert('set_zoomtype');
-    zoom_set_text();                                                     //alert('zoom_set_text');
+    reader_fill_zoom();                                                     //alert('reader_fill_zoom');
     elem = document.getElementById('reader_zoomtype_zoom');
-    if (elem){ elem.innerHTML=zoomtype_arr[n_zoomtype]; }
+    if (elem){ elem.innerHTML=reader.zoomtype_arr[n_zoomtype]; }
     elem = document.getElementById('reader_menu_zoomtype_text');
-    if (elem){ elem.innerHTML=zoomtype_arr[n_zoomtype]; }                //alert('done');
+    if (elem){ elem.innerHTML=reader.zoomtype_arr[n_zoomtype]; }                //alert('done');
 }
     
 //-- buttons -------------------------------------------------------------------------
@@ -296,13 +283,13 @@ function reader_show_buttons(){                                          //alert
     elem = document.getElementById('reader_buttons_area');
     inner_e = '<div id="reader_menu" class="buttons" onclick="reader_show_menu();" '+common_buttonpos(0)+'>menu</div>' ;
     inner_e+= '<div id="reader_edit"     class="'+edit_class+'" '+edit_function+' '+common_buttonpos(1)+'>edit</div>' ;
-    inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_select_type(1);" '+common_buttonpos(2)+'>word</div>' ;
-    inner_e+= '<div id="prev" class="buttons" onclick="scrollbut_div(0,1,0);" '+common_buttonpos(3)+'>'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="next" class="buttons" onclick="scrollbut_div(1,1,0);" '+common_buttonpos(7)+'>'+symbol_next+'</div>' ;
+    inner_e+= '<div id="reader_selecttype" class="buttons" onclick="reader_set_selecttype(1);" '+common_buttonpos(2)+'>word</div>' ;
+    inner_e+= '<div id="prev" class="buttons" onclick="reader_scroll(0,1,0);" '+common_buttonpos(3)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="next" class="buttons" onclick="reader_scroll(1,1,0);" '+common_buttonpos(7)+'>'+symbol_next+'</div>' ;
     
     //inner_e+= '<div id="reader_speed"     class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+symbol_speed+'</div>' ;
     inner_e+= '<div id="reader_mail" class="buttons" onclick="reader_show_mail();" '+common_buttonpos(4)+'>'+symbol_mail+'</div>' ;
-    inner_e+= '<div id="readall"     class="buttons" onclick="scrollbut_div(-1,1,1);"  '+common_buttonpos(5)+'>'+symbol_readall+'</div>' ;
+    inner_e+= '<div id="readall"     class="buttons" onclick="reader_scroll(-1,1,1);"  '+common_buttonpos(5)+'>'+symbol_readall+'</div>' ;
     inner_e+= '<div id="playpause"   class="buttons" onclick="reader_play_pause()"    '+common_buttonpos(6)+'>'+symbol_play+'</div>' ;
     elem.innerHTML=inner_e;
     //dir = get_subdir(reader.fname);
@@ -318,13 +305,13 @@ function reader_show_menu(){
     inner_e+= '<div id="common_lang"         class="buttons"          onclick="common_show_lang(1, false)"      style="left:50%;top:20%;">local lang</div>';
     inner_e+= '<div id="reader_go"                class="buttons disabled" onclick=""                        style="left:70%;top:20%;">go</div>' ;
     inner_e+= '<div id="reader_menu_go-files"     class="buttons"          onclick="goto_files();"           style="left:70%;top:60%;">go home</div>';
-    inner_e+= '<div id="reader_menu_zoomtype_text" class="buttons_text"                                      style="left:37%;top:60%;">'+zoomtype_arr[n_zoom]+'</div>' ;
+    inner_e+= '<div id="reader_menu_zoomtype_text" class="buttons_text"                                      style="left:37%;top:60%;">'+reader.zoomtype_arr[n_zoom]+'</div>' ;
     inner_e+= '<div id="reader_menu_zoomtype"     class="buttons"          onclick="reader_show_zoomtype();" style="left:50%;top:60%;">zoom</div>' ;
     common_create_menu('reader_menu', 0, inner_e);
 }
 function reader_show_zoomtype(){
     n_zoom = reader.zoomtype;
-    inner_e = '<div id="reader_zoomtype_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="reader_zoomtype_zoom" class="text_zoom">'+zoomtype_arr[n_zoom]+'</div></div>';
+    inner_e = '<div id="reader_zoomtype_zoombox" class="reader_zoom_box" style="left:20%;top:16%;width:52%;"><div id="reader_zoomtype_zoom" class="text_zoom">'+reader.zoomtype_arr[n_zoom]+'</div></div>';
     inner_e+= '<div id="0"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:20%; top:60%;">no zoom</div>';
     inner_e+= '<div id="1"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:45%; top:60%;">by word</div>';
     inner_e+= '<div id="2"      class="buttons"     onclick="reader_set_zoomtype(this.id)"   style="left:70%; top:60%;">by sentence</div>';
@@ -343,7 +330,7 @@ function goto_files(){ window.location.href = '/index.html'; window.speechSynthe
 function reader_editor(){                                                //alert('to_editor');
     text_all = document.getElementById('text_from_file').innerHTML;
     reader.text_parsed = text_all;
-    id = get_id();
+    id = reader.get_id();
     text = document.getElementById(id).innerHTML;
     text_plane = merge_text(text); 
     reader.ineditor = true;                                      //alert(text_plane);
