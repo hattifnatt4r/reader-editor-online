@@ -23,28 +23,29 @@
 .buttons{
   width:12vw; height:17vh;    
   background-color: #8aa0a8;   
-  font-size: 6vmin; line-height: 7.5vmin;
+  font-size: 6vmin; line-height: 6.2vmin;
   position:fixed; box-sizing:border-box;
-  text-align: center; vertical-align:center; 
+  text-align: center; vertical-align:middle; /*line-height: 17vmin;*/
   word-break: normal; white-space: normal;
   color: rgba(0,0,0,0.45);
-  border: solid 10px #8aa0a8;  border-radius: 0.25vmin; 
+  border: solid 1vh #8aa0a8;  border-radius: 0.25vmin; 
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);
 }
 .buttons:hover{
-  border: solid  10px #6c8893;  
+  border: solid  1.3vh #6c8893;  
   background-color: #6c8893;
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
 .buttons_text{
   font-size: 6vmin; line-height: 7.5vmin;
-  width:12%; height:17%;  position:fixed;  
+  width:12vw; height:17vh;  position:fixed;  
   word-break: normal; white-space: normal;
   background-color: white;  color: rgba(0,0,0,0.52);
   border-radius: 0.25vmin; 
   border: dashed 2px #8a8a5c;  box-sizing:border-box;
 }
-.disabled{ opacity:0.4; }
+.disabled{ opacity:0.25; }
+.disabled:hover{ opacity:0.2; }
 .files{
   position: absolute; 
   text-align: left; vertical-align:top;
@@ -61,26 +62,14 @@
 .files-txt:hover{ border: solid 10px #70a9a9; background-color:#70a9a9;  --color:#70a9a9; }
 .files-txt-hover{ border: solid 10px #70a9a9; background-color:#70a9a9;  --color:#70a9a9; }
 .attention{       border: solid 10px #a6ce7e; background-color: #a6ce7e; }
-.buttons_editor{
-  border: solid 10px #98acb3; border-radius: 1%;  font-size: 50px; 
-  position: fixed; box-sizing:border-box; width: 2%; height: 2%; 
-  text-align: center; vertical-align:top; line-height:100%;
-  color: rgba(0,0,0,0.4);
-  background-color: #98acb3;  
-  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.05), 0 5px 15px 0 rgba(0,0,0,0.17);  
-}
-.buttons_editor:hover{ 
-  background-color: #a7b8be; border-color: #a7b8be; 
-  opacity: 0.6; border-radius: 0.25vmin; 
-  box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
-}
+
 .nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
   line-height:60%; font-size: 800%; color:#99bd75; color:#80ac53; color:#8cb464; }
 .nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
-.symbol{ background-color: #99bd75; border-color: #99bd75; font-size: 400%; }
-.symbol:hover{ background-color: #a6c587; border-color: #a6c587; opacity: 0.6; }
-.symbol0{ background-color: #99bd75; border-color: #99bd75; }
-.symbol0:hover{ background-color: #a6c587; border-color: #a6c587; }
+.symbol{ background-color: #99bd75; border-color: #99bd75; }
+.symbol{ background-color: #94B96E; border-color: #94B96E; }
+.symbol:hover{ background-color: #80ac53; border-color: #80ac53; }
+.symbol:hover{ background-color: #73a145; border-color: #73a145; }
 
 
 /*-- reader text ---------------------------------------------------------*/

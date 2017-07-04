@@ -1,5 +1,5 @@
 //-- editor variables -------------------------------------------------------------------
-
+//alert('editor');
 var editor = {
 	dict: {},
 	style: {},
@@ -11,6 +11,9 @@ var editor = {
 	
 	sound_navigator: 1,
 	sound_buttons: 0,
+	capslock: 0,
+	caps: 0,
+	pin_letters: 0,
 };
 
 editor.dict = {
@@ -26,12 +29,13 @@ editor.dict = {
 	
 	symbolset7_en: [ 
 		['m','u','l','d',  'c','r','h','s','n','i',  'o','a','t','e','space'],
-	    ['z','q','x','j','k','v',  'b','p','y','g','f','w',  'newline','dash','emark','qmark','dot','comma'],             
-	    ['lbr','rbr','star','quotes','colon','semicolon',  '1','2','3','4','5','space',  '6','7','8','9','0','space']
+	    ['z','q','x','j','k','v',  'b','p','y','g','f','w',  'emark','qmark','dash','dot','comma'],             
+	    ['lbr','rbr','star','quotes','colon','semicolon','space',  '1','2','3','4','5',  '6','7','8','9','0','newline']
 	], symbolset7_ru: [ 
 		['r17','r5','r14','r12',  'r13','r3','r18','r19','r20','r15',  'r10','r1','r6','r16','space'],    
-        ['r22','r31','r27','r24','r32','r26',  'r8','r23','r11','r25','r2','r9',  'r4','r30','r29','r33','r21','dot','comma'],    
-		['r28','colon','semicolon','emark','qmark','space',  '1','2','3','4','5','dash',  '6','7','8','9','0','space']
+        ['r22','r31','r27','r24','r32','r26',  'r8','r23','r11','r25','r2','r9',  'r4','r30','r29','r33','r21'],    
+		//['r28','colon','semicolon','emark','qmark','dot',  '1','2','3','4','5','dash',  '6','7','8','9','0','comma']
+		['r28','1','2','3','4','5','semicolon',  '6','7','8','9','0','colon',   'newline','emark','qmark','dash','dot','comma']
 	], symbolset7_math: [
 		['minus','plus','comma','dot','9','8',  '3','4','5','6','7',  '2','1','0','space'],    
 		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'emark','qmark','sqrt','power','less','more',  'newline','eq','slash','cdot','lbr','rbr'],    
@@ -45,7 +49,7 @@ editor.dict = {
 	    ['space','space','space','space','z',  'q','x','j','k','v','b',  'dash','p','y','g','f','w','underscore'],             
 	    ['space','space','space','space','space','space',  'space','1','2','3','4','5', 'space','6','7','8','9','0']
 	],                               
-	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_en, this.symbolset7_ru, this.symbolset7_files, this.symbolset7_math2] ; },
+	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_math2, this.symbolset7_files, this.symbolset7_en, this.symbolset7_ru] ; },
 	
 };                                                                       //alert(editor.dict.symbolset_all());
 
@@ -62,9 +66,10 @@ editor.style = {
 	box_class :  'text_zoom',
 	zoomspace : 5,
 	nlines_lvl0: 3,
+	nlines_lvl1: 2,
 	fontsize: 0,
 	cursorshift: 0,
-	class_arr: ["buttons", "buttons symbol0", "buttons nobkg", "buttons disabled"],
+	class_arr: ["buttons", "buttons symbol", "buttons nobkg", "buttons disabled"],
 	
 	get_button: function (i, class_n){                                   //alert('pos: '+this.b_top);
 		if (class_n===undefined) {class_n=0;}
@@ -84,37 +89,33 @@ editor.style = {
 	    if ( nx>0 )   { x -= b_width*(1-this.b_leftwidth); }
 	    if ( nx===0 )           { b_width = b_width*this.b_leftwidth; }
 	    if ( nx===this.b_nx-1 ) { b_width = b_width*this.b_rightwidth; }
-	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight; style+='line-height:60%;'; }
+	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight; //style+='line-height:60%;'; 
+		}
 	    
 	    style+= 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);
 	    return('class="'+class_name+'" style="'+style+'"');
 	},
 	
-	set_style: function (stylename){                                     //alert(stylename);
-		if (stylename==='upper_oneline') {                               //alert(stylename);
-		    this.b_nx=6; this.b_ny=3; 
+	set_style: function (stylename, ncol){                                     //alert(stylename);
+		if (stylename==='bottom_3rows') {                               //alert(stylename);
+			if (ncol===undefined) {ncol=7;}
+		    this.b_nx=ncol; this.b_ny=3; 
 		    this.b_yratio=0.5; this.b_xratio=0.5;
-		    this.b_left=2; this.b_right=98; this.b_top=35; this.b_bottom=97; this.b_botheight=0.8;
+		    this.b_left=2; this.b_right=98; this.b_top=42.5; this.b_bottom=97; this.b_botheight=0.8;
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 6;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
-		    this.fontsize = this.window_height*zoomheight / 100 * 0.7;
 		    document.getElementById('editor_text_box').style.height=zoomheight+'%';
-		    document.getElementById('editor_text_box').className='reader_zoom_box';
-		    document.getElementById('editor_text_area').className='text_zoom';
-		    document.getElementById('editor_text_area').style.fontSize = this.fontsize;
+		    editor_set_fontsize(this.nlines_lvl1,1);  
 		     
-		}else if (stylename==='upper_twolines') {                        //alert('twolines');
-		    this.b_nx=6; this.b_ny=2; 
-		    this.b_yratio=0.5; this.b_xratio=0.55;
-		    this.b_left=2; this.b_right=98; this.b_top=64; this.b_bottom=97; this.b_botheight=0.7;
+		}else if (stylename==='bottom_2rows') {                          //alert('2rows');
+			if (ncol===undefined) {ncol=6;}
+		    this.b_nx=ncol; this.b_ny=2; 
+		    this.b_yratio=0.5; this.b_xratio=0.5;
+		    this.b_left=2; this.b_right=98; this.b_top=64; this.b_bottom=97; this.b_botheight=0.8;
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 5;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
-		    document.getElementById('editor_text_box').style.height = zoomheight+'%';
-		    document.getElementById('editor_text_box').className='text_scroll_box';
-		    document.getElementById('editor_text_area').className='text_scroll';
-		    document.getElementById('editor_text_box').style.width='96%';
-		    document.getElementById('editor_text_box').style.left='2%';
-		    editor_set_fontsize(this.nlines_lvl0);                       //alert(this.b_top);
+		    document.getElementById('editor_text_box').style.height = zoomheight+'%';  
+		    editor_set_fontsize(this.nlines_lvl0,0);                     //alert('nlines_lvl0: '+this.nlines_lvl0);
 		    		    
 		}else if (stylename==='cut_leftright') {                         //alert(stylename);
 		    this.b_nx=7; 
@@ -140,7 +141,8 @@ editor.style = {
 if (typeof reader!=='undefined' && reader.ineditor===true) { reader_editor();}
 
 function editor_run(parent, text_raw, destination, iter){                //alert(destination);
-	editor.style.nlines_lvl0 = common.editor_nlines;
+	editor.style.nlines_lvl0 = common.editor_nlines_lvl0;
+	editor.style.nlines_lvl1 = common.editor_nlines_lvl1;
 	if (text_raw==undefined) { text_raw=""; }
 	if (destination==undefined) { destination=""; }
 	if (iter==undefined) { iter=0; }
@@ -149,17 +151,15 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	editor.text_raw = text_raw.toString();
 	editor.iter = iter;
 
-    create_element('editor_area','body_bkg', 'editor_elements');
+    create_element('editor_area','body_bkg', 'base_elements');
     
-	var elem=create_element('editor_text_box','reader_zoom_box', 'editor_area'); 
+	var elem=create_element('editor_text_box','text_scroll_box', 'editor_area'); 
 	elem.style = 'top:2%; width:96%; left:2%;';
-	elem.innerHTML = '<div id="editor_text_area" class="text_zoom" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
+	elem.innerHTML = '<div id="editor_text_area" class="text_scroll" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
 	elem = create_element('editor_buttons_area', '', 'editor_area'); 
-	//document.getElementById("base_elements").appendChild(document.getElementById("editor_buttons_area"));
-	//document.getElementById("base_elements").appendChild(document.getElementById("editor_text_box"));
 	
-	//editor_type = 'upper_oneline';
-	editor_type = 'upper_twolines';
+	//editor_type = 'bottom_3rows';
+	editor_type = 'bottom_2rows';
 	editor.style.set_style(editor_type);
 	
 	document.getElementById('editor_text_area').innerHTML=editor.text_raw;   //alert('editor 3');
@@ -196,10 +196,10 @@ function editor_exit(){                                                  //alert
 function editor_show_start(){                                            //alert('editor_start');
     elem = document.getElementById('editor_buttons_area');
     inner_e0 = "<div id='editor_buttons_area_0'>";
-    inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(4,0);" '+editor.style.get_button(3,1) +'> xyz </div>';
+    inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(1,0);" '+editor.style.get_button(3,1) +'> xyz </div>';
     inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(0,0);" '+editor.style.get_button(9,1) +'> 123 </div>';
-    inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(1,0);" '+editor.style.get_button(4,1) +'> abc </div>';
-    inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(2,0);" '+editor.style.get_button(10,1)+'> абв </div>';
+    inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(3,0);" '+editor.style.get_button(4,1) +'> abc </div>';
+    inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(10,1)+'> абв </div>';
     inner_e0+= '<div id="editor_navigate"   onclick="editor_show_navigate(0);" ' +editor.style.get_button(5)   +'>'+symbol_navigate+'</div>';
     inner_e0+= '<div id="editor_exit"       onclick="editor_exit();" '           +editor.style.get_button(6)  +'> exit </div>';
     inner_e0+= '<div id="editor_menu"       onclick="editor_show_menu();" '      +editor.style.get_button(2)   +'> menu </div>';
@@ -224,37 +224,53 @@ function editor_show_menu(){
     inner_e+= '<div id="editor_sound"        onclick="" '+common_buttonpos_menu(0,3)+'> sound </div>';
     inner_e+= '<div id="editor_read"         onclick="" '+common_buttonpos_menu(4,3)+'> read </div>';
     inner_e+= '<div id="editor_sound_button" onclick="" '+common_buttonpos_menu(1,3)+'> sound </div>';
-    common_create_menu('editor_menu', 0, inner_e, 'editor_buttons_area');
+    common_create_menu('editor_menu', 0, inner_e);
 }
 function editor_show_fontsize(){
 	var inner_e = "";
-    inner_e += '<div id="5"  onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(4,0)+'> 5 lines </div>';
-    inner_e += '<div id="4"  onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(5,0)+'> 4 lines </div>';
-    inner_e += '<div id="3"  onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(6,0)+'> 3 lines </div>';
-    inner_e += '<div id="2"  onclick="editor_set_fontsize(this.id);"  '+common_buttonpos_menu(7,0)+'> 2 lines </div>';
-    common_create_menu('editor_fontsize', 1, inner_e, 'editor_buttons_area');
+    inner_e += '<div id="5"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(4,0)+'> 5 lines </div>';
+    inner_e += '<div id="4"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(5,0)+'> 4 lines </div>';
+    inner_e += '<div id="3"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(6,0)+'> 3 lines </div>';
+    inner_e += '<div id="2"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(7,0)+'> 2 lines </div>';
+    common_create_menu('editor_fontsize', 1, inner_e);
 }
     
 function editor_show_symbols(lang, lvl){                                 //alert('show_symbols');
-    editor.style.set_style('upper_oneline');
+    editor.style.set_style('bottom_3rows');
     editor.style.b_nx=7;
     
     key_arr = editor.dict.symbolset7_all()[lang][lvl];                    //alert(key_arr);
     inner_e = ''; i=0; 
     if (lvl==0){                                                         //alert('lvl=0');
+		var symbol1, symbol2;
+		if (lang===0)      { symbol1 = symbol_nextpage3; symbol2 = symbol_nextpage1; }
+        else if (lang===1) { symbol1 = symbol_nextpage2; symbol2 = symbol_nextpage3; }
+        else               { symbol1 = symbol_nextpage1; symbol2 = symbol_nextpage2; }
+        if (lang===4) { symbol1 = 'эюя'; }
         inner_e+= editor.style.button_delete(6);
         inner_e+= editor.style.button_prev(19);
         inner_e+= editor.style.button_next(20);
-        inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',1);" ' +editor.style.get_button(13) +'>'+symbol_nextpage+'</div>';
-        inner_e+= '<div id="editor_letters_p2" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7)  +'>'+symbol_nextpage+'</div>';
+        inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',1);" ' +editor.style.get_button(13) +'>'+symbol1+'</div>';
+        inner_e+= '<div id="editor_letters_p2" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7)  +'>'+symbol2+'</div>';
         if (editor.parent==="files"){ inner_e+= editor.style.button_exit(14); }
 		else {                        inner_e+= editor.style.button_backto_start(14); }
         reserved=[5,6, 13,14,20];                                        //alert('2: '+inner_e);
         reserved=[6,7, 13,14,20,19];                                        //alert('2: '+inner_e);
     }else {
-        inner_e+= editor.style.button_backto_letters(20,1);
-        reserved=[6,13,20];
-        if (lang===2 && lvl===1) { reserved=[13,20]; }
+        inner_e+= editor.style.button_backto_letters(14,1);
+        inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(7) +'> pin tab </div>';
+        reserved=[6,7,14];
+        if (lvl===2)  { 
+			if (lang===4){ reserved=[7,14]; }
+			else{
+				inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',1);" ' +editor.style.get_button(13) +'>'+symbol_nextpage+'</div>'; 
+				reserved=[7,14,13];
+			}
+		}else if (lvl===1)  { 
+			inner_e+= '<div id="editor_caps"     onclick="editor_capital(1,0,0);" ' +editor.style.get_button(13) +'> caps </div>';
+			inner_e+= '<div id="editor_capslock" onclick="editor_capital(1,1,0);" ' +editor.style.get_button(6)  +'> caps lock </div>';
+			reserved=[7,14,13,6];
+		}
     }                                                                    //alert('3: '+inner_e);
     for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){
         if (reserved.indexOf(ii)==-1 && i<key_arr.length){
@@ -262,7 +278,7 @@ function editor_show_symbols(lang, lvl){                                 //alert
             i_name_button = editor.dict.allchar_buttons()[key_arr[i]];   //alert(i+' '+i_name+' '+i_name_button);
             style = editor.style.get_button(ii, 1);                      //alert(ii, style);
             keys = Object.keys(editor.dict.allchar() ); nn=keys.indexOf(i_name).toString();
-            inner_e += '<div id="editor_letter_'+i_name+'" onclick="editor_set_letter('+nn+', 1);"  '+style+'>'+i_name_button+'</div>';
+            inner_e += '<div id="editor_letter_'+i_name+'" onclick="editor_set_letter('+nn+');"  '+style+'>'+i_name_button+'</div>';
             i+=1;
         } 
     }
@@ -273,33 +289,58 @@ function editor_show_symbols(lang, lvl){                                 //alert
         document.getElementById('editor_buttons_area_1').style.visibility='hidden';
         elem = document.getElementById('editor_buttons_area_2');
     }elem.style.visibility='visible';
-    elem.innerHTML = inner_e;
+    elem.innerHTML = inner_e;                                            //alert('pin: '+editor.pin_letters);
+    editor_capital(0,1);
 }
 
 function editor_show_navigate(lvl){
 	var elem; var inner_e = "";
-	if (lvl===1) {editor.style.set_style('upper_twolines'); }
-    inner_e+= editor.style.button_delete(5);
-    inner_e+= editor.style.button_prev(8);
-    inner_e+= editor.style.button_next(10);
-    inner_e+= '<div id="editor_prevword" onclick="editor_scrollword(0);" ' +editor.style.get_button(7) +'>' +symbol_leftword  +'</div>' ;
-	inner_e+= '<div id="editor_nextword" onclick="editor_scrollword(1);" ' +editor.style.get_button(11)+'>' +symbol_rightword +'</div>' ;
-    inner_e+= '<div id="editor_up"       onclick="editor_scrollvert(0);" ' +editor.style.get_button(3) +'>' +symbol_up        +'</div>' ;
-	inner_e+= '<div id="editor_down"     onclick="editor_scrollvert(1);" ' +editor.style.get_button(9) +'>' +symbol_down      +'</div>' ;
-	inner_e+= '<div id="editor_sound"    onclick="editor_sound();" '       +editor.style.get_button(0) +'>' +symbols_sound[editor.sound_navigator] +'</div>' ;
-	inner_e+= '<div id="editor_spell"    onclick="editor_spell();" '       +editor.style.get_button(1) +'> spell </div>' ;
-    inner_e+= '<div id="editor_show_letter" '+editor.style.get_button(4,2)+'>_</div>';
+	editor.style.set_style('bottom_2rows',7);
+    inner_e+= editor.style.button_delete(6);
+    inner_e+= editor.style.button_prev(10);
+    inner_e+= editor.style.button_next(12);
+    inner_e+= '<div id="editor_prevword" onclick="editor_scrollword(0);" ' +editor.style.get_button(9) +'>' +symbol_leftword  +'</div>' ;
+	inner_e+= '<div id="editor_nextword" onclick="editor_scrollword(1);" ' +editor.style.get_button(13)+'>' +symbol_rightword +'</div>' ;
+    inner_e+= '<div id="editor_up"       onclick="editor_scrollvert(0);" ' +editor.style.get_button(4) +'>' +symbol_up        +'</div>' ;
+	inner_e+= '<div id="editor_down"     onclick="editor_scrollvert(1);" ' +editor.style.get_button(11) +'>' +symbol_down      +'</div>' ;
+	inner_e+= '<div id="editor_sound"    onclick="editor_sound();" '       +editor.style.get_button(2) +'>' +symbols_sound[editor.sound_navigator] +'</div>' ;
+	inner_e+= '<div id="editor_spell"    onclick="editor_spell();" '       +editor.style.get_button(8) +'> spell </div>' ;
+	inner_e+= '<div id="editor_ctrlz"    onclick="editor_ctrlz();"  '      +editor.style.get_button(0,3) +'>' +symbol_ctrlz +'</div>' ;
+	inner_e+= '<div id="editor_ctrly"    onclick="editor_ctrly();"  '      +editor.style.get_button(1,3) +'>' +symbol_ctrly +'</div>' ;
+    inner_e+= '<div id="editor_show_letter" '+editor.style.get_button(5,2)+'>_</div>';
     if (lvl===0){ 
-		inner_e+= editor.style.button_backto_start(6);
+		inner_e+= editor.style.button_backto_start(7);
 		document.getElementById('editor_buttons_area_0').style.visibility='hidden';
 		elem = document.getElementById('editor_buttons_area_1');
 	}else{ 
-		inner_e+= editor.style.button_backto_letters(6,1);
+		inner_e+= editor.style.button_backto_letters(7,1);
 		document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 		elem = document.getElementById('editor_buttons_area_2');
 	}
     elem.style.visibility='visible';
     elem.innerHTML = inner_e;
+}
+
+function editor_capital(setcaps, lock, reset){
+	if (setcaps===undefined) {setcaps=0;}
+	if (lock===undefined) {lock=0;}
+	if (reset===undefined) {reset=0;}
+	
+	if (reset===1) {editor.caps=0;}
+	if (setcaps===1) {	
+		if (lock===0){ editor.caps = (editor.caps+1)%2; }
+		else { editor.capslock=(editor.capslock+1)%2; }
+	}                                                                    //alert('caps: '+editor.caps+ +editor.capslock);
+	var arr = document.getElementsByClassName("symbol");
+	var inner = ""; var i = 0;
+	for (i=0; i<arr.length; i+=1){
+		inner = arr[i].innerHTML;
+		if ( /^[a-zA-Z]+$/.test(inner) || /^[а-яА-Я]+$/.test(inner) ) { 
+			if (editor.caps+editor.capslock===1) { arr[i].innerHTML = inner.toUpperCase(); }
+			else                                 { arr[i].innerHTML = inner.toLowerCase(); }
+		}
+	}	
+	if (setcaps===1 && editor.pin_letters===0) { editor_backto_letters(); }
 }
 
 //-- delete / add functions ------------------------------------------------------
@@ -326,17 +367,21 @@ function editor_delete(){                                                //alert
 		editor.text_raw = text_c;	
         editor_set_cursor(); 
     }
-}function editor_set_letter(n, back){
+}function editor_set_letter(n){
     var iter = editor.iter;
 	var text = editor.text_raw;
     keys = Object.keys( editor.dict.allchar() );
-    letter = editor.dict.allchar()[keys[n]];                                       //alert(n+' '+arr[n]+'  '+letter);
+    letter = editor.dict.allchar()[keys[n]];                              //alert(n+' '+arr[n]+'  '+letter);
+    if (editor.capslock+editor.caps===1) { 
+		if (/^[a-zA-Z]+$/.test(letter) || /^[а-яА-Я]+$/.test(letter)) { letter = letter.toUpperCase(); }
+	}
     text_c = text.substr(0, iter)+letter+text.substr(iter);
     editor.text_raw = text_c;
     iter_new = iter+letter.length;
     editor.iter = iter_new;
     editor_set_cursor(); 
-    if (back==1){ editor_backto_letters(); }
+    if (editor.pin_letters===0) { editor_backto_letters(); }
+    editor_capital(0,0,1);
 }
 
 //-- menu functions ------------------------------------------------------------
@@ -345,11 +390,16 @@ function editor_sound(){
     editor.sound_navigator = (editor.sound_navigator+1)%2;                   //alert(editor_sound_counter);
     document.getElementById('editor_sound').innerHTML = symbols_sound[editor.sound_navigator];
 }
-function editor_set_fontsize(id){
+function editor_set_fontsize(id, lvl){
     var zoomheight = editor.style.b_top - 2 - editor.style.zoomspace;    //alert(zoomheight+' '+id); 
-    editor.style.nlines_lvl0 = parseInt(id);                                   //alert(editor.nlines_lvl0);             
-    common.editor_nlines = parseInt(id);                                   //alert(editor.nlines_lvl0);             
-    var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / editor.style.nlines_lvl0;  //alert(fontsize);
+    if (lvl===0){
+		editor.style.nlines_lvl0 = parseInt(id);                                   //alert(editor.nlines_lvl0);             
+		common.editor_nlines_lvl0 = parseInt(id);                                   //alert(editor.nlines_lvl0); 
+	}else if (lvl===1){
+		editor.style.nlines_lvl1 = parseInt(id);                                   //alert(editor.nlines_lvl0);             
+		common.editor_nlines_lvl1 = parseInt(id);         
+	}            
+    var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / id;  //alert(fontsize);
 	document.getElementById('editor_text_area').style.fontSize = fontsize.toString()+'px';
 	editor.style.fontsize = fontsize;    
 }
@@ -366,17 +416,19 @@ function editor_spell(){
 }
 
 function editor_backto_start(){
-    editor.style.set_style('upper_twolines');
+    editor.style.set_style('bottom_2rows');
     document.getElementById('editor_buttons_area_0').style.visibility='visible';
     document.getElementById('editor_buttons_area_1').style.visibility='hidden';
-    }
+}
 function editor_backto_letters(change_style){
-    if (change_style==1){ editor.style.set_style('upper_oneline'); }
+    if (change_style==1){ editor.style.set_style('bottom_3rows'); }
     document.getElementById('editor_buttons_area_1').style.visibility='visible';
     document.getElementById('editor_buttons_area_2').style.visibility='hidden';
     document.getElementById('editor_buttons_area_3').style.visibility='hidden';
     document.getElementById('editor_text_box').style.width='96%';
-    }
+    editor.pin_letters = 0;
+    //editor_capital(0,0,1);
+}
 
 //-- cursor functions -----------------------------------------------------------
 //-------------------------------------------------------------------------------

@@ -2,10 +2,11 @@
 var common = {
 	langbase: "en",
 	lang: "auto",
-	editor_nlines: 3,
+	editor_nlines_lvl0: 3,
+	editor_nlines_lvl1: 2,
 	fontsize: 0.8,
 	
-	cookie_number: 4,
+	cookie_number: 5,
 	cookie_suffix: "_",
 	name: "common",
 	play_counter: 1,
@@ -83,15 +84,29 @@ var symbol_sound =      '<strong style="font-size:150%;line-height:120%;">&#1282
 var symbol_sound_sub =  '<sub><strong style="font-size:90%;"> &#128265;</strong></sub>';
 var symbol_sound_sub2 = '<sub><strong style="font-size:90%;"> &#128265;auto</strong></sub>';
 
-var symbol_play =        '<strong style="font-size:115%;line-height:115%;"> &#9199;</strong>';
+var symbol_play =        '<strong style="font-size:115%;line-height:115%;">&#9199;</strong>';
 //var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#10704;</strong>';
-var symbol_pause =       '<strong style="font-size:115%;line-height:115%;"> &#9208;</strong>';
-var symbol_prev =        '<strong style="font-size:125%;line-height:130%;"> &#9204;</strong>';
-var symbol_next =        '<strong style="font-size:125%;line-height:130%;"> &#9205;</strong>';
-var symbol_readall =     '<strong style="font-size:170%;line-height:115%;"> &#119218;</strong>';
-var symbol_readall =     '<strong style="font-size:140%;line-height:130%;"> &#8967;</strong>';
+var symbol_pause =       '<strong style="font-size:115%;line-height:115%;">&#9208;</strong>';
+var symbol_prev =        '<strong style="font-size:125%;line-height:130%;">&#9204;</strong>';
+var symbol_next =        '<strong style="font-size:125%;line-height:130%;">&#9205;</strong>';
+var symbol_up =          '<strong style="font-size:125%;line-height:130%;">&#9206;</strong>';
+var symbol_down =        '<strong style="font-size:125%;line-height:130%;">&#9207;</strong>';
+var symbol_leftword =    '<strong style="font-size:125%;line-height:130%;">&#9194;</strong>';
+var symbol_rightword =   '<strong style="font-size:125%;line-height:130%;">&#9193;</strong>';
+var symbol_readall =     '<strong style="font-size:170%;line-height:115%;">&#119218;</strong>';
+var symbol_readall =     '<strong style="font-size:140%;line-height:130%;">&#8967;</strong>';
 var symbol_readall =     ' read all ';
 var symbol_upload =     ' up load ';
+var symbol_ctrlz =     '<strong style="font-size:145%;line-height:130%;"> &#10554;</strong>';
+//var symbol_ctrlz =     '<strong style="font-size:145%;line-height:130%;"> &#8630;</strong>';
+var symbol_ctrly =     '<strong style="font-size:145%;line-height:130%;"> &#10555;</strong>';
+//var symbol_ctrly =     '<strong style="font-size:145%;line-height:130%;"> &#8631;</strong>';
+var symbol_left = symbol_prev;
+var symbol_right = symbol_next;
+var symbol_navigate = symbol_prev+symbol_next;
+var symbol_nextpage1 =   '<span>xyz</span>';
+var symbol_nextpage2 =   '123';
+var symbol_nextpage3 =   '^ / %';
 
 var symbols_play_pause = [symbol_play, symbol_pause];
 var symbols_sound = [symbol_mute, symbol_sound];
@@ -530,9 +545,11 @@ function common_create_menu(id, lvl, buttons_html, parent){                     
 
 function menu_blur(){
     $('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+    //$('#editor_base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
 }
 function menu_back(id, foggyoff){                                      //alert(id);
     if (foggyoff==1){ $('#base_elements').foggy(false);  }
+    //if (foggyoff==1){ $('#editor_base_elements').foggy(false);  }
     elem = document.getElementById(id).parentNode;
     elem.parentNode.removeChild(elem);
 }
@@ -590,7 +607,8 @@ function common_buttonpos(i, class_n){
     var x = bleft + (i-i%yn)/yn*(dx+xspace); 
     if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
     if (i%yn==yn-1){ dy = dy*dy_bot; }
-    var style = 'left:'+x+'%;top:'+y+'%;width:'+dx+'%;height:'+dy+'%;';
+    var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;';
+    //var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;line-height:'+dy+'vh;';
     return('class="'+class_name+'" style="'+style+'"'); 
 }
 
@@ -616,6 +634,6 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	var y = b_top + (b_yspace+b_height)*ny;
 	if (class_n===1) { x += b_xspace-1; }
 	if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
-	var style = 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);
+	var style = 'left:'+x.toString()+'vw; top:'+y.toString()+'vh;'+'width:'+b_width.toString()+'vw; height:'+b_height.toString()+'vh;'  ;  //alert(style);
 	return('class="'+class_name+'" style="'+style+'"')
 	}

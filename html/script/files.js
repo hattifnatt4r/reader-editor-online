@@ -99,8 +99,8 @@ function files_run(){                                                    //alert
 function files_show_buttons(){                                           //alert('alert b0');
     var elem = document.getElementById('files_buttons_area');                //alert('alert b1');
     var inner_e="";
-    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common_buttonpos(0)+'>menu</div>' ;
-    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common_buttonpos(1)+'>opt</div>';
+    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common_buttonpos(0)+'> <span>menu</span> </div>' ;
+    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common_buttonpos(1)+'> <span>opt</span> </div>';
     inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common_buttonpos(2)+'>'+symbol_enter+'</div></div>';
     inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common_buttonpos(4)+'>'+'log in'+'</div>' ;
     inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common_buttonpos(5)+'>'+symbol_upload+'</div>' ;
