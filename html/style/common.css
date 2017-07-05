@@ -21,19 +21,22 @@
 /*-- buttons -------------------------------------------------------------*/
 .buttons_area{}
 .buttons{
-  width:12vw; height:17vh;    
-  background-color: #8aa0a8;   
-  font-size: 6vmin; line-height: 6.2vmin;
+  width:12vw; height:17vh;     
+  font-size: 6.3vmin; line-height: 6.5vmin;
   position:fixed; box-sizing:border-box;
-  text-align: center; vertical-align:middle; /*line-height: 17vmin;*/
   word-break: normal; white-space: normal;
-  color: rgba(0,0,0,0.45);
-  border: solid 1vh #8aa0a8;  border-radius: 0.25vmin; 
+  color: rgba(0,0,0,0.45);  
+  background-color: #8aa0a8;  
+  border: solid 1.7vmin #8aa0a8;  border-radius: 0.25vmin; 
+  border-top-width: 0vmin; 
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);
+  /*---------------------------*/
+  display:flex; justify-content:center; align-items:center;
 }
 .buttons:hover{
-  border: solid  1.3vh #6c8893;  
   background-color: #6c8893;
+  border-color:     #6c8893; 
+  border-top-width: 0.8vmin; 
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
 .buttons_text{
@@ -45,26 +48,28 @@
   border: dashed 2px #8a8a5c;  box-sizing:border-box;
 }
 .disabled{ opacity:0.25; }
-.disabled:hover{ opacity:0.2; }
+.disabled:hover{ opacity:0.2; border-top-width: 0vmin; }
 .files{
-  position: absolute; 
-  text-align: left; vertical-align:top;
   font-size:3.2vh; color:rgba(0,0,0,0.6); 
   word-break: break-all; overflow-y: hidden; white-space: normal;
   box-sizing: border-box;
-  background-color: #afdf9f;  border-radius: 0.25vmin; 
-  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.03), 0 5px 15px 0 rgba(0,0,0,0.15);  
+  border-radius: 0.25vmin; 
+  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.03), 0 5px 15px 0 rgba(0,0,0,0.15); 
+  border: solid 2vmin #a6ce7e;
+  border-top-width: 1.5vmin;
+  border-bottom-width: 1.5vmin;
+  /*display:flex; justify-content:center; align-items:center; */
 }
-.files-dir{       border: solid 10px #a6ce7e; background-color:#a6ce7e;  --color:#a6ce7e; }
-.files-dir:hover{ border: solid 10px #80ac39; background-color:#80ac39;  --color:#80ac39; }
-.files-dir-hover{ border: solid 10px #80ac39; background-color:#80ac39;  --color:#80ac39; }
-.files-txt{       border: solid 10px #acd2d2; background-color:#acd2d2;  --color:#acd2d2; }
-.files-txt:hover{ border: solid 10px #70a9a9; background-color:#70a9a9;  --color:#70a9a9; }
-.files-txt-hover{ border: solid 10px #70a9a9; background-color:#70a9a9;  --color:#70a9a9; }
-.attention{       border: solid 10px #a6ce7e; background-color: #a6ce7e; }
+.files-dir{       border-color: #a6ce7e; background-color:#a6ce7e; }
+.files-dir:hover{ border-color: #80ac39; background-color:#80ac39; }
+.files-dir-hover{ border-color: #80ac39; background-color:#80ac39; }
+.files-txt{       border-color: #acd2d2; background-color:#acd2d2; }
+.files-txt:hover{ border-color: #70a9a9; background-color:#70a9a9; }
+.files-txt-hover{ border-color: #70a9a9; background-color:#70a9a9; }
+.attention{       border-color: #a6ce7e; background-color: #a6ce7e; }
 
 .nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
-  line-height:60%; font-size: 800%; color:#99bd75; color:#80ac53; color:#8cb464; }
+  font-size: 17vmin; color:#8cb464; }
 .nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
 .symbol{ background-color: #99bd75; border-color: #99bd75; }
 .symbol{ background-color: #94B96E; border-color: #94B96E; }

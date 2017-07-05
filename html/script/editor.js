@@ -92,7 +92,7 @@ editor.style = {
 	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight; //style+='line-height:60%;'; 
 		}
 	    
-	    style+= 'left:'+x.toString()+'%; top:'+y.toString()+'%;'+'width:'+b_width.toString()+'%; height:'+b_height.toString()+'%;'  ;  //alert(style);
+	    style+= 'left:'+x+'vw; top:'+y+'vh; width:'+b_width+'vw; height:'+b_height+'vh; border-bottom-width:'+b_height*0.07+'vh;'  ;  //alert(style);
 	    return('class="'+class_name+'" style="'+style+'"');
 	},
 	
@@ -129,8 +129,8 @@ editor.style = {
 	button_delete: function(i) { return '<div id="editor_delete"  onclick="editor_delete();" '  +this.get_button(i) +'>'+symbol_delete_editor+'</div>'; },
 	button_prev:   function(i) { return '<div id="editor_prev"    onclick="editor_scroll(0);" ' +this.get_button(i) +'>'+symbol_left+'</div>' },
 	button_next:   function(i) { return '<div id="editor_next"    onclick="editor_scroll(1);" ' +this.get_button(i) +'>'+symbol_right+'</div>' },
-	button_backto_start:   function(i)    { return '<div id="editor_backto_start"   onclick="editor_backto_start();" '        +this.get_button(i) +'> bck </div>' },
-	button_backto_letters: function(i, s) { return '<div id="editor_backto_letters" onclick="editor_backto_letters('+s+');" ' +this.get_button(i) +'> bck </div>' },
+	button_backto_start:   function(i)    { return '<div id="editor_backto_start"   onclick="editor_backto_start();" '        +this.get_button(i) +'> back </div>' },
+	button_backto_letters: function(i, s) { return '<div id="editor_backto_letters" onclick="editor_backto_letters('+s+');" ' +this.get_button(i) +'> back </div>' },
 		
 };
 
@@ -151,14 +151,14 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	editor.text_raw = text_raw.toString();
 	editor.iter = iter;
 
-    create_element('editor_area','body_bkg', 'base_elements');
+    create_element('editor_bkg','body_bkg', 'created_elements');
+    create_element('editor_area','body_bkg', 'editor_base_elements');
     
 	var elem=create_element('editor_text_box','text_scroll_box', 'editor_area'); 
 	elem.style = 'top:2%; width:96%; left:2%;';
 	elem.innerHTML = '<div id="editor_text_area" class="text_scroll" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
 	elem = create_element('editor_buttons_area', '', 'editor_area'); 
 	
-	//editor_type = 'bottom_3rows';
 	editor_type = 'bottom_2rows';
 	editor.style.set_style(editor_type);
 	
@@ -169,6 +169,8 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 }
 function editor_exit(){                                                  //alert(editor.destination);
     var elem = document.getElementById('editor_area');
+    elem.parentNode.removeChild(elem);
+    var elem = document.getElementById('editor_bkg');
     elem.parentNode.removeChild(elem);
     if (editor.parent=="reader"){ 
 		reader.ischanged_text = true;
@@ -204,8 +206,8 @@ function editor_show_start(){                                            //alert
     inner_e0+= '<div id="editor_exit"       onclick="editor_exit();" '           +editor.style.get_button(6)  +'> exit </div>';
     inner_e0+= '<div id="editor_menu"       onclick="editor_show_menu();" '      +editor.style.get_button(2)   +'> menu </div>';
     inner_e0+= '<div id="editor_save"       onclick="editor_save();" '           +editor.style.get_button(8)   +'> save </div>';
-    inner_e0+= '<div id="editor_copy"       onclick="" ' +editor.style.get_button(7,3) +'> copy </div>';
-    inner_e0+= '<div id="editor_past"       onclick="" ' +editor.style.get_button(1,3) +'> past </div>';
+    //inner_e0+= '<div id="editor_copy"       onclick="" ' +editor.style.get_button(7,3) +'> copy </div>';
+    inner_e0+= '<div id="editor_past"       onclick="" ' +editor.style.get_button(1,3) +'> copy past </div>';
     inner_e0+= '<div id="editor_go"         onclick="" ' +editor.style.get_button(0,3) +'> go </div>';
     inner_e0+= "</div>"
     inner_e1 = "<div id='editor_buttons_area_1'></div>";
@@ -224,7 +226,7 @@ function editor_show_menu(){
     inner_e+= '<div id="editor_sound"        onclick="" '+common_buttonpos_menu(0,3)+'> sound </div>';
     inner_e+= '<div id="editor_read"         onclick="" '+common_buttonpos_menu(4,3)+'> read </div>';
     inner_e+= '<div id="editor_sound_button" onclick="" '+common_buttonpos_menu(1,3)+'> sound </div>';
-    common_create_menu('editor_menu', 0, inner_e);
+    common_create_menu('editor_menu', 0, inner_e,'editor_created_elements', true);
 }
 function editor_show_fontsize(){
 	var inner_e = "";
@@ -232,7 +234,7 @@ function editor_show_fontsize(){
     inner_e += '<div id="4"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(5,0)+'> 4 lines </div>';
     inner_e += '<div id="3"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(6,0)+'> 3 lines </div>';
     inner_e += '<div id="2"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(7,0)+'> 2 lines </div>';
-    common_create_menu('editor_fontsize', 1, inner_e);
+    common_create_menu('editor_fontsize', 1, inner_e, 'editor_created_elements', true);
 }
     
 function editor_show_symbols(lang, lvl){                                 //alert('show_symbols');
@@ -482,7 +484,7 @@ function editor_scrollword(order){                                       //alert
 		i_right = iter;	
 	}
 	if (order==0){
-		if (text[iter]!=' ') { i_right = text.indexOf(' ', iter); if (i_right==-1){i_right=text.length;} }
+		if (text[iter-1]!==' ' && iter>0){ i_right = text.indexOf(' ', iter); if (i_right==-1){i_right=text.length;} }
 		if (text[iter-1]===' ' && iter>0){ iter = find_spacestart(text,iter-1) }
 		if (iter>0){ 
 			i = text.lastIndexOf(' ', iter-1);

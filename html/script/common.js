@@ -84,22 +84,26 @@ var symbol_sound =      '<strong style="font-size:150%;line-height:120%;">&#1282
 var symbol_sound_sub =  '<sub><strong style="font-size:90%;"> &#128265;</strong></sub>';
 var symbol_sound_sub2 = '<sub><strong style="font-size:90%;"> &#128265;auto</strong></sub>';
 
-var symbol_play =        '<strong style="font-size:115%;line-height:115%;">&#9199;</strong>';
-//var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#10704;</strong>';
-var symbol_pause =       '<strong style="font-size:115%;line-height:115%;">&#9208;</strong>';
-var symbol_prev =        '<strong style="font-size:125%;line-height:130%;">&#9204;</strong>';
-var symbol_next =        '<strong style="font-size:125%;line-height:130%;">&#9205;</strong>';
-var symbol_up =          '<strong style="font-size:125%;line-height:130%;">&#9206;</strong>';
-var symbol_down =        '<strong style="font-size:125%;line-height:130%;">&#9207;</strong>';
-var symbol_leftword =    '<strong style="font-size:125%;line-height:130%;">&#9194;</strong>';
-var symbol_rightword =   '<strong style="font-size:125%;line-height:130%;">&#9193;</strong>';
-var symbol_readall =     '<strong style="font-size:170%;line-height:115%;">&#119218;</strong>';
-var symbol_readall =     '<strong style="font-size:140%;line-height:130%;">&#8967;</strong>';
+var b_alpha = 0.9;
+var symbol_sound =       '<span style="font-size:9vmin;opacity:'+b_alpha+';">&#128265;</span>';
+var symbol_delete_editor='<span style="font-size:10vmin;opacity:'+b_alpha+';position:relative;top:0.6vmin;">&#10007;</span>';
+var symbol_enter =       '<span style="font-size:12vmin;opacity:'+b_alpha+';position:relative;top:0.8vmin;">&#10004;</span>';
+var symbol_play =        '<span style="font-size:8.7vmin;opacity:'+b_alpha+';">&#9199;</span>';
+//var symbol_play =        '<strong style="font-size:110%;opacity:'+b_alpha+';"> &#10704;</strong>';
+var symbol_pause =       '<span style="font-size:8.7vmin;opacity:'+b_alpha+';">&#9208;</span>';
+var symbol_prev =        '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9204;</span>';
+var symbol_next =        '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9205;</span>';
+var symbol_up =          '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9206;</span>';
+var symbol_down =        '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9207;</span>';
+var symbol_leftword =    '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9194;</span>';
+var symbol_rightword =   '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9193;</span>';
+var symbol_readall =     '<span style="font-size:12vmin;opacity:'+b_alpha+';">&#119218;</span>';
+var symbol_readall =     '<span style="font-size:12vmin;opacity:'+b_alpha+';">&#8967;</span>';
 var symbol_readall =     ' read all ';
-var symbol_upload =     ' up load ';
-var symbol_ctrlz =     '<strong style="font-size:145%;line-height:130%;"> &#10554;</strong>';
+var symbol_upload =     ' upload ';
+var symbol_ctrlz =     '<span style="font-size:12vmin;"> &#10554;</span>';
 //var symbol_ctrlz =     '<strong style="font-size:145%;line-height:130%;"> &#8630;</strong>';
-var symbol_ctrly =     '<strong style="font-size:145%;line-height:130%;"> &#10555;</strong>';
+var symbol_ctrly =     '<span style="font-size:12vmin;"> &#10555;</span>';
 //var symbol_ctrly =     '<strong style="font-size:145%;line-height:130%;"> &#8631;</strong>';
 var symbol_left = symbol_prev;
 var symbol_right = symbol_next;
@@ -522,14 +526,14 @@ function common_set_fontsize(id, obj){                                   //alert
     obj.fontsize = scale;                                                //alert('obj_name 2: '+obj.name+' '+obj.fontsize);
 }
 
-function common_create_menu(id, lvl, buttons_html, parent){                      //alert('create_menu');
+function common_create_menu(id, lvl, buttons_html, parent, ineditor){    //alert('create_menu '+ineditor);
 	if (parent==undefined) { parent='created_elements'; }
     if (lvl==0){                                                         //alert('lvl0');
-        menu_blur();
-        inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,1);" class="back_area"></div>';
+        menu_blur(ineditor);
+        inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,1,'+ineditor+');" class="back_area"></div>';
         inner_e+= '<div id="'+id+'_area"  class="menu_area">';
     }else{                                                               //alert('lvl1');
-        inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,0);" class="back_area" style="opacity:0;"></div>';
+        inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,0,'+ineditor+');" class="back_area" style="opacity:0;"></div>';
         inner_e+= '<div id="'+id+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
         inner_e+= '<div id="'+id+'_area2"  class="menu_area_lvl2">';
         }                                                                //alert(inner_e);
@@ -540,16 +544,15 @@ function common_create_menu(id, lvl, buttons_html, parent){                     
     return (element);
     }
 
-//-------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------
-
-function menu_blur(){
-    $('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
-    //$('#editor_base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+function menu_blur(ineditor){                                            //alert('blur '+ineditor);
+	if (ineditor===undefined) {ineditor=false;}
+	if (ineditor){ $('#editor_base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); }
+	else{          $('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); }
 }
-function menu_back(id, foggyoff){                                      //alert(id);
-    if (foggyoff==1){ $('#base_elements').foggy(false);  }
-    //if (foggyoff==1){ $('#editor_base_elements').foggy(false);  }
+function menu_back(id, foggyoff, ineditor){                              //alert(id);
+	if (ineditor===undefined) {ineditor=false;}
+	if (ineditor){ if (foggyoff==1){ $('#editor_base_elements').foggy(false);  } }
+	else{          if (foggyoff==1){ $('#base_elements').foggy(false);  } }
     elem = document.getElementById(id).parentNode;
     elem.parentNode.removeChild(elem);
 }
@@ -607,8 +610,8 @@ function common_buttonpos(i, class_n){
     var x = bleft + (i-i%yn)/yn*(dx+xspace); 
     if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
     if (i%yn==yn-1){ dy = dy*dy_bot; }
-    var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;';
-    //var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;line-height:'+dy+'vh;';
+    //var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;'; alert(dy);
+    var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh; border-bottom-width:'+dy*0.13+'vh;';
     return('class="'+class_name+'" style="'+style+'"'); 
 }
 
@@ -634,6 +637,6 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	var y = b_top + (b_yspace+b_height)*ny;
 	if (class_n===1) { x += b_xspace-1; }
 	if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
-	var style = 'left:'+x.toString()+'vw; top:'+y.toString()+'vh;'+'width:'+b_width.toString()+'vw; height:'+b_height.toString()+'vh;'  ;  //alert(style);
+	var style = 'left:'+x+'vw; top:'+y+'vh;'+'width:'+b_width+'vw; height:'+b_height+'vh;';  //alert(style);
 	return('class="'+class_name+'" style="'+style+'"')
 	}

@@ -99,8 +99,8 @@ function files_run(){                                                    //alert
 function files_show_buttons(){                                           //alert('alert b0');
     var elem = document.getElementById('files_buttons_area');                //alert('alert b1');
     var inner_e="";
-    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common_buttonpos(0)+'> <span>menu</span> </div>' ;
-    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common_buttonpos(1)+'> <span>opt</span> </div>';
+    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common_buttonpos(0)+'> menu </div>' ;
+    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common_buttonpos(1)+'> opt </div>';
     inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common_buttonpos(2)+'>'+symbol_enter+'</div></div>';
     inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common_buttonpos(4)+'>'+'log in'+'</div>' ;
     inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common_buttonpos(5)+'>'+symbol_upload+'</div>' ;
@@ -126,7 +126,6 @@ function files_show_menu(){
     inner_e += '<div id="files_fontsize" onclick="common_show_fontsize('+obj+');" '+common_buttonpos_menu(0,0)+'> font size </div>';
     inner_e += '<div id="files_past"     onclick="" '+common_buttonpos_menu(5,3)+'> past </div>';
     inner_e += '<div id="files_sound"    onclick="" '+common_buttonpos_menu(4,3)+'> sound </div>';
-    inner_e += '<div id="files_download" onclick="" '+common_buttonpos_menu(6,3)+'> down load </div>';
     common_create_menu('files_menu', 0, inner_e);
 }
 function files_show_create(){
@@ -143,9 +142,10 @@ function files_show_options(){                                           //alert
     files.editor_text = text;
     var inner_e = ""; 
     inner_e += '<div '+common_buttonpos_menu(0,2)+'><div id="files_options_edit" onclick="files_edittext(this.id);" class="text_zoom">'+text+'</div></div>';
-    inner_e += '<div id="files_delete"    onclick="files.click_php(this.id);"  '+common_buttonpos_menu(4,0)+'>delete</div>';
-    inner_e += '<div id="files_edit"      onclick="files.click_php(this.id);"  '+common_buttonpos_menu(7,0)+'>edit</div>';
-    inner_e += '<div id="files_cleanhtml" onclick="files.click_php(this.id);"  '+common_buttonpos_menu(5,0)+'>html</div>';
+    inner_e += '<div id="files_delete"    onclick="files.click_php(this.id);"  '+common_buttonpos_menu(4,0)+'> delete </div>';
+    inner_e += '<div id="files_edit"      onclick="files.click_php(this.id);"  '+common_buttonpos_menu(7,0)+'> edit name </div>';
+    inner_e += '<div id="files_cleanhtml" onclick="files.click_php(this.id);"  '+common_buttonpos_menu(5,0)+'> html to txt </div>';
+    inner_e += '<div id="files_download"  onclick="" '+common_buttonpos_menu(3,3)+'> down- load </div>';
     inner_e += '<div id="files_copy"      onclick="" '+common_buttonpos_menu(6,3)+'>copy</div>';
     common_create_menu('files_options', 0, inner_e);
     if (fname.indexOf('.html')==-1){files_disable('files_cleanhtml');}

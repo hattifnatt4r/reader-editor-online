@@ -241,7 +241,7 @@ function reader_play_pause(){
 
 function reader_set_selecttype(order){                                      //alert('select');
     n_select_type = reader.selecttype;
-    types = ['select <br> .','select <br> . .','select <br> . . .'];
+    types = ['select <br> -','select <br> - -','select <br> - - -'];
     if (order==1){
         n_select_type = (n_select_type+1)%3;
         reader.selecttype = n_select_type;
