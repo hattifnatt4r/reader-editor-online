@@ -18,14 +18,12 @@ if ($_SESSION["session"]!=10){
     $_SESSION["filename_opened"] = '';
     $_SESSION["files_arr"] = array();
     
-    $_SESSION["form_done"] = 0;
+    $_SESSION["alert"] = "";
 }
 //run_files();
 
 //-- files ------------------------------------------------------------------
 function run_files(){
-	//$_SESSION['file_counter'] = 0;
-	//unset($_POST);
 	make_files_array();
 	echo "<div hidden id='hidden_files_nentry' style='position:fixed; top:67%; left:85%'>".$_SESSION['nentry']."</div>";
 	echo "<div hidden id='hidden_files_dir' style='position:fixed; top:60%; left:85%'>".$_SESSION['usr_dir']."</div>";
@@ -35,14 +33,13 @@ function run_files(){
 	
 	echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >
 	<div id='files_area' class='reader_text'>".$show_arr."</div></div></div>";
-	echo "<div hidden style='position:fixed; top:0%; left:15%'>".$_SESSION["file_counter"]."</div>";
 	
 	echo '<div id="files_zoom_box" class="reader_zoom_box">  
 	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
 	
 	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
-	//echo " | usr_dir1: ".$_SESSION['usr_dir']." ".$entry." ".$_SESSION["file_counter"]." | ";
-	//echo " | FILES_ARR: ".$_SESSION["files_arr"][0]." | ";
+	echo '<div hidden id="php_alert">'.$_SESSION["alert"]."</div>";
+	$_SESSION["alert"] = "";
 }
 function make_files_array(){
 	$arr_dir=array(); $arr_file=array(); $arr_entries=array(); 
@@ -123,47 +120,55 @@ if (isset($_POST['ffiles_createdir_submit'])) {
     }
 }
 
-if (isset($_POST['addcontact_submit_name'])) {
-    $value = $_POST['addcontact_submit_name'];
-    $contact_name = $_POST["addcontact_text_name"];
-    echo 'TEXT: '.$text.' '; 
+if (isset($_POST['ffiles_addmail_submit'])) {
+    $value = $_POST['ffiles_addmail_submit'];
+    $contact_name = $_POST["ffiles_edit_text"];
     
+    $success = 1;
     $usr_dir=$_SESSION['usr_dir'];
     $usr_name = get_usrname();
-    /*
-    $arr = array(); 
-    array_push($arr, $usr_name); 
-    array_push($arr, $contact_name);
-    sort($arr); 
-    $full_name = "users_mail/".$arr[0].'_'.$arr[1]; */
     $full_name = get_mail_fname($usr_name,$contact_name);
-    //$full_name = $usr_dir.'/'.$arr[0].'_'.$arr[1].".txt";
-    //$full_name = $usr_dir.'/new.txt';
-    if (!file_exists('users/'.$contact_name)){echo '<div style="position:fixed;top:0%;left:0%;">There is no user with this name</div>';}
-    elseif (!file_exists($full_name)){
-        $myfile = fopen($full_name, "w") or die("Unable to open file!");
+    
+    //-- Check if contact user exists --------------------------------------
+    if (!file_exists('users/'.$contact_name)){                           
+		echo $full_name.' There is no user with this name <br>'; 
+		$success = 0; $alert = "There is no user with this name";
+	}
+    if ($success==1 && file_exists($full_name)) { $success = 0; $alert = "Warning: Main file already exists"; }
+    
+    //-- Create file in mail-storage ---------------------------------------
+    if ($success==1){                                                    // Create file in mail-storage
+        $myfile = fopen($full_name, "w") or die(" | Unable to open file ".$full_name." | ");
         chmod($full_name, 0666);
         fclose($myfile);
-        echo '<div style="position:fixed;top:0%;left:0%;">'.$full_name.'</div>';
-        
-        $local_name = $usr_dir.'/'.$contact_name;
-        $myfile = fopen($local_name, "w") or die("Unable to open file!");
-        $name = get_usrname();
-        $text = ' <br> <div id="mail_temp_title" name="'.$name.'"> write your messsage </div> <div id="mail_temp_text" name="'.$name.'"> abc </div>';
+        if (!file_exists($full_name)){ $success = 0; $alert = "Cannot create main file"; }
+	}
+	
+	//-- Create mail-file in user directory --------------------------------
+	$local_name = $usr_dir.'/'.$contact_name;                            
+	if ($success==1 && file_exists($local_name) ) { $success = 0; $alert = "Local file already exists"; }
+	elseif ($success==1){
+        $myfile = fopen($local_name, "w") or die(" | Unable to open file ".$local_name." | ");
+        $text = '';
         fwrite($myfile, $text);
         chmod($local_name, 0666);
         fclose($myfile);
-        echo '<div style="position:fixed;top:0%;left:50%;">'.$local_name.'</div>';
-        
-        $local_name = 'users/'.$contact_name.'/mail/'.$usr_name;
-        $myfile = fopen($local_name, "w") or die("Unable to open file!");
-        $text = ' <br> <div id="mail_temp_title" name="'.$contact_name.'"> write your message </div> <div id="mail_temp_text" name="'.$contact_name.'"> abc </div>';
+        if (!file_exists($local_name)){ $success = 0; $alert = "Cannot create local file"; }
+	}
+	
+	//-- Create mail-file in contact-user directory ------------------------
+	$local_name = 'users/'.$contact_name.'/mail/'.$usr_name;             
+	if ($success==1 && file_exists($local_name) ) { $success = 0; $alert = "2d local file already exists"; }
+	elseif ($success==1){
+        $myfile = fopen($local_name, "w") or die(" | Unable to open file ".$local_name." | ");
+        $text = '';
         fwrite($myfile, $text);
         chmod($local_name, 0666);
         fclose($myfile);
-        //header('Location:/index.html'); 
-    }
-    //else{ echo '<div style="position:fixed;top:0%;">'.$full_name.' EXISTS</div>'; }
+        if (!file_exists($local_name)){ $success = 0; $alert = "Cannot create 2d local file"; }
+	}
+    
+    $_SESSION["alert"] = $alert;
     header('Location:/index.html'); 
 }
 function get_usrname(){

@@ -71,9 +71,7 @@
 .nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
   font-size: 17vmin; color:#8cb464; }
 .nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
-.symbol{ background-color: #99bd75; border-color: #99bd75; }
 .symbol{ background-color: #94B96E; border-color: #94B96E; }
-.symbol:hover{ background-color: #80ac53; border-color: #80ac53; }
 .symbol:hover{ background-color: #73a145; border-color: #73a145; }
 
 
@@ -161,19 +159,18 @@
 
 /*-- */
 .mail{
-  left:2%; width:75%; 
+  left:2%; width:75%; top:1vh;
   /*-------------*/
   position:relative; text-align:center; box-sizing:border-box;
-  font-size:25px; line-height: 135%; color:rgba(0,0,0,0.8);
+  color:rgba(0,0,0,0.8);
   background-color: white;  background-color:#acd2d2; background-color:#ddeaee;
   /*border: dashed 2px #8a8a5c;*/
-  border: solid 2px white;
+  border: solid 0.5vh white;
 }
-.mail_out{
-  left:1.5%; text-align:left; background-color:#ddeaee;}
-.mail_in{
-  left:26.5%; text-align:right; background-color:#e6eedd;}
+.mail_out{ left:1.5%; text-align:left; background-color:#ddeaee; border-color:#ddeaee;}
+.mail_in{ left:26.5%; text-align:right; background-color:#e6eedd; border-color:#e6eedd;}
+.mail_title{ background-color:white; border-color:white;}
 .mail_temp{ background-color:#ffe6cc; background-color:#f7f7d4; background-color:#ddeaee; /*background-color:#bbd5dd;*/ }
-
+.mail_space{ height:2vh; background-color:white;border-color:white;}
 
 

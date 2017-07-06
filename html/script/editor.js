@@ -45,9 +45,9 @@ editor.dict = {
 		['less','more','sqrt','power','cdot','eq',  '1','2','3','4','5','newline',  '6','7','8','9','0','space'],    
 		['space','space','space','space','space','space',  'lbrf','rbrf','lbrsq','rbrsq','less','pc', 'underscore','c','d','e','f','g','h']  
 	],	symbolset7_files: [ 
-		['m','u','l','d',  'c','r','h','s','n','i',  'space','o','a','t','e'],
-	    ['space','space','space','space','z',  'q','x','j','k','v','b',  'dash','p','y','g','f','w','underscore'],             
-	    ['space','space','space','space','space','space',  'space','1','2','3','4','5', 'space','6','7','8','9','0']
+		['m','u','l','d','c','r',  'h','s','n','i','o', 'a','t','e','underscore'],
+	    ['space','space','space','space','z',  'q','x','j','k','v',  'b','dash','p','y','g','f','w'],             
+	    ['space','space','space','space','space','space',  'space','1','2','3','4','5',  '6','7','8','9','0','underscore']
 	],                               
 	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_math2, this.symbolset7_files, this.symbolset7_en, this.symbolset7_ru] ; },
 	
@@ -165,7 +165,7 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	document.getElementById('editor_text_area').innerHTML=editor.text_raw;   //alert('editor 3');
 	editor_set_cursor();                                                     //alert('editor 4');
 	editor_show_start();                                                     //alert('editor 5');
-	if (parent==='files') { editor_show_symbols(3,0); }
+	if (parent==='files') { editor_show_symbols(2,0); }
 }
 function editor_exit(){                                                  //alert(editor.destination);
     var elem = document.getElementById('editor_area');

@@ -13,8 +13,8 @@ if (isset($_POST['reader_menu_go_file1'])) {
     }
 //echo "<div style='position:fixed; top:0%; left:2%'>".$_SESSION["filename_opened"]."</div>";
 
-if (isset($_POST['save_text_js'])) {
-    $text = $_POST["text_origin_js"];
+if (isset($_POST['freader_save_submit'])) {
+    $text = $_POST["freader_save_text"];
     //echo $text;
     $fname = $_SESSION["filename_opened"];
     $myfile = fopen($fname, "w") or die("Unable to open file!");
@@ -26,8 +26,8 @@ if (isset($_POST['save_text_js'])) {
     header('Location:/reader.html');
 } 
 
-if (isset($_POST['sendmail_submit_name'])) {
-    $msg = $_POST["sendmail_text_name"];
+if (isset($_POST['freader_sendmail_submit'])) {
+    $msg = $_POST["freader_save_text"];
     //$fname = $_POST["sendmail_text2_name"];
     $fname = get_mail_fname(get_usrname(), get_contactname());
     echo '<div style="position:fixed;top:0%;left:20%;">'.$fname.'</div>';
@@ -47,7 +47,8 @@ if (isset($_POST['sendmail_submit_name'])) {
     $fname = $_SESSION["filename_opened"];
     $myfile = fopen($fname, "w") or die("Unable to open file!");
     $name = get_usrname();
-    $text = ' <br> <div id="mail_temp_title" name="'.$name.'"> write your message </div> <div id="mail_temp_text" name="'.$name.'"> abc </div><br><br><br>';
+    //$text = ' <br> <div id="mail_temp_title" name="'.$name.'"> write your message </div> <div id="mail_temp_text" name="'.$name.'"> abc </div><br><br><br>';
+    $text = '';
     fwrite($myfile, $text);
     fclose($myfile);
     
@@ -105,6 +106,9 @@ function run_reader(){
 	    fclose($myfile);
 	    //echo '<div style="position:fixed;top:5%;left:0%;">MAIL: '.$text.'</div>';
 	    echo "<div hidden id='hidden_mail_all' style='position:fixed; top:80%; left:85%'>".$text."</div>";
+	    
+	    echo "<div hidden id='hidden_mail_archive' >".$text."</div>";
+	    echo "<div hidden id='hidden_mail_msg' >".$_SESSION["file_text"]."</div>";
 	}
 
 }

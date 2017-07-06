@@ -27,6 +27,7 @@ var files = {
 		           "files_mail": "ffiles_mail_submit", 
 		           "files_upload": "ffiles_upload_submit", 
 		           "files_upload_choose": "ffiles_upload_choose", 
+		           "files_addmail": "ffiles_addmail_submit", 
 		           },
 	click_php: function(id) { //alert('click: '+id);
 		if (id==="files_enter" && this.get_ftype()=="dir" ) { this.iter=0; this.iter_prev=0; }
@@ -60,6 +61,7 @@ var files = {
 }                                                        //alert(files.dir);
 window.onbeforeunload = files_beforunload;
 function files_beforunload() {common.cookie_save.call(files); common.cookie_save(); }
+function files_cleancookie(){ cookie_delete_all(); alert('clear cookie'); window.location.href = '/index.html'; }
 
 //-- run files -------------------------------------------------------------------
 
@@ -92,6 +94,9 @@ function files_run(){                                                    //alert
 	common_set_fontsize(files.fontsize, files);                          //alert(files.fontsize);
 	files_scroll(files.iter, 'no');                                      //alert('files run 2');
 	files_set_zoom('no');                                                //alert('files run 3');
+	
+	//elem = document.getElementById("php_alert");                         //alert(elem.innerHTML);
+	//if (elem.innerHTML!=''){alert(elem.innerHTML);}
 }                                                                        //alert('dir: '+files_get_dir());
 
 //-- show buttons ---------------------------------------------------------------------------
@@ -123,7 +128,8 @@ function files_show_menu(){
     //inner_e += '<div id="files_mail"    onclick="files.click_php(this.id)" ' +common_buttonpos_menu(4,0)+'>email</div>';
     inner_e += '<div id="files_create"   onclick="files_show_create();" '     +common_buttonpos_menu(7,0)+'>new file</div>';
     inner_e += '<div id="files_zoom"     onclick="files_set_zoom();" '        +common_buttonpos_menu(3,0)+'>'+files.zoom_arr[files.zoom]+'</div>';
-    inner_e += '<div id="files_fontsize" onclick="common_show_fontsize('+obj+');" '+common_buttonpos_menu(0,0)+'> font size </div>';
+    inner_e += '<div id="files_fontsize" onclick="common_show_fontsize('+obj+');" '+common_buttonpos_menu(6,0)+'> font size </div>';
+    inner_e += '<div id="files_cleancookie" onclick="files_cleancookie();" '  +common_buttonpos_menu(0,0)+'> delete cookie </div>';
     inner_e += '<div id="files_past"     onclick="" '+common_buttonpos_menu(5,3)+'> past </div>';
     inner_e += '<div id="files_sound"    onclick="" '+common_buttonpos_menu(4,3)+'> sound </div>';
     common_create_menu('files_menu', 0, inner_e);
@@ -163,15 +169,9 @@ function files_show_login(){
 }
 function files_show_addcontact(){
 	var inner_e="";
-    inner_e+= '<div id="files_addcontact_zoom_box" class="reader_zoom_box" style="left:15%;top:15%;width:63%;border:solid 1px white;"><div id="files_addcontact_zoom" class="text_zoom">file</div></div>';
-    inner_e+= '<div id="files_edit-name" class="buttons" onclick="files_edittext_addcontact(123);" style="left:40%; top:45%;">edit name</div>';
-    
-    inner_e+= '<div hidden id="files_addcontact_form" style="left:13%;top:45%:width:20%;position:fixed;"> ';
-    inner_e+= '<form action="" method="post">';
-    inner_e+= '<input type="text"   id="addcontact_text_id"     name="addcontact_text_name"   value="file" style="width:0%;height:0%;">';
-    inner_e+= '<input type="submit" id="addcontact_submit_id"   name="addcontact_submit_name" value="create file" ></div>';
-    inner_e+= '<div id="files_addcontact_id" class="buttons" onclick="files_click(11);" style="left:13%;top:45%;">create file</div>';
-    common_create_menu('files_addcontact', 0, inner_e);
+	inner_e += '<div '+common_buttonpos_menu(0,2)+'><div id="files_addmail_edit" onclick="files_edittext(this.id);" class="text_zoom"> new contact </div></div>';
+	inner_e += '<div id="files_addmail"      onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'> add contact </div>';
+    common_create_menu('files_addmail', 0, inner_e);
 }
 function files_show_upload(){
     var inner_e = "";
@@ -220,6 +220,7 @@ function files_scroll(order, i_utter){                                   //alert
     else{fname_ii = elem.innerText; }
     fname_ii = replace_all(fname_ii,'_',' ');
     if (i_utter===undefined){ utter(fname_ii, 1, onend=0); }
+    //if (iter===order && i_utter!='no'){document.getElementById(files.buttons_php["files_enter"]).click(); }
 }
 
 function files_fill_zoom(){

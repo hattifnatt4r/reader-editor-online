@@ -21,8 +21,13 @@ var reader = {
     name: 'reader',
     text_parsed: "",
     word_id: [], sentence_id: [], paragraph_id: [],
+    mailnum: 0,
     
     zoomtype_arr: ['no zoom', 'by word', 'by sentence'],
+    buttons_php: { "reader_save": "freader_save_submit", 
+		           "reader_sendmail": "freader_sendmail_submit"
+		           },
+	click_php: function(id) { document.getElementById(this.buttons_php[id]).click(); },
     
     get_id_array: function(){
         var id_arr = [];
@@ -49,7 +54,6 @@ var reader = {
 }
 window.onbeforeunload = reader_beforunload;
 function reader_beforunload() { common.cookie_save.call(reader); common.cookie_save(); }
-//function reader_clearcookie(){ cookie_delete_all(); }
 
 //-- run reader ---------------------------------------------------------------------
 reader.fname = document.getElementById('file_title').innerText.replace(' ','');
@@ -64,78 +68,86 @@ common.cookie_load();
 reader_run();
 
 function reader_run() {                                                  //alert('reader_run');
-    reader_show_buttons();                                               //alert('buttons');
-    create_element('reader_zoom_box','reader_zoom_box', 'base_elements');
-    document.getElementById("reader_zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
-    document.getElementById("base_elements").appendChild(document.getElementById("text_from_file_box"));
+    var subdir=get_subdir(reader.fname);
     
-    subdir=get_subdir(reader.fname);                                            
-    name = get_usrname(reader.fname);                                           //alert('NAME: '+name);
-    if (subdir=='mail'){
-        var text_allmail = document.getElementById('hidden_mail_all').innerHTML; //alert('allmail: '+text_allmail);
-        var text_i = document.getElementById('hidden_text').innerHTML;           //alert('newmail: '+text_i);
-        document.getElementById('hidden_text').innerHTML=text_allmail+text_i;
-        e=document.getElementsByName(name);
-        for (i=0; i<e.length; i++){e[i].className='mail mail_out';}
-        contact_name=reader.fname.substr(reader.fname.lastIndexOf('/')+1);             //alert('CONTACT: '+contact_name);
-        e=document.getElementsByName(contact_name);
-        for (i=0; i<e.length; i++){e[i].className='mail mail_in';}
+    if (reader.ischanged_text==false){
+        reader_show_buttons();                                               //alert('buttons');
+        create_element('reader_zoom_box','reader_zoom_box', 'base_elements');
+        document.getElementById("reader_zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
+        document.getElementById("base_elements").appendChild(document.getElementById("text_from_file_box"));
+    }
+    if (subdir==='mail' && reader.ischanged_text==false){
+        var user_name = get_usrname(reader.fname).replace(" ",""); 
+        var contact_name=reader.fname.substr(reader.fname.lastIndexOf('/')+1).replace(" ",""); 
+        
+        var mail_arr = reader_get_mailarr();                             //alert('mail_arr_parsed: '+mail_arr);
+        var text = "", class_i="", name_i="", i=0;
+        for (i=0; i<mail_arr.length; i+=1){                              
+            name_i = mail_arr[i][1].toString().replace(" ","");          //alert('mail i: |'+name_i+'|');
+            if (name_i==user_name) {class_i = 'mail mail_out'; }
+            if (name_i==contact_name) {class_i = 'mail mail_in'; }       
+            text+= '<div title="void_div" class="mail mail_space">  </div>';    
+            text+= '<div title="'+name_i+'" class="'+class_i+' mail_title" >from ' +name_i+', '+mail_arr[i][2]+'</div>';
+            text+= '<div title="'+name_i+'" class="'+class_i+'">'+mail_arr[i][3]+'</div>';               
+        }
+        var msg = document.getElementById('hidden_mail_msg').innerHTML;
+        text+= '<div title="void_div" class="mail mail_space">  </div>'; 
+        text+= '<div title="'+user_name+'" class="mail mail_out mail_title" >from ' +user_name+', new </div>';
+        text+= '<div title="'+user_name+'" class="mail mail_out mail_temp" id="mail_editable">'+msg+'</div>';           //alert('mail_text: '+text);
+        text+= '<div title="void_div" style="position:relative;height:20vh;">  </div>'; 
+        
+        document.getElementById('hidden_text').innerHTML=text;
     }
     
     reader_text();                                                       //alert(word_id); //alert(paragraph_id);
-     
-    reader_set_selecttype(order=0);                                         //alert('select_type');
+    reader_set_selecttype(order=0);                                      //alert('select_type');
     reader_set_zoomtype(0);                                              //alert('zoom_type');
     common_set_fontsize(common.fontsize, common);
+    if (subdir==='mail'){
+        //document.getElementById('reader_mail').style.visibility = 'visible';
+        reader.iter = reader.get_id_array().length-1;                    //alert(reader.iter);
+        reader_highlite(); 
+        scroll_to(reader.get_id(),'text_from_file_box', title=0);
+    } 
     
-    //alert(reader.ineditor);
-    //if (reader.ineditor) {reader_editor();}
-     
+    
 }
 
 function reader_text(){                                                  //alert(reader.editor_text+',   '+reader.ischanged_text);
+    var subdir=get_subdir(reader.fname);
+    var text = "", text_parsed = "";
+    var parser = [];
     if (reader.ischanged_text==false){
-        var text = document.getElementById('hidden_text').innerHTML;
-        var parser = reader_parse_txt(text, 0);
-        var text_parsed = parser[0];                                     //alert('parsed 0 '+text_parsed);
+        text = document.getElementById('hidden_text').innerHTML;
+        parser = reader_parse_html(text);
+        text_parsed = parser[0];                                     //alert('parsed 0 '+text_parsed);
         reader.word_id=parser[1]; reader.sentence_id=parser[2]; reader.paragraph_id=parser[3];
                                                                         
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
         reader.text_origin = text;
         reader.text_parsed = text_parsed;
     }else{
-        var text = reader.editor_text;
-        var text_parsed = reader.text_parsed;
-        document.getElementById('temp').innerHTML = text_parsed;         //alert(text_parsed);
+        if (subdir==='mail'){
+            text_parsed = $('#text_from_file').find('#mail_editable').html();   //alert('msg parsed: '+text_parsed);
+        }else{
+            text_parsed = reader.text_parsed;
+        }
+        text = reader.editor_text;
+        document.getElementById('temp').innerHTML = text_parsed;         //alert('parsed: '+text_parsed);
         var id = reader.id_curr;                                         //alert(id);
-        document.getElementById(id).innerHTML = text;                    //alert(text);
+        document.getElementById(id).innerHTML = text;                    //alert('parsed: '+text);
         
         var text_all_parsed = document.getElementById('temp').innerHTML; //alert('text_all_parsed: '+text_all_parsed);
         var text_all_origin = merge_text(text_all_parsed);               //alert('merged: '+text_all_origin);
-        reader.text_origin = text_all_origin;
-        
-        var parser = reader_parse_txt(text_all_origin, 0); 
-        var text_parsed = parser[0]; 
-        reader.word_id=parser[1];  reader.sentence_id=parser[2]; reader.paragraph_id=parser[3];
-        document.getElementById('text_from_file').innerHTML = text_parsed;   //alert(text_parsed);
-        reader.text_parsed = text_parsed;
-        
+    
         reader.ischanged_text = false;
-        
-        if (subdir=='mail'){
-            name = get_usrname(reader.fname);                                   //alert('NAME: '+name);
-            text = '<br><div id="mail_temp_title" title="'+name+'" class="mail mail_out mail_temp">'+name+', '+'</div>';
-            text+= '<div id="mail_temp_text" title="'+name+'" class="mail mail_out">'+document.getElementById('mail_temp_text').innerHTML+'</div>';
-            text=merge_text(text);
-        }
-        else{text=reader.text_origin;}                  //alert('SAVE: '+text);
-        reader_save(text);
+        reader_save(text_all_origin);
     }
 }                   
 
 function reader_save(text){
-        document.getElementById('save_text_text_js').value = text; 
-        document.getElementById('save_text_submit_js').click();          //alert('saved '+text);
+        document.getElementById('freader_save_text').value = text; 
+        document.getElementById('freader_save_submit').click();          //alert('saved '+text);
 }
  
 //-- reader scroll functions -------------------------------------------------------------------
@@ -177,7 +189,12 @@ function reader_scroll(order,stop,onend){                                //alert
     scroll_to(id,'text_from_file_box', title=0);                         //alert('scroll 1');
     //scroll_to(id,'reader_zoom_box',title=1); alert('scroll 2');
     reader_fill_zoom();  
-    if (iter==-1){ edit_function = ''; edit_class='buttons disabled'; 
+    
+    var subdir=get_subdir(reader.fname);
+    var mail_notedit = false;
+    if(subdir==='mail' && $('#'+id).parents('#mail_editable').length === 0) { mail_notedit=true; }  //alert(mail_notedit);
+    
+    if (iter==-1 || mail_notedit===true){ edit_function = ''; edit_class='buttons disabled'; 
         document.getElementById('reader_edit').className='buttons disabled';
         document.getElementById('reader_edit').setAttribute( "onclick", '' );
     } else {
@@ -338,13 +355,6 @@ function reader_editor(){                                                //alert
 }
 
 //-- mail --------------------------------------------------------------------
-dir = get_subdir(reader.fname);
-if (dir=='mail'){
-    color = '#e0e2e4';
-    document.getElementById('reader_mail').style.visibility = 'visible';
-    //document.getElementById('text_from_file_box').style.backgroundColor = color;
-    //document.getElementById('text_from_file').style.backgroundColor = color;
-}
 
 function reader_if_editable(){
     id = reader.latest_p;
@@ -354,38 +364,53 @@ function reader_if_editable(){
     return(editable);
 }
 
+
 function reader_show_mail(){
-    inner_e = '<div hidden id="files_sendmail_form"> ';
-    inner_e+= '<form action="" method="post">';
-    inner_e+= '<input type="text"   id="sendmail_text_id"     name="sendmail_text_name"   value="empty" style="width:0%;height:0%;">';
-    inner_e+= '<input type="submit" id="sendmail_submit_id"   name="sendmail_submit_name" value="empty" ></div>';
-    inner_e+= '<div id="reader_sendmail"  class="buttons" onclick="reader_mail_send();"   style="left:15%; top:50%;">send</div>';
-    inner_e+= '<div id="reader_mail_update"   class="buttons disabled" onclick=""   style="left:40%; top:50%;">update</div>';
+    var inner_e = '';
+    inner_e += '<div id="reader_sendmail" onclick="reader.click_php(this.id);" '+common_buttonpos_menu(4,0)+'> send mail </div>';
+    inner_e += '<div id="reader_refresh"  onclick="reader_refresh();" '         +common_buttonpos_menu(6,0)+'> refresh </div>';
     common_create_menu('reader_mail', 0, inner_e);
     
-    name = get_usrname(reader.fname);                                           //alert('NAME: '+name);
-    date = Date(); date=date.substr(date.indexOf(' ')); date = date.substr(0,date.indexOf('GMT')-1);
-    text2 = '<br><div name="'+name+'" class="mail mail_out">'+name+': '+date+'</div>';
-    text2+= '<div name="'+name+'" class="mail mail_out">'+document.getElementById('mail_temp_text').innerHTML+'</div>';
-    text2=merge_text(text2);
-    document.getElementById('sendmail_text_id').value=text2;             //alert('TEXT 2: '+text2);
+    var username = get_usrname(reader.fname);                            //alert('NAME: '+username);
+    var date = Date(); 
+    date = date.substr(date.indexOf(' '));                               //alert('date: '+date);
+    date = date.substr(0,date.indexOf('GMT')-1);
+    var text = $('#text_from_file').find('#mail_editable').html();     //alert('msg parsed: '+text);
+    text = merge_text(text);                                      
+    var m_num = "|m_n_u_m|", m_from="|m_f_r_o_m|", m_time="|m_t_i_m_e|", m_text="|m_t_e_x_t|";
+    text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  
+    document.getElementById('freader_save_text').value=text;  
 }
-function reader_mail_send(){
-    /*
-    //alert('mail');
-    //id_arr=paragraph_id;
-    name = get_usrname(reader.fname); alert(name);
-    text_new = ' <br> <div id="mail_temp_title" title="'+name+'" class="mail mail_out mail_temp"> '+name+': not sent yet </div> <div id="mail_temp_text" title="'+name+'" class="mail mail_out"> abc </div>';
-    //document.cookie = "mailtext_"+reader.fname+"= ";
-    text = document.getElementById('hidden_text').innerHTML;
-    //text = localStorage.getItem('text_origin');
-    alert(text+text_new);
-    parser = reader_parse_pdf(text+text_new); 
-    text_parsed = parser[0]; 
-    var word_id=parser[1];     var sentence_id=parser[2]; var paragraph_id=parser[3];
-    document.getElementById('text_from_file').innerHTML = text_parsed;
-    alert(text_parsed);
-    */
-    document.getElementById('sendmail_submit_id').click(); 
-}
+function reader_refresh() {window.location.href = '/reader.html';}
+
+function reader_get_mailarr(){
+    var archive = document.getElementById('hidden_mail_archive').innerHTML;  alert(archive);
+    if (archive.toString().replace(" ","")=="") {return [];}
     
+    var mail_arr = [];
+    
+    var m_num = "|m_n_u_m|", m_from="|m_f_r_o_m|", m_time="|m_t_i_m_e|", m_text="|m_t_e_x_t|";
+    var proceed=true, i=0, i_start=0, i_end=0;
+    i = archive.indexOf(m_num);
+    while (proceed){
+        i_end = archive.indexOf(m_num,i+1);
+        i_start = i;
+        if (i_end===-1){i_end=archive.length; proceed=false;}
+        else{ i = i_end; }
+        mail_arr.push(archive.substring(i_start, i_end));
+    }                                                                    //alert('mail_arr: '+mail_arr.length);
+                                                                         //alert('mail_arr: '+mail_arr);
+    var msg=""; 
+    for (i=0; i<mail_arr.length; i+=1){                                  //alert(i);
+        msg = mail_arr[i];                                               //alert(msg);
+        var mail_i = ['','','',''];
+        mail_i[0] = parseInt( msg.substring( msg.indexOf(m_num) +m_num.length,  msg.indexOf(m_from) ) );
+        mail_i[1] = msg.substring( msg.indexOf(m_from)+m_from.length, msg.indexOf(m_time) ).toString().replace(" ","");
+        mail_i[2] = msg.substring( msg.indexOf(m_time)+m_time.length, msg.indexOf(m_text) );
+        mail_i[3] = msg.substring( msg.indexOf(m_text)+m_text.length, msg.length );
+        mail_arr[i] = mail_i;
+    }                                                                    //alert('mail_arr_parsed: '+mail_arr);
+    
+    reader.mailnum = parseInt(mail_arr[mail_arr.length-1][0])+1;         //alert('mailnum: '+reader.mailnum);
+    return(mail_arr);
+}
