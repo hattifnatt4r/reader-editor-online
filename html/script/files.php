@@ -31,10 +31,9 @@ function run_files(){
 	$show_arr = ""; $i=0;
 	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
 	
-	echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >
-	<div id='files_area' class='reader_text'>".$show_arr."</div></div></div>";
+	echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >".$show_arr."</div></div>";
 	
-	echo '<div id="files_zoom_box" class="reader_zoom_box">  
+	echo '<div id="files_zoom_box" class="text_zoom_box">  
 	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
 	
 	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
@@ -64,7 +63,7 @@ function make_files_array(){
 }
 
 function show_file($entry, $i){
-    $left = 1; $right = 64.5; $xn=4; $top=-7; 
+    $left = 2.5; $right = 65; $xn=4; $top=4; 
     $xwidth=14; $ywidth=20; $yspace=6;
     $xspace = ( $right-$left-$xn*$xwidth )/($xn-1); 
     $x = $left + ($xspace+$xwidth)* ($i%$xn);
@@ -193,6 +192,23 @@ if (isset($_POST["ffiles_delete_submit"])) {
 	if (file_exists($filename)){ 
 		rename($filename, $_SESSION['usr_home'].'/trash/'.$entry);}
 	header('Location:/index.html');
+}	
+if (isset($_POST["ffiles_past_submit"])) {
+	$fname = $_POST["ffiles_copyfname_text"];
+	$fdir = $_POST["ffiles_copyfdir_text"];
+	$filename = 'users'.$fdir.'/'.$fname;
+	$newfile = $_SESSION['usr_dir'].'/'.$fname;
+	//chmod($_SESSION['usr_dir'], 0777);
+	$k=1;
+	$i = strrpos($newfile, ".");
+	$newfile_final = $newfile;
+	while (file_exists($newfile_final)){
+		$newfile_final = substr($newfile, 0, $i).'('.$k.')'.substr($newfile, $i);
+		$k+=1;
+	}
+	echo $filename.' | '.$newfile_final;
+	copy($filename, $newfile_final);
+	header('Location:/index.html');
 }		
 if (isset($_POST["ffiles_edit_submit"])) {
 	$_SESSION["file_counter"]=$_POST["ffiles_iter"];	
@@ -217,7 +233,6 @@ if (isset($_POST["ffiles_cleanhtml_submit"])) {
 	echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:20%;">'.$filename.'</div>';
 	$myfile = fopen($filename, "r") or die("Unable to open file!");
 	$txt = fread($myfile, filesize($filename));
-	//fwrite($myfile, $txt);
 	fclose($myfile);
 	$txt = clean_html($txt);
 	$fname = substr($filename,0,strpos($filename,'.html')).'.txt';

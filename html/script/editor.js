@@ -19,37 +19,44 @@ var editor = {
 editor.dict = {
 	letters_ru: { r1:'а',r2:'б',r3:'в',r4:'г',r5:'д',r6:'е',r7:'ё',r8:'ж',r9:'з',r10:'и',r11:'й',r12:'к',r13:'л',r14:'м',r15:'н',r16:'о',r17:'п',r18:'р',r19:'с',r20:'т',r21:'у',r22:'ф',r23:'х',r24:'ц',r25:'ч',r26:'ш',r27:'щ',r28:'ъ',r29:'ы',r30:'ь',r31:'э',r32:'ю',r33:'я' },
 	letters_en: {  a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z'},
-	symbols1:   { 0:'0',1:'1',2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', colon:':', semicolon:';', quotes:'"', plus:'+', minus:'-', eq:'=', star:'*', slash:'/', lbr:'(', rbr:')', power:'^', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}', underscore:'_'},
-	symbols2:   { space:' ', newline:' <br> ', pc:'<abbr>&#37</abbr>', less:'<abbr>&#60</abbr>', more:'<abbr>&#62</abbr>', leq:'<abbr>&#8804</abbr>', geq:'<abbr>&#8805</abbr>', ll:'<abbr>&#8810</abbr>', gg:'<abbr>&#8811</abbr>', approx:'<abbr>&#8776</abbr>', vert:'|', backslash:'<abbr>&#8726</abbr>', sum:'<abbr>&#8721</abbr>', prod:'<abbr>&#8719</abbr>', cap:'<abbr>&#8745</abbr>', cup:'<abbr>&#8746</abbr>', subset:'<abbr>&#8834</abbr>', supset:'<abbr>&#8835</abbr>', sim:'<abbr>~</abbr>', cdot:'<abbr>&#8729</abbr>', neq:'<abbr>&#8800</abbr>', quiv:'<abbr>&#8801</abbr>', sqrt:'<abbr>&#8730</abbr>'},
-	symbols2_b: { space:' ',  newline:'line',  pc:'&#37', less:'&#60', more:'&#62', leq:'&#8804', geq:'&#8805', ll:'&#8810', gg:'&#8811', approx:'&#8776', vert:'|', backslash:'&#8726', sum:'&#8721', prod:'&#8719', cap:'&#8745', cup:'&#8746', subset:'&#8834', supset:'&#8835', sim:'~', cdot:'&#8729', neq:'&#8800', quiv:'&#8801', sqrt:'&#8730'},
+	symbols1:   { 0:'0',1:'1',2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', colon:':', semicolon:';', quotes:'"', plus:'+', minus:'-', eq:'=', star:'*', slash:'/', lbr:'(', rbr:')', power:'^', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}', underscore:'_', vert:'|'},
+	symbols2:   { space:' ', newline:' <br> ', pc:'<abbr>&#37</abbr>', less:'<abbr>&#60</abbr>', more:'<abbr>&#62</abbr>', at:'<abbr>&#64</abbr>', 
+				  backslash:'<abbr>&#8726</abbr>', sum:'<abbr>&#8721</abbr>', prod:'<abbr>&#8719</abbr>', sqrt:'<abbr>&#8730</abbr>', cdot:'<abbr>&#8729</abbr>', 
+		          leq:'<abbr>&#8804</abbr>', geq:'<abbr>&#8805</abbr>', ll:'<abbr>&#8810</abbr>', gg:'<abbr>&#8811</abbr>', sim:'<abbr>~</abbr>', neq:'<abbr>&#8800</abbr>', quiv:'<abbr>&#8801</abbr>', approx:'<abbr>&#8776</abbr>', 
+		          prime:'<abbr>&#8242</abbr>', ldquo:'<abbr>&#8220</abbr>', rdquo:'<abbr>&#8221</abbr>', lsquo:'<abbr>&#8216</abbr>', rsquo:'<abbr>&#8217</abbr>', 
+		          cap:'<abbr>&#8745</abbr>', cup:'<abbr>&#8746</abbr>', subset:'<abbr>&#8834</abbr>', supset:'<abbr>&#8835</abbr>' },
+	symbols2_b: { space:' ',  newline:'line',  pc:'&#37', less:'&#60', more:'&#62', leq:'&#8804', geq:'&#8805', ll:'&#8810', gg:'&#8811', approx:'&#8776', vert:'|', backslash:'&#8726', sum:'&#8721', prod:'&#8719', cap:'&#8745', cup:'&#8746', subset:'&#8834', supset:'&#8835', sim:'~', cdot:'&#8729', neq:'&#8800', quiv:'&#8801', sqrt:'&#8730',   prime:'&#8242', ldquo:'&#8220', rdquo:'&#8221', lsquo:'&#8216', rsquo:'&#8217', at:'&#64' },
 	allchar: function(){ 
 		return( Object.assign({}, this.letters_en, this.letters_ru, this.symbols1, this.symbols2   )); }, 
 	allchar_buttons: function(){ 
 		return( Object.assign({}, this.letters_en, this.letters_ru, this.symbols1, this.symbols2_b )); },
 	
 	symbolset7_en: [ 
-		['m','u','l','d',  'c','r','h','s','n','i',  'o','a','t','e','space'],
-	    ['z','q','x','j','k','v',  'b','p','y','g','f','w',  'emark','qmark','dash','dot','comma'],             
-	    ['lbr','rbr','star','quotes','colon','semicolon','space',  '1','2','3','4','5',  '6','7','8','9','0','newline']
+		['m','u','c','d','r','l',  'o','t','h','e','s',  'n','a','i','space'],
+	    [ 'qmark','dash','dot','comma','z','q','prime',   'j','x','g','p','f',   'k','v','b','y','w' ],             
+	    ['colon','semicolon','emark','quotes','lbr','rbr',  '1','2','3','4','5',  '6','7','8','9','0','newline']
 	], symbolset7_ru: [ 
-		['r17','r5','r14','r12',  'r13','r3','r18','r19','r20','r15',  'r10','r1','r6','r16','space'],    
-        ['r22','r31','r27','r24','r32','r26',  'r8','r23','r11','r25','r2','r9',  'r4','r30','r29','r33','r21'],    
-		//['r28','colon','semicolon','emark','qmark','dot',  '1','2','3','4','5','dash',  '6','7','8','9','0','comma']
-		['r28','1','2','3','4','5','semicolon',  '6','7','8','9','0','colon',   'newline','emark','qmark','dash','dot','comma']
+		['r5','r17','r18','r16','r13','r14',  'r3','r1','r6','r15','r10',   'space','r12','r19','r20'],    
+        ['r22','r11','r25','r32','r26','r27','r31',   'r23','r8','r9','r2','r21',  'r24','r29','r33','r30','r4'],    
+		['r28','1','2','3','4','5',  '6','7','8','9','0',   'newline','emark','qmark','dash','dot','comma']
 	], symbolset7_math: [
-		['minus','plus','comma','dot','9','8',  '3','4','5','6','7',  '2','1','0','space'],    
-		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'emark','qmark','sqrt','power','less','more',  'newline','eq','slash','cdot','lbr','rbr'],    
+		['comma','dot','minus','plus','8','9',  '4','5','6','7','space',  '0','1','2','3'],    
+		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'qmark','sqrt','power','less','more',  'newline','eq','slash','cdot','lbr','rbr'],    
 		['i','j','k','l','underscore','space',  'd','e','f','g','h','space',  'a','b','c','x','y','z']  
 	], symbolset7_math2: [
 		['a','b','comma','dot','2','3', 'slash','minus','plus','lbr','rbr', 'x','y','z','space'],    
-		['less','more','sqrt','power','cdot','eq',  '1','2','3','4','5','newline',  '6','7','8','9','0','space'],    
+		['less','more','sqrt','power','cdot','eq',  'newline','1','2','3','4','5',  '6','7','8','9','0','space'],    
 		['space','space','space','space','space','space',  'lbrf','rbrf','lbrsq','rbrsq','less','pc', 'underscore','c','d','e','f','g','h']  
 	],	symbolset7_files: [ 
-		['m','u','l','d','c','r',  'h','s','n','i','o', 'a','t','e','underscore'],
-	    ['space','space','space','space','z',  'q','x','j','k','v',  'b','dash','p','y','g','f','w'],             
-	    ['space','space','space','space','space','space',  'space','1','2','3','4','5',  '6','7','8','9','0','underscore']
+		['m','u','c','d','r','l',  'o','t','h','e','s',  'n','a','i','underscore'],
+		[ 'dot','space','space','dash','z','q','at',   'j','x','g','p','f',   'k','v','b','y','w' ],             
+	    ['space','space','space','space','space','space', '1','2','3','4','5',  '6','7','8','9','0','underscore']
+	],symbolset7_other: [  
+		['lbrf','rbrf','lbrsq','rbrsq','lsquo','rsquo',  'quotes','at','ldquo','rdquo','less','more',  'eq','slash','cdot','lbr','rbr'],  
+		['comma','dot','minus','plus','8','9',  '4','5','6','7','space',  '0','1','2','at'],    
+		['i','j','k','l','underscore','space',  'd','e','f','g','h','space',  'a','b','c','x','y','z']  
 	],                               
-	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_math2, this.symbolset7_files, this.symbolset7_en, this.symbolset7_ru] ; },
+	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_math2, this.symbolset7_other, this.symbolset7_files, this.symbolset7_en, this.symbolset7_ru] ; },
 	
 };                                                                       //alert(editor.dict.symbolset_all());
 
@@ -165,7 +172,7 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	document.getElementById('editor_text_area').innerHTML=editor.text_raw;   //alert('editor 3');
 	editor_set_cursor();                                                     //alert('editor 4');
 	editor_show_start();                                                     //alert('editor 5');
-	if (parent==='files') { editor_show_symbols(2,0); }
+	if (parent==='files') { editor_show_symbols(3,0); }
 }
 function editor_exit(){                                                  //alert(editor.destination);
     var elem = document.getElementById('editor_area');
@@ -200,8 +207,9 @@ function editor_show_start(){                                            //alert
     inner_e0 = "<div id='editor_buttons_area_0'>";
     inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(1,0);" '+editor.style.get_button(3,1) +'> xyz </div>';
     inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(0,0);" '+editor.style.get_button(9,1) +'> 123 </div>';
-    inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(3,0);" '+editor.style.get_button(4,1) +'> abc </div>';
-    inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(10,1)+'> абв </div>';
+    inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(4,1) +'> abc </div>';
+    inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(5,0);" '+editor.style.get_button(10,1)+'> абв </div>';
+    inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(2,0);" '+editor.style.get_button(11,1)+'>'+symbol_nextpage3+'</div>';
     inner_e0+= '<div id="editor_navigate"   onclick="editor_show_navigate(0);" ' +editor.style.get_button(5)   +'>'+symbol_navigate+'</div>';
     inner_e0+= '<div id="editor_exit"       onclick="editor_exit();" '           +editor.style.get_button(6)  +'> exit </div>';
     inner_e0+= '<div id="editor_menu"       onclick="editor_show_menu();" '      +editor.style.get_button(2)   +'> menu </div>';
@@ -218,8 +226,8 @@ function editor_show_start(){                                            //alert
 }
 function editor_show_menu(){
     var inner_e = "";
-    inner_e+= '<div '+common_buttonpos_menu(2,1)+'><div id="common_lang_zoom1" class="text_zoom">'+common.langbase+'</div></div>';
-    inner_e+= '<div '+common_buttonpos_menu(6,1)+'><div id="common_lang_zoom1" class="text_zoom">'+common.lang+'</div></div>';
+    inner_e+= '<div '+common_buttonpos_menu(2,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom">'+common.langbase+'</div></div>';
+    inner_e+= '<div '+common_buttonpos_menu(6,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom" >'+common.lang+'</div></div>';
     inner_e+= '<div id="common_langbase"     onclick="common_show_lang(1, true,  this.parentElement.id);" ' +common_buttonpos_menu(3,0)+'> base lang </div>';
     inner_e+= '<div id="common_lang"         onclick="common_show_lang(1, false, this.parentElement.id);" ' +common_buttonpos_menu(7,0)+'> lang </div>';
     inner_e+= '<div id="editor_fontsize"     onclick="editor_show_fontsize();" '+common_buttonpos_menu(5,0)+'> font size </div>';
@@ -241,14 +249,15 @@ function editor_show_symbols(lang, lvl){                                 //alert
     editor.style.set_style('bottom_3rows');
     editor.style.b_nx=7;
     
+    var symbol1, symbol2;
+	if (lang===0)      { symbol1 = symbol_nextpage3; symbol2 = symbol_nextpage1; }
+	else if (lang===1) { symbol1 = symbol_nextpage2; symbol2 = symbol_nextpage3; }
+	else               { symbol1 = symbol_nextpage1; symbol2 = symbol_nextpage2; }
+	if (lang===4) { symbol1 = 'эюя'; }
+    
     key_arr = editor.dict.symbolset7_all()[lang][lvl];                    //alert(key_arr);
     inner_e = ''; i=0; 
     if (lvl==0){                                                         //alert('lvl=0');
-		var symbol1, symbol2;
-		if (lang===0)      { symbol1 = symbol_nextpage3; symbol2 = symbol_nextpage1; }
-        else if (lang===1) { symbol1 = symbol_nextpage2; symbol2 = symbol_nextpage3; }
-        else               { symbol1 = symbol_nextpage1; symbol2 = symbol_nextpage2; }
-        if (lang===4) { symbol1 = 'эюя'; }
         inner_e+= editor.style.button_delete(6);
         inner_e+= editor.style.button_prev(19);
         inner_e+= editor.style.button_next(20);
@@ -260,18 +269,16 @@ function editor_show_symbols(lang, lvl){                                 //alert
         reserved=[6,7, 13,14,20,19];                                        //alert('2: '+inner_e);
     }else {
         inner_e+= editor.style.button_backto_letters(14,1);
-        inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(7) +'> pin tab </div>';
-        reserved=[6,7,14];
         if (lvl===2)  { 
-			if (lang===4){ reserved=[7,14]; }
-			else{
-				inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',1);" ' +editor.style.get_button(13) +'>'+symbol_nextpage+'</div>'; 
-				reserved=[7,14,13];
-			}
-		}else if (lvl===1)  { 
-			inner_e+= '<div id="editor_caps"     onclick="editor_capital(1,0,0);" ' +editor.style.get_button(13) +'> caps </div>';
+			inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',1);" ' +editor.style.get_button(13) +'>'+symbol1+'</div>'; 
 			inner_e+= '<div id="editor_capslock" onclick="editor_capital(1,1,0);" ' +editor.style.get_button(6)  +'> caps lock </div>';
-			reserved=[7,14,13,6];
+			inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(7) +'> pin tab </div>';
+			reserved=[14,6,7,13];
+		}else if (lvl===1)  { 
+			inner_e+= '<div id="editor_caps"     onclick="editor_capital(1,0,0);" ' +editor.style.get_button(20) +'> caps </div>';
+			inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7) +'>'+symbol2+'</div>'; 
+			inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(13) +'> pin tab </div>';
+			reserved=[14,7,13,20];
 		}
     }                                                                    //alert('3: '+inner_e);
     for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){

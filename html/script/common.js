@@ -539,33 +539,37 @@ function get_usrname(fname_i){
 
 //-- show functions ------------------------------------------------------------
 //------------------------------------------------------------------------------
-function common_show_lang(lvl, is_base, parent){                         //alert('common_show_lang '+parent);
+function common_show_lang(lvl, parent){                         //alert('common_show_lang '+parent);
     var inner_e = ''; var lang='';
-    if (is_base===true){ lang = common.langbase; }
-    else{ 
-		lang = common.lang;                                //alert('name '+name);
-        inner_e+= '<div id="auto"  class="buttons"  onclick="common_set_lang(this.id,'+is_base+');" '+common_buttonpos_menu(5,0,3,2)+'>auto</div>'; 
-    }
-    inner_e+=     '<div id="en"    class="buttons"  onclick="common_set_lang(this.id,'+is_base+');" '+common_buttonpos_menu(3,0,3,2)+'>en</div>';
-    inner_e+=     '<div id="ru"    class="buttons"  onclick="common_set_lang(this.id,'+is_base+');" '+common_buttonpos_menu(4,0,3,2)+'>ru</div>';
-    inner_e+=     '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2,3,2)+'><div id="common_lang_zoom2" class="text_zoom">'+lang+'</div></div>';
+    inner_e+=     '<div id="en"               onclick="common_set_lang(this.id,'+true+');" '+common_buttonpos_menu(1,0)+'>en</div>';
+    inner_e+=     '<div id="ru"               onclick="common_set_lang(this.id,'+true+');" '+common_buttonpos_menu(2,0)+'>ru</div>';
+    inner_e+=     '<div id="en"               onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(5,0)+'>en</div>';
+    inner_e+=     '<div id="ru"               onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(6,0)+'>ru</div>';
+    inner_e+=     '<div id="auto"             onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(7,0)+'>auto</div>';
+    inner_e+=     '<div id="common_langbase_zoom"  onclick="" '+common_buttonpos_menu(0,1)+'>'+common.langbase+'</div>';
+    inner_e+=     '<div id="common_lang_zoom"      onclick="" '+common_buttonpos_menu(4,1)+'>'+common.lang+'</div>';
     common_create_menu('common_lang',lvl, inner_e, parent);
 }
 function common_set_lang(lang, is_base){                                 //alert(lang+' '+is_base);
-    if (is_base===true){ common.langbase = lang; }        
-    else{ common.lang = lang; }          
-    document.getElementById('common_lang_zoom1').innerHTML = lang;       //alert('zoom1');
-    document.getElementById('common_lang_zoom2').innerHTML = lang;       //alert('zoom2');
+    if (is_base===true){ 
+		common.langbase = lang; 
+		document.getElementById('common_langbase_zoom').innerHTML = lang;
+	}else{ 
+		common.lang = lang; 
+		document.getElementById('common_lang_zoom').innerHTML = lang;
+	}          
+    document.getElementById('common_lang_both_zoom').innerHTML = common.langbase+'+ <br>'+common.lang;       //alert('zoom1');
 }
 
 function common_show_fontsize(obj){                                      //alert('obj_name: '+obj.name+ ' '+obj.fontsize);
     var inner_e = ''; 
+    inner_e+=     '<div id="0.8"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(2,0)+'> x 0.7 </div>';
     inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(3,0)+'> x 1 </div>';
     inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(7,0)+'> x 1.2 </div>';
-    inner_e+=     '<div id="1.4"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(6,0)+'> x 1.5 </div>';
+    inner_e+=     '<div id="1.45"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(6,0)+'> x 1.5 </div>';
     inner_e+=     '<div id="1.9"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(5,0)+'> x 2 </div>';
     inner_e+=     '<div id="2.4"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(4,0)+'> x 2.5 </div>';
-    inner_e+=     '<div class="reader_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom" style="font-size:'+obj.fontsize*3.5+'vh;">text example</div></div>';
+    inner_e+=     '<div class="text_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom menu_zoom" style="font-size:'+obj.fontsize*3.5+'vh;">text example</div></div>';
     common_create_menu('common_fontsize',1, inner_e);
 }
 function common_set_fontsize(id, obj){                                   //alert('obj_name 2: '+obj);
@@ -674,7 +678,7 @@ function common_buttonpos(i, class_n){
 
 function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){                         //alert('style');
 	if (class_n===undefined) {class_n=0;}
-	var class_arr = ["buttons", "reader_zoom_box", "reader_zoom_box", "buttons disabled"];
+	var class_arr = ["buttons", "buttons_text", "text_zoom_box", "buttons disabled"];
 	var class_name = class_arr[class_n];
 	
 	if (shift_nleft===undefined) {shift_nleft=0; shift_n=0;}
@@ -682,7 +686,7 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	var b_width = 12; var b_height = 17;
 	var b_left = 16;  var b_right = 84; 
 	var b_top = 25; var b_bot = 75;
-	if (y_dim===3) { b_left=15; b_right=85; b_top=18; b_bot=82; }
+	if (y_dim===3) { b_left=15; b_right=85; b_top=17; b_bot=83; }
 	var b_sspace = 1;
 	var nx = i%(x_dim); var ny = (i-i%(x_dim))/x_dim;
 	
@@ -692,8 +696,9 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	var x = b_left + b_width*nx + b_xspace*(nx-shift_nleft) + b_sspace*shift_nleft;
 	var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim-1);
 	var y = b_top + (b_yspace+b_height)*ny;
-	if (class_n===1) { x += b_xspace-1; }
-	if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
+	//if (class_n===1) { x += b_xspace-1; }
+	//if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
+	if (class_n===2) { b_width = 2*b_width+b_xspace; }
 	var style = 'left:'+x+'vw; top:'+y+'vh;'+'width:'+b_width+'vw; height:'+b_height+'vh;';  //alert(style);
 	return('class="'+class_name+'" style="'+style+'"')
 	}

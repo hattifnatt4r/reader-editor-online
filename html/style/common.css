@@ -40,12 +40,14 @@
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
 }
 .buttons_text{
-  font-size: 6vmin; line-height: 7.5vmin;
-  width:12vw; height:17vh;  position:fixed;  
+  width:12vw; height:17vh;     
+  font-size: 6.3vmin; line-height: 6.5vmin;
+  position:fixed; box-sizing:border-box;
   word-break: normal; white-space: normal;
   background-color: white;  color: rgba(0,0,0,0.52);
   border-radius: 0.25vmin; 
-  border: dashed 2px #8a8a5c;  box-sizing:border-box;
+  border: dashed 0.3vh #8a8a5c;  box-sizing:border-box;
+  display:flex; justify-content:center; align-items:center;
 }
 .disabled{ opacity:0.25; }
 .disabled:hover{ opacity:0.2; border-top-width: 0vmin; }
@@ -77,12 +79,12 @@
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1%; top:2%; width:70%; height: 74%; 
+  left:1vw; top:2vh; width:70vw; height: 74vh; 
   position:fixed; text-align:center; box-sizing:border-box;
   font-size:3vh; color:rgba(0,0,0,0.8);
   line-height: 5vh; 
   background-color: white;  border-radius: 0.25vmin; 
-  border: dashed 2px #8a8a5c;
+  border: dashed 0.3vh #8a8a5c;
 }.text_scroll{
   position:relative; left:0%;top:0%; width:99.5%;height:100%;  box-sizing:border-box;
   white-space:pre-wrap; overflow-y: scroll; overflow-x: hidden;
@@ -98,14 +100,16 @@
 }
 
 /*-- zoom ----------------------------------------------------------------*/
-.reader_zoom_box{
+.text_zoom_box{
   left:1vw; top:78vh; width:70vw; height: 20vh; 
   position:fixed; 
   background-color: white;  border-radius: 0.25vmin; 
-  border: dashed 2px #8a8a5c;  box-sizing:border-box;
+  border: dashed 0.3vh #8a8a5c;  box-sizing:border-box;
+  font-size: 13vmin; line-height: 19vmin; 
+  display:flex; justify-content:center; align-items:center;
 }.text_zoom{
-  border-radius: 1%; font-size: 14vmin; line-height: 19vmin;
-  position:relative; width:100%; height:97.5%;  box-sizing:border-box;
+  border-radius: 0.25vmin; top:-0.5vh;
+  position:relative; width:100%; height:98%;  
   font-style:normal;  color: rgba(0,0,0,0.58);
   overflow-x: scroll; overflow-y: hidden; white-space:nowrap; 
 }.text_zoom::-webkit-scrollbar {
@@ -115,7 +119,7 @@
 }.text_zoom::-webkit-scrollbar-thumb {
   background-color: #c8ccd0; 
 }
-
+.menu_zoom{font-size: 6vmin; top:-2vh;}
 /*-- menu ----------------------------------------------------------------*/
 .button_app{
   border-radius: 1%;
