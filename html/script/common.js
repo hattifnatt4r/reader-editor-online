@@ -548,6 +548,7 @@ function common_show_lang(lvl, parent){                         //alert('common_
     inner_e+=     '<div id="auto"             onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(7,0)+'>auto</div>';
     inner_e+=     '<div id="common_langbase_zoom"  onclick="" '+common_buttonpos_menu(0,1)+'>'+common.langbase+'</div>';
     inner_e+=     '<div id="common_lang_zoom"      onclick="" '+common_buttonpos_menu(4,1)+'>'+common.lang+'</div>';
+    if (editor!=undefined) {parent = "editor_created_elements";}
     common_create_menu('common_lang',lvl, inner_e, parent);
 }
 function common_set_lang(lang, is_base){                                 //alert(lang+' '+is_base);

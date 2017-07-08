@@ -226,10 +226,13 @@ function editor_show_start(){                                            //alert
 }
 function editor_show_menu(){
     var inner_e = "";
-    inner_e+= '<div '+common_buttonpos_menu(2,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom">'+common.langbase+'</div></div>';
-    inner_e+= '<div '+common_buttonpos_menu(6,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom" >'+common.lang+'</div></div>';
-    inner_e+= '<div id="common_langbase"     onclick="common_show_lang(1, true,  this.parentElement.id);" ' +common_buttonpos_menu(3,0)+'> base lang </div>';
-    inner_e+= '<div id="common_lang"         onclick="common_show_lang(1, false, this.parentElement.id);" ' +common_buttonpos_menu(7,0)+'> lang </div>';
+    var parent = "editor_created_elements";
+    //inner_e+= '<div '+common_buttonpos_menu(2,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom">'+common.langbase+'</div></div>';
+    //inner_e+= '<div '+common_buttonpos_menu(6,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom" >'+common.lang+'</div></div>';
+    //inner_e+= '<div id="common_langbase"     onclick="common_show_lang(1, true,  this.parentElement.id);" ' +common_buttonpos_menu(3,0)+'> base lang </div>';
+    //inner_e+= '<div id="common_lang"         onclick="common_show_lang(1, false, this.parentElement.id);" ' +common_buttonpos_menu(7,0)+'> lang </div>';
+    inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common_buttonpos_menu(2,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
+    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(3,0)+'>local lang</div>';
     inner_e+= '<div id="editor_fontsize"     onclick="editor_show_fontsize();" '+common_buttonpos_menu(5,0)+'> font size </div>';
     inner_e+= '<div id="editor_sound"        onclick="" '+common_buttonpos_menu(0,3)+'> sound </div>';
     inner_e+= '<div id="editor_read"         onclick="" '+common_buttonpos_menu(4,3)+'> read </div>';
