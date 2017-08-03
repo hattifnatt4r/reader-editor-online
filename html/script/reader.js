@@ -1,5 +1,5 @@
 //-- reader variables ----------------------------------------------------------------
-
+alert('READER');
 var reader = {
     latest_w: "p0s0w0", latest_s: "p0s0", latest_p: "p0",
     id_prev: "p0s0w0",
@@ -72,9 +72,9 @@ function reader_run() {                                                  //alert
     
     if (reader.ischanged_text==false){
         reader_show_buttons();                                               //alert('buttons');
-        create_element('text_zoom_box','text_zoom_box', 'base_elements');
-        document.getElementById("text_zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
-        document.getElementById("base_elements").appendChild(document.getElementById("text_from_file_box"));
+        create_element('zoom_box','text_zoom_box', 'base_elements');
+        document.getElementById("zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
+        document.getElementById("base_elements").appendChild(document.getElementById("content_box"));
     }
     if (subdir==='mail' && reader.ischanged_text==false){
         var user_name = get_usrname(reader.fname).replace(" ",""); 
@@ -102,13 +102,13 @@ function reader_run() {                                                  //alert
     
     reader_text();                                                       //alert(word_id); //alert(paragraph_id);
     reader_set_selecttype(order=0);                                      //alert('select_type');
-    reader_set_zoomtype(0);                                              //alert('zoom_type');
+    reader_set_zoomtype(reader.zoomtype);                                              //alert('zoom_type');
     common_set_fontsize(common.fontsize, common);
     if (subdir==='mail'){
         //document.getElementById('reader_mail').style.visibility = 'visible';
         reader.iter = reader.get_id_array().length-1;                    //alert(reader.iter);
         reader_highlite(); 
-        scroll_to(reader.get_id(),'text_from_file_box', title=0);
+        scroll_to(reader.get_id(),'content_box', title=0);
 		
 		/*
 	    var elem=document.getElementById('text_from_file'); 
@@ -197,7 +197,7 @@ function reader_scroll(order,stop,onend){                                //alert
     }
     reader_utter(stop_i=stop, onend); 
     reader_highlite(); 
-    scroll_to(id,'text_from_file_box', title=0);                         //alert('scroll 1');
+    scroll_to(id,'content_box', title=0);                         //alert('scroll 1');
     //scroll_to(id,'text_zoom_box',title=1); alert('scroll 2');
     reader_fill_zoom();  
     
@@ -286,44 +286,49 @@ function reader_set_zoomtype(n_zoomtype){
     reader.zoomtype = n_zoomtype;
     var bodyStyles = window.getComputedStyle(document.body);
     textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
-    var elem = document.getElementById("text_zoom_box");               //alert('zoom2');
+    var elem = document.getElementById("zoom_box");               //alert('zoom2');
     if (n_zoomtype==0){ 
         elem.style.visibility='hidden';
-        document.getElementById('text_from_file_box').style.height = '96%';  //alert('zoom3');
+        document.getElementById('content_box').style.height = '100%';  //alert('zoom3');
     }else{
         elem.style.visibility='visible';
-        document.getElementById('text_from_file_box').style.height = textheight_zoom; //alert(textheight_zoom);
+        document.getElementById('content_box').style.height = textheight_zoom; //alert(textheight_zoom);
     }                                                                    //alert('set_zoomtype');
     reader_fill_zoom();                                                     //alert('reader_fill_zoom');
     elem = document.getElementById('reader_zoomtype_zoom');
     if (elem){ elem.innerHTML=reader.zoomtype_arr[n_zoomtype]; }
     elem = document.getElementById('reader_menu_zoomtype_text');
     if (elem){ elem.innerHTML=reader.zoomtype_arr[n_zoomtype]; }                //alert('done');
+    common.style.resize();
 }
     
 //-- buttons -------------------------------------------------------------------------
+function reader_resize(){
+	reader_show_buttons();
+	common.style.resize();
+}
 
 function reader_show_buttons(){                                          //alert('buttons');
     iter = reader.iter;
     if (iter==-1 || is_inlist(readonlydir)){ edit_function = ''; edit_class='buttons disabled'; }
     else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
     
-    elem = document.getElementById('reader_buttons_area');
-    inner_e = '<div id="reader_menu" onclick="reader_show_menu();" '+common_buttonpos(0)+'>menu</div>' ;
-    inner_e+= '<div id="reader_edit" class="'+edit_class+'" '+edit_function+' '+common_buttonpos(1)+'>edit</div>' ;
-    inner_e+= '<div id="reader_selecttype" onclick="reader_set_selecttype(1);" '+common_buttonpos(2)+'>word</div>' ;
-    inner_e+= '<div id="prev" onclick="reader_scroll(0,1,0);" '+common_buttonpos(3)+'>'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="next" onclick="reader_scroll(1,1,0);" '+common_buttonpos(7)+'>'+symbol_next+'</div>' ;
+    elem = document.getElementById('buttons_area');
+    inner_e = '<div id="reader_menu" onclick="reader_show_menu();" '+common.style.buttonpos(0)+'>menu</div>' ;
+    inner_e+= '<div id="reader_edit" class="'+edit_class+'" '+edit_function+' '+common.style.buttonpos(1)+'>edit</div>' ;
+    inner_e+= '<div id="reader_selecttype" onclick="reader_set_selecttype(1);" '+common.style.buttonpos(5)+'>word</div>' ;
+    inner_e+= '<div id="prev" onclick="reader_scroll(0,1,0);" '+common.style.buttonpos(2)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="next" onclick="reader_scroll(1,1,0);" '+common.style.buttonpos(6)+'>'+symbol_next+'</div>' ;
     
     //inner_e+= '<div id="reader_speed"     class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+symbol_speed+'</div>' ;
-    inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common_buttonpos(6)+'>'+symbol_play+'</div>' ;
-    inner_e+= '<div id="reader_navigate"   onclick="" ' +common_buttonpos(5,1)+'> navi- gate </div>' ;
+    inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common.style.buttonpos(3)+'>'+symbol_play+'</div>' ;
+    //inner_e+= '<div id="reader_navigate"   onclick="" ' +common.style.buttonpos(5,1)+'> navi- gate </div>' ;
     
     var subdir = get_subdir(reader.fname);
     if (subdir==='mail'){
-		inner_e+= '<div id="reader_mail" onclick="reader_show_mail();" '+common_buttonpos(4)+'>'+symbol_mail+'</div>' ;
+		inner_e+= '<div id="reader_mail" onclick="reader_show_mail();" '+common.style.buttonpos(4)+'>'+symbol_mail+'</div>' ;
 	}else{
-		inner_e+= '<div id="readall"     onclick="reader_scroll(-1,1,1);"  '+common_buttonpos(4)+'>'+symbol_readall+'</div>' ;
+		inner_e+= '<div id="readall"     onclick="reader_scroll(-1,1,1);"  '+common.style.buttonpos(4)+'>'+symbol_readall+'</div>' ;
 	}
     elem.innerHTML=inner_e;
 }

@@ -19,8 +19,9 @@
 <link href='https://fonts.googleapis.com/css?family=Swanky and Moo Moo' rel='stylesheet'> 
 </head>
 
-<body id='body' class='body_bkg' >
+<body id='body' class='body_bkg' onresize="files_resize()" >
 <?php require('script/files.php'); ?>    
+<!-- <div style='position:fixed; top:0%; left:0%;background-color:#5c4023; opacity:0.1;width:100vw;height:10vh;'></div> -->
 
 <div hidden id='hidden_files_nentry' style='position:fixed; top:66%; left:85%'>0</div>
 
@@ -29,7 +30,7 @@
 <input type="submit" id="python_submit_id" onclick="alert(111);" name="python_submit_name" value="empty" ></div>
 
 <div id='base_elements'>
-    <div id='files_buttons_area' class='buttons_area'></div>
+    <div id='buttons_area' class='buttons_area'></div>
 </div>
 <div id='created_elements'></div>
 <div id='editor_base_elements'></div>

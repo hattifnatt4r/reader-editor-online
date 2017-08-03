@@ -48,15 +48,15 @@ var files = {
 	},
 	get_fname: function(i){ 
 		if (i===undefined) {i=this.iter;} 
-		return document.getElementById('fileid_'+this.iter.toString()).innerHTML; 
+		return document.getElementById('fileid_'+this.iter.toString()+'_name').innerHTML; 
 	},
 	get_fid: function(i){ 
 		if (i===undefined) {i=this.iter;} 
 		return 'fileid_'+i.toString(); 
 	}, 
-	get_felem: function(i){
+	get_felem_pic: function(i){
 		if (i===undefined) {i=this.iter;} 
-		return document.getElementById(this.get_fid(i));
+		return document.getElementById(this.get_fid(i)+'_pic');
 	},
 	get_ftype: function(i){
 		if (i===undefined) {i=this.iter;} 
@@ -92,32 +92,39 @@ function files_run(){                                                    //alert
 	document.body.style.setProperty('--screen-height', screen_height);
 	document.body.style.setProperty('--screen-width', screen_width);     //alert('alert2');
 	textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
-	document.getElementById("files_area_box").style.height = textheight_zoom; //alert('alert3');
+	document.getElementById("content_box").style.height = textheight_zoom; //alert('alert3');
 	
 	files_show_buttons();                                                //alert('reader1');
-	document.getElementById("base_elements").appendChild(document.getElementById("files_area_box"));        // alert('reader2');
-	document.getElementById("base_elements").appendChild(document.getElementById("files_zoom_box"));
+	document.getElementById("base_elements").appendChild(document.getElementById("content_box"));        // alert('reader2');
+	document.getElementById("base_elements").appendChild(document.getElementById("zoom_box"));
 	
 	common_set_fontsize(files.fontsize, files);                          //alert(files.fontsize);
 	files_scroll(files.iter, 'no');                                      //alert('files run 2');
 	files_set_zoom('no');                                                //alert('files run 3');
+	common.style.resize();
+	files_show_files();
 	
 	//elem = document.getElementById("php_alert");                         //alert(elem.innerHTML);
 	//if (elem.innerHTML!=''){alert(elem.innerHTML);}
 }                                                                        //alert('dir: '+files_get_dir());
 
 //-- show buttons ---------------------------------------------------------------------------
+function files_resize(){
+	files_show_buttons();
+	common.style.resize();
+	files_show_files();
+}
 
 function files_show_buttons(){                                           //alert('alert b0');
-    var elem = document.getElementById('files_buttons_area');                //alert('alert b1');
+    var elem = document.getElementById('buttons_area');                //alert('alert b1');
     var inner_e="";
-    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common_buttonpos(0)+'> menu </div>' ;
-    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common_buttonpos(1)+'> opt </div>';
-    inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common_buttonpos(2)+'>'+symbol_enter+'</div></div>';
-    inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common_buttonpos(4)+'>'+'log in'+'</div>' ;
-    inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common_buttonpos(5)+'>'+symbol_upload+'</div>' ;
-    inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common_buttonpos(3)+'>'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common_buttonpos(7)+'>'+symbol_next+'</div>' ;
+    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common.style.buttonpos(0)+'> menu </div>' ;
+    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common.style.buttonpos(1)+'> opt </div>';
+    inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common.style.buttonpos(2)+'>'+symbol_enter+'</div></div>';
+    inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common.style.buttonpos(4)+'>'+'log in'+'</div>' ;
+    inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5)+'>'+symbol_upload+'</div>' ;
+    inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(3)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(7)+'>'+symbol_next+'</div>' ;
     //inner_e+= '<div id="files_python_button" class="buttons" onclick="files_click(10);"   style="'+reader_button_position(6)+'">py</div>';
     elem.innerHTML=inner_e;
     //if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload'); }
@@ -204,6 +211,38 @@ function uploadOnChange() {                                              //alert
 }
 
 //-- text display functions ---------------------------------------------------------------
+function files_show_files(){
+	var files_arr = document.getElementById('files_array').childNodes;   //alert(files_arr.length);
+	var wratio = window.innerWidth/window.innerHeight;
+	var left = 2.5; var right = 65; var top=-10; 
+	//var right = common.style.content_width;
+	var content_width = common.style.get_content_width();                //alert(content_width);
+    var ywidth=16.5; var yspace=9;
+    var xwidth=ywidth*1.4;
+    var xspace = 4;                                                      
+    //var xn = Math.floor((right-left)/(xspace+xwidth));                   alert(xn);
+    var xn = Math.floor((content_width-7)/(xspace+xwidth));              //alert(xn);
+    var ratio = (content_width-4)/(xspace+xwidth)/xn;
+    var pic_width = 0.6*xwidth;
+    xwidth = xwidth*ratio;
+    xspace = xspace*ratio;
+    //$xn = gmp_div_q($right-$left, $xspace+$xwidth); 
+    //$xn=2;
+    var i=0;       
+	for (i=0; i<files_arr.length; i+=1){                                 //alert(files_arr[i].id);
+		var n_y = (i-i%xn)/xn;
+	    var x = left + (xspace+xwidth)* (i%xn);
+	    var y = top +  (ywidth+yspace)*n_y;  
+	    //var style = 'left:'+x+'vw; top:'+y+'vh; width:'+xwidth+'vh; height:'+ywidth+'vh;';
+	    files_arr[i].style.top = y+'vh';
+	    files_arr[i].style.left = x+'vh';
+	    files_arr[i].style.height = ywidth+'vh';
+	    files_arr[i].style.width = xwidth+'vh';
+	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
+	    elem_pic.style.width = pic_width+'vh';
+	    
+		}
+	}
 
 function files_scroll(order, i_utter){                                   //alert('order '+order);
     var iter = files.iter;                                               //alert(files.fontsize);
@@ -218,20 +257,19 @@ function files_scroll(order, i_utter){                                   //alert
     var elem = document.getElementById('ffiles_iter');
     if (elem) {elem.value = files.iter; } 
     files_fill_zoom();
-    scroll_to(files.get_fid(), 'files_area_box', title=0);
+    scroll_to(files.get_fid(), 'content_box', title=0);
     
     var type = files.get_ftype();
     if (type=='dir'){fclass='files-dir-hover';} else{fclass='files-txt-hover';}  
-    elem = files.get_felem();
-    elem.className = 'files '+fclass; 
+    elem = files.get_felem_pic();
+    elem.className = 'files files_pic '+fclass; 
     if (iter!=iter_prev){
         type = files.get_ftype(iter_prev);
         if (type=='dir'){fclass='files-dir';} else{fclass='files-txt';}  
-        files.get_felem(iter_prev).className = 'files '+fclass; 
+        files.get_felem_pic(iter_prev).className = 'files files_pic '+fclass; 
         }
-    
     if (iter==0){fname_ii='..';}
-    else{fname_ii = elem.innerText; }
+    else{fname_ii = files.get_fname(); }
     fname_ii = replace_all(fname_ii,'_',' ');
     if (i_utter===undefined){ utter(fname_ii, 1, onend=0); }
     //if (iter===order && i_utter!='no'){document.getElementById(files.buttons_php["files_enter"]).click(); }
@@ -245,13 +283,13 @@ function files_set_zoom(order){
 	if (order===undefined){ files.zoom = (files.zoom+1)%2; }             //alert(files.zoom);
     var bodyStyles = window.getComputedStyle(document.body);
     textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
-    var elem = document.getElementById("files_zoom_box");               //alert('zoom2');
+    var elem = document.getElementById("zoom_box");               //alert('zoom2');
     if (files.zoom===1){ 
         elem.style.visibility='hidden';
-        document.getElementById('files_area_box').style.height = '96%';  //alert('zoom3');
+        document.getElementById('content_box').style.height = '96%';  //alert('zoom3');
     }else{
         elem.style.visibility='visible';
-        document.getElementById('files_area_box').style.height = textheight_zoom; //alert(textheight_zoom);
+        document.getElementById('content_box').style.height = textheight_zoom; //alert(textheight_zoom);
     }                                                                    
     var name = files.zoom_arr[files.zoom];                               //alert(name);
     elem = document.getElementById('files_zoom'); 

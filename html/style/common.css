@@ -1,8 +1,19 @@
 /* body {} */
 
-
 .body_bkg{
-  background-color: #e0e2e4;  
+  /*background-color: #e0e2e4;  */
+  background-color: white;  
+  background-image: url("pics/reader6-01-01.gif");
+  background-image: url("pics/reader5-02-bkg08-01.png"); 
+  background-image: url("pics/reader8-01-bkg04-01.png"); 
+  /*background-image: url("pics/reader3-08.png"); */
+    
+  background-size: auto 100vh;
+  background-position: right top;
+  background-position: auto 4vh;
+  background-repeat: no-repeat;
+  
+  /*---------------------------*/
   position: fixed; left:0;top:0; width:100%;height:100%;
   font-weight:400; font-size:20px; text-align:center; 
   
@@ -10,34 +21,82 @@
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
   font-family: "Open Sans";
   font-family: "Times New Roman", Georgia, Serif;  
+  /*font-family: "Ubuntu";  */
 }
 .text{
   font-style:normal; 
 }.text_highlite{
   font-style:normal; 
-  background-color: #b1d775; 
+  /*background-color: #b1d775; */
+  background-color: rgba(129, 170, 9, 0.6);
+  background-color: rgba(89, 161, 18, 0.6);
+  background-color: rgba(105, 161, 18, 0.6);
+  background-color: rgba(108, 170, 9, 0.6);
 }
-
+.editor_bkg{
+  background-color: white;   
+  position:fixed;
+  top: 0vh; left: 0vw;
+  width:100vw; height:100vh;
+}
+.editor_buttons_area{
+  background-color: rgba(0, 0, 0, 0.05); 
+  /* background-color: rgba(76, 95, 103, 0.1);  */
+  position:fixed;
+  top:50vh; left:0vw;
+  height:100vh; width:100vw;
+}
 /*-- buttons -------------------------------------------------------------*/
-.buttons_area{}
+.buttons_area{ }
 .buttons{
   width:12vw; height:17vh;     
-  font-size: 6.3vmin; line-height: 6.5vmin;
+  font-size: 4vmin; line-height: 4.5vmin;
   position:fixed; box-sizing:border-box;
   word-break: normal; white-space: normal;
-  color: rgba(0,0,0,0.45);  
-  background-color: #8aa0a8;  
+  border-radius: 0.25vmin;
+  color: rgba(0,0,0,0.5); 
+  /*color: rgba(250,250,250,0.8); */
+  
+  /*---------------------------*/
+  /*background-color: #8aa0a8;  
   border: solid 1.7vmin #8aa0a8;  border-radius: 0.25vmin; 
-  border-top-width: 0vmin; 
-  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.08), 0 5px 15px 0 rgba(0,0,0,0.2);
+   
+  background-color: rgba(92, 64, 35, 0.1); 
+  background-color: rgba(107, 143, 36, 0.2); 
+  background-color: rgba(110, 152, 27, 0.2); 
+  background-color: #668113;
+  */
+  /*border: solid 1.7vmin rgba(0,0,0,0); 
+  border-top-width: 0vmin; */
+  
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08), 0 4px 13px 0 rgba(0,0,0,0.2);
+  
+  /*
+  background-image: url("pics/reader5-btn02-01.png");
+  background-size: 11.9vw 17.5vh;
+  background-position: -0.3vw 0vh;
+  background-repeat: no-repeat;
+  */
+  
   /*---------------------------*/
   display:flex; justify-content:center; align-items:center;
+  font-family: "Ubuntu";  
+  
+  /*
+  background-image: url("pics/321.jpg");
+  background-size: 12vw 17vh; */
 }
 .buttons:hover{
+  /*
   background-color: #6c8893;
   border-color:     #6c8893; 
-  border-top-width: 0.8vmin; 
+  */
+  background-color: rgba(107, 143, 36, 0.7); 
+  background-color: rgba(110, 152, 27, 0.7); 
+  /*
+  border-top-width: 0.8vmin; */
   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.24), 0 10px 15px 0 rgba(0,0,0,0.19);
+   
 }
 .buttons_text{
   width:12vw; height:17vh;     
@@ -52,16 +111,28 @@
 .disabled{ opacity:0.25; }
 .disabled:hover{ opacity:0.2; border-top-width: 0vmin; }
 .files{
-  font-size:3.2vh; color:rgba(0,0,0,0.6); 
-  word-break: break-all; overflow-y: hidden; white-space: normal;
-  box-sizing: border-box;
   border-radius: 0.25vmin; 
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.03), 0 5px 15px 0 rgba(0,0,0,0.15); 
+  background-color: rgba(0,0,0,0.1);
+  width:17vw; height:16.5vh:
+  /*display:flex; justify-content:center; align-items:center; */
+}
+.files_name{
+  text-align: center;
+  height: 14vh;
+  font-size:3.2vh; color:rgba(0,0,0,0.6); 
+  word-break: break-all; overflow-y: hidden; white-space: normal;
+  box-sizing:border-box;
+  border: solid 0vh rgba(0,0,0,0);
+  border-top-width: 1vh;
+  /* 
   border: solid 2vmin #a6ce7e;
   border-top-width: 1.5vmin;
   border-bottom-width: 1.5vmin;
-  /*display:flex; justify-content:center; align-items:center; */
+  */ 
+  
 }
+.files_pic{ width:7vw; height:6vh; }
 .files-dir{       border-color: #a6ce7e; background-color:#a6ce7e; }
 .files-dir:hover{ border-color: #80ac39; background-color:#80ac39; }
 .files-dir-hover{ border-color: #80ac39; background-color:#80ac39; }
@@ -73,37 +144,41 @@
 .nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
   font-size: 17vmin; color:#8cb464; }
 .nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
-.symbol{ background-color: #94B96E; border-color: #94B96E; }
-.symbol:hover{ background-color: #73a145; border-color: #73a145; }
+.symbol{ background-color: #94B96E; border-color: #94B96E; background-color:rgba(110,152,27,0.7);  }
+.symbol:hover{ background-color: #73a145; border-color: #73a145; background-color:rgba(110,152,27,1);}
+.editor{ background-color: rgba(0,0,0,0.3); background-color: rgba(76, 95, 103, 0.35); }
+.editor:hover{ background-color: rgba(0,0,0,0.5); background-color: rgba(76, 95, 103, 0.65); }
 
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1vw; top:2vh; width:70vw; height: 74vh; 
+  left:1.5vw; top:0vh; width:70vw; height: 74vh; 
   position:fixed; text-align:center; box-sizing:border-box;
   font-size:3vh; color:rgba(0,0,0,0.8);
   line-height: 5vh; 
-  background-color: white;  border-radius: 0.25vmin; 
-  border: dashed 0.3vh #8a8a5c;
+  border-radius: 0.25vmin;  
+  white-space:pre;
+  /*background-color: white;   border: dashed 0.3vh #8a8a5c; */
 }.text_scroll{
-  position:relative; left:0%;top:0%; width:99.5%;height:100%;  box-sizing:border-box;
-  white-space:pre-wrap; overflow-y: scroll; overflow-x: hidden;
+  position:relative; left:0vw;top:0vh; width:99.5%;height:100%;  box-sizing:border-box;
+  white-space:pre-wrap; overflow-y: scroll; overflow-x: hidden; direction:rtl;
 }.text_scroll::-webkit-scrollbar {
   color:black;  border-radius: 0.25vmin; 
 }.text_scroll::-webkit-scrollbar-track {
   position:absolute; left:0%; border-radius: 0.25vmin; 
 }.text_scroll::-webkit-scrollbar-thumb {
-  background-color: #c8ccd0; border-radius: 0.25vmin; 
+  background-color: rgba(0,0,0,0.15); border-radius: 0.25vmin; 
 }.reader_text{
-  position:relative; left:2.5%;top:2%; width:93.5%;height:90%; 
-  background-color: rgba(255,255,255,0.9);
+  position:relative; left:1.3vw;top:2%; width:93.5%;height:90%; direction:ltr;
+  /*background-color: rgba(255,255,255,0.9);*/
 }
 
 /*-- zoom ----------------------------------------------------------------*/
 .text_zoom_box{
-  left:1vw; top:78vh; width:70vw; height: 20vh; 
+  left:3.4vw; top:78vh; width:70vw; height: 20vh; 
   position:fixed; 
-  background-color: white;  border-radius: 0.25vmin; 
+  /*background-color: white;  */
+  border-radius: 0.25vmin; 
   border: dashed 0.3vh #8a8a5c;  box-sizing:border-box;
   font-size: 13vmin; line-height: 19vmin; 
   display:flex; justify-content:center; align-items:center;
@@ -115,9 +190,10 @@
 }.text_zoom::-webkit-scrollbar {
   position:relative; 
 }.text_zoom::-webkit-scrollbar-track {
-  background-color: white;
+  /*background-color: white;*/
 }.text_zoom::-webkit-scrollbar-thumb {
   background-color: #c8ccd0; 
+  background-color: rgba(0,0,0,0.15);
 }
 .menu_zoom{font-size: 6vmin; top:-2vh;}
 /*-- menu ----------------------------------------------------------------*/

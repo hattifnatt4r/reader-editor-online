@@ -1,5 +1,5 @@
 <?php
-
+session_set_cookie_params(3600,"/");
 session_start();
 if ($_SESSION["session"]!=10){
 	 //echo 'SESSION_START';
@@ -21,6 +21,7 @@ if ($_SESSION["session"]!=10){
     $_SESSION["alert"] = "";
 }
 //run_files();
+echo 'USR-DIR: '.$_SESSION['usr_dir'];
 
 //-- files ------------------------------------------------------------------
 function run_files(){
@@ -31,9 +32,11 @@ function run_files(){
 	$show_arr = ""; $i=0;
 	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
 	
-	echo "<div id='files_area_box' class='text_scroll_box' style='height:73%;'> <div class='text_scroll' align='left' >".$show_arr."</div></div>";
+	echo "<div id='content_box' class='text_scroll_box' style='height:73vh;top:0vh;position:fixed;'> 
+	<div class='text_scroll' style='top:-6.5vh;left:0vw;' align='left' >
+	<div id='files_array' class='reader_text' style='top:0vh;left:0vw;'>".$show_arr."</div></div></div>";
 	
-	echo '<div id="files_zoom_box" class="text_zoom_box">  
+	echo '<div id="zoom_box" class="text_zoom_box">  
 	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
 	
 	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
@@ -63,30 +66,41 @@ function make_files_array(){
 }
 
 function show_file($entry, $i){
-    $left = 2.5; $right = 65; $xn=4; $top=4; 
-    $xwidth=14; $ywidth=20; $yspace=6;
-    $xspace = ( $right-$left-$xn*$xwidth )/($xn-1); 
+    $left = 2.5; $right = 65; $top=0; 
+    $ywidth=16.5; $yspace=9;
+    $xwidth=$ywidth*1.1;
+    $xspace = 1;
+    $xn = floor(($right-$left)/($xspace+$xwidth)); 
+    //$xn = gmp_div_q($right-$left, $xspace+$xwidth); 
+    //$xn=2;
+    $n_y = ($i-$i%$xn)/$xn;
     $x = $left + ($xspace+$xwidth)* ($i%$xn);
-    $y = $top +  ($yspace+$ywidth)*($i-$i%$xn)/$xn;
+    $y = $top +  ($ywidth+$yspace)*$n_y;
     $style = "position:absolute;
         left: ".$x."vw; top: ".$y."vh;
-        width:".$xwidth."vw; height:".$ywidth."vh;
+        width:".$xwidth."vh; height:".$ywidth."vh;
         " ;        
     $filename = $_SESSION['usr_dir'].'/'.$entry;
     if (file_exists($filename)){
-        if (is_dir($filename)){$class='files files-dir';$title='dir';} else { $class='files files-txt';$title='txt'; }
+        if (is_dir($filename)){$class='files files_pic files-dir';$title='dir';} else { $class='files files_pic files-txt';$title='txt'; }
         //if ($entry=='readme.txt'){ $class = 'files attention'; }
     }//else{ $class='files attention'; $title=''; $entry='new <br> contact'; }
     if (strpos($entry,'~')!==false){ 
         $entry = str_replace('~','',$entry); $class='files attention';
          }
-    $file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'">'.$entry.'</div>' ;
+    $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'" align="center">'
+    .'<div id="fileid_'.$i.'_pic"  class="'.$class.'" ></div>'
+    .'<div id="fileid_'.$i.'_name"  class="files_name" >'.$entry.'</div></div>' ;
+    //$file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'">'
+    //.$entry.'</div>' ;
     return($file_i);
 }
 //---------------------------------------------------------------------------
 function find_object($i_obj, $usr_dir){
+	make_files_array();
     $entry = $_SESSION["files_arr"][$i_obj];
-    //echo '<div style="position:fixed;top:97%;">'.$entry.'</div>';
+    //echo '| '.$entry.' | ';
+    //echo '|---| '.$_SESSION["files_arr"][1].' | '.$i_obj.' |---| ';
     return $entry;
 }
 
@@ -247,10 +261,10 @@ if (isset($_POST["ffiles_cleanhtml_submit"])) {
 //-- enter button ---------------------------------------------------
 
 if (isset($_POST['ffiles_enter_submit'])) {
-    $_SESSION["file_counter"]=$_POST["ffiles_iter"];
+    $_SESSION["file_counter"]=intval($_POST["ffiles_iter"]);
     $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
     $filename = $_SESSION['usr_dir'].'/'.$entry;
-    //echo ' | ENTER '.$_SESSION["file_counter"]." ".$entry." | ";
+    echo ' | ENTER '.$_SESSION["file_counter"]." ".$entry." | ";
     //unset($_POST);
     
 	if ($_SESSION["file_counter"]==0){
@@ -265,7 +279,7 @@ if (isset($_POST['ffiles_enter_submit'])) {
 	}else{
 		if (is_dir($filename)){ 
 			$_SESSION['usr_dir'] = $filename;
-			//echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
+			echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
 			$_SESSION['file_counter'] = 0;
 			header('Location:/index.html');
 			//run_files();
@@ -274,9 +288,10 @@ if (isset($_POST['ffiles_enter_submit'])) {
 			$txt = fread($myfile, filesize($filename));
 			fclose($myfile);
 			$_SESSION["file_text"] = $txt;
-			//echo filesize($filename).$filename.'TEXT:'.$txt;
+			echo filesize($filename).'  '.$filename.' TEXT:  '.$txt;
 			$_SESSION["filename_opened"] = $filename;
 			header('Location:/reader.html');
+			//exit;
 		}
 	}
 	//echo '  | NEW-DIR2: '.$_SESSION['usr_dir']." | ";

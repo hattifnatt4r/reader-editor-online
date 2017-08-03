@@ -37,10 +37,90 @@ var common = {
 			}          //alert(v);
 			this[keys[i]] = v;         
 		}
+	},
+	style: {}	
+}
+
+common.style = {
+	class_arr: ["buttons", "buttons disabled"],
+    yn:4, btop:3.5, bbot:96.5, 
+    xn:2, bright:98, xspace:4, dx_side:1,
+    dy: 16.5, xy_ratio: 1.1,
+    //content_width: 100,
+    
+    get_content_width: function(){
+		var wratio = window.innerWidth/window.innerHeight;
+		var bright = wratio*this.bright;
+		var dx = this.xy_ratio*this.dy;
+		var content_width = (bright - 2*dx -this.xspace-1*wratio);
+		return(content_width);
+	},
+    get_yspace: function(){
+		var yspace = (this.bbot-this.btop-(this.yn)*this.dy ) / (this.yn-1); 
+	    return(yspace);
+	},
+    buttonpos: function(i, class_n){ //alert(i);
+		var wratio = window.innerWidth/window.innerHeight;
+		if (class_n===undefined) {class_n=0;}
+		var class_name = this.class_arr[class_n];
+	    var bright = wratio*this.bright;
+	    var n_x = (i-i%this.yn)/this.yn;
+	    
+	    //var dy = this.get_dy();  alert(dy);
+	    var dx = this.dy*1.1;
+	    var yspace = this.get_yspace();                                  //alert(yspace);
+	    var y = this.btop + (i%this.yn)*(yspace+this.dy*1);
+	    var x = bright - (this.xn-n_x)*dx - (this.xn-n_x-1)*this.xspace; 
+	    if ((i-i%this.yn)/this.yn==this.xn-1){ dx = dx*this.dx_side; }    
+	    var style = 'left:'+x+'vh;top:'+y+'vh;width:'+dx+'vh;height:'+this.dy+'vh; border-bottom-width:'+this.dy*0.13+'vh;';
+	    return('class="'+class_name+'" style="'+style+'"'); 
+	},
+	resize: function(){                                                  //alert('resize');
+		var wratio = window.innerWidth/window.innerHeight;
+		var content_width = this.get_content_width();
+		var elem = document.getElementById('content_box');
+	    if (elem){ elem.style.width= content_width+'vh'; }
+	    var elem = document.getElementById('zoom_box');
+	    if (elem){ elem.style.width= (content_width-5.4*wratio)+'vh'; }  //alert(content_width);
 	}
 		
 }
-
+//function common_buttonpos(i, class_n){ return(common.style.buttonpos(i, class_n)); }
+/*
+function common_buttonpos(i, class_n){
+	var colors = ['#668113','#816513','#668113','#816513',   '#814a13','#668113','#814a13','#668113'];
+	if (class_n===undefined) {class_n=0;}
+	var class_arr = ["buttons", "buttons disabled"];
+	var class_name = class_arr[class_n];
+    var yn=4, btop=2,   bbot=98,   yspace=9,   dy_bot=1;
+    var xn=2, bleft=73, bright=99, xspace=3.5, dx_side=1;
+    //xspace=0; yspace=0; bright=98.8; bleft=74;
+    var wratio = window.innerWidth/window.innerHeight;
+    bright=98; btop=3; bbot=97; xspace=4; 
+    bright = wratio*bright;
+    var n_x = (i-i%yn)/yn;
+    
+    var dy = (bbot-btop-(yn-1)*yspace )/yn; 
+    dy = dy*yn/(yn-1+dy_bot);
+    var y = btop + (i%yn)*(yspace+dy*1);
+    if (i%yn==yn-1) {y=y;}
+    //var dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
+    var dx = dy*1.1;
+    //var x = bleft + (i-i%yn)/yn*(dx+xspace); 
+    var x = bright - (xn-n_x)*dx - (xn-n_x-1)*xspace; 
+    if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
+    if (i%yn==yn-1){ dy = dy*dy_bot; }
+    //var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;'; alert(dy);
+    var style = 'left:'+x+'vh;top:'+y+'vh;width:'+dx+'vh;height:'+dy+'vh; border-bottom-width:'+dy*0.13+'vh;';
+    //style+='background-color:'+colors[i]+';';
+    //alert(bright - 2*dx -xspace );
+    var elem = document.getElementById('content_box');
+    if (elem){ elem.style.width= (bright - 2*dx -xspace-1)+'vh'; }
+    var elem = document.getElementById('zoom_box');
+    if (elem){ elem.style.width= (bright - 2*dx -xspace-5.4*wratio)+'vh'; }
+    return('class="'+class_name+'" style="'+style+'"'); 
+}
+*/
 //var config = {};
 //config.readonlydir = ['books_txt',''];
 var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'];
@@ -575,7 +655,7 @@ function common_show_fontsize(obj){                                      //alert
 }
 function common_set_fontsize(id, obj){                                   //alert('obj_name 2: '+obj);
 	var classname = ''; var lineheight = 1.1; var alpha_def=0.6;
-	if (obj.name==='files'){ classname = 'files'; lineheight = 1.1; alpha_def=0.6;}
+	if (obj.name==='files'){ classname = 'files_name'; lineheight = 1.1; alpha_def=0.6;}
 	if (obj.name==='common'){ classname = 'text_scroll'; lineheight = 1.38; alpha_def=0.8;}             //alert('class: '+class_name);
 	var font_default = 3.5;             
 	var scale = parseFloat(id);                                          //alert(scale);
@@ -657,26 +737,6 @@ function cookie_delete_all() {
 
 //-- button position -----------------------------------------------------------------------------
 
-function common_buttonpos(i, class_n){
-	if (class_n===undefined) {class_n=0;}
-	var class_arr = ["buttons", "buttons disabled"];
-	var class_name = class_arr[class_n];
-    var yn=4, btop=2,   bbot=98,   yspace=9,   dy_bot=1;
-    var xn=2, bleft=73, bright=99, xspace=3.5, dx_side=1;
-    
-    var dy = (bbot-btop-(yn-1)*yspace )/yn; 
-    dy = dy*yn/(yn-1+dy_bot);
-    var y = btop + (i%yn)*(yspace+dy*1);
-    if (i%yn==yn-1) {y=y;}
-    var dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
-    var x = bleft + (i-i%yn)/yn*(dx+xspace); 
-    if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
-    if (i%yn==yn-1){ dy = dy*dy_bot; }
-    //var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;'; alert(dy);
-    var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh; border-bottom-width:'+dy*0.13+'vh;';
-    return('class="'+class_name+'" style="'+style+'"'); 
-}
-
 function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){                         //alert('style');
 	if (class_n===undefined) {class_n=0;}
 	var class_arr = ["buttons", "buttons_text", "text_zoom_box", "buttons disabled"];
@@ -701,5 +761,7 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	//if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
 	if (class_n===2) { b_width = 2*b_width+b_xspace; }
 	var style = 'left:'+x+'vw; top:'+y+'vh;'+'width:'+b_width+'vw; height:'+b_height+'vh;';  //alert(style);
+	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
+	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
 	return('class="'+class_name+'" style="'+style+'"')
 	}

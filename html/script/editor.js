@@ -76,7 +76,7 @@ editor.style = {
 	nlines_lvl1: 2,
 	fontsize: 0,
 	cursorshift: 0,
-	class_arr: ["buttons", "buttons symbol", "buttons nobkg", "buttons disabled"],
+	class_arr: ["buttons editor", "buttons symbol", "buttons nobkg", "buttons disabled"],
 	
 	get_button: function (i, class_n){                                   //alert('pos: '+this.b_top);
 		if (class_n===undefined) {class_n=0;}
@@ -112,6 +112,7 @@ editor.style = {
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 6;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
 		    document.getElementById('editor_text_box').style.height=zoomheight+'%';
+		    document.getElementById('editor_buttons_area').style.top=(this.b_top-this.zoomspace/2)+'%';
 		    editor_set_fontsize(this.nlines_lvl1,1);  
 		     
 		}else if (stylename==='bottom_2rows') {                          //alert('2rows');
@@ -122,6 +123,7 @@ editor.style = {
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 5;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
 		    document.getElementById('editor_text_box').style.height = zoomheight+'%';  
+		    document.getElementById('editor_buttons_area').style.top=(this.b_top-this.zoomspace/2)+'%';
 		    editor_set_fontsize(this.nlines_lvl0,0);                     //alert('nlines_lvl0: '+this.nlines_lvl0);
 		    		    
 		}else if (stylename==='cut_leftright') {                         //alert(stylename);
@@ -158,13 +160,13 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	editor.text_raw = text_raw.toString();
 	editor.iter = iter;
 
-    create_element('editor_bkg','body_bkg', 'created_elements');
-    create_element('editor_area','body_bkg', 'editor_base_elements');
+    create_element('editor_bkg','editor_bkg', 'created_elements');
+    create_element('editor_area','editor_bkg', 'editor_base_elements');
     
 	var elem=create_element('editor_text_box','text_scroll_box', 'editor_area'); 
 	elem.style = 'top:2%; width:96%; left:2%;';
-	elem.innerHTML = '<div id="editor_text_area" class="text_scroll" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;">zoom word</div>'; 
-	elem = create_element('editor_buttons_area', '', 'editor_area'); 
+	elem.innerHTML = '<div class="text_scroll" ><div id="editor_text_area" class="reader_text" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;width:99%;height:100%;">zoom word</div></div>'; 
+	elem = create_element('editor_buttons_area', 'editor_buttons_area', 'editor_area'); 
 	
 	editor_type = 'bottom_2rows';
 	editor.style.set_style(editor_type);

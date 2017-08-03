@@ -18,16 +18,17 @@
 <link href='https://fonts.googleapis.com/css?family=Swanky and Moo Moo' rel='stylesheet'> 
 </head>
 
-<body id='body' class='body_bkg' id='reader_body'>
+<body id='body' class='body_bkg' id='reader_body' onresize="reader_resize()">
 <?php require('script/reader.php'); ?>    
 <!-- <div id='reader_buttons_area' class='buttons_area'></div> -->
+<!-- <div style='position:fixed; top:0%; left:0%;background-color:#5c4023; opacity:0.1;width:100vw;height:7vh;'></div> -->
 
 <div hidden id='hidden_text_parsed' style='position:fixed; top:0%; left:0%'>0</div>
 <div hidden id='hidden_text' style='position:fixed; top:45%; left:83%'>0</div>
 <div hidden id='temp' style='position:fixed; top:50%; left:83%'>0</div>
 
 <div id='base_elements'>
-    <div id='reader_buttons_area' class='buttons_area'></div>
+    <div id='buttons_area' class='buttons_area'></div>
 </div>
 <div id='created_elements'> </div>
 <div id='editor_base_elements'> </div>
