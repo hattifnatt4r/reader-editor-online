@@ -1,5 +1,5 @@
 <?php
-echo 'OPENED: ';
+//echo 'OPENED: ';
 if ($_SESSION["session_reader"]!=10){
     $_SESSION["session_reader"] = 10;
     $_SESSION["reader_counter"] = 0;
@@ -86,7 +86,7 @@ function get_mail_fname($a,$b){
 run_reader();
 
 function run_reader(){
-	echo 'opened: '.$_SESSION["filename_opened"];
+	//echo 'opened: '.$_SESSION["filename_opened"];
 	$dir = substr($_SESSION["usr_dir"], strpos($_SESSION["usr_dir"], "/")); 
 	if ($dir==$_SESSION["usr_dir"]){$dir='';} 
 	$fname = substr($_SESSION["filename_opened"], strrpos($_SESSION["filename_opened"], "/")+1);

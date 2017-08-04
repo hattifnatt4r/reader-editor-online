@@ -17,9 +17,10 @@ if ($_SESSION["session"]!==10){
     $_SESSION["files_arr"] = array();
     
     $_SESSION["alert"] = "";
+    //$_SESSION["submit_any"] = "ok";
 }
 //run_files();
-echo 'USR-DIR: '.$_SESSION['usr_dir'];
+//echo 'USR-DIR: '.$_SESSION['usr_dir'];
 
 //-- files ------------------------------------------------------------------
 function run_files(){
@@ -32,7 +33,7 @@ function run_files(){
 	
 	echo "<div id='content_box' class='text_scroll_box' style='height:73vh;top:0vh;position:fixed;'> 
 	<div class='text_scroll' style='top:-6.5vh;left:0vw;' align='left' >
-	<div id='files_array' class='reader_text' style='top:0vh;left:0vw;'>".$show_arr."</div></div></div>";
+	<div id='files_array' class='reader_text' style='top:0vh;left:0vw;visibility:hidden;'>".$show_arr."</div></div></div>";
 	
 	echo '<div id="zoom_box" class="text_zoom_box">  
 	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
@@ -40,6 +41,7 @@ function run_files(){
 	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
 	echo '<div hidden id="php_alert">'.$_SESSION["alert"]."</div>";
 	$_SESSION["alert"] = "";
+	//$_SESSION["submit_any"] = "ok";
 }
 function make_files_array(){
 	$arr_dir=array(); $arr_file=array(); $arr_entries=array(); 
@@ -119,7 +121,8 @@ if (isset($_POST['ffiles_createtxt_submit'])) {
     echo 'TEXT: '.$text.' '; 
     if ($text!='' || $text!=' ' || $text!='  '){
         create_file($text,$_SESSION['usr_dir']); 
-        header('Location:/index.html'); 
+        //header('Location:/index.html'); 
+        echo "<div hidden id='php_goto'>"."index.html"."</div>";
     }
 }
 if (isset($_POST['ffiles_createdir_submit'])) {
@@ -127,7 +130,8 @@ if (isset($_POST['ffiles_createdir_submit'])) {
     echo 'TEXT: '.$text.' '; 
     if ($text!='' || $text!=' ' || $text!='  '){
         create_dir($text,$_SESSION['usr_dir']); 
-        header('Location:/index.html'); 
+        //header('Location:/index.html'); 
+        echo "<div hidden id='php_goto'>"."index.html"."</div>";
     }
 }
 
@@ -180,7 +184,8 @@ if (isset($_POST['ffiles_addmail_submit'])) {
 	}
     
     $_SESSION["alert"] = $alert;
-    header('Location:/index.html'); 
+    //header('Location:/index.html'); 
+    echo "<div hidden id='php_goto'>"."index.html"."</div>";
 }
 function get_usrname(){
     $usr_dir=$_SESSION['usr_dir'];
@@ -203,7 +208,8 @@ if (isset($_POST["ffiles_delete_submit"])) {
 	$filename = $_SESSION['usr_dir'].'/'.$entry;
 	if (file_exists($filename)){ 
 		rename($filename, $_SESSION['usr_home'].'/trash/'.$entry);}
-	header('Location:/index.html');
+	//header('Location:/index.html');
+	echo "<div hidden id='php_goto'>"."index.html"."</div>";
 }	
 if (isset($_POST["ffiles_past_submit"])) {
 	$fname = $_POST["ffiles_copyfname_text"];
@@ -220,7 +226,8 @@ if (isset($_POST["ffiles_past_submit"])) {
 	}
 	echo $filename.' | '.$newfile_final;
 	copy($filename, $newfile_final);
-	header('Location:/index.html');
+	//header('Location:/index.html');
+	echo "<div hidden id='php_goto'>"."index.html"."</div>";
 }		
 if (isset($_POST["ffiles_edit_submit"])) {
 	$_SESSION["file_counter"]=$_POST["ffiles_iter"];	
@@ -235,7 +242,8 @@ if (isset($_POST["ffiles_edit_submit"])) {
 		if (!is_dir($filename)){$filename_new=$filename_new.'.txt';}
 		if (file_exists($filename)){ 
 			rename($filename, $filename_new);}
-		header('Location:/index.html'); 
+		//header('Location:/index.html'); 
+		echo "<div hidden id='php_goto'>"."index.html"."</div>";
 	}
 }
 if (isset($_POST["ffiles_cleanhtml_submit"])) {	
@@ -253,7 +261,8 @@ if (isset($_POST["ffiles_cleanhtml_submit"])) {
 	chmod($fname, 0666);
 	fwrite($myfile, $txt);
 	fclose($myfile);
-	header('Location:/index.html'); 
+	//header('Location:/index.html'); 
+	echo "<div hidden id='php_goto'>"."index.html"."</div>";
 }
 
 //-- enter button ---------------------------------------------------
@@ -262,7 +271,7 @@ if (isset($_POST['ffiles_enter_submit'])) {
     $_SESSION["file_counter"]=intval($_POST["ffiles_iter"]);
     $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
     $filename = $_SESSION['usr_dir'].'/'.$entry;
-    echo ' | ENTER '.$_SESSION["file_counter"]." ".$entry." | ";
+    //echo ' | ENTER '.$_SESSION["file_counter"]." ".$entry." | ";
     //unset($_POST);
     
 	if ($_SESSION["file_counter"]==0){
@@ -273,24 +282,22 @@ if (isset($_POST['ffiles_enter_submit'])) {
 			//$_SESSION['file_counter'] = 0;
 			//header('Location:/index.html');
 			//run_files();
-			//echo "<div hidden id='php_goto'>"."index.html"."</div>";
+			echo "<div hidden id='php_goto'>"."index.html"."</div>";
 		}
 	}else{
 		if (is_dir($filename)){ 
 			$_SESSION['usr_dir'] = $filename;
-			echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
+			//echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
 			$_SESSION['file_counter'] = 0;
-			//header('Location:/public_html/index.html');
 			//header('Location:/index.html');
-			//header('Location: http:/index.html');
 			//run_files();
-			//echo "<div hidden id='php_goto'>"."index.html"."</div>";
+			echo "<div hidden id='php_goto'>"."index.html"."</div>";
 		}else{
 			$myfile = fopen($filename, "r") or die("Unable to open file!");
 			$txt = fread($myfile, filesize($filename));
 			fclose($myfile);
 			$_SESSION["file_text"] = $txt;
-			echo filesize($filename).'  '.$filename.' TEXT:  '.$txt;
+			//echo filesize($filename).'  '.$filename.' TEXT:  '.$txt;
 			$_SESSION["filename_opened"] = $filename;
 			//header('Location:/reader.html');
 			//header('Location: http:/reader.html');
@@ -301,6 +308,9 @@ if (isset($_POST['ffiles_enter_submit'])) {
 	}
 	//echo "<div hidden id='php_goto'>"."index.html"."</div>";
 	//echo '  | NEW-DIR2: '.$_SESSION['usr_dir']." | ";
+	//unset($_SESSION['message']);
+	//unset($_POST['ffiles_enter_submit']);
+	//$_SESSION["submit_any"] = "";
 }
 
 //-- login ------------------------------------------------------------------
@@ -329,7 +339,8 @@ if (isset($_POST['ffiles_userlogin_submit'])) {
     }
     $_SESSION['usr_dir'] = "users/".$name;
     $_SESSION['usr_home'] = "users/".$name;
-    header('Location:/index.html');
+    //header('Location:/index.html');
+    echo "<div hidden id='php_goto'>"."index.html"."</div>";
 }
 //-- copy -----------------------------------------------------------------
 
@@ -435,7 +446,8 @@ if(isset($_POST["ffiles_upload_submit"])) {
             echo "Sorry, there was an error uploading your file.";
         }
     }
-    header('Location:/index.html');
+    //header('Location:/index.html');
+    echo "<div hidden id='php_goto'>"."index.html"."</div>";
 }
 
 if(isset($_POST["python_submit_name"])) {

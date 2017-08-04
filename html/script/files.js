@@ -242,11 +242,13 @@ function files_show_files(){
 	    files_arr[i].style.left = x+'vh';
 	    files_arr[i].style.height = ywidth+'vh';
 	    files_arr[i].style.width = xwidth+'vh';
+	    //files_arr[i].style.visibility = 'visible';
 	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
 	    elem_pic.style.width = pic_width+'vh';
 	    
 		}
-	}
+	document.getElementById('files_array').style.visibility = 'visible';
+}
 
 function files_scroll(order, i_utter){                                   //alert('order '+order);
     var iter = files.iter;                                               //alert(files.fontsize);
