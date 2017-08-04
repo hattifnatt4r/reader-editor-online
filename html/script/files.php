@@ -31,9 +31,9 @@ function run_files(){
 	$show_arr = ""; $i=0;
 	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
 	
-	echo "<div id='content_box' class='text_scroll_box' style='height:73vh;top:0vh;position:fixed;'> 
-	<div class='text_scroll' style='top:-6.5vh;left:0vw;' align='left' >
-	<div id='files_array' class='reader_text' style='top:0vh;left:0vw;visibility:hidden;'>".$show_arr."</div></div></div>";
+	echo "<div id='content_box' class='text_scroll_box' style='position:fixed;height:73%;top:0%;' align='top'> 
+	<div class='text_scroll' style='top:-8.4%;left:0vw;' align='left' >
+	<div id='files_array' class='reader_text' style='top:0;left:0;visibility:hidden;'>".$show_arr."</div></div></div>";
 	
 	echo '<div id="zoom_box" class="text_zoom_box">  
 	<div id="files_zoom_text" class="text_zoom">..</div> </div>';

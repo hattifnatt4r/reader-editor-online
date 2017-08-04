@@ -8,9 +8,9 @@
   background-image: url("pics/reader8-01-bkg04-01.png"); 
   /*background-image: url("pics/reader3-08.png"); */
     
-  background-size: auto 100vh;
+  background-size: auto 100%;
   background-position: right top;
-  background-position: auto 4vh;
+  background-position: auto 0%;
   background-repeat: no-repeat;
   
   /*---------------------------*/
@@ -36,20 +36,20 @@
 .editor_bkg{
   background-color: white;   
   position:fixed;
-  top: 0vh; left: 0vw;
-  width:100vw; height:100vh;
+  top: 0; left: 0;
+  width:100%; height:100%;
 }
 .editor_buttons_area{
   background-color: rgba(0, 0, 0, 0.05); 
   /* background-color: rgba(76, 95, 103, 0.1);  */
   position:fixed;
-  top:50vh; left:0vw;
-  height:100vh; width:100vw;
+  top:50%; left:0;
+  height:100%; width:100%;
 }
 /*-- buttons -------------------------------------------------------------*/
 .buttons_area{ }
 .buttons{
-  width:12vw; height:17vh;     
+  width:12%; height:17%;     
   font-size: 4vmin; line-height: 4.5vmin;
   position:fixed; box-sizing:border-box;
   word-break: normal; white-space: normal;
@@ -152,7 +152,7 @@
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
-  left:1.5vw; top:0vh; width:70vw; height: 74vh; 
+  left:1.5%; top:0%; width:70%; height: 74%; 
   position:fixed; text-align:center; box-sizing:border-box;
   font-size:3vh; color:rgba(0,0,0,0.8);
   line-height: 5vh; 
@@ -160,7 +160,7 @@
   white-space:pre;
   /*background-color: white;   border: dashed 0.3vh #8a8a5c; */
 }.text_scroll{
-  position:relative; left:0vw;top:0vh; width:99.5%;height:100%;  box-sizing:border-box;
+  position:relative; left:0%;top:0%; width:99.5%;height:100%; 
   white-space:pre-wrap; overflow-y: scroll; overflow-x: hidden; direction:rtl;
 }.text_scroll::-webkit-scrollbar {
   color:black;  border-radius: 0.25vmin; 
@@ -169,13 +169,13 @@
 }.text_scroll::-webkit-scrollbar-thumb {
   background-color: rgba(0,0,0,0.15); border-radius: 0.25vmin; 
 }.reader_text{
-  position:relative; left:1.3vw;top:2%; width:93.5%;height:90%; direction:ltr;
+  position:relative; left:1.3%;top:2%; width:93.5%;height:100%; direction:ltr;
   /*background-color: rgba(255,255,255,0.9);*/
 }
 
 /*-- zoom ----------------------------------------------------------------*/
 .text_zoom_box{
-  left:3.4vw; top:78vh; width:70vw; height: 20vh; 
+  left:3.4%; top:78%; width:70%; height: 20%; 
   position:fixed; 
   /*background-color: white;  */
   border-radius: 0.25vmin; 
@@ -183,7 +183,7 @@
   font-size: 13vmin; line-height: 19vmin; 
   display:flex; justify-content:center; align-items:center;
 }.text_zoom{
-  border-radius: 0.25vmin; top:-0.5vh;
+  border-radius: 0.25vmin; top:0;
   position:relative; width:100%; height:98%;  
   font-style:normal;  color: rgba(0,0,0,0.58);
   overflow-x: scroll; overflow-y: hidden; white-space:nowrap; 

@@ -292,7 +292,7 @@ function reader_set_zoomtype(n_zoomtype){
         document.getElementById('content_box').style.height = '100%';  //alert('zoom3');
     }else{
         elem.style.visibility='visible';
-        document.getElementById('content_box').style.height = textheight_zoom; //alert(textheight_zoom);
+        document.getElementById('content_box').style.height = common.style.textheight_zoom+'%'; //alert(textheight_zoom);
     }                                                                    //alert('set_zoomtype');
     reader_fill_zoom();                                                     //alert('reader_fill_zoom');
     elem = document.getElementById('reader_zoomtype_zoom');
@@ -300,6 +300,8 @@ function reader_set_zoomtype(n_zoomtype){
     elem = document.getElementById('reader_menu_zoomtype_text');
     if (elem){ elem.innerHTML=reader.zoomtype_arr[n_zoomtype]; }                //alert('done');
     common.style.resize();
+    document.getElementById('zoom_box').style.height = (100 - common.style.textheight_zoom-2)+'%';
+    document.getElementById('zoom_box').style.top = (common.style.textheight_zoom +0.2)+'%';
 }
     
 //-- buttons -------------------------------------------------------------------------

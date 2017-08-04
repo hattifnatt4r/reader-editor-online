@@ -99,7 +99,7 @@ editor.style = {
 	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight; //style+='line-height:60%;'; 
 		}
 	    
-	    style+= 'left:'+x+'vw; top:'+y+'vh; width:'+b_width+'vw; height:'+b_height+'vh; border-bottom-width:'+b_height*0.07+'vh;'  ;  //alert(style);
+	    style+= 'left:'+x+'%; top:'+y+'%; width:'+b_width+'%; height:'+b_height+'%; border-bottom-width:'+b_height*0.07+'%;'  ;  //alert(style);
 	    return('class="'+class_name+'" style="'+style+'"');
 	},
 	

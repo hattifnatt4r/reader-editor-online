@@ -46,6 +46,8 @@ common.style = {
     yn:4, btop:3.5, bbot:96.5, 
     xn:2, bright:98, xspace:4, dx_side:1,
     dy: 16.5, xy_ratio: 1.1,
+    textheight_zoom: 78,
+    textheight: 97,
     //content_width: 100,
     
     get_content_width: function(){
@@ -63,7 +65,7 @@ common.style = {
 		var wratio = window.innerWidth/window.innerHeight;
 		if (class_n===undefined) {class_n=0;}
 		var class_name = this.class_arr[class_n];
-	    var bright = wratio*this.bright;
+	    var bright = wratio*this.bright;           //if (i===0){alert('bright: '+bright);}
 	    var n_x = (i-i%this.yn)/this.yn;
 	    
 	    //var dy = this.get_dy();  alert(dy);
@@ -72,16 +74,18 @@ common.style = {
 	    var y = this.btop + (i%this.yn)*(yspace+this.dy*1);
 	    var x = bright - (this.xn-n_x)*dx - (this.xn-n_x-1)*this.xspace; 
 	    if ((i-i%this.yn)/this.yn==this.xn-1){ dx = dx*this.dx_side; }    
-	    var style = 'left:'+x+'vh;top:'+y+'vh;width:'+dx+'vh;height:'+this.dy+'vh; border-bottom-width:'+this.dy*0.13+'vh;';
+	    var style = 'left:'+x/wratio+'%;top:'+y+'%;width:'+dx/wratio+'%;height:'+this.dy+'%; border-bottom-width:'+this.dy*0.13+'%;';
 	    return('class="'+class_name+'" style="'+style+'"'); 
 	},
 	resize: function(){                                                  //alert('resize');
 		var wratio = window.innerWidth/window.innerHeight;
 		var content_width = this.get_content_width();
 		var elem = document.getElementById('content_box');
-	    if (elem){ elem.style.width= content_width+'vh'; }
+	    if (elem){ elem.style.width= content_width/wratio+'%'; }
 	    var elem = document.getElementById('zoom_box');
-	    if (elem){ elem.style.width= (content_width-5.4*wratio)+'vh'; }  //alert(content_width);
+	    if (elem){ elem.style.width= (content_width-5.4*wratio)/wratio+'%'; }  //alert(content_width);
+	    //if (elem){ elem.style.height= '20.3%'; }  //alert(content_width);
+	    //if (elem){ elem.style.left= '-0.1%'; }  //alert(content_width);
 	}
 		
 }
@@ -760,7 +764,7 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	//if (class_n===1) { x += b_xspace-1; }
 	//if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
 	if (class_n===2) { b_width = 2*b_width+b_xspace; }
-	var style = 'left:'+x+'vw; top:'+y+'vh;'+'width:'+b_width+'vw; height:'+b_height+'vh;';  //alert(style);
+	var style = 'left:'+x+'%; top:'+y+'%;'+'width:'+b_width+'%; height:'+b_height+'%;';  //alert(style);
 	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
 	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
 	return('class="'+class_name+'" style="'+style+'"')
