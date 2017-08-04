@@ -1,6 +1,5 @@
 <?php
 echo 'OPENED: ';
-session_start();
 if ($_SESSION["session_reader"]!=10){
     $_SESSION["session_reader"] = 10;
     $_SESSION["reader_counter"] = 0;

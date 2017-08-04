@@ -1,5 +1,5 @@
 //-- reader variables ----------------------------------------------------------------
-alert('READER');
+//alert('READER');
 var reader = {
     latest_w: "p0s0w0", latest_s: "p0s0", latest_p: "p0",
     id_prev: "p0s0w0",

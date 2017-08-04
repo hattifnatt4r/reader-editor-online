@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -20,14 +21,10 @@
 </head>
 
 <body id='body' class='body_bkg' onresize="files_resize()" >
-<?php require('script/files.php'); ?>    
-<!-- <div style='position:fixed; top:0%; left:0%;background-color:#5c4023; opacity:0.1;width:100vw;height:10vh;'></div> -->
-
+<?php include 'script/files.php'; ?>    
 <div hidden id='hidden_files_nentry' style='position:fixed; top:66%; left:85%'>0</div>
-
-<div hidden id="files_python" style="left:90%;top:70%;position:fixed;width:10%;height:20%;">
-<form action="" method="post"> 
-<input type="submit" id="python_submit_id" onclick="alert(111);" name="python_submit_name" value="empty" ></div>
+<div hidden id='php_goto'> </div>
+<!-- <a hidden href="reader.html"> go to reader</a> -->
 
 <div id='base_elements'>
     <div id='buttons_area' class='buttons_area'></div>

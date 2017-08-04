@@ -71,7 +71,11 @@ function files_beforunload() {common.cookie_save.call(files); common.cookie_save
 function files_cleancookie(){ cookie_delete_all(); alert('clear cookie'); window.location.href = '/index.html'; }
 
 //-- run files -------------------------------------------------------------------
-
+//alert('start_files');
+var elem = document.getElementById("php_goto");
+var php_goto = elem.innerHTML.replace(' ','');
+elem.innerHTML = '';
+if (php_goto!=''){ window.location.href = '/'+php_goto; }
 files_run();
 
 function files_run(){                                                    //alert('files_run');  

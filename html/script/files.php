@@ -1,9 +1,7 @@
 <?php
-session_set_cookie_params(3600,"/");
-session_start();
-if ($_SESSION["session"]!=10){
+if ($_SESSION["session"]!==10){
 	 //echo 'SESSION_START';
-	getUserData();
+	//getUserData();
     $_SESSION["session"] = 10;
     
     $_SESSION['usr_dir'] = "users/common";
@@ -26,8 +24,8 @@ echo 'USR-DIR: '.$_SESSION['usr_dir'];
 //-- files ------------------------------------------------------------------
 function run_files(){
 	make_files_array();
-	echo "<div hidden id='hidden_files_nentry' style='position:fixed; top:67%; left:85%'>".$_SESSION['nentry']."</div>";
-	echo "<div hidden id='hidden_files_dir' style='position:fixed; top:60%; left:85%'>".$_SESSION['usr_dir']."</div>";
+	echo "<div hidden id='hidden_files_nentry'>".$_SESSION['nentry']."</div>";
+	echo "<div hidden id='hidden_files_dir'>".$_SESSION['usr_dir']."</div>";
 	
 	$show_arr = ""; $i=0;
 	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
@@ -273,16 +271,20 @@ if (isset($_POST['ffiles_enter_submit'])) {
 			$_SESSION["usr_dir"] = $new_dir;
 			//echo '  | GO-BCK: '.$_SESSION['usr_dir'];
 			//$_SESSION['file_counter'] = 0;
-			header('Location:/index.html');
+			//header('Location:/index.html');
 			//run_files();
+			//echo "<div hidden id='php_goto'>"."index.html"."</div>";
 		}
 	}else{
 		if (is_dir($filename)){ 
 			$_SESSION['usr_dir'] = $filename;
 			echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
 			$_SESSION['file_counter'] = 0;
-			header('Location:/index.html');
+			//header('Location:/public_html/index.html');
+			//header('Location:/index.html');
+			//header('Location: http:/index.html');
 			//run_files();
+			//echo "<div hidden id='php_goto'>"."index.html"."</div>";
 		}else{
 			$myfile = fopen($filename, "r") or die("Unable to open file!");
 			$txt = fread($myfile, filesize($filename));
@@ -290,10 +292,14 @@ if (isset($_POST['ffiles_enter_submit'])) {
 			$_SESSION["file_text"] = $txt;
 			echo filesize($filename).'  '.$filename.' TEXT:  '.$txt;
 			$_SESSION["filename_opened"] = $filename;
-			header('Location:/reader.html');
+			//header('Location:/reader.html');
+			//header('Location: http:/reader.html');
+			//header('Location:  http://www.hedgehoginafog.com/reader.html');
 			//exit;
+			echo "<div hidden id='php_goto'>"."reader.html"."</div>";
 		}
 	}
+	//echo "<div hidden id='php_goto'>"."index.html"."</div>";
 	//echo '  | NEW-DIR2: '.$_SESSION['usr_dir']." | ";
 }
 
