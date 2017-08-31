@@ -174,6 +174,8 @@ function reader_scroll(order,stop,onend){                                //alert
     else { id=id_arr[iter]; }
     reader.iter = iter;
     reader.id_curr = id;
+
+    if (id_arr.length-1===iter){onend=0;}
     
     if (iter==-1){
         reader.latest_w  = id;
@@ -206,10 +208,10 @@ function reader_scroll(order,stop,onend){                                //alert
     if(subdir==='mail' && $('#'+id).parents('#mail_editable').length === 0) { mail_notedit=true; }  //alert(mail_notedit);
     
     if (iter==-1 || mail_notedit===true){ edit_function = ''; edit_class='buttons disabled'; 
-        document.getElementById('reader_edit').className='buttons disabled';
+        document.getElementById('reader_edit').className='buttons symbol disabled';
         document.getElementById('reader_edit').setAttribute( "onclick", '' );
     } else {
-        document.getElementById('reader_edit').className='buttons';
+        document.getElementById('reader_edit').className='buttons symbol';
         document.getElementById('reader_edit').setAttribute( "onclick", 'reader_editor(reader_edit)' );
     }
 }    
@@ -312,25 +314,25 @@ function reader_resize(){
 
 function reader_show_buttons(){                                          //alert('buttons');
     iter = reader.iter;
-    if (iter==-1 || is_inlist(readonlydir)){ edit_function = ''; edit_class='buttons disabled'; }
-    else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons'; }
+    if (iter==-1 || is_inlist(readonlydir)){ edit_function = ''; edit_class='buttons symbol disabled'; }
+    else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons symbol'; }
     
     elem = document.getElementById('buttons_area');
-    inner_e = '<div id="reader_menu" onclick="reader_show_menu();" '+common.style.buttonpos(0)+'>menu</div>' ;
-    inner_e+= '<div id="reader_edit" class="'+edit_class+'" '+edit_function+' '+common.style.buttonpos(1)+'>edit</div>' ;
-    inner_e+= '<div id="reader_selecttype" onclick="reader_set_selecttype(1);" '+common.style.buttonpos(5)+'>word</div>' ;
-    inner_e+= '<div id="prev" onclick="reader_scroll(0,1,0);" '+common.style.buttonpos(2)+'>'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="next" onclick="reader_scroll(1,1,0);" '+common.style.buttonpos(6)+'>'+symbol_next+'</div>' ;
+    inner_e = '<div id="reader_menu" onclick="reader_show_menu();" '+common.style.buttonpos(0,4)+'>menu</div>' ;
+    inner_e+= '<div id="reader_edit" class="'+edit_class+'" '+edit_function+' '+common.style.buttonpos(1,2)+'>edit</div>' ;
+    inner_e+= '<div id="reader_selecttype" onclick="reader_set_selecttype(1);" '+common.style.buttonpos(5,4)+'>word</div>' ;
+    inner_e+= '<div id="prev" onclick="reader_scroll(0,1,0);" '+common.style.buttonpos(2,4)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="next" onclick="reader_scroll(1,1,0);" '+common.style.buttonpos(6,4)+'>'+symbol_next+'</div>' ;
     
     //inner_e+= '<div id="reader_speed"     class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+symbol_speed+'</div>' ;
-    inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common.style.buttonpos(3)+'>'+symbol_play+'</div>' ;
+    inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common.style.buttonpos(3,4)+'>'+symbol_play+'</div>' ;
     //inner_e+= '<div id="reader_navigate"   onclick="" ' +common.style.buttonpos(5,1)+'> navi- gate </div>' ;
     
     var subdir = get_subdir(reader.fname);
     if (subdir==='mail'){
-		inner_e+= '<div id="reader_mail" onclick="reader_show_mail();" '+common.style.buttonpos(4)+'>'+symbol_mail+'</div>' ;
+		inner_e+= '<div id="reader_mail" onclick="reader_show_mail();" '+common.style.buttonpos(4,2)+'>'+symbol_mail+'</div>' ;
 	}else{
-		inner_e+= '<div id="readall"     onclick="reader_scroll(-1,1,1);"  '+common.style.buttonpos(4)+'>'+symbol_readall+'</div>' ;
+		inner_e+= '<div id="readall"     onclick="reader_scroll(-1,1,1);"  '+common.style.buttonpos(4,4)+'>'+symbol_readall+'</div>' ;
 	}
     elem.innerHTML=inner_e;
 }

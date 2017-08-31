@@ -42,7 +42,7 @@ var common = {
 }
 
 common.style = {
-	class_arr: ["buttons", "buttons disabled"],
+	class_arr: ["buttons", "buttons disabled", "buttons symbol", "buttons symbol disabled", "buttons editor", "buttons editor disabled"],
     yn:4, btop:3.5, bbot:96.5, 
     xn:2, bright:98, xspace:4, dx_side:1,
     dy: 16.5, xy_ratio: 1.1,
@@ -84,6 +84,8 @@ common.style = {
 	    if (elem){ elem.style.width= content_width/wratio+'%'; }
 	    var elem = document.getElementById('zoom_box');
 	    if (elem){ elem.style.width= (content_width-5.4*wratio)/wratio+'%'; }  //alert(content_width);
+	    var elem = document.getElementById('buttons_area');
+	    if (elem){ elem.style.left= (content_width-0.5*wratio)/wratio+'%'; } 
 	    //if (elem){ elem.style.height= '20.3%'; }  //alert(content_width);
 	    //if (elem){ elem.style.left= '-0.1%'; }  //alert(content_width);
 	}
@@ -237,19 +239,38 @@ function utter_sentence(id, id_all, stop, onend){
     }*/
     utter(txt, stop, onend);
 }
-function utter(txt, stop, onend){                                  // 0-auto, 1-ru, 2-en
+function utter(txt, stop, onend, rate){                                  // 0-auto, 1-ru, 2-en
+	if (rate===undefined){rate=0.9;}
+	
+	if (editor.if_spell===1){
+		txt = editor.spell_arr[editor.i_spell];
+		editor.i_spell +=1;
+		if (editor.spell_arr.length===editor.i_spell){
+			onend=0;
+			editor.i_spell = 0;
+			editor.if_spell=0; 
+			editor.spell_arr=[];                                         //alert('stop');
+		}
+	}
+	
     msg = new SpeechSynthesisUtterance(txt);
     ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
     if (common.lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
     else { msg.lang=common.lang; }
     if (!ru && !en && common.lang=='auto'){ msg.lang=common.langbase; }
-    msg.rate = 0.9; 
+    msg.rate = rate; 
     if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
+    
+    
     window.speechSynthesis.speak(msg);    
     common.play_counter=1;
     msg.onstart=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[1]};
     if (onend==0){ msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; }
-    else{ msg.onend=function(event){reader_scroll(1,0,1)}; }
+    else{ 
+		if (editor.if_spell===1){ msg.onend=function(event){editor_spell_i()}; }
+		else{ msg.onend=function(event){reader_scroll(1,0,1)}; }
+	}
+    
 }    
     
 function create_element(id, cl, parent, style, inner){                   //alert(id, cl, parent, style);

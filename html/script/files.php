@@ -82,15 +82,15 @@ function show_file($entry, $i){
         " ;        
     $filename = $_SESSION['usr_dir'].'/'.$entry;
     if (file_exists($filename)){
-        if (is_dir($filename)){$class='files files_pic files-dir';$title='dir';} else { $class='files files_pic files-txt';$title='txt'; }
+        if (is_dir($filename)){$class='files_pic files-dir';$title='dir';} else { $class='files_pic files-txt';$title='txt'; }
         //if ($entry=='readme.txt'){ $class = 'files attention'; }
     }//else{ $class='files attention'; $title=''; $entry='new <br> contact'; }
     if (strpos($entry,'~')!==false){ 
         $entry = str_replace('~','',$entry); $class='files attention';
          }
-    $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'" align="center">'
+    $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  class="files" style="'.$style.'" title="'.$title.'" align="center">'
     .'<div id="fileid_'.$i.'_pic"  class="'.$class.'" ></div>'
-    .'<div id="fileid_'.$i.'_name"  class="files_name" >'.$entry.'</div></div>' ;
+    .'<div id="fileid_'.$i.'_name"  class="files_name" >'.$entry.'</div> </div>' ;
     //$file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'">'
     //.$entry.'</div>' ;
     return($file_i);

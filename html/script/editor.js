@@ -14,6 +14,11 @@ var editor = {
 	capslock: 0,
 	caps: 0,
 	pin_letters: 0,
+	
+	spell_type:0,
+	if_spell: 0,
+	i_spell: 0,
+	spell_arr: [],
 };
 
 editor.dict = {
@@ -32,12 +37,12 @@ editor.dict = {
 		return( Object.assign({}, this.letters_en, this.letters_ru, this.symbols1, this.symbols2_b )); },
 	
 	symbolset7_en: [ 
-		['m','u','c','d','r','l',  'o','t','h','e','s',  'n','a','i','space'],
-	    [ 'qmark','dash','dot','comma','z','q','prime',   'j','x','g','p','f',   'k','v','b','y','w' ],             
+		['u','c','d','r','l',  'o','t','h','e','s',  'n','a','i','space'],
+	    [ 'qmark','dash','dot','comma','z','q','prime',   'j','x','g','p','f','m',   'k','v','b','y','w' ],             
 	    ['colon','semicolon','emark','quotes','lbr','rbr',  '1','2','3','4','5',  '6','7','8','9','0','newline']
 	], symbolset7_ru: [ 
-		['r5','r17','r18','r16','r13','r14',  'r3','r1','r6','r15','r10',   'space','r12','r19','r20'],    
-        ['r22','r11','r25','r32','r26','r27','r31',   'r23','r8','r9','r2','r21',  'r24','r29','r33','r30','r4'],    
+		['r17','r18','r16','r13','r14',  'r3','r1','r6','r15','r10',   'space','r12','r19','r20'],    
+        ['r22','r11','r25','r32','r26','r27','r31',   'r23','r8','r9','r2','r21','r5',  'r24','r29','r33','r30','r4'],    
 		['r28','1','2','3','4','5',  '6','7','8','9','0',   'newline','emark','qmark','dash','dot','comma']
 	], symbolset7_math: [
 		['comma','dot','minus','plus','8','9',  '4','5','6','7','space',  '0','1','2','3'],    
@@ -108,7 +113,7 @@ editor.style = {
 			if (ncol===undefined) {ncol=7;}
 		    this.b_nx=ncol; this.b_ny=3; 
 		    this.b_yratio=0.5; this.b_xratio=0.5;
-		    this.b_left=2; this.b_right=98; this.b_top=42.5; this.b_bottom=97; this.b_botheight=0.8;
+		    this.b_left=2; this.b_right=98; this.b_top=42.5; this.b_bottom=97; this.b_botheight=1;
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 6;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
 		    document.getElementById('editor_text_box').style.height=zoomheight+'%';
@@ -119,7 +124,7 @@ editor.style = {
 			if (ncol===undefined) {ncol=6;}
 		    this.b_nx=ncol; this.b_ny=2; 
 		    this.b_yratio=0.5; this.b_xratio=0.5;
-		    this.b_left=2; this.b_right=98; this.b_top=64; this.b_bottom=97; this.b_botheight=0.8;
+		    this.b_left=2; this.b_right=98; this.b_top=64; this.b_bottom=97; this.b_botheight=1;
 		    this.b_leftwidth=1; this.b_rightwidth=1; this.zoomspace = 5;
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
 		    document.getElementById('editor_text_box').style.height = zoomheight+'%';  
@@ -258,7 +263,7 @@ function editor_show_symbols(lang, lvl){                                 //alert
 	if (lang===0)      { symbol1 = symbol_nextpage3; symbol2 = symbol_nextpage1; }
 	else if (lang===1) { symbol1 = symbol_nextpage2; symbol2 = symbol_nextpage3; }
 	else               { symbol1 = symbol_nextpage1; symbol2 = symbol_nextpage2; }
-	if (lang===4) { symbol1 = 'эюя'; }
+	if (lang===5) { symbol1 = 'эюя'; }
     
     key_arr = editor.dict.symbolset7_all()[lang][lvl];                    //alert(key_arr);
     inner_e = ''; i=0; 
@@ -266,12 +271,13 @@ function editor_show_symbols(lang, lvl){                                 //alert
         inner_e+= editor.style.button_delete(6);
         inner_e+= editor.style.button_prev(19);
         inner_e+= editor.style.button_next(20);
+        inner_e+= '<div id="editor_spell"    onclick="editor_spell();" '       +editor.style.get_button(0) +'> spell </div>' ;
         inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',1);" ' +editor.style.get_button(13) +'>'+symbol1+'</div>';
         inner_e+= '<div id="editor_letters_p2" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7)  +'>'+symbol2+'</div>';
         if (editor.parent==="files"){ inner_e+= editor.style.button_exit(14); }
 		else {                        inner_e+= editor.style.button_backto_start(14); }
         reserved=[5,6, 13,14,20];                                        //alert('2: '+inner_e);
-        reserved=[6,7, 13,14,20,19];                                        //alert('2: '+inner_e);
+        reserved=[0,6,7, 13,14,20,19];                                        //alert('2: '+inner_e);
     }else {
         inner_e+= editor.style.button_backto_letters(14,1);
         if (lvl===2)  { 
@@ -282,8 +288,8 @@ function editor_show_symbols(lang, lvl){                                 //alert
 		}else if (lvl===1)  { 
 			inner_e+= '<div id="editor_caps"     onclick="editor_capital(1,0,0);" ' +editor.style.get_button(20) +'> caps </div>';
 			inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7) +'>'+symbol2+'</div>'; 
-			inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(13) +'> pin tab </div>';
-			reserved=[14,7,13,20];
+			//inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(13) +'> pin tab </div>';
+			reserved=[14,7,20];
 		}
     }                                                                    //alert('3: '+inner_e);
     for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){
@@ -396,6 +402,7 @@ function editor_delete(){                                                //alert
     editor_set_cursor(); 
     if (editor.pin_letters===0) { editor_backto_letters(); }
     editor_capital(0,0,1);
+    utter(letter, 1, 0);
 }
 
 //-- menu functions ------------------------------------------------------------
@@ -420,14 +427,28 @@ function editor_set_fontsize(id, lvl){
 function editor_spell(){
     var iter = editor.iter;
 	var text = editor.text_raw;
+	var text_utter = '', text_u = '';
     if (text[iter-1]!=' ' || text[iter]!=' '){ 
         i1 = text.substr(0,iter).lastIndexOf(' '); 
         i2 = text.indexOf(' ',iter);
         if (i1==-1){i1=0;}
         if (i2==-1){i2=text.length;}
-        utter(text.substr(i1, i2-i1), 1, 0);
+        text_utter = text.substr(i1, i2-i1);
+        i1 = text_utter.indexOf('<');
+        if (i1>=0) { text_utter = text_utter.substr(0,i1); }
+        
+        if (editor.spell_type===1){
+			editor.spell_arr=[];
+			editor.if_spell = 1;
+			for (i=0; i<text_utter.length; i+=1){ editor.spell_arr.push(text_utter[i]); }  
+			utter('', 1, 1);
+		}else{ utter(text_utter, 1, 0); }
+		editor.spell_type = (editor.spell_type+1)%2;
     }
 }
+function editor_spell_i(txt){
+		utter('', 1, 1);
+	}
 
 function editor_backto_start(){
     editor.style.set_style('bottom_2rows');

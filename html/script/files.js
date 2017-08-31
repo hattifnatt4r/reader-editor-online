@@ -117,13 +117,13 @@ function files_resize(){
 function files_show_buttons(){                                           //alert('alert b0');
     var elem = document.getElementById('buttons_area');                //alert('alert b1');
     var inner_e="";
-    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common.style.buttonpos(0)+'> menu </div>' ;
-    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common.style.buttonpos(1)+'> opt </div>';
-    inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common.style.buttonpos(2)+'>'+symbol_enter+'</div></div>';
-    inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common.style.buttonpos(4)+'>'+'log in'+'</div>' ;
-    inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5)+'>'+symbol_upload+'</div>' ;
-    inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(3)+'>'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(7)+'>'+symbol_next+'</div>' ;
+    inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common.style.buttonpos(0,4)+'> menu </div>' ;
+    inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common.style.buttonpos(1,4)+'> opt </div>';
+    inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common.style.buttonpos(3,2)+'>'+symbol_enter+'</div></div>';
+    inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common.style.buttonpos(4,2)+'>'+'log in'+'</div>' ;
+    inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5,2)+'>'+symbol_upload+'</div>' ;
+    inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(2,4)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(6,4)+'>'+symbol_next+'</div>' ;
     //inner_e+= '<div id="files_python_button" class="buttons" onclick="files_click(10);"   style="'+reader_button_position(6)+'">py</div>';
     elem.innerHTML=inner_e;
     //if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload'); }
@@ -221,13 +221,13 @@ function files_show_files(){
 	//var eratio_y = document.getElementById('content_box').style.height;   //alert(eratio_y)
 	//eratio_y = parseFloat(eratio_y)/100;                                     alert(eratio_y);
 	var eratio_y = 0.74;
-    var ywidth=16.5; var yspace=9;
-    var xwidth=ywidth*1.4;
-    var xspace = 4;                                                      
+    var ywidth=21.5; var yspace=3;
+    var xwidth=ywidth*1.2;
+    var xspace = 3;                                                      
     //var xn = Math.floor((right-left)/(xspace+xwidth));                   alert(xn);
-    var xn = Math.floor((content_width-7)/(xspace+xwidth));              //alert(xn+' '+xspace+' '+xwidth+' '+content_width);
+    var xn = Math.floor((content_width+1)/(xspace+xwidth));              //alert(xn+' '+xspace+' '+xwidth+' '+content_width);
     if (xn<1){xn=1};
-    var ratio = (content_width-4)/(xspace+xwidth)/xn;
+    var ratio = (content_width+1)/(xspace+xwidth)/xn;
     var pic_width = 0.6*xwidth;
     xwidth = xwidth*ratio;
     xspace = xspace*ratio;
@@ -246,7 +246,9 @@ function files_show_files(){
 	    files_arr[i].style.width = xwidth/wratio/eratio_x+'%';
 	    //files_arr[i].style.visibility = 'visible';
 	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
-	    elem_pic.style.width = pic_width/wratio/eratio_x/dx+'%';
+	    //elem_pic.style.width = pic_width/wratio/eratio_x/dx+'%';
+	    var elem_name = document.getElementById(files_arr[i].id+'_name');
+	    //elem_name.style.width = '100%';
 	    
 		}
 	document.getElementById('files_array').style.visibility = 'visible';
@@ -267,6 +269,7 @@ function files_scroll(order, i_utter){                                   //alert
     files_fill_zoom();
     scroll_to(files.get_fid(), 'content_box', title=0);
     
+    /*
     var type = files.get_ftype();
     if (type=='dir'){fclass='files-dir-hover';} else{fclass='files-txt-hover';}  
     elem = files.get_felem_pic();
@@ -276,6 +279,7 @@ function files_scroll(order, i_utter){                                   //alert
         if (type=='dir'){fclass='files-dir';} else{fclass='files-txt';}  
         files.get_felem_pic(iter_prev).className = 'files files_pic '+fclass; 
         }
+        */ 
     if (iter==0){fname_ii='..';}
     else{fname_ii = files.get_fname(); }
     fname_ii = replace_all(fname_ii,'_',' ');
