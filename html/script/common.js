@@ -17,6 +17,9 @@ var common = {
 	ctag: "span",
 	ptag: "span",
 	
+	time_click: 0,
+	time_delay: 700,
+	
 	cookie_save: function(){                                             //alert('save_cookies '+this.cookie_number);
 	    var keys = Object.keys(this);                                    //alert(keys);
 	    var i;
@@ -91,44 +94,29 @@ common.style = {
 	}
 		
 }
-//function common_buttonpos(i, class_n){ return(common.style.buttonpos(i, class_n)); }
+
 /*
-function common_buttonpos(i, class_n){
-	var colors = ['#668113','#816513','#668113','#816513',   '#814a13','#668113','#814a13','#668113'];
-	if (class_n===undefined) {class_n=0;}
-	var class_arr = ["buttons", "buttons disabled"];
-	var class_name = class_arr[class_n];
-    var yn=4, btop=2,   bbot=98,   yspace=9,   dy_bot=1;
-    var xn=2, bleft=73, bright=99, xspace=3.5, dx_side=1;
-    //xspace=0; yspace=0; bright=98.8; bleft=74;
-    var wratio = window.innerWidth/window.innerHeight;
-    bright=98; btop=3; bbot=97; xspace=4; 
-    bright = wratio*bright;
-    var n_x = (i-i%yn)/yn;
-    
-    var dy = (bbot-btop-(yn-1)*yspace )/yn; 
-    dy = dy*yn/(yn-1+dy_bot);
-    var y = btop + (i%yn)*(yspace+dy*1);
-    if (i%yn==yn-1) {y=y;}
-    //var dx = (bright-bleft-(xn-1)*xspace )/(xn-1.+dx_side);
-    var dx = dy*1.1;
-    //var x = bleft + (i-i%yn)/yn*(dx+xspace); 
-    var x = bright - (xn-n_x)*dx - (xn-n_x-1)*xspace; 
-    if ((i-i%yn)/yn==xn-1){ dx = dx*dx_side; }    
-    if (i%yn==yn-1){ dy = dy*dy_bot; }
-    //var style = 'left:'+x+'vw;top:'+y+'vh;width:'+dx+'vw;height:'+dy+'vh;'; alert(dy);
-    var style = 'left:'+x+'vh;top:'+y+'vh;width:'+dx+'vh;height:'+dy+'vh; border-bottom-width:'+dy*0.13+'vh;';
-    //style+='background-color:'+colors[i]+';';
-    //alert(bright - 2*dx -xspace );
-    var elem = document.getElementById('content_box');
-    if (elem){ elem.style.width= (bright - 2*dx -xspace-1)+'vh'; }
-    var elem = document.getElementById('zoom_box');
-    if (elem){ elem.style.width= (bright - 2*dx -xspace-5.4*wratio)+'vh'; }
-    return('class="'+class_name+'" style="'+style+'"'); 
-}
+$(document).click(function() {
+  var time = new Date().getTime();
+  if (time-common.click_time<2000) { alert('to early'); 
+	  }
+  else{ common.click_time = time;   alert(time); }
+});
 */
-//var config = {};
-//config.readonlydir = ['books_txt',''];
+
+document.addEventListener("click",handler,true);
+function handler(e){
+	var time = new Date().getTime();
+	var type = e.target.type;     //alert(id);
+	if (type===undefined){
+		if (time-common.time_click<common.time_delay) {                      //alert('to early'); 
+			e.stopPropagation();
+		    e.preventDefault();
+		}
+		else{ common.time_click = time; }
+	}
+}
+
 var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
