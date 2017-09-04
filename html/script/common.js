@@ -5,8 +5,9 @@ var common = {
 	editor_nlines_lvl0: 3,
 	editor_nlines_lvl1: 2,
 	fontsize: 0.8,
+	time_delay: 700,
 	
-	cookie_number: 5,
+	cookie_number: 6,
 	cookie_suffix: "_",
 	name: "common",
 	play_counter: 1,
@@ -18,7 +19,6 @@ var common = {
 	ptag: "span",
 	
 	time_click: 0,
-	time_delay: 700,
 	
 	cookie_save: function(){                                             //alert('save_cookies '+this.cookie_number);
 	    var keys = Object.keys(this);                                    //alert(keys);
@@ -712,6 +712,17 @@ function menu_back(id, foggyoff, ineditor){                              //alert
     elem.parentNode.removeChild(elem);
 }
 
+function common_show_clickdelay(){                                      //alert('obj_name: '+obj.name+ ' '+obj.fontsize);
+    var inner_e = ''; 
+    inner_e+=     '<div id="0.0"      class="buttons"  onclick="common_set_clickdelay(0.01);" '+common_buttonpos_menu(4,0)+'> 0.0 </div>';
+    inner_e+=     '<div id="0.1"      class="buttons"  onclick="common_set_clickdelay(0.1);" '+common_buttonpos_menu(5,0)+'> 0.1 sec </div>';
+    inner_e+=     '<div id="0.5"      class="buttons"  onclick="common_set_clickdelay(0.5);" '+common_buttonpos_menu(6,0)+'> 0.5 sec </div>';
+    inner_e+=     '<div id="0.7"      class="buttons"  onclick="common_set_clickdelay(0.7);" '+common_buttonpos_menu(7,0)+'> 0.7 sec </div>';
+    common_create_menu('common_clickdelay',1, inner_e);
+}
+function common_set_clickdelay(delay){
+	common.time_delay = delay*1000;                                     //alert(delay);
+}
 //-- cookie ---------------------------------------------------------------------
 
 function cookie_get(cname) {

@@ -146,7 +146,8 @@ function files_show_menu(){
     inner_e += '<div id="files_cleancookie" onclick="files_cleancookie();" '  +common_buttonpos_menu(0,0)+'> delete cookie </div>';
     //inner_e += '<div id="files_past"     onclick="files.click_php(this.id);" '+common_buttonpos_menu(5,0)+'> past </div>';
     inner_e += '<div id="files_past"     onclick="files_past();" '+common_buttonpos_menu(5,0)+'> past </div>';
-    inner_e += '<div id="files_sound"    onclick="" '+common_buttonpos_menu(4,3)+'> sound </div>';
+    //inner_e += '<div id="files_sound"    onclick="" '+common_buttonpos_menu(4,3)+'> sound </div>';
+    inner_e += '<div id="files_clickdelay" onclick="common_show_clickdelay();" '+common_buttonpos_menu(4,0)+'> click delay </div>';
     common_create_menu('files_menu', 0, inner_e);
     if (localStorage.getItem("copy_fdir")=="") { files_disable("files_past"); }
 }

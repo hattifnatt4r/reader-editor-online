@@ -437,12 +437,15 @@ function editor_spell(){
         i1 = text_utter.indexOf('<');
         if (i1>=0) { text_utter = text_utter.substr(0,i1); }
         
-        if (editor.spell_type===1){
+        if (editor.spell_type===0){
+			utter(text_utter, 1, 0); 
+		}else{ 
+			utter(text_utter, 1, 0); 
 			editor.spell_arr=[];
 			editor.if_spell = 1;
 			for (i=0; i<text_utter.length; i+=1){ editor.spell_arr.push(text_utter[i]); }  
 			utter('', 1, 1);
-		}else{ utter(text_utter, 1, 0); }
+		}
 		editor.spell_type = (editor.spell_type+1)%2;
     }
 }
@@ -580,6 +583,7 @@ function editor_set_cursor(){                                            //alert
     }                                                                    //alert(text); alert(text_c);
     document.getElementById('editor_text_area').innerHTML=text_c;
     scroll_to('cursor','editor_text_box', title=0);                      //alert(text_c);
+    editor.spell_type=0;
     }
 
 //-----------------------------------------------------------------------------------

@@ -46,6 +46,8 @@ function run_files(){
 function make_files_array(){
 	$arr_dir=array(); $arr_file=array(); $arr_entries=array(); 
 	array_push($arr_dir, '..');
+	//echo ' | '.$_SESSION['usr_dir'].' -- '.$handle.' || ';
+	echo ' | '.opendir($_SESSION['usr_dir']).' -- '.$handle.' || ';
 	if ($handle = opendir($_SESSION['usr_dir'])) {
 	    $i = 1; 
 	    foreach(scandir($_SESSION['usr_dir']) as $entry) {
