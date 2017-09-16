@@ -189,7 +189,7 @@ function editor_exit(){                                                  //alert
     if (editor.parent=="reader"){ 
 		reader.ischanged_text = true;
 		reader.editor_text = editor.text_raw;
-		reader.ineditor = false;
+		reader.ineditor = false;                                         //alert('editor id: '+reader.id_curr);
 		reader_run(); 
 	}else if (editor.parent=="files"){                                   //alert(editor.destination);
 		elem = document.getElementById(editor.destination);

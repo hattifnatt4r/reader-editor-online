@@ -22,6 +22,7 @@ var reader = {
     text_parsed: "",
     word_id: [], sentence_id: [], paragraph_id: [],
     mailnum: 0,
+    navigate: 0,
     
     zoomtype_arr: ['no zoom', 'by word', 'by sentence'],
     buttons_php: { "reader_save": "freader_save_submit", 
@@ -67,9 +68,12 @@ common.cookie_load();
 
 reader_run();
 
-function reader_run() {                                                  //alert('reader_run');
-    var subdir=get_subdir(reader.fname);
+function reader_run() {                                                  //alert('reader_run '+reader.ischanged_text+' '+reader.editor_text);
+    var subdir=get_subdir(reader.fname);                                 //alert(reader.ischanged_text);
     
+    //reader_set_selecttype(order=0); 
+    //reader_set_zoomtype(reader.zoomtype);                                              //alert('zoom_type');
+    //common_set_fontsize(common.fontsize, common);
     if (reader.ischanged_text==false){
         reader_show_buttons();                                               //alert('buttons');
         create_element('zoom_box','text_zoom_box', 'base_elements');
@@ -97,6 +101,7 @@ function reader_run() {                                                  //alert
         text+= '<div title="void_div" style="position:relative;height:11vh;">  </div>'; 
        
         document.getElementById('hidden_text').innerHTML=text;
+        //reader.id_curr = reader.get_id();  
        
     }
     
@@ -143,8 +148,9 @@ function reader_text(){                                                  //alert
         }else{
             text_parsed = reader.text_parsed;
         }
-        text = reader.editor_text;
-        document.getElementById('temp').innerHTML = text_parsed;         //alert('parsed: '+text_parsed);
+        reader.id_curr = reader.get_id();
+        text = reader.editor_text;                                       
+        document.getElementById('temp').innerHTML = text_parsed;         //alert('parsed: '+text_parsed+' | E: '+text);
         var id = reader.id_curr;                                         //alert(id);
         document.getElementById(id).innerHTML = text;                    //alert('parsed: '+text);
         
@@ -173,7 +179,7 @@ function reader_scroll(order,stop,onend){                                //alert
     if (iter==-1){ id='file_title'; } 
     else { id=id_arr[iter]; }
     reader.iter = iter;
-    reader.id_curr = id;
+    reader.id_curr = id;                                                 //alert('scroll id: '+id);
 
     if (id_arr.length-1===iter){onend=0;}
     
@@ -243,9 +249,9 @@ function reader_fill_zoom(){                                                //al
     var elem=document.getElementById('reader_zoom');
     elem.innerHTML=text;                                                 //alert('zoom_text '+text);
 }
-function reader_highlite(){                                                     //alert('reader_highlite');
-    id_prev = reader.id_prev;
-    id = reader.get_id()                                                        //alert('reader_highlite 0 id '+id +' id_prev '+id_prev);
+function reader_highlite(){                                              //alert('reader_highlite');
+    var id_prev = reader.id_prev;                                        //alert(id_prev);
+    var id = reader.get_id();                                            //alert('reader_highlite 0 id '+id +' id_prev '+id_prev);
     document.getElementById(id_prev).className='text';
     div = document.getElementById(id);                                   //alert('reader_highlite div '+ div + ' id '+id +' id_prev '+id_prev);
     div.className='text_highlite';                                       //alert('highlite 2');
@@ -269,18 +275,24 @@ function reader_play_pause(){
 }
 //-- reader menu functions -----------------------------------------------------------
 
-function reader_set_selecttype(order){                                      //alert('select');
+function reader_set_selecttype(order, settype){                                      //alert('select');
+	if (settype===undefined){settype=0;}
     n_select_type = reader.selecttype;
     types = ['select <br> -','select <br> - -','select <br> - - -'];
-    if (order==1){
+    if (settype==1){
         n_select_type = (n_select_type+1)%3;
         reader.selecttype = n_select_type;
         id_arr = reader.get_id_array();  latest_id = reader.get_id_backup();           //alert('selecttype '+iter);
         reader.iter = id_arr.indexOf(latest_id);
-    }        
+    }else if (settype==2){
+		n_select_type = order;
+		reader.selecttype = n_select_type;
+        id_arr = reader.get_id_array();  latest_id = reader.get_id_backup();           //alert('selecttype '+iter);
+        reader.iter = id_arr.indexOf(latest_id);
+		}        
     reader_highlite(); reader_fill_zoom();                                         //alert('select 1');
     id=reader.get_id(); 
-    reader.id_curr = id;
+    reader.id_curr = id;                                                 //alert('selecttype: '+id);
     document.getElementById('reader_selecttype').innerHTML=types[n_select_type];
 }
 
@@ -320,13 +332,13 @@ function reader_show_buttons(){                                          //alert
     elem = document.getElementById('buttons_area');
     inner_e = '<div id="reader_menu" onclick="reader_show_menu();" '+common.style.buttonpos(0,4)+'>menu</div>' ;
     inner_e+= '<div id="reader_edit" class="'+edit_class+'" '+edit_function+' '+common.style.buttonpos(1,2)+'>edit</div>' ;
-    inner_e+= '<div id="reader_selecttype" onclick="reader_set_selecttype(1);" '+common.style.buttonpos(5,4)+'>word</div>' ;
-    inner_e+= '<div id="prev" onclick="reader_scroll(0,1,0);" '+common.style.buttonpos(2,4)+'>'+symbol_prev+'</div>' ;
-    inner_e+= '<div id="next" onclick="reader_scroll(1,1,0);" '+common.style.buttonpos(6,4)+'>'+symbol_next+'</div>' ;
+    inner_e+= '<div id="reader_selecttype" onclick="reader_set_selecttype(1,1);" '+common.style.buttonpos(5,4)+'>word</div>' ;
+    inner_e+= '<div id="prev" onclick="reader_scroll(0,1,0);" '+common.style.buttonpos(3,4)+'>'+symbol_prev+'</div>' ;
+    inner_e+= '<div id="next" onclick="reader_scroll(1,1,0);" '+common.style.buttonpos(7,4)+'>'+symbol_next+'</div>' ;
     
     //inner_e+= '<div id="reader_speed"     class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+symbol_speed+'</div>' ;
-    inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common.style.buttonpos(3,4)+'>'+symbol_play+'</div>' ;
-    //inner_e+= '<div id="reader_navigate"   onclick="" ' +common.style.buttonpos(5,1)+'> navi- gate </div>' ;
+    inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common.style.buttonpos(6,4)+'>'+symbol_play+'</div>' ;
+    inner_e+= '<div id="reader_navigate"   onclick="reader_show_navigate()" ' +common.style.buttonpos(2,4)+'>'+symbol_updown+'</div>' ;
     
     var subdir = get_subdir(reader.fname);
     if (subdir==='mail'){
@@ -336,13 +348,43 @@ function reader_show_buttons(){                                          //alert
 	}
     elem.innerHTML=inner_e;
 }
+function reader_show_navigate(){
+	elem = document.getElementById('nvigate_area');
+	inner_e = '';
+	inner_e+= '<div id="navigate_0" onclick="reader_navigate(0);" '+common_buttonpos_menu(4,0)+'> start </div>' ;
+	//inner_e+= '<div id="navigate_0" onclick="reader_navigate(0);" '+common_buttonpos_menu(4,0)+'> - </div>' ;
+	inner_e+= '<div id="navigate_1" onclick="reader_navigate(0.5);" '+common_buttonpos_menu(6,0)+'> mid </div>' ;
+	inner_e+= '<div id="navigate_2" onclick="reader_navigate(1);" '+common_buttonpos_menu(7,0)+'> end </div>' ;
+    common_create_menu('reader_navigate', 0, inner_e);
+}
+function reader_navigate(order){
+	var len = reader.paragraph_id.length;
+	if (order===undefined){
+		if (reader.navigate===0){
+			reader.iter = 0;
+		}else if (reader.navigate===1){
+			reader.iter = (len-len%2)/2;
+		}else if (reader.navigate===2){
+			reader.iter = len-1;
+		}
+		reader.navigate = (reader.navigate+1)%3;
+	}else{
+		reader.iter = Math.floor(len*order);
+		if (reader.iter==len){reader.iter = len-1;}                      //alert('navigate: '+len+' '+reader.iter);
+	}
+	var id = reader.get_id();                                            //alert(id+'  '+reader.navigate);
+	//reader.iter = iter;
+    reader.id_curr = id;
+    reader_highlite(); 
+    scroll_to(id,'content_box', title=0);
+}
 function reader_show_menu(){
     var n_zoom = reader.zoomtype; var obj='common';
     inner_e = '';
     inner_e+= '<div id="reader_fontsize"        onclick="common_show_fontsize('+obj+');" '+    common_buttonpos_menu(0,0)+'> font size </div>';    
     inner_e+= '<div id="reader_menu_sound"      onclick="" ' +common_buttonpos_menu(4,3)+'>sound</div>';
     inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common_buttonpos_menu(1,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
-    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(2,0)+'>local lang</div>';
+    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(2,0)+'>lang</div>';
     inner_e+= '<div id="reader_go"              onclick="" '+common_buttonpos_menu(3,3)+'>go</div>' ;
     inner_e+= '<div id="reader_menu_go-files"   onclick="goto_files();" '+common_buttonpos_menu(7,0)+'">go home</div>';
     inner_e+= '<div id="reader_menu_zoomtype_text" '+common_buttonpos_menu(5,1,4,2,0,-1)+'>'+reader.zoomtype_arr[n_zoom]+'</div>' ;
@@ -398,7 +440,7 @@ function reader_show_mail(){
     var date = Date(); 
     date = date.substr(date.indexOf(' '));                               //alert('date: '+date);
     date = date.substr(0,date.indexOf('GMT')-1);
-    var text = $('#text_from_file').find('#mail_editable').html();     //alert('msg parsed: '+text);
+    var text = $('#text_from_file').find('#mail_editable').html();       //alert('msg parsed: '+text);
     text = merge_text(text);                                      
     var m_num = "|m_n_u_m|", m_from="|m_f_r_o_m|", m_time="|m_t_i_m_e|", m_text="|m_t_e_x_t|";
     text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  

@@ -54,6 +54,7 @@ if (isset($_POST['freader_sendmail_submit'])) {
     
     $_SESSION["file_text"] = $text;
     header('Location:/reader.html');
+    header('Location:/reader.html');
 } 
 
 function get_usrname(){

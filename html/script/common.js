@@ -5,7 +5,7 @@ var common = {
 	editor_nlines_lvl0: 3,
 	editor_nlines_lvl1: 2,
 	fontsize: 0.8,
-	time_delay: 700,
+	time_delay: 10,
 	
 	cookie_number: 6,
 	cookie_suffix: "_",
@@ -179,6 +179,7 @@ var symbol_ctrlz =     '<span style="font-size:12vmin;"> &#10554;</span>';
 //var symbol_ctrlz =     '<strong style="font-size:145%;line-height:130%;"> &#8630;</strong>';
 var symbol_ctrly =     '<span style="font-size:12vmin;"> &#10555;</span>';
 //var symbol_ctrly =     '<strong style="font-size:145%;line-height:130%;"> &#8631;</strong>';
+var symbol_updown =    '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9206;<br>&#9207;</span>';
 var symbol_left = symbol_prev;
 var symbol_right = symbol_next;
 var symbol_navigate = symbol_prev+symbol_next;
@@ -713,16 +714,20 @@ function menu_back(id, foggyoff, ineditor){                              //alert
 }
 
 function common_show_clickdelay(){                                      //alert('obj_name: '+obj.name+ ' '+obj.fontsize);
+	var delay = common.time_delay/1000;
     var inner_e = ''; 
-    inner_e+=     '<div id="0.0"      class="buttons"  onclick="common_set_clickdelay(0.01);" '+common_buttonpos_menu(4,0)+'> 0.0 </div>';
-    inner_e+=     '<div id="0.1"      class="buttons"  onclick="common_set_clickdelay(0.1);" '+common_buttonpos_menu(5,0)+'> 0.1 sec </div>';
-    inner_e+=     '<div id="0.5"      class="buttons"  onclick="common_set_clickdelay(0.5);" '+common_buttonpos_menu(6,0)+'> 0.5 sec </div>';
-    inner_e+=     '<div id="0.7"      class="buttons"  onclick="common_set_clickdelay(0.7);" '+common_buttonpos_menu(7,0)+'> 0.7 sec </div>';
+    inner_e+= '<div id="common_clickdelay_zoom"  onclick="" ' +common_buttonpos_menu(0,1)+'>'+delay+' sec</div>';
+    inner_e+= '<div id="0.0"      class="buttons"  onclick="common_set_clickdelay(0.01);" '+common_buttonpos_menu(4,0)+'> 0.0 </div>';
+    inner_e+= '<div id="0.1"      class="buttons"  onclick="common_set_clickdelay(0.1);" '+common_buttonpos_menu(5,0)+'> 0.1 sec </div>';
+    inner_e+= '<div id="0.5"      class="buttons"  onclick="common_set_clickdelay(0.5);" '+common_buttonpos_menu(6,0)+'> 0.5 sec </div>';
+    inner_e+= '<div id="0.7"      class="buttons"  onclick="common_set_clickdelay(0.7);" '+common_buttonpos_menu(7,0)+'> 0.7 sec </div>';
     common_create_menu('common_clickdelay',1, inner_e);
 }
 function common_set_clickdelay(delay){
 	common.time_delay = delay*1000;                                     //alert(delay);
+	document.getElementById('common_clickdelay_zoom').innerHTML = delay+' sec';
 }
+
 //-- cookie ---------------------------------------------------------------------
 
 function cookie_get(cname) {
