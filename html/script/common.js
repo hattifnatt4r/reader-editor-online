@@ -11,6 +11,9 @@ var common = {
 	cookie_suffix: "_",
 	name: "common",
 	play_counter: 1,
+	utter_text: '',
+	utter_stop: 0,
+	utter_onend: 0,
 	
 	symbol_ltag: '<abbr>',
 	symbol_rtag: '</abbr>',
@@ -209,27 +212,41 @@ function utter_paragraph(id, id_all, id_all_w, stop, onend){
         utter_sentence(id_i, id_all_w, stop_s, onend_i);
     }    
 }    
-function utter_sentence(id, id_all, stop, onend){
-    txt=document.getElementById(id).innerText;
-    //alert(txt);
-    /*
-    proceed=true; ii=0;
+function utter_sentence(id, id_all, stop, onend, txt){
+	if (txt===undefined){ txt=document.getElementById(id).innerText; }   //alert(txt);
+    
+    var proceed=true; 
+    var ii=0, i=0, txt_i='', part_i='';
     while(proceed){
         if (txt.length>200){
             txt_i=txt.substring(0,200);
-            i=txt_i.lastIndexOf(' ');
-            part_i=txt_i.substring(0,i);
-            txt=txt.substring(i);
-            if (ii==0){ stop_s=stop; }else{stop_s=0;}
-            utter(part_i, stop_s, 0);
+            i=txt_i.lastIndexOf(',');                                    //alert(i);
+            if (i===-1){i=txt_i.lastIndexOf(' ');}
+            part_i=txt_i.substring(0,i+1);
+            txt=txt.substring(i+1);
+            if (ii==0){ stop_s=stop; }else{stop_s=0;}                    //alert(stop_s+'  '+onend+' | '+part_i);
+            if (common.utter_text===''){ common.utter_onend = onend; }
+            else{ onend = common.utter_onend; }
+            common.utter_onend = onend;
+            //common.utter_stop = stop;
+            common.utter_text = txt;
+            utter(part_i, stop_s, 1);
             ii++;
-        }else{proceed=false; //alert(txt); 
-            utter(txt, onend); }
-    }*/
-    utter(txt, stop, onend);
+        }else{
+			if (common.utter_text!=''){
+				stop=0;
+				onend = common.utter_onend;
+			}
+			proceed=false;                                               //alert(proceed+' '+onend+' | '+txt); 
+			common.utter_text = '';
+            utter(txt, stop, onend); 
+        }
+    }
+    
+    //utter(txt, stop, onend);
 }
 function utter(txt, stop, onend, rate){                                  // 0-auto, 1-ru, 2-en
-	if (rate===undefined){rate=0.9;}
+	if (rate===undefined){rate=1;}
 	
 	if (editor.if_spell===1){
 		txt = editor.spell_arr[editor.i_spell];
@@ -241,8 +258,7 @@ function utter(txt, stop, onend, rate){                                  // 0-au
 			editor.spell_arr=[];                                         //alert('stop');
 		}
 	}
-	
-    msg = new SpeechSynthesisUtterance(txt);
+    var msg = new SpeechSynthesisUtterance(txt);
     ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
     if (common.lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
     else { msg.lang=common.lang; }
@@ -257,6 +273,7 @@ function utter(txt, stop, onend, rate){                                  // 0-au
     if (onend==0){ msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; }
     else{ 
 		if (editor.if_spell===1){ msg.onend=function(event){editor_spell_i()}; }
+		else if (common.text_utter!='') { msg.onend=function(event){utter_sentence('', '', '', '', txt=common.utter_text)}; }
 		else{ msg.onend=function(event){reader_scroll(1,0,1)}; }
 	}
     
