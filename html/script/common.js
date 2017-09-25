@@ -258,6 +258,8 @@ function utter(txt, stop, onend, rate){                                  // 0-au
 			editor.spell_arr=[];                                         //alert('stop');
 		}
 	}
+	txt.replace('.', ' ');
+	
     var msg = new SpeechSynthesisUtterance(txt);
     ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
     if (common.lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
@@ -526,6 +528,7 @@ function reader_parse_txt(text_origin, n_p){
     var id_p='', id_s='', id_w='';
     var word='', word_start = '', word_end='';
     var otag=common.otag, ctag=common.ctag, tag_p=common.ptag;
+    var character='';
     
     word_start = "<"+tag_p+" id='p"+p0+"'><"+otag+" id='p"+p0+"s0'><"+otag+" id='p"+p0+"s0w0'>";
     
@@ -536,7 +539,10 @@ function reader_parse_txt(text_origin, n_p){
 	}                                                                    //alert('i_end: '+i_end+' '+arr.length);
     
     for (i=0; i<arr.length; i+=1){
-        word=arr[i];                                                     //alert(i);
+        word=arr[i];             
+        if (i===i_end) {character = 'A';}
+        else{ character = arr[i+1].charAt(0); }
+        if (character.toLowerCase() === character.toUpperCase() && /^\d+$/.test(character)===false){ character='a'; }   //alert(/^\d+$/.test(character));
 		
         if ( tag_arr.indexOf(i)!=-1 ) { 
 				text = text+word; 
@@ -555,7 +561,7 @@ function reader_parse_txt(text_origin, n_p){
 			text = text+ word_start + word + word_end;
 			word_start =  '<'+tag_p+' id="'+id_p+'"><'+otag+' id="'+id_s+'"><'+otag+' id="'+id_w+'">';
 			
-		} else if ( find_indexof(word, endsentence)[0] !=-1 ){    
+		} else if ( find_indexof(word, endsentence)[0]!=-1 && character == character.toUpperCase() ){
 			i_s+=1; i_w=0;
 			id_s = 'p'+i_p + 's'+i_s; 
 			id_w = 'p'+i_p + 's'+i_s + 'w'+i_w;
