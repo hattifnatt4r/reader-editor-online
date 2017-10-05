@@ -144,7 +144,7 @@ function reader_text(){                                                  //alert
         reader.text_parsed = text_parsed;
     }else{
         if (subdir==='mail'){
-            text_parsed = $('#text_from_file').find('#mail_editable').html();   //alert('msg parsed: '+text_parsed);
+            text_parsed = $('#text_from_file').find('#mail_editable').php();   //alert('msg parsed: '+text_parsed);
         }else{
             text_parsed = reader.text_parsed;
         }
@@ -407,7 +407,7 @@ function is_inlist(list){
         }
     return(inlist);
 }
-function goto_files(){ window.location.href = '/index.html'; window.speechSynthesis.cancel(); }
+function goto_files(){ window.location.href = '/index.php'; window.speechSynthesis.cancel(); }
 
 function reader_editor(){                                                //alert('to_editor');
     text_all = document.getElementById('text_from_file').innerHTML;
@@ -440,7 +440,7 @@ function reader_show_mail(){
     var date = Date(); 
     date = date.substr(date.indexOf(' '));                               //alert('date: '+date);
     date = date.substr(0,date.indexOf('GMT')-1);
-    var text = $('#text_from_file').find('#mail_editable').html();       //alert('msg parsed: '+text);
+    var text = $('#text_from_file').find('#mail_editable').php();       //alert('msg parsed: '+text);
     text = merge_text(text);                                      
     var m_num = "|m_n_u_m|", m_from="|m_f_r_o_m|", m_time="|m_t_i_m_e|", m_text="|m_t_e_x_t|";
     text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  
@@ -452,14 +452,14 @@ function reader_sendmail() {
     var date = Date(); 
     date = date.substr(date.indexOf(' '));                               //alert('date: '+date);
     date = date.substr(0,date.indexOf('GMT')-1);
-    var text = $('#text_from_file').find('#mail_editable').html();     //alert('msg parsed: '+text);
+    var text = $('#text_from_file').find('#mail_editable').php();     //alert('msg parsed: '+text);
     text = merge_text(text);                                      
     var m_num = "|m_n_u_m|", m_from="|m_f_r_o_m|", m_time="|m_t_i_m_e|", m_text="|m_t_e_x_t|";
     text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  
     document.getElementById('freader_save_text').value=text;  
     document.getElementById("freader_sendmail_submit").click(); 
 } */
-function reader_refresh() {window.location.href = '/reader.html';}
+function reader_refresh() {window.location.href = '/reader.php';}
 
 function reader_get_mailarr(){
     var archive = document.getElementById('hidden_mail_archive').innerHTML;  //alert(archive);

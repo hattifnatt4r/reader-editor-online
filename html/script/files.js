@@ -68,7 +68,7 @@ var files = {
 }                                                        //alert(files.dir);
 window.onbeforeunload = files_beforunload;
 function files_beforunload() {common.cookie_save.call(files); common.cookie_save(); }
-function files_cleancookie(){ cookie_delete_all(); alert('clear cookie'); window.location.href = '/index.html'; }
+function files_cleancookie(){ cookie_delete_all(); alert('clear cookie'); window.location.href = '/index.php'; }
 
 //-- run files -------------------------------------------------------------------
 //alert('start_files');
@@ -171,7 +171,7 @@ function files_show_options(){                                           //alert
     inner_e += '<div id="files_download"  onclick="files_download();"  '+common_buttonpos_menu(3,0)+'> down- load </div>';
     inner_e += '<div id="files_copy"      onclick="files_copy();" '+common_buttonpos_menu(6,0)+'>copy</div>';    
     common_create_menu('files_options', 0, inner_e);
-    if (fname.indexOf('.html')==-1){files_disable('files_cleanhtml');}
+    if (fname.indexOf('.php')==-1){files_disable('files_cleanhtml');}
 }
 function files_show_login(){
 	var name="name", pass="password";

@@ -6,10 +6,10 @@ if ($_SESSION["session_reader"]!=10){
     }
 //-- go ---------------------------------------------------------------------
 if (isset($_POST['reader_menu_go_files'])) {
-    header('Location:/index.html');
+    header('Location:/index.php');
     }    
 if (isset($_POST['reader_menu_go_file1'])) {
-    header('Location:/index.html');
+    header('Location:/index.php');
     }
 //echo "<div style='position:fixed; top:0%; left:2%'>".$_SESSION["filename_opened"]."</div>";
 
@@ -23,7 +23,7 @@ if (isset($_POST['freader_save_submit'])) {
     fclose($myfile);
     //echo 'saved '.$fname;
     $_SESSION["file_text"] = $text;
-    header('Location:/reader.html');
+    header('Location:/reader.php');
 } 
 
 if (isset($_POST['freader_sendmail_submit'])) {
@@ -53,8 +53,8 @@ if (isset($_POST['freader_sendmail_submit'])) {
     fclose($myfile);
     
     $_SESSION["file_text"] = $text;
-    header('Location:/reader.html');
-    header('Location:/reader.html');
+    header('Location:/reader.php');
+    header('Location:/reader.php');
 } 
 
 function get_usrname(){
