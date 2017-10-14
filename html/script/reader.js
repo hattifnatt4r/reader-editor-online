@@ -130,25 +130,25 @@ function reader_run() {                                                  //alert
 }
 
 function reader_text(){                                                  //alert(reader.editor_text+',   '+reader.ischanged_text);
-    var subdir=get_subdir(reader.fname);
+    var subdir=get_subdir(reader.fname);                                 //alert('subdir: '+subdir);
     var text = "", text_parsed = "";
     var parser = [];
     if (reader.ischanged_text==false){
-        text = document.getElementById('hidden_text').innerHTML;
+        text = document.getElementById('hidden_text').innerHTML;         //alert('hidden_text: '+text);
         parser = reader_parse_html(text);
-        text_parsed = parser[0];                                          //alert('parsed 0 '+text_parsed);
+        text_parsed = parser[0];                                         //alert('parsed 0 '+text_parsed);
         reader.word_id=parser[1]; reader.sentence_id=parser[2]; reader.paragraph_id=parser[3];
                                                                         
         document.getElementById('text_from_file').innerHTML = text_parsed;   //alert('parsed 1 '+text_parsed);
         reader.text_origin = text;
         reader.text_parsed = text_parsed;
     }else{
-        if (subdir==='mail'){
-            text_parsed = $('#text_from_file').find('#mail_editable').php();   //alert('msg parsed: '+text_parsed);
+        if (subdir==='mail'){                                            //alert('ok');
+            text_parsed = $('#text_from_file').find('#mail_editable').html();       //alert('msg parsed: '+text_parsed);
         }else{
             text_parsed = reader.text_parsed;
         }
-        reader.id_curr = reader.get_id();
+        reader.id_curr = reader.get_id();                                //alert('id_curr: '+reader.id_curr);
         text = reader.editor_text;                                       
         document.getElementById('temp').innerHTML = text_parsed;         //alert('parsed: '+text_parsed+' | E: '+text);
         var id = reader.id_curr;                                         //alert(id);
@@ -268,6 +268,7 @@ function reader_play_pause(){
         }
     else if (window.speechSynthesis.speaking ){                          //alert('speaking'); 
         window.speechSynthesis.pause(); 
+        //window.speechSynthesis.cancel(); 
         document.getElementById('playpause').innerHTML=symbols_play_pause[0];
         common.play_counter=0; 
     }
@@ -440,7 +441,7 @@ function reader_show_mail(){
     var date = Date(); 
     date = date.substr(date.indexOf(' '));                               //alert('date: '+date);
     date = date.substr(0,date.indexOf('GMT')-1);
-    var text = $('#text_from_file').find('#mail_editable').php();       //alert('msg parsed: '+text);
+    var text = $('#text_from_file').find('#mail_editable').html();       //alert('msg parsed: '+text);
     text = merge_text(text);                                      
     var m_num = "|m_n_u_m|", m_from="|m_f_r_o_m|", m_time="|m_t_i_m_e|", m_text="|m_t_e_x_t|";
     text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  

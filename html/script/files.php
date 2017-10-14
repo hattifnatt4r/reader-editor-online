@@ -21,6 +21,9 @@ if ($_SESSION["session"]!==10){
 }
 //run_files();
 //echo 'USR-DIR: '.$_SESSION['usr_dir'];
+if (!is_writable("users/")) { echo "'users/' not writable";  }
+if (!is_writable("users_mail/")) { echo "'users_mail/' not writable";  }
+if (!is_writable("data/login.json")) { echo "'data/login.json' not writable";  }
 
 //-- files ------------------------------------------------------------------
 function run_files(){
@@ -336,6 +339,9 @@ if (isset($_POST['ffiles_userlogin_submit'])) {
         $myfile = fopen($fname, "w") or die("Unable to open $fname !");
         fwrite($myfile, $text);
         fclose($myfile);
+        //chmod("users", 0777);
+        //if (is_writable("users/")){ echo "is writable"; }
+		//else { echo "is not writable";  }
         recurse_copy('users/common_backup',"users/".$name);
         chmod("users/".$name, 0777);
     }

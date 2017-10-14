@@ -194,6 +194,23 @@ var symbols_play_pause = [symbol_play, symbol_pause];
 var symbols_sound = [symbol_mute, symbol_sound];
 
 
+function check_browser(){
+    c = navigator.userAgent.search("Chrome");
+    f = navigator.userAgent.search("Firefox");
+    m8 = navigator.userAgent.search("MSIE 8.0");
+    m9 = navigator.userAgent.search("MSIE 9.0");
+    if (c > -1) {
+        browser = "Chrome";
+    } else if (f > -1) {
+        browser = "Firefox";
+    } else if (m9 > -1) {
+        browser ="MSIE 9.0";
+    } else if (m8 > -1) {
+        browser ="MSIE 8.0";
+    } else{ browser = "Other";}
+    return browser;
+}
+
 function scroll_to(id, id_area, title){
     if (title==0){ elem = document.getElementById(id);  }
     else { elem= document.querySelectorAll('[id="'+id+'"]')[1]; //alert('title '+elem+' '+id+' '+area); 
@@ -258,22 +275,30 @@ function utter(txt, stop, onend, rate){                                  // 0-au
 			editor.spell_arr=[];                                         //alert('stop');
 		}
 	}
-	txt.replace('.', ' ');
+	txt.replace('.', ' ');                                               //alert(txt);
 	
-    var msg = new SpeechSynthesisUtterance(txt);
+    //var msg = new SpeechSynthesisUtterance(txt);
+    var msg = new SpeechSynthesisUtterance();
+    //var msg2 = new SpeechSynthesisUtterance();
+    msg.text = txt;
     ru = /[а-яА-ЯЁё]/.test(txt); en = /[a-zA-Z]/.test(txt); 
     if (common.lang=='auto'){ if (en){ msg.lang='en'; } if (ru){ msg.lang='ru'; } }
     else { msg.lang=common.lang; }
     if (!ru && !en && common.lang=='auto'){ msg.lang=common.langbase; }
-    msg.rate = rate; 
-    if (stop==1){ window.speechSynthesis.pause(); window.speechSynthesis.cancel(); }
+    msg.rate = rate;                                                     //alert('rate: '+msg.rate+', lang: '+msg.lang+', txt: '+msg.text+', stop: '+stop);
+    if (stop==1){ 
+		window.speechSynthesis.pause();         //alert('paused');
+		window.speechSynthesis.cancel();        //alert('cancelled');
+	}   
     
-    
-    window.speechSynthesis.speak(msg);    
+    //msg2.lang = msg.lang;
+    window.speechSynthesis.speak(msg);  
+      
     common.play_counter=1;
     msg.onstart=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[1]};
-    if (onend==0){ msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; }
-    else{ 
+    if (onend==0){ 
+		msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; 
+	}else{ 
 		if (editor.if_spell===1){ msg.onend=function(event){editor_spell_i()}; }
 		else if (common.text_utter!='') { msg.onend=function(event){utter_sentence('', '', '', '', txt=common.utter_text)}; }
 		else{ msg.onend=function(event){reader_scroll(1,0,1)}; }
@@ -817,3 +842,4 @@ function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){ 
 	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
 	return('class="'+class_name+'" style="'+style+'"')
 	}
+

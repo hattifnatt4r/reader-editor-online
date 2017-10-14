@@ -1,3 +1,16 @@
+/*
+if ('speechSynthesis' in window) {
+	var msg = new SpeechSynthesisUtterance();
+	var msg2 = new SpeechSynthesisUtterance();
+  	msg.text = 'Hello mozilla!';
+  	msg2.text = 'Again';
+  	msg.onend=function(event){ window.speechSynthesis.speak(msg2); };
+  	window.speechSynthesis.speak(msg);
+  	//window.speechSynthesis.speak(msg);
+	//alert('Your browser <strong>supports</strong> speech synthesis.');
+} else{ alert('not support'); }
+*/
+//alert(check_browser());
 
 //-- files variables ---------------------------------------------------------------
 if (localStorage.getItem("isset")!="true"){
@@ -283,7 +296,7 @@ function files_scroll(order, i_utter){                                   //alert
         */ 
     if (iter==0){fname_ii='..';}
     else{fname_ii = files.get_fname(); }
-    fname_ii = replace_all(fname_ii,'_',' ');
+    fname_ii = replace_all(fname_ii,'_',' ');                             //alert(i_utter+' | '+fname_ii+' | '+order);
     if (i_utter===undefined){ utter(fname_ii, 1, onend=0); }
     //if (iter===order && i_utter!='no'){document.getElementById(files.buttons_php["files_enter"]).click(); }
 }
