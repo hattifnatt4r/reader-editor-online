@@ -1,5 +1,5 @@
+
 //-- editor variables -------------------------------------------------------------------
-//alert('editor');
 var editor = {
 	dict: {},
 	style: {},
@@ -63,7 +63,7 @@ editor.dict = {
 	],                               
 	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_math2, this.symbolset7_other, this.symbolset7_files, this.symbolset7_en, this.symbolset7_ru] ; },
 	
-};                                                                       //alert(editor.dict.symbolset_all());
+};                                                                  
 
 //-- editor style object --------------------------------------------------------------
 editor.style = {
@@ -83,11 +83,11 @@ editor.style = {
 	cursorshift: 0,
 	class_arr: ["buttons editor", "buttons symbol", "buttons nobkg", "buttons disabled"],
 	
-	get_button: function (i, class_n){                                   //alert('pos: '+this.b_top);
+	get_button: function (i, class_n){                                   consolelog_func("brown"); 
 		if (class_n===undefined) {class_n=0;}
 		var class_name = this.class_arr[class_n];
 		var style="";
-	    var ny = (i-i%this.b_nx)/this.b_nx;                              //alert('pos: '+i+' '+ny);
+	    var ny = (i-i%this.b_nx)/this.b_nx;                           
 	    var nx = i % this.b_nx;
 	   
 	    var b_yspace = (this.b_bottom - this.b_top) / ( this.b_ny-1 + (this.b_ny-1+this.b_botheight) / this.b_yratio ); 
@@ -101,15 +101,15 @@ editor.style = {
 	    if ( nx>0 )   { x -= b_width*(1-this.b_leftwidth); }
 	    if ( nx===0 )           { b_width = b_width*this.b_leftwidth; }
 	    if ( nx===this.b_nx-1 ) { b_width = b_width*this.b_rightwidth; }
-	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight; //style+='line-height:60%;'; 
+	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight;
 		}
 	    
-	    style+= 'left:'+x+'%; top:'+y+'%; width:'+b_width+'%; height:'+b_height+'%; border-bottom-width:'+b_height*0.07+'%;'  ;  //alert(style);
+	    style+= 'left:'+x+'%; top:'+y+'%; width:'+b_width+'%; height:'+b_height+'%; border-bottom-width:'+b_height*0.07+'%;'  ;  
 	    return('class="'+class_name+'" style="'+style+'"');
 	},
 	
-	set_style: function (stylename, ncol){                                     //alert(stylename);
-		if (stylename==='bottom_3rows') {                               //alert(stylename);
+	set_style: function (stylename, ncol){                               consolelog_func("brown"); 
+		if (stylename==='bottom_3rows') {                               
 			if (ncol===undefined) {ncol=7;}
 		    this.b_nx=ncol; this.b_ny=3; 
 		    this.b_yratio=0.5; this.b_xratio=0.5;
@@ -120,7 +120,7 @@ editor.style = {
 		    document.getElementById('editor_buttons_area').style.top=(this.b_top-this.zoomspace/2)+'%';
 		    editor_set_fontsize(this.nlines_lvl1,1);  
 		     
-		}else if (stylename==='bottom_2rows') {                          //alert('2rows');
+		}else if (stylename==='bottom_2rows') {                          
 			if (ncol===undefined) {ncol=6;}
 		    this.b_nx=ncol; this.b_ny=2; 
 		    this.b_yratio=0.5; this.b_xratio=0.5;
@@ -129,9 +129,9 @@ editor.style = {
 		    var zoomheight = this.b_top - 2 - this.zoomspace;
 		    document.getElementById('editor_text_box').style.height = zoomheight+'%';  
 		    document.getElementById('editor_buttons_area').style.top=(this.b_top-this.zoomspace/2)+'%';
-		    editor_set_fontsize(this.nlines_lvl0,0);                     //alert('nlines_lvl0: '+this.nlines_lvl0);
+		    editor_set_fontsize(this.nlines_lvl0,0);                     
 		    		    
-		}else if (stylename==='cut_leftright') {                         //alert(stylename);
+		}else if (stylename==='cut_leftright') {                         
 		    this.b_nx=7; 
 		    this.b_left=1.5; this.b_right=98.5;
 		    this.b_rightwidth=0.6; this.b_leftwidth=0.6;
@@ -154,7 +154,7 @@ editor.style = {
 //editor_run();
 if (typeof reader!=='undefined' && reader.ineditor===true) { reader_editor();}
 
-function editor_run(parent, text_raw, destination, iter){                //alert(destination);
+function editor_run(parent, text_raw, destination, iter){                consolelog_func("darkblue"); 
 	editor.style.nlines_lvl0 = common.editor_nlines_lvl0;
 	editor.style.nlines_lvl1 = common.editor_nlines_lvl1;
 	if (text_raw==undefined) { text_raw=""; }
@@ -176,12 +176,12 @@ function editor_run(parent, text_raw, destination, iter){                //alert
 	editor_type = 'bottom_2rows';
 	editor.style.set_style(editor_type);
 	
-	document.getElementById('editor_text_area').innerHTML=editor.text_raw;   //alert('editor 3');
-	editor_set_cursor();                                                     //alert('editor 4');
-	editor_show_start();                                                     //alert('editor 5');
+	document.getElementById('editor_text_area').innerHTML=editor.text_raw;  
+	editor_set_cursor();                                                     
+	editor_show_start();                                                   
 	if (parent==='files') { editor_show_symbols(3,0); }
 }
-function editor_exit(){                                                  //alert(editor.destination);
+function editor_exit(){                                                  consolelog_func("darkblue"); 
     var elem = document.getElementById('editor_area');
     elem.parentNode.removeChild(elem);
     var elem = document.getElementById('editor_bkg');
@@ -189,32 +189,31 @@ function editor_exit(){                                                  //alert
     if (editor.parent=="reader"){ 
 		reader.ischanged_text = true;
 		reader.editor_text = editor.text_raw;
-		reader.ineditor = false;                                         //alert('editor id: '+reader.id_curr);
+		reader.ineditor = false;                                         console.log(reader.ischanged_text+', text: '+reader.editor_text);    
 		reader_run(); 
-	}else if (editor.parent=="files"){                                   //alert(editor.destination);
+	}else if (editor.parent=="files"){                                  
 		elem = document.getElementById(editor.destination);
-		if (elem) { elem.innerHTML = editor.text_raw; }                  //alert(elem);
+		if (elem) { elem.innerHTML = editor.text_raw; }               
 		elem = document.getElementById("ffiles_edit_text" );
-		if (elem) { elem.value = editor.text_raw; }                      //alert(editor.text_raw);
+		if (elem) { elem.value = editor.text_raw; }                      
 		filesys.editor_text = "";                                        
 	}  
-}function editor_save(){                                                 //alert('editor_save');
+}function editor_save(){                                                 consolelog_func("darkblue"); 
     if (editor.parent=='reader'){
 		reader.editor_text = editor.text_raw;
         reader.ischanged_text = true;
         reader_run(); 
-        //document.getElementById('reader_edit').click();
     }
 }
 
 //-- show buttons ---------------------------------------------------------------
 //-------------------------------------------------------------------------------
-function editor_show_start(){                                            //alert('editor_start');
+function editor_show_start(){                                            consolelog_func(); 
     elem = document.getElementById('editor_buttons_area');
     inner_e0 = "<div id='editor_buttons_area_0'>";
-    inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(1,0);" '+editor.style.get_button(3,1) +'> xyz </div>';
-    inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(0,0);" '+editor.style.get_button(9,1) +'> 123 </div>';
-    inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(4,1) +'> abc </div>';
+    //inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(1,0);" '+editor.style.get_button(3,1) +'> xyz </div>';
+    inner_e0+= '<div id="editor_numbers"    onclick="editor_show_symbols(0,0);" '+editor.style.get_button(3,1) +'> 123 </div>';
+    inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(9,1) +'> abc </div>';
     inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(5,0);" '+editor.style.get_button(10,1)+'> абв </div>';
     inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(2,0);" '+editor.style.get_button(11,1)+'>'+symbol_nextpage3+'</div>';
     inner_e0+= '<div id="editor_navigate"   onclick="editor_show_navigate(0);" ' +editor.style.get_button(5)   +'>'+symbol_navigate+'</div>';
@@ -231,22 +230,18 @@ function editor_show_start(){                                            //alert
     inner_e4 = "<div id='editor_buttons_area_4'></div>";
     elem.innerHTML = inner_e0+inner_e1+inner_e2 + inner_e3 + inner_e4;
 }
-function editor_show_menu(){
+function editor_show_menu(){                                             consolelog_func(); 
     var inner_e = "";
     var parent = "editor_created_elements";
-    //inner_e+= '<div '+common_buttonpos_menu(2,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom">'+common.langbase+'</div></div>';
-    //inner_e+= '<div '+common_buttonpos_menu(6,1)+'><div id="common_lang_zoom1" class="text_zoom menu_zoom" >'+common.lang+'</div></div>';
-    //inner_e+= '<div id="common_langbase"     onclick="common_show_lang(1, true,  this.parentElement.id);" ' +common_buttonpos_menu(3,0)+'> base lang </div>';
-    //inner_e+= '<div id="common_lang"         onclick="common_show_lang(1, false, this.parentElement.id);" ' +common_buttonpos_menu(7,0)+'> lang </div>';
     inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common_buttonpos_menu(2,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
-    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(3,0)+'>local lang</div>';
+    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(3,0)+'> lang </div>';
     inner_e+= '<div id="editor_fontsize"     onclick="editor_show_fontsize();" '+common_buttonpos_menu(5,0)+'> font size </div>';
     inner_e+= '<div id="editor_sound"        onclick="" '+common_buttonpos_menu(0,3)+'> sound </div>';
     inner_e+= '<div id="editor_read"         onclick="" '+common_buttonpos_menu(4,3)+'> read </div>';
     inner_e+= '<div id="editor_sound_button" onclick="" '+common_buttonpos_menu(1,3)+'> sound </div>';
     common_create_menu('editor_menu', 0, inner_e,'editor_created_elements', true);
 }
-function editor_show_fontsize(){
+function editor_show_fontsize(){                                         consolelog_func(); 
 	var inner_e = "";
     inner_e += '<div id="5"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(4,0)+'> 5 lines </div>';
     inner_e += '<div id="4"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(5,0)+'> 4 lines </div>';
@@ -255,7 +250,7 @@ function editor_show_fontsize(){
     common_create_menu('editor_fontsize', 1, inner_e, 'editor_created_elements', true);
 }
     
-function editor_show_symbols(lang, lvl){                                 //alert('show_symbols');
+function editor_show_symbols(lang, lvl){                                 consolelog_func(); 
     editor.style.set_style('bottom_3rows');
     editor.style.b_nx=7;
     
@@ -265,9 +260,9 @@ function editor_show_symbols(lang, lvl){                                 //alert
 	else               { symbol1 = symbol_nextpage1; symbol2 = symbol_nextpage2; }
 	if (lang===5) { symbol1 = 'эюя'; }
     
-    key_arr = editor.dict.symbolset7_all()[lang][lvl];                    //alert(key_arr);
+    key_arr = editor.dict.symbolset7_all()[lang][lvl];                 
     inner_e = ''; i=0; 
-    if (lvl==0){                                                         //alert('lvl=0');
+    if (lvl==0){                                                      
         inner_e+= editor.style.button_delete(6);
         inner_e+= editor.style.button_prev(19);
         inner_e+= editor.style.button_next(20);
@@ -276,8 +271,8 @@ function editor_show_symbols(lang, lvl){                                 //alert
         inner_e+= '<div id="editor_letters_p2" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7)  +'>'+symbol2+'</div>';
         if (editor.parent==="files"){ inner_e+= editor.style.button_exit(14); }
 		else {                        inner_e+= editor.style.button_backto_start(14); }
-        reserved=[5,6, 13,14,20];                                        //alert('2: '+inner_e);
-        reserved=[0,6,7, 13,14,20,19];                                        //alert('2: '+inner_e);
+        reserved=[5,6, 13,14,20];                                     
+        reserved=[0,6,7, 13,14,20,19];                                    
     }else {
         inner_e+= editor.style.button_backto_letters(14,1);
         if (lvl===2)  { 
@@ -291,12 +286,12 @@ function editor_show_symbols(lang, lvl){                                 //alert
 			//inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(13) +'> pin tab </div>';
 			reserved=[14,7,20];
 		}
-    }                                                                    //alert('3: '+inner_e);
+    }                                                                  
     for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){
         if (reserved.indexOf(ii)==-1 && i<key_arr.length){
             i_name = key_arr[i];
-            i_name_button = editor.dict.allchar_buttons()[key_arr[i]];   //alert(i+' '+i_name+' '+i_name_button);
-            style = editor.style.get_button(ii, 1);                      //alert(ii, style);
+            i_name_button = editor.dict.allchar_buttons()[key_arr[i]];  
+            style = editor.style.get_button(ii, 1);                    
             keys = Object.keys(editor.dict.allchar() ); nn=keys.indexOf(i_name).toString();
             inner_e += '<div id="editor_letter_'+i_name+'" onclick="editor_set_letter('+nn+');"  '+style+'>'+i_name_button+'</div>';
             i+=1;
@@ -309,11 +304,11 @@ function editor_show_symbols(lang, lvl){                                 //alert
         document.getElementById('editor_buttons_area_1').style.visibility='hidden';
         elem = document.getElementById('editor_buttons_area_2');
     }elem.style.visibility='visible';
-    elem.innerHTML = inner_e;                                            //alert('pin: '+editor.pin_letters);
+    elem.innerHTML = inner_e;                                      
     editor_capital(0,1);
 }
 
-function editor_show_navigate(lvl){
+function editor_show_navigate(lvl){                                      consolelog_func(); 
 	var elem; var inner_e = "";
 	editor.style.set_style('bottom_2rows',7);
     inner_e+= editor.style.button_delete(6);
@@ -341,7 +336,7 @@ function editor_show_navigate(lvl){
     elem.innerHTML = inner_e;
 }
 
-function editor_capital(setcaps, lock, reset){
+function editor_capital(setcaps, lock, reset){                           consolelog_func(); 
 	if (setcaps===undefined) {setcaps=0;}
 	if (lock===undefined) {lock=0;}
 	if (reset===undefined) {reset=0;}
@@ -350,7 +345,7 @@ function editor_capital(setcaps, lock, reset){
 	if (setcaps===1) {	
 		if (lock===0){ editor.caps = (editor.caps+1)%2; }
 		else { editor.capslock=(editor.capslock+1)%2; }
-	}                                                                    //alert('caps: '+editor.caps+ +editor.capslock);
+	}                                                                 
 	var arr = document.getElementsByClassName("symbol");
 	var inner = ""; var i = 0;
 	for (i=0; i<arr.length; i+=1){
@@ -365,14 +360,14 @@ function editor_capital(setcaps, lock, reset){
 
 //-- delete / add functions ------------------------------------------------------
 //--------------------------------------------------------------------------------
-function editor_delete(){                                                //alert(editor.iter);
+function editor_delete(){                                                consolelog_func(); 
     if (editor.iter>0) { 
 		//var rtag = "</abbr>"; var ltag = "<abbr>";    
 		var ltag = common.symbol_ltag, rtag = common.symbol_rtag;              
         var iter = editor.iter;
-		var text = editor.text_raw;                                      //alert(iter+'  '+text);
+		var text = editor.text_raw;                                      
 		
-        var i = text.substr(0,iter).lastIndexOf(rtag);                       //alert(iter+' '+i);
+        var i = text.substr(0,iter).lastIndexOf(rtag);                  
         if (iter==i+rtag.length && i!=-1){
             iter_l = text.substr(0,iter).lastIndexOf(ltag);
         }else{
@@ -387,11 +382,11 @@ function editor_delete(){                                                //alert
 		editor.text_raw = text_c;	
         editor_set_cursor(); 
     }
-}function editor_set_letter(n){
+}function editor_set_letter(n){                                          consolelog_func(); 
     var iter = editor.iter;
 	var text = editor.text_raw;
     keys = Object.keys( editor.dict.allchar() );
-    letter = editor.dict.allchar()[keys[n]];                              //alert(n+' '+arr[n]+'  '+letter);
+    letter = editor.dict.allchar()[keys[n]];                             
     if (editor.capslock+editor.caps===1) { 
 		if (/^[a-zA-Z]+$/.test(letter) || /^[а-яА-Я]+$/.test(letter)) { letter = letter.toUpperCase(); }
 	}
@@ -407,24 +402,24 @@ function editor_delete(){                                                //alert
 
 //-- menu functions ------------------------------------------------------------
 //------------------------------------------------------------------------------
-function editor_sound(){
-    editor.sound_navigator = (editor.sound_navigator+1)%2;                   //alert(editor_sound_counter);
+function editor_sound(){                                                 consolelog_func(); 
+    editor.sound_navigator = (editor.sound_navigator+1)%2;             
     document.getElementById('editor_sound').innerHTML = symbols_sound[editor.sound_navigator];
 }
-function editor_set_fontsize(id, lvl){
-    var zoomheight = editor.style.b_top - 2 - editor.style.zoomspace;    //alert(zoomheight+' '+id); 
+function editor_set_fontsize(id, lvl){                                   consolelog_func(); 
+    var zoomheight = editor.style.b_top - 2 - editor.style.zoomspace;  
     if (lvl===0){
-		editor.style.nlines_lvl0 = parseInt(id);                                   //alert(editor.nlines_lvl0);             
-		common.editor_nlines_lvl0 = parseInt(id);                                   //alert(editor.nlines_lvl0); 
+		editor.style.nlines_lvl0 = parseInt(id);                                              
+		common.editor_nlines_lvl0 = parseInt(id);                                   
 	}else if (lvl===1){
-		editor.style.nlines_lvl1 = parseInt(id);                                   //alert(editor.nlines_lvl0);             
+		editor.style.nlines_lvl1 = parseInt(id);                                            
 		common.editor_nlines_lvl1 = parseInt(id);         
 	}            
-    var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / id;  //alert(fontsize);
+    var fontsize = editor.style.window_height * zoomheight/100 / 1.2 / id;  
 	document.getElementById('editor_text_area').style.fontSize = fontsize.toString()+'px';
 	editor.style.fontsize = fontsize;    
 }
-function editor_spell(){
+function editor_spell(){                                                 consolelog_func(); 
     var iter = editor.iter;
 	var text = editor.text_raw;
 	var text_utter = '', text_u = '';
@@ -449,16 +444,16 @@ function editor_spell(){
 		editor.spell_type = (editor.spell_type+1)%2;
     }
 }
-function editor_spell_i(txt){
+function editor_spell_i(txt){                                            consolelog_func(); 
 		utter('', 1, 1);
 	}
 
-function editor_backto_start(){
+function editor_backto_start(){                                          consolelog_func(); 
     editor.style.set_style('bottom_2rows');
     document.getElementById('editor_buttons_area_0').style.visibility='visible';
     document.getElementById('editor_buttons_area_1').style.visibility='hidden';
 }
-function editor_backto_letters(change_style){
+function editor_backto_letters(change_style){                            consolelog_func(); 
     if (change_style==1){ editor.style.set_style('bottom_3rows'); }
     document.getElementById('editor_buttons_area_1').style.visibility='visible';
     document.getElementById('editor_buttons_area_2').style.visibility='hidden';
@@ -470,15 +465,15 @@ function editor_backto_letters(change_style){
 
 //-- cursor functions -----------------------------------------------------------
 //-------------------------------------------------------------------------------
-function editor_scrollvert(order){                                       //alert('scrollvert');
+function editor_scrollvert(order){                                       consolelog_func(); 
     order = parseInt(order);
     var iter_prev = editor.iter;
     var iter_save = iter_prev; 
-    var pos0 = parseInt(document.getElementById('cursor').offsetTop);        //alert(pos0);
+    var pos0 = parseInt(document.getElementById('cursor').offsetTop);      
     var proceed = 1;
     while(proceed==1){
         editor_scrollword(order);
-        pos = parseInt(document.getElementById('cursor').offsetTop);     //alert('|'+pos0+'|'+pos+'|');
+        pos = parseInt(document.getElementById('cursor').offsetTop);    
         iter = editor.iter;
         if (pos!=pos0 || iter==iter_prev) {proceed=0;}
         iter_prev = iter;
@@ -489,11 +484,11 @@ function editor_scrollvert(order){                                       //alert
         editor_set_cursor();
         } 
     if (order==0){
-        pos0 = parseInt(document.getElementById('cursor').offsetTop);    //alert(pos0);
+        pos0 = parseInt(document.getElementById('cursor').offsetTop);   
         proceed = 1;
         while(proceed==1){
             editor_scrollword(0);
-            pos = parseInt(document.getElementById('cursor').offsetTop); //alert('|'+pos0+'|'+pos+'|');
+            pos = parseInt(document.getElementById('cursor').offsetTop); 
             var iter = editor.iter;  
             if (pos!=pos0 || iter==iter_prev) {proceed=0;}
             iter_prev = iter;
@@ -502,7 +497,7 @@ function editor_scrollvert(order){                                       //alert
     var text_read = common_textto_read( editor.text_raw.substring(iter_save, iter) );
 	if (editor.sound_navigator==1) { utter(text_read, 1, 0); }   
 }
-function editor_scrollword(order){                                       //alert('scrollword '+order);
+function editor_scrollword(order){                                       consolelog_func(); 
     order = parseInt(order);
     var iter = editor.iter;
     var text = editor.text_raw;
@@ -533,7 +528,7 @@ function editor_scrollword(order){                                       //alert
 	var text_read = common_textto_read( text.substring(i_left, i_right) );
 	if (editor.sound_navigator==1) { utter(text_read, 1, 0); }   
 }
-function editor_scroll(order){
+function editor_scroll(order){                                           consolelog_func(); 
     var ltag = common.symbol_ltag, rtag = common.symbol_rtag; 
     var iter = editor.iter;
     var iter_prev = iter;
@@ -550,11 +545,11 @@ function editor_scroll(order){
     }else if (order==0 && iter > 0) { 
         i = text.substr(0,iter).lastIndexOf(rtag);
         if (iter==i+rtag.length && i!=-1){
-            iter = text.substr(0,iter).lastIndexOf(ltag);                //alert('1:'+iter);
+            iter = text.substr(0,iter).lastIndexOf(ltag);              
         }else{
             i = text.substr(0,iter).lastIndexOf('>');
             if (iter==i+1 && i!=-1){
-                iter = text.substr(0,iter).lastIndexOf('<');             //alert('2:'+iter);
+                iter = text.substr(0,iter).lastIndexOf('<');          
             }else{iter-=1;}     
         } 
     }  
@@ -565,24 +560,24 @@ function editor_scroll(order){
     var text_read = common_textto_read(letter);
     if (editor.sound_navigator==1) { utter(text_read, 1, 0); }
     if (letter==' '){letter='_';}
-    document.getElementById('editor_show_letter').innerHTML = letter;
+    //document.getElementById('editor_show_letter').innerHTML = letter;
     return (iter);
 }
 
-function editor_set_cursor(){                                            //alert('set_cursor');
-	var cursorshift = editor.style.fontsize*0.15;                        //alert(cursorshift);
+function editor_set_cursor(){                                            consolelog_func(); 
+	var cursorshift = editor.style.fontsize*0.15;                     
     var cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" style="left:-'+cursorshift.toString()+'px" >|</em></em>'; 
-    var iter = editor.iter;                                              //alert('iter: '+iter);
-    var text = editor.text_raw;                                          //alert('text: '+text);
-    rspace = text.indexOf(' ',iter);                                     //alert('rspace: '+rspace);
+    var iter = editor.iter;                                           
+    var text = editor.text_raw;                                     
+    rspace = text.indexOf(' ',iter);                                  
     lspace = text.substr(0,iter).lastIndexOf(' ');                       
-    if (rspace>0 && lspace>0 && lspace<rspace){                          //alert('|'+lspace+'|'+iter+'|'+rspace+'|');
+    if (rspace>0 && lspace>0 && lspace<rspace){                     
         text_c = text.substr(0, lspace+1)+'<span style="white-space:nowrap;">'+text.substr(lspace+1,iter-lspace-1)+cursor+text.substr(iter,rspace-iter)+'</span>'+text.substr(rspace);
     }else{ 
         text_c = text.substr(0, iter)+cursor+text.substr(iter); 
-    }                                                                    //alert(text); alert(text_c);
+    }                                                                  
     document.getElementById('editor_text_area').innerHTML=text_c;
-    scroll_to('cursor','editor_text_box', title=0);                      //alert(text_c);
+    scroll_to('cursor','editor_text_box', title=0);                  
     editor.spell_type=0;
     }
 

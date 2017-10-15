@@ -7,11 +7,12 @@ if ('speechSynthesis' in window) {
   	msg.onend=function(event){ window.speechSynthesis.speak(msg2); };
   	window.speechSynthesis.speak(msg);
   	//window.speechSynthesis.speak(msg);
-	//alert('Your browser <strong>supports</strong> speech synthesis.');
-} else{ alert('not support'); }
+	//console.log('Your browser <strong>supports</strong> speech synthesis.');
+} else{ console.log('not support'); }
 */
-//alert(check_browser());
+//console.log(check_browser());
 
+console.log(document.title);
 //-- files variables ---------------------------------------------------------------
 if (localStorage.getItem("isset")!="true"){
 	localStorage.setItem("isset", "true");
@@ -29,6 +30,7 @@ var files = {
 	
 	cookie_number: 7,
 	cookie_suffix: "_f",
+	subdir: "",
 	editor_text: "",
 	
 	nentry: document.getElementById('hidden_files_nentry').innerHTML,
@@ -49,86 +51,92 @@ var files = {
 		           "files_download": "ffiles_download_submit", 
 		           "files_past": "ffiles_past_submit", 
 		           },
-	click_php: function(id) { //alert('click: '+id);
+	click_php: function(id) {                                            consolelog_func('brown');
 		if (id==="files_enter" && this.get_ftype()=="dir" ) { this.iter=0; this.iter_prev=0; }
 		document.getElementById(this.buttons_php[id]).click(); 
 	},
-	set_dir: function() {
+	set_dir: function() {                                                consolelog_func('brown');
 		dir0 = document.getElementById('hidden_files_dir').innerHTML; 
 	    i = dir0.indexOf('/');
 	    if (i!=-1) { dir = dir0.substr(i); } else{dir = '';}
 		this.dir = dir;
 	},
-	get_fname: function(i){ 
+	get_fname: function(i){                                              consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
 		return document.getElementById('fileid_'+this.iter.toString()+'_name').innerHTML; 
 	},
-	get_fid: function(i){ 
+	get_fid: function(i){                                                consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
 		return 'fileid_'+i.toString(); 
 	}, 
-	get_felem_pic: function(i){
+	get_felem_pic: function(i){                                          consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
 		return document.getElementById(this.get_fid(i)+'_pic');
 	},
-	get_ftype: function(i){
+	get_ftype: function(i){                                              consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
 		var type = "";
 		var elem = document.getElementById(this.get_fid(i));
 		if (elem) { type=elem.getAttribute('title'); }
 		return type;
 	},
-}                                                        //alert(files.dir);
+}                                                        
 window.onbeforeunload = files_beforunload;
-function files_beforunload() {common.cookie_save.call(files); common.cookie_save(); }
-function files_cleancookie(){ cookie_delete_all(); alert('clear cookie'); window.location.href = '/index.php'; }
+function files_beforunload() {                                           consolelog_func();
+	common.cookie_save.call(files); 
+	common.cookie_save(); 
+}
+function files_cleancookie(){                                            consolelog_func();
+	cookie_delete_all(); 
+	window.location.href = '/index.php'; 
+}
 
 //-- run files -------------------------------------------------------------------
-//alert('start_files');
 var elem = document.getElementById("php_goto");
 var php_goto = elem.innerHTML.replace(' ','');
 elem.innerHTML = '';
 if (php_goto!=''){ window.location.href = '/'+php_goto; }
 files_run();
 
-function files_run(){                                                    //alert('files_run');  
+function files_run(){                                                    consolelog_func('darkblue'); 
 	files.set_dir(); 
+	files.subdir = get_subdir(files.dir+'/');  
 	document.getElementById('content_box').style.top = '-3.4%';
 	
-	if (cookie_get('isset_files_')!='isset'){                            //alert('set_cookie');
+	if (cookie_get('isset_files_')!='isset'){                            
 		cookie_set("isset_files_", "isset");
 		common.cookie_save.call(files);
 	}else { common.cookie_load.call(files); }
-	if (cookie_get('isset_common_')!='isset'){                           //alert('set_cookie');
+	if (cookie_get('isset_common_')!='isset'){                           
 		cookie_set("isset_common_", "isset");
 		common.cookie_save();
-	}else { common.cookie_load(); }                                      //alert( document.cookie );
+	}else { common.cookie_load(); }                                      
 	                                                                                                             
 	var bodyStyles = window.getComputedStyle(document.body);
 	
-	files_show_buttons();                                                //alert('reader1');
-	document.getElementById("base_elements").appendChild(document.getElementById("content_box"));        // alert('reader2');
+	files_show_buttons();                                                
+	document.getElementById("base_elements").appendChild(document.getElementById("content_box"));        
 	document.getElementById("base_elements").appendChild(document.getElementById("zoom_box"));
 	
-	common_set_fontsize(files.fontsize, files);                          //alert(files.fontsize);
-	files_scroll(files.iter, 'no');                                      //alert('files run 2');
-	files_set_zoom('no');                                                //alert('files run 3');
+	common_set_fontsize(files.fontsize, files);                         
+	files_scroll(files.iter, 'no');                                      
+	files_set_zoom('no');                                                
 	common.style.resize();
 	files_show_files();
 	
-	//elem = document.getElementById("php_alert");                         //alert(elem.innerHTML);
-	//if (elem.innerHTML!=''){alert(elem.innerHTML);}
-}                                                                        //alert('dir: '+files_get_dir());
+	//elem = document.getElementById("php_alert");                         
+	//if (elem.innerHTML!=''){console.log(elem.innerHTML);}
+}                                                                        
 
 //-- show buttons ---------------------------------------------------------------------------
-function files_resize(){
+function files_resize(){                                                 consolelog_func("darkblue"); 
 	files_show_buttons();
 	common.style.resize();
 	files_show_files();
 }
 
-function files_show_buttons(){                                           //alert('alert b0');
-    var elem = document.getElementById('buttons_area');                //alert('alert b1');
+function files_show_buttons(){                                           consolelog_func();  
+    var elem = document.getElementById('buttons_area');               
     var inner_e="";
     inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common.style.buttonpos(0,4)+'> menu </div>' ;
     inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common.style.buttonpos(1,4)+'> opt </div>';
@@ -140,14 +148,13 @@ function files_show_buttons(){                                           //alert
     //inner_e+= '<div id="files_python_button" class="buttons" onclick="files_click(10);"   style="'+reader_button_position(6)+'">py</div>';
     elem.innerHTML=inner_e;
     //if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload'); }
-    subdir = get_subdir(files.dir+'/');                                        //alert('sub: '+subdir);
-    if (subdir=='mail'){                                                 //alert('mail!');
-        id = 'fileid_'+files.nentry;                                     //alert(id);
+    if (files.subdir=='mail'){                                                 
+        id = 'fileid_'+files.nentry;                                    
         document.getElementById(id).onclick=function() { files_show_addcontact(); } 
         document.getElementById(id).innerHTML=symbol_newmail;
         }
 }
-function files_show_menu(){  
+function files_show_menu(){                                              consolelog_func();
 	document.getElementById("ffiles_copyfname_text").value = localStorage.getItem("copy_fname");
     document.getElementById("ffiles_copyfdir_text").value = localStorage.getItem("copy_fdir"); 
 	var inner_e = "";  var obj = 'files';
@@ -157,21 +164,20 @@ function files_show_menu(){
     inner_e += '<div id="files_zoom"     onclick="files_set_zoom();" '        +common_buttonpos_menu(3,0)+'>'+files.zoom_arr[files.zoom]+'</div>';
     inner_e += '<div id="files_fontsize" onclick="common_show_fontsize('+obj+');" '+common_buttonpos_menu(6,0)+'> font size </div>';
     inner_e += '<div id="files_cleancookie" onclick="files_cleancookie();" '  +common_buttonpos_menu(0,0)+'> delete cookie </div>';
-    //inner_e += '<div id="files_past"     onclick="files.click_php(this.id);" '+common_buttonpos_menu(5,0)+'> past </div>';
     inner_e += '<div id="files_past"     onclick="files_past();" '+common_buttonpos_menu(5,0)+'> past </div>';
     //inner_e += '<div id="files_sound"    onclick="" '+common_buttonpos_menu(4,3)+'> sound </div>';
     inner_e += '<div id="files_clickdelay" onclick="common_show_clickdelay();" '+common_buttonpos_menu(4,0)+'> click delay </div>';
     common_create_menu('files_menu', 0, inner_e);
     if (localStorage.getItem("copy_fdir")=="") { files_disable("files_past"); }
 }
-function files_show_create(){
+function files_show_create(){                                            consolelog_func();
 	var inner_e = "";
     inner_e += '<div '+common_buttonpos_menu(0,2)+'><div id="files_create_edit" onclick="files_edittext(this.id);" class="text_zoom menu_zoom">file name</div></div>';    
     inner_e += '<div id="files_createtxt" onclick="files.click_php(this.id);" '+common_buttonpos_menu(6,0)+'>create txt</div>';
     inner_e += '<div id="files_createdir" onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'>create dir </div>';
     common_create_menu('files_create', 1, inner_e);
 }
-function files_show_options(){                                           //alert('show_options');
+function files_show_options(){                                           consolelog_func();
     var fname = files.get_fname();
     var text = fname;
     if (fname.lastIndexOf('.')!=-1) { text = fname.substring(0, fname.indexOf('.')); }
@@ -186,7 +192,7 @@ function files_show_options(){                                           //alert
     common_create_menu('files_options', 0, inner_e);
     if (fname.indexOf('.php')==-1){files_disable('files_cleanhtml');}
 }
-function files_show_login(){
+function files_show_login(){                                             consolelog_func();
 	var name="name", pass="password";
 	if (files.userremember) {name = files.username; pass = files.userpass; }
     var inner_e="";
@@ -201,13 +207,13 @@ function files_show_login(){
     inner_e+= '<div id="files_usermail"      onclick="" '   +common_buttonpos_menu(7,3,4,3)+'> mail data </div>';
     common_create_menu('files_lodin', 0, inner_e);
 }
-function files_show_addcontact(){
+function files_show_addcontact(){                                        consolelog_func();
 	var inner_e="";
 	inner_e += '<div '+common_buttonpos_menu(0,2)+'><div id="files_addmail_edit" onclick="files_edittext(this.id);" class="text_zoom menu_zoom"> new contact </div></div>';
 	inner_e += '<div id="files_addmail"      onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'> add contact </div>';
     common_create_menu('files_addmail', 0, inner_e);
 }
-function files_show_upload(){
+function files_show_upload(){                                            consolelog_func();
     var inner_e = "";
     inner_e+= '<div '+common_buttonpos_menu(0,2)+'><div id="files_upload_name" onclick="" class="text_zoom menu_zoom"></div></div>';
     inner_e+= '<div id="files_upload_choose" onclick="files.click_php(this.id);" '+common_buttonpos_menu(4,0)+'>choose file</div>';
@@ -215,8 +221,8 @@ function files_show_upload(){
     common_create_menu('files_upload', 0, inner_e);
     document.getElementById('ffiles_upload_choose').onchange = uploadOnChange;
 }
-function uploadOnChange() {                                              //alert('file');
-    var filename = this.value;                                           //alert(filename);
+function uploadOnChange() {                                              consolelog_func();
+    var filename = this.value;                                           
     var lastIndex = filename.lastIndexOf("\\");
     if (lastIndex >= 0) {
         filename = filename.substring(lastIndex + 1);
@@ -224,56 +230,45 @@ function uploadOnChange() {                                              //alert
 }
 
 //-- text display functions ---------------------------------------------------------------
-function files_show_files(){
-	var files_arr = document.getElementById('files_array').childNodes;   //alert('files_arr: '+files_arr.length);
-	var wratio = window.innerWidth/window.innerHeight;                   //alert('window: '+wratio+' '+window.innerWidth+' '+window.innerHeight);
-	var left = 2.5; //var right = 65; 
+function files_show_files(){                                             consolelog_func();
+	var files_arr = document.getElementById('files_array').childNodes;   
+	var wratio = window.innerWidth/window.innerHeight;                   
+	var left = 2.5; 
 	var top=-7; 
-	//var right = common.style.content_width;
-	var content_width = common.style.get_content_width();                //alert(content_width);
-	var eratio_x = content_width/wratio/100;                               //alert(eratio_x);
-	//var eratio_y = document.getElementById('content_box').style.height;   //alert(eratio_y)
-	//eratio_y = parseFloat(eratio_y)/100;                                     alert(eratio_y);
+	var content_width = common.style.get_content_width();                
+	var eratio_x = content_width/wratio/100;                             
 	var eratio_y = 0.74;
     var ywidth=21.5; var yspace=3;
     var xwidth=ywidth*1.2;
     var xspace = 3;                                                      
-    //var xn = Math.floor((right-left)/(xspace+xwidth));                   alert(xn);
-    var xn = Math.floor((content_width+1)/(xspace+xwidth));              //alert(xn+' '+xspace+' '+xwidth+' '+content_width);
+    var xn = Math.floor((content_width+1)/(xspace+xwidth));             
     if (xn<1){xn=1};
     var ratio = (content_width+1)/(xspace+xwidth)/xn;
     var pic_width = 0.6*xwidth;
     xwidth = xwidth*ratio;
     xspace = xspace*ratio;
-    //$xn = gmp_div_q($right-$left, $xspace+$xwidth); 
-    //$xn=2;
     var i=0;       
-	for (i=0; i<files_arr.length; i+=1){                                 //alert(files_arr[i].id);
+	for (i=0; i<files_arr.length; i+=1){                                 
 		var n_y = (i-i%xn)/xn;
 	    var x = left + (xspace+xwidth)* (i%xn);
 	    var y = top +  (ywidth+yspace)*n_y;  
-	    //var style = 'left:'+x+'vw; top:'+y+'vh; width:'+xwidth+'vh; height:'+ywidth+'vh;';
 	    files_arr[i].style.top = y/eratio_y+'%';
 	    files_arr[i].style.left = x/wratio/eratio_x+'%';
 	    files_arr[i].style.height = ywidth/eratio_y+'%';
 	    dx = xwidth/wratio/eratio_x/100;
 	    files_arr[i].style.width = xwidth/wratio/eratio_x+'%';
-	    //files_arr[i].style.visibility = 'visible';
 	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
-	    //elem_pic.style.width = pic_width/wratio/eratio_x/dx+'%';
-	    var elem_name = document.getElementById(files_arr[i].id+'_name');
-	    //elem_name.style.width = '100%';
-	    
+	    var elem_name = document.getElementById(files_arr[i].id+'_name');	    
 		}
 	document.getElementById('files_array').style.visibility = 'visible';
 }
 
-function files_scroll(order, i_utter){                                   //alert('order '+order);
-    var iter = files.iter;                                               //alert(files.fontsize);
-    var iter_prev = files.iter_prev;                                     //alert(iter_prev);
+function files_scroll(order, i_utter){                                   consolelog_func('darkblue');
+    var iter = files.iter;                                               
+    var iter_prev = files.iter_prev;                                     
     if (order==='files_next'){ if (iter<files.nentry) {iter+=1;} }
     else if (order==='files_prev'){ if (iter>0) {iter-=1;} }
-    else { iter = order };                                               //alert(iter);
+    else { iter = order };                                               
     iter_prev = files.iter;   
     files.iter_prev = files.iter;
     files.iter = iter;
@@ -283,64 +278,49 @@ function files_scroll(order, i_utter){                                   //alert
     files_fill_zoom();
     scroll_to(files.get_fid(), 'content_box', title=0);
     
-    /*
-    var type = files.get_ftype();
-    if (type=='dir'){fclass='files-dir-hover';} else{fclass='files-txt-hover';}  
-    elem = files.get_felem_pic();
-    elem.className = 'files files_pic '+fclass; 
-    if (iter!=iter_prev){
-        type = files.get_ftype(iter_prev);
-        if (type=='dir'){fclass='files-dir';} else{fclass='files-txt';}  
-        files.get_felem_pic(iter_prev).className = 'files files_pic '+fclass; 
-        }
-        */ 
     if (iter==0){fname_ii='..';}
     else{fname_ii = files.get_fname(); }
-    fname_ii = replace_all(fname_ii,'_',' ');                             //alert(i_utter+' | '+fname_ii+' | '+order);
+    fname_ii = fname_ii.replace('_',' ');                               
     if (i_utter===undefined){ utter(fname_ii, 1, onend=0); }
-    //if (iter===order && i_utter!='no'){document.getElementById(files.buttons_php["files_enter"]).click(); }
 }
 
-function files_fill_zoom(){
+function files_fill_zoom(){                                              consolelog_func();
     var dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+files.dir+' / </em>';
     document.getElementById('files_zoom_text').innerHTML = dir+files.get_fname(); 
 }   
-function files_set_zoom(order){                
-	if (order===undefined){ files.zoom = (files.zoom+1)%2; }             //alert(files.zoom);
+function files_set_zoom(order){                                          consolelog_func();
+	if (order===undefined){ files.zoom = (files.zoom+1)%2; }             
     var bodyStyles = window.getComputedStyle(document.body);
-    //textheight_zoom = bodyStyles.getPropertyValue('--reader-textheight-zoom'); 
-    //textheight_zoom = '76%';
-    var elem = document.getElementById("zoom_box");               //alert('zoom2');
+    var elem = document.getElementById("zoom_box");               
     if (files.zoom===1){ 
         elem.style.visibility='hidden';
-        document.getElementById('content_box').style.height = '96%';  //alert('zoom3');
+        document.getElementById('content_box').style.height = '96%';  
     }else{
         elem.style.visibility='visible';
-        document.getElementById('content_box').style.height = common.style.textheight_zoom+'%'; //alert(textheight_zoom);
+        document.getElementById('content_box').style.height = common.style.textheight_zoom+'%'; 
     }                                                                    
-    var name = files.zoom_arr[files.zoom];                               //alert(name);
+    var name = files.zoom_arr[files.zoom];                               
     elem = document.getElementById('files_zoom'); 
     document.getElementById('zoom_box').style.height = (100 - common.style.textheight_zoom-2)+'%';
     document.getElementById('zoom_box').style.top = (common.style.textheight_zoom +0.2)+'%';
     if (elem) { 
 		elem.innerHTML = files.zoom_arr[files.zoom]; 
 		}
-    //files_fill_zoom();
 }
 
 //-- account functions ------------------------------------------------------------------
-function files_login(xml){                                               //alert('login');
+function files_login(xml){                                               consolelog_func();
     var name = document.getElementById('files_loginname_edit').innerHTML;
     var pass = document.getElementById('files_loginpass_edit').innerHTML;
     document.getElementById('ffiles_username').value = name;
     document.getElementById('ffiles_userpass').value = pass;
-    document.getElementById('ffiles_userlogin_submit').value = "login";  //alert('login: '+name+' '+pass);
-    files.username = name;                                               //alert(files.username);
+    document.getElementById('ffiles_userlogin_submit').value = "login";  
+    files.username = name;                                               
     user_access=0;
-    data =  JSON.parse(xml.responseText);                                //alert(data);
-    users = data.users;                                                  //alert(users);
+    data =  JSON.parse(xml.responseText);                                
+    users = data.users;                                                  
     for (i=0; i<users.length; i++){
-        name_i = users[i].name;                                          //alert('NAME: '+name_i+' '+name);
+        name_i = users[i].name;                                          
         if (name_i==name){
             user_access=1;
             pass_i = users[i].password;
@@ -348,33 +328,33 @@ function files_login(xml){                                               //alert
                 user_access=2;
                 files.iter = 0;
                 document.getElementById("ffiles_userlogin_submit").click();
-    }}}                                                                  //alert(user_access);
+    }}}                                                                  
     utter(login_messages_en[user_access],0,0,0);
 }
-function files_login_new(xml){                                           //alert('login');
+function files_login_new(xml){                                           consolelog_func();
     var name = document.getElementById('files_loginname_edit').innerHTML;
-    var pass = document.getElementById('files_loginpass_edit').innerHTML;    //alert(name, pass)
+    var pass = document.getElementById('files_loginpass_edit').innerHTML;   
     document.getElementById('ffiles_username').value = name;
     document.getElementById('ffiles_userpass').value = pass; 
-    document.getElementById('ffiles_userlogin_submit').value = "new";    //alert(name+' '+pass);
+    document.getElementById('ffiles_userlogin_submit').value = "new";    
     files.username = name;
     user_access=0;
     data =  JSON.parse(xml.responseText); 
     users = data.users;
     for (i=0; i<users.length; i++){
-        name_i = users[i].name;                                          //alert('NAME: '+name_i+' '+name);
+        name_i = users[i].name;                                          
         if (name_i==name){ user_access=1; }
-    }                                                                    //alert(user_access);
+    }                                                                    
     if (user_access==0){ 
 		files.iter = 0;
 		document.getElementById("ffiles_userlogin_submit").click();
 	}
     utter(newlogin_messages_en[user_access],0,0,0);
 }
-function loadDoc(url1, login_function) {                                 //alert('loadDoc');
+function loadDoc(url1, login_function) {                                 consolelog_func();
     xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {                //alert('load  '+ this.readyState+' '+this.status );
+    xhttp.onreadystatechange = function() {                              consolelog_func();
+	    if (this.readyState == 4 && this.status == 200) {                
 	        login_function(this);   
 	    }
     };
@@ -382,44 +362,44 @@ function loadDoc(url1, login_function) {                                 //alert
     xhttp.send();
 }
 
-function files_logout(){                                                 //alert('logout');
+function files_logout(){                                                 consolelog_func();
     document.getElementById('ffiles_username').value = 'common';
     document.getElementById('ffiles_userpass').value = '';     
     files.iter = 0;    
     document.getElementById("ffiles_userlogin_submit").click();
 }
-function files_login_remember(){                                                 //alert('logout');
+function files_login_remember(){                                         consolelog_func();
     files.username = document.getElementById('files_loginname_edit').innerHTML;
-    files.userpass = document.getElementById('files_loginpass_edit').innerHTML;  //alert(files.username+' '+files.userpass);
+    files.userpass = document.getElementById('files_loginpass_edit').innerHTML;  
     files.userremember = true;
 }
 
 //-------------------------------------------------------------------------------
-function files_edittext(id){
+function files_edittext(id){                                             consolelog_func('darkblue');
 	var text = files.editor_text;
     editor_run('files', text , id);
 }
     
 //------------------------------------------------------------------------------
-function file_exists(fname){
+function file_exists(fname){                                             consolelog_func();                                           
     fname = fname.toString();
     txt=0; dir=0; a='';
     i_max = files.nentry;
     for (i=0; i<=i_max; i++){
         fname_i = files.get_fname(i).replace('.txt','');
         type = files.get_ftype(i);
-        a+=i+' '+fname+' '+fname_i+' '+type+"\n";                        //alert(a);
+        a+=i+' '+fname+' '+fname_i+' '+type+"\n";                        
         if(fname_i==fname){ if(type=='dir'){dir=1;} if(type=='txt'){txt=1;} }
-    }                                                                    //alert(a + i_max +'\n'+txt+' '+dir);
+    }                                                                    
     return([txt,dir]);
 }
 
-function files_disable(id){
+function files_disable(id){                                              consolelog_func();
     document.getElementById(id).onclick=''; 
     document.getElementById(id).className='buttons disabled';
 }
 
-function files_download(){
+function files_download(){                                               consolelog_func();
 	var fname = files.get_fname(); 
     var elem = document.getElementById('created_elements');
     inner_e = elem.innerHTML;
@@ -429,15 +409,14 @@ function files_download(){
     link.click();
     elem.parentNode.removeChild(link);
 }
-function files_copy(){
-	//var fname = files.get_fname(); 
-    //document.getElementById("ffiles_copyfname_text").value = files.get_fname();
-    //document.getElementById("ffiles_copyfdir_text").value = files.dir;     //alert(files.dir);
+function files_copy(){                                                   consolelog_func();
     localStorage.setItem("copy_fname", files.get_fname());
     localStorage.setItem("copy_fdir", files.dir);
 }
-function files_past(){
+function files_past(){                                                   consolelog_func();
     document.getElementById("ffiles_copyfname_text").value = localStorage.getItem("copy_fname");
     document.getElementById("ffiles_copyfdir_text").value = localStorage.getItem("copy_fdir"); 
     document.getElementById("ffiles_past_submit").click(); 
 }
+
+//------------------------------------------------------------------------
