@@ -6,8 +6,9 @@ var common = {
 	editor_nlines_lvl1: 2,
 	fontsize: 0.8,
 	time_delay: 10,
+	welcome: 'do',
 	
-	cookie_number: 6,
+	cookie_number: 7,
 	browser: "",
 	cookie_suffix: "_",
 	name: "common",
@@ -15,6 +16,7 @@ var common = {
 	utter_text: '',
 	utter_stop: 0,
 	utter_onend: 0,
+	repeat_text: '',
 	
 	symbol_ltag: '<abbr>',
 	symbol_rtag: '</abbr>',
@@ -42,7 +44,7 @@ var common = {
 				if (v.indexOf('.')==-1) { v=parseInt(v); }
 				else { v=parseFloat(v); }   
 			}         
-			this[keys[i]] = v;         
+			this[keys[i]] = v;                                           //console.log(keys[i]+' | '+v);
 		}
 	},
 	style: {}	
@@ -55,6 +57,8 @@ common.style = {
     dy: 16.5, xy_ratio: 1.1,
     textheight_zoom: 78,
     textheight: 97,
+    b_width: 12, 
+    b_height: 17,
     
     get_content_width: function(){                                       consolelog_func('brown');
 		var wratio = window.innerWidth/window.innerHeight;
@@ -62,10 +66,6 @@ common.style = {
 		var dx = this.xy_ratio*this.dy;
 		var content_width = (bright - 2*dx -this.xspace-1*wratio);
 		return(content_width);
-	},
-    get_yspace: function(){                                              consolelog_func('brown');
-		var yspace = (this.bbot-this.btop-(this.yn)*this.dy ) / (this.yn-1); 
-	    return(yspace);
 	},
     buttonpos: function(i, class_n){                                     consolelog_func('brown');
 		var wratio = window.innerWidth/window.innerHeight;
@@ -75,13 +75,45 @@ common.style = {
 	    var n_x = (i-i%this.yn)/this.yn;
 	    
 	    var dx = this.dy*1.1;
-	    var yspace = this.get_yspace();                                 
+	    var yspace = (this.bbot-this.btop-(this.yn)*this.dy ) / (this.yn-1); 
 	    var y = this.btop + (i%this.yn)*(yspace+this.dy*1);
 	    var x = bright - (this.xn-n_x)*dx - (this.xn-n_x-1)*this.xspace; 
 	    if ((i-i%this.yn)/this.yn==this.xn-1){ dx = dx*this.dx_side; }    
 	    var style = 'left:'+x/wratio+'%;top:'+y+'%;width:'+dx/wratio+'%;height:'+this.dy+'%; border-bottom-width:'+this.dy*0.13+'%;';
 	    return('class="'+class_name+'" style="'+style+'"'); 
 	},
+	
+	buttonpos_menu: function(i, class_n, x_dim, y_dim, shift_n, shift_nleft){  consolelog_func('brown'); 
+		if (class_n===undefined) {class_n=0;}
+		var class_arr = ["buttons", "buttons_text", "text_zoom_box", "buttons disabled"];
+		var class_name = class_arr[class_n];
+		
+		if (shift_nleft===undefined) {shift_nleft=0; shift_n=0;}
+		if (x_dim===undefined) {x_dim=4; y_dim=2;}
+		var b_width = 12; var b_height = 17;
+		var b_width = this.b_width; var b_height = this.b_height;
+		var b_left = 16;  var b_right = 84; 
+		var b_top = 25; var b_bot = 75;
+		if (y_dim===3) { b_left=15; b_right=85; b_top=17; b_bot=83; }
+		if (y_dim===5) { b_left=15; b_right=85; b_top=14; b_bot=86; }
+		var b_sspace = 1;
+		var nx = i%(x_dim); var ny = (i-i%(x_dim))/x_dim;
+		
+		var class_arr = ["buttons"]
+		
+		var b_xspace = (b_right-b_left-b_width*x_dim - b_sspace*shift_n)/(x_dim-1-shift_n);
+		var x = b_left + b_width*nx + b_xspace*(nx-shift_nleft) + b_sspace*shift_nleft;
+		var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim-1);
+		var y = b_top + (b_yspace+b_height)*ny;
+		//if (class_n===1) { x += b_xspace-1; }
+		//if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
+		if (class_n===2) { b_width = 2*b_width+b_xspace; }
+		var style = 'left:'+x+'%; top:'+y+'%;'+'width:'+b_width+'%; height:'+b_height+'%;';  
+		if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
+		if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
+		return('class="'+class_name+'" style="'+style+'"');
+	},
+	
 	resize: function(){                                                  consolelog_func('brown');
 		var wratio = window.innerWidth/window.innerHeight;
 		var content_width = this.get_content_width();
@@ -110,6 +142,7 @@ function handler(e){                                                     console
 	}
 }
 
+
 var readonlydir = ['/books_txt/', '/books_pdf/', '/textbooks/', '/encyclopedia/'];
 var pdfdir = ['/books_pdf/', '/textbooks/', '/encyclopedia/'];
 
@@ -120,68 +153,31 @@ var login_messages_ru = ['Указанное имя не существует.',
 var newlogin_messages_en = ['The new user is added successfully.', 'The name is busy.', ''];
 var newlogin_messages_ru = ['Новый аккаунт успешно создан.', 'Невозможно создать новый аккаунт. Указанное имя занято.', ''];
 
-var symbol_prev =        '<strong style="font-size:250%;line-height:80%;">&#8249;</strong>';
-var symbol_prev_editor = '<strong style="font-size:280%;line-height:30%;">&#8249;</strong>';
-var symbol_next =        '<strong style="font-size:250%;line-height:80%">&#8250;</strong>';
-var symbol_next_editor = '<strong style="font-size:280%;line-height:30%">&#8250;</strong>';
-var symbol_enter =       '<strong style="font-size:200%;line-height:105%">&#10004;</strong>';
-var symbol_delete =      '<strong style="font-size:200%;line-height:105%;">&#10007;</strong>';
-var symbol_delete_editor = '<strong style="font-size:180%;line-height:106%;">&#10007;</strong>';
-var symbol_cut =         '<strong style="font-size:200%;">&#9985;</strong>';
-var symbol_readall =     '<strong style="font-size:100%;line-height:115%;">&#9776;</strong>';
-var symbol_play =        '<strong style="font-size:110%;line-height:115%;"> &#8883;</strong>';
-var symbol_pause =       '<strong style="font-size:120%;line-height:115%;letter-spacing:-20px;">&#9595;&#9595;</strong>';
-var symbol_speed =        '<strong style="font-size:120%;line-height:115%;">&#9837;</strong>';
-var symbol_login =        '<strong style="font-size:200%;line-height:100%;">login</strong>';
-var symbol_upload =       '<strong style="font-size:180%;line-height:115%;">&#8679;</strong>';
-var symbol_mail =         '<strong style="font-size:130%;line-height:115%;">&#9993;</strong>';
-var symbol_mail =         '<strong style="font-size:90%;line-height:150%;">&#128386;</strong>';
-var symbol_newmail =      '<strong style="font-size:130%;">+</strong>';
-var symbol_nextpage =   '<strong style="font-size:150%;opacity:0.8;line-height:70%">&#10150;</strong>';
-//var symbol_nextpage =   '<strong style="font-size:150%;opacity:0.8;line-height:70%">+</strong>';
-var symbol_navigate =   '<strong style="font-size:300%;line-height:40%;">&#8249;&#8250;</strong>';
-var symbol_left  =      '<strong style="font-size:150%;line-height:50%;">&#9668;</strong>';
-var symbol_right =      '<strong style="font-size:150%;line-height:50%;">&#9658;</strong>';
-var symbol_up =         '<strong style="font-size:150%;line-height:80%;">&#9650;</strong>';
-var symbol_down =       '<strong style="font-size:150%;line-height:55%;">&#9660;</strong>';
-var symbol_leftword  =      '<strong style="font-size:115%;line-height:70%;">&#9665;</strong>';
-var symbol_rightword =      '<strong style="font-size:115%;line-height:70%;">&#9655;</strong>';
-var symbol_mute  =      '<strong style="font-size:150%;line-height:120%;">&#128263;</strong>';
-var symbol_sound =      '<strong style="font-size:150%;line-height:120%;">&#128265;</strong>';
-var symbol_sound_sub =  '<sub><strong style="font-size:90%;"> &#128265;</strong></sub>';
-var symbol_sound_sub2 = '<sub><strong style="font-size:90%;"> &#128265;auto</strong></sub>';
-
-var b_alpha = 0.9;
-var symbol_sound =       '<span style="font-size:9vmin;opacity:'+b_alpha+';">&#128265;</span>';
-var symbol_delete_editor='<span style="font-size:10vmin;opacity:'+b_alpha+';position:relative;top:0.6vmin;">&#10007;</span>';
-var symbol_enter =       '<span style="font-size:12vmin;opacity:'+b_alpha+';position:relative;top:0.8vmin;">&#10004;</span>';
-var symbol_play =        '<span style="font-size:8.7vmin;opacity:'+b_alpha+';">&#9199;</span>';
-//var symbol_play =        '<strong style="font-size:110%;opacity:'+b_alpha+';"> &#10704;</strong>';
-var symbol_pause =       '<span style="font-size:8.7vmin;opacity:'+b_alpha+';">&#9208;</span>';
-var symbol_prev =        '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9204;</span>';
-var symbol_next =        '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9205;</span>';
-var symbol_up =          '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9206;</span>';
-var symbol_down =        '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9207;</span>';
-var symbol_leftword =    '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9194;</span>';
-var symbol_rightword =   '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9193;</span>';
-var symbol_readall =     '<span style="font-size:12vmin;opacity:'+b_alpha+';">&#119218;</span>';
-var symbol_readall =     '<span style="font-size:12vmin;opacity:'+b_alpha+';">&#8967;</span>';
-var symbol_readall =     ' read all ';
-var symbol_upload =     ' up- load ';
-var symbol_ctrlz =     '<span style="font-size:12vmin;"> &#10554;</span>';
-//var symbol_ctrlz =     '<strong style="font-size:145%;line-height:130%;"> &#8630;</strong>';
-var symbol_ctrly =     '<span style="font-size:12vmin;"> &#10555;</span>';
-//var symbol_ctrly =     '<strong style="font-size:145%;line-height:130%;"> &#8631;</strong>';
-var symbol_updown =    '<span style="font-size:9.5vmin;opacity:'+b_alpha+';">&#9206;<br>&#9207;</span>';
-var symbol_left = symbol_prev;
-var symbol_right = symbol_next;
-var symbol_navigate = symbol_prev+symbol_next;
 var symbol_nextpage1 =   '<span>xyz</span>';
 var symbol_nextpage2 =   '123';
 var symbol_nextpage3 =   '^ / %';
 
+//var symbol_enter = '<svg class="ion_symbol"> <use xlink:href="#ion-left-right"></use> </svg>';
+var symbol_enter     = '<svg class="ion_symbol ion_symbol_smaller"> <use xlink:href="#ion-checkmark-round"></use> </svg>';
+var symbol_prev_next = '<svg class="ion_symbol"> <use xlink:href="#ion-left-right"></use> </svg>';
+var symbol_prev_prev = '<svg class="ion_symbol"> <use xlink:href="#ion-left-left"></use> </svg>';
+var symbol_next_next = '<svg class="ion_symbol"> <use xlink:href="#ion-right-right"></use> </svg>';
+var symbol_up_down   = '<svg class="ion_symbol"> <use xlink:href="#ion-up-down"></use> </svg>';
+var symbol_play      = '<svg class="ion_symbol" style="position:relative;" > <use xlink:href="#ion-play-pause"></use> </svg>';
+var symbol_pause     = '<svg class="ion_symbol"> <use xlink:href="#ion-pause"></use> </svg>';
+var symbol_next      = '<svg class="ion_symbol"> <use xlink:href="#ion-arrow-right-b"></use> </svg>';
+var symbol_prev      = '<svg class="ion_symbol"> <use xlink:href="#ion-arrow-left-b"></use> </svg>';
+var symbol_up        = '<svg class="ion_symbol"> <use xlink:href="#ion-arrow-up-b"></use> </svg>';
+var symbol_down      = '<svg class="ion_symbol"> <use xlink:href="#ion-arrow-down-b"></use> </svg>';
+var symbol_sound_on  = '<svg class="ion_symbol"> <use xlink:href="#ion-android-volume-up"></use> </svg>';
+var symbol_sound_off = '<svg class="ion_symbol"> <use xlink:href="#ion-android-volume-off"></use> </svg>';
+var symbol_delete    = '<svg class="ion_symbol"> <use xlink:href="#ion-backspace"></use> </svg>';
+var symbol_undo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-undo"></use> </svg>';
+var symbol_redo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
+
+
 var symbols_play_pause = [symbol_play, symbol_pause];
-var symbols_sound = [symbol_mute, symbol_sound];
+var symbols_sound = [symbol_sound_off, symbol_sound_on];
 
 
 function check_browser(){                                                consolelog_func(); 
@@ -216,12 +212,12 @@ function utter_paragraph(id, id_all, id_all_w, stop, onend){             console
         id_i = id_all[iii]; stop_s=0; onend_i=0;
         if (iii==0){ stop_s=stop; }
         if (iii==id_all.length-1){onend_i=onend;}
-        utter_sentence(id_i, id_all_w, stop_s, onend_i);
+        var txt = document.getElementById(id_i).innerText;
+        utter_sentence(txt, stop_s, onend_i);
     }    
 }    
-function utter_sentence(id, id_all, stop, onend, txt){                   consolelog_func(); 
-	if (txt===undefined){ txt=document.getElementById(id).innerText; }   
-    
+function utter_sentence(txt, stop, onend, repeat){                       consolelog_func();  
+    if (repeat!==undefined){ txt=common.repeat_text; }                   //console.log(txt);
     var proceed=true; 
     var ii=0, i=0, txt_i='', part_i='';
     while(proceed){
@@ -238,7 +234,7 @@ function utter_sentence(id, id_all, stop, onend, txt){                   console
             common.utter_text = txt;
             utter(part_i, stop_s, 1);
             ii++;
-        }else{
+        }else{                                                           
 			if (common.utter_text!=''){
 				stop=0;
 				onend = common.utter_onend;
@@ -252,14 +248,16 @@ function utter_sentence(id, id_all, stop, onend, txt){                   console
 function utter(txt, stop, onend, rate){                                  consolelog_func(); 
 	if (rate===undefined){rate=1;}
 	
-	if (editor.if_spell===1){
-		txt = editor.spell_arr[editor.i_spell];
-		editor.i_spell +=1;
-		if (editor.spell_arr.length===editor.i_spell){
-			onend=0;
-			editor.i_spell = 0;
-			editor.if_spell=0; 
-			editor.spell_arr=[];                                         
+	if (document.title=='reader'){
+		if (editor.if_spell===1){
+			txt = editor.spell_arr[editor.i_spell];
+			editor.i_spell +=1;
+			if (editor.spell_arr.length===editor.i_spell){
+				onend=0;
+				editor.i_spell = 0;
+				editor.if_spell=0; 
+				editor.spell_arr=[];                                         
+			}
 		}
 	}
 	txt.replace('.', ' ');                                               
@@ -291,7 +289,7 @@ function utter(txt, stop, onend, rate){                                  console
 			msg.onend=function(event){document.getElementById('playpause').innerHTML=symbols_play_pause[0]}; 
 		}else{ 
 			if (editor.if_spell===1){ msg.onend=function(event){editor_spell_i()}; }
-			else if (common.text_utter!='') { msg.onend=function(event){utter_sentence('', '', '', '', txt=common.utter_text)}; }
+			else if (common.text_utter!='') { msg.onend=function(event){utter_sentence(common.utter_text, '', '')}; }
 			else{ msg.onend=function(event){reader_scroll(1,0,1)}; }
 		}
 	}
@@ -720,13 +718,13 @@ function get_usrname(fname_i){                                           console
 //------------------------------------------------------------------------------
 function common_show_lang(lvl, parent){                                  consolelog_func(); 
     var inner_e = ''; var lang='';
-    inner_e+=     '<div id="en"               onclick="common_set_lang(this.id,'+true+');" '+common_buttonpos_menu(1,0)+'>en</div>';
-    inner_e+=     '<div id="ru"               onclick="common_set_lang(this.id,'+true+');" '+common_buttonpos_menu(2,0)+'>ru</div>';
-    inner_e+=     '<div id="en"               onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(5,0)+'>en</div>';
-    inner_e+=     '<div id="ru"               onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(6,0)+'>ru</div>';
-    inner_e+=     '<div id="auto"             onclick="common_set_lang(this.id,'+false+');" '+common_buttonpos_menu(7,0)+'>auto</div>';
-    inner_e+=     '<div id="common_langbase_zoom"  onclick="" '+common_buttonpos_menu(0,1)+'>'+common.langbase+'</div>';
-    inner_e+=     '<div id="common_lang_zoom"      onclick="" '+common_buttonpos_menu(4,1)+'>'+common.lang+'</div>';
+    inner_e+=     '<div id="en"               onclick="common_set_lang(this.id,'+true+');" '+common.style.buttonpos_menu(1,0)+'>en</div>';
+    inner_e+=     '<div id="ru"               onclick="common_set_lang(this.id,'+true+');" '+common.style.buttonpos_menu(2,0)+'>ru</div>';
+    inner_e+=     '<div id="en"               onclick="common_set_lang(this.id,'+false+');" '+common.style.buttonpos_menu(5,0)+'>en</div>';
+    inner_e+=     '<div id="ru"               onclick="common_set_lang(this.id,'+false+');" '+common.style.buttonpos_menu(6,0)+'>ru</div>';
+    inner_e+=     '<div id="auto"             onclick="common_set_lang(this.id,'+false+');" '+common.style.buttonpos_menu(7,0)+'>auto</div>';
+    inner_e+=     '<div id="common_langbase_zoom"  onclick="" '+common.style.buttonpos_menu(0,1)+'>'+common.langbase+'</div>';
+    inner_e+=     '<div id="common_lang_zoom"      onclick="" '+common.style.buttonpos_menu(4,1)+'>'+common.lang+'</div>';
     if (editor!=undefined) {parent = "editor_created_elements";}
     common_create_menu('common_lang',lvl, inner_e, parent);
 }
@@ -743,13 +741,13 @@ function common_set_lang(lang, is_base){                                 console
 
 function common_show_fontsize(obj){                                      consolelog_func(); 
     var inner_e = ''; 
-    inner_e+=     '<div id="0.8"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(2,0)+'> x 0.7 </div>';
-    inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(3,0)+'> x 1 </div>';
-    inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(7,0)+'> x 1.2 </div>';
-    inner_e+=     '<div id="1.45"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(6,0)+'> x 1.5 </div>';
-    inner_e+=     '<div id="1.9"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(5,0)+'> x 2 </div>';
-    inner_e+=     '<div id="2.4"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common_buttonpos_menu(4,0)+'> x 2.5 </div>';
-    inner_e+=     '<div class="text_zoom_box" '+common_buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom menu_zoom" style="font-size:'+obj.fontsize*3.5+'vh;">text example</div></div>';
+    inner_e+=     '<div id="0.8"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(2,0)+'> x 0.7 </div>';
+    inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(3,0)+'> x 1 </div>';
+    inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(7,0)+'> x 1.2 </div>';
+    inner_e+=     '<div id="1.45"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(6,0)+'> x 1.5 </div>';
+    inner_e+=     '<div id="1.9"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(5,0)+'> x 2 </div>';
+    inner_e+=     '<div id="2.4"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(4,0)+'> x 2.5 </div>';
+    inner_e+=     '<div class="text_zoom_box" '+common.style.buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom menu_zoom" style="font-size:'+obj.fontsize*3.5+'vh;">text example</div></div>';
     common_create_menu('common_fontsize',1, inner_e);
 }
 function common_set_fontsize(id, obj){                                   consolelog_func(); 
@@ -783,7 +781,7 @@ function common_create_menu(id, lvl, buttons_html, parent, ineditor){    console
     element.innerHTML=inner_e+buttons_html+'</div>';
     document.getElementById(parent).appendChild(element);
     return (element);
-    }
+}
 
 function menu_blur(ineditor){                                            consolelog_func(); 
 	if (ineditor===undefined) {ineditor=false;}
@@ -801,11 +799,11 @@ function menu_back(id, foggyoff, ineditor){                              console
 function common_show_clickdelay(){                                       consolelog_func(); 
 	var delay = common.time_delay/1000;
     var inner_e = ''; 
-    inner_e+= '<div id="common_clickdelay_zoom"  onclick="" ' +common_buttonpos_menu(0,1)+'>'+delay+' sec</div>';
-    inner_e+= '<div id="0.0"      class="buttons"  onclick="common_set_clickdelay(0.01);" '+common_buttonpos_menu(4,0)+'> 0.0 </div>';
-    inner_e+= '<div id="0.1"      class="buttons"  onclick="common_set_clickdelay(0.1);" '+common_buttonpos_menu(5,0)+'> 0.1 sec </div>';
-    inner_e+= '<div id="0.5"      class="buttons"  onclick="common_set_clickdelay(0.5);" '+common_buttonpos_menu(6,0)+'> 0.5 sec </div>';
-    inner_e+= '<div id="0.7"      class="buttons"  onclick="common_set_clickdelay(0.7);" '+common_buttonpos_menu(7,0)+'> 0.7 sec </div>';
+    inner_e+= '<div id="common_clickdelay_zoom"  onclick="" ' +common.style.buttonpos_menu(0,1)+'>'+delay+' sec</div>';
+    inner_e+= '<div id="0.0"      class="buttons"  onclick="common_set_clickdelay(0.01);" '+common.style.buttonpos_menu(4,0)+'> 0.0 </div>';
+    inner_e+= '<div id="0.1"      class="buttons"  onclick="common_set_clickdelay(0.1);" '+common.style.buttonpos_menu(5,0)+'> 0.1 sec </div>';
+    inner_e+= '<div id="0.5"      class="buttons"  onclick="common_set_clickdelay(0.5);" '+common.style.buttonpos_menu(6,0)+'> 0.5 sec </div>';
+    inner_e+= '<div id="0.7"      class="buttons"  onclick="common_set_clickdelay(0.7);" '+common.style.buttonpos_menu(7,0)+'> 0.7 sec </div>';
     common_create_menu('common_clickdelay',1, inner_e);
 }
 function common_set_clickdelay(delay){                                   consolelog_func(); 
@@ -815,8 +813,8 @@ function common_set_clickdelay(delay){                                   console
 
 //-- cookie ---------------------------------------------------------------------
 
-function cookie_get(cname) {                                             //consolelog_func(); 
-    var name = cname + "=";
+function cookie_get(cname) {                                             consolelog_func(); 
+    var name = cname + "=";                                              
     decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');  
     var i;  var c;
@@ -828,10 +826,10 @@ function cookie_get(cname) {                                             //conso
         if (c.indexOf(name) == 0) {
             return c.substring(name.length, c.length);
         }
-    }
+    }                                                                    
     return "";
 }
-function cookie_set(cname, cvalue, exdays){                              //consolelog_func(); 
+function cookie_set(cname, cvalue, exdays){                              consolelog_func(); 
 	if (exdays===undefined) {exdays=60;}
 	var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 3600 * 1000));
@@ -848,37 +846,6 @@ function cookie_delete_all() {                                           console
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 }
-
-//-- button position -----------------------------------------------------------------------------
-
-function common_buttonpos_menu(i, class_n, x_dim, y_dim, shift_n, shift_nleft){  consolelog_func(); 
-	if (class_n===undefined) {class_n=0;}
-	var class_arr = ["buttons", "buttons_text", "text_zoom_box", "buttons disabled"];
-	var class_name = class_arr[class_n];
-	
-	if (shift_nleft===undefined) {shift_nleft=0; shift_n=0;}
-	if (x_dim===undefined) {x_dim=4; y_dim=2;}
-	var b_width = 12; var b_height = 17;
-	var b_left = 16;  var b_right = 84; 
-	var b_top = 25; var b_bot = 75;
-	if (y_dim===3) { b_left=15; b_right=85; b_top=17; b_bot=83; }
-	var b_sspace = 1;
-	var nx = i%(x_dim); var ny = (i-i%(x_dim))/x_dim;
-	
-	var class_arr = ["buttons"]
-	
-	var b_xspace = (b_right-b_left-b_width*x_dim - b_sspace*shift_n)/(x_dim-1-shift_n);
-	var x = b_left + b_width*nx + b_xspace*(nx-shift_nleft) + b_sspace*shift_nleft;
-	var b_yspace = (b_bot-b_top-b_height*y_dim)/(y_dim-1);
-	var y = b_top + (b_yspace+b_height)*ny;
-	//if (class_n===1) { x += b_xspace-1; }
-	//if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
-	if (class_n===2) { b_width = 2*b_width+b_xspace; }
-	var style = 'left:'+x+'%; top:'+y+'%;'+'width:'+b_width+'%; height:'+b_height+'%;';  
-	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
-	if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
-	return('class="'+class_name+'" style="'+style+'"')
-	}
 
 //-- misc ----------------------------------------------------------------
 
@@ -935,5 +902,37 @@ function consolelog(text, lvl, color){
 	for (i=0; i<lvl; i+=1) { text = shift+text; }
 	console.log('%c'+text, 'color:'+color); 
 }
+
+
+function common_show_notification(text){                                 consolelog_func();
+	//if (parent==undefined) { parent='created_elements'; }
+	var parent='created_elements';
+	var id = "notification";
+	var b_top = 90-common.style.b_height;
+	menu_blur();
+	
+	inner_e = '<div id="'+id+'_back" onclick="menu_back(this.id,1,false);" class="back_area"> </div>';
+	inner_e+= '<div class="menu_area" >';
+	//inner_e+= '<div id="'+id+'_area"  class="menu_area" style="left:0;width:100vw;top:25vh;height:50vh;" >';
+	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:5vmin;line-height:8vh; color: rgba(0,0,0,0.55);">';
+	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;font-family:Ubuntu;">'+text+' &nbsp </div> </div> </div> </div>' ;
+                                       
+    inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > repeat </div>';
+    //inner_e += '<div onclick="" ' +common.style.buttonpos_menu(18,0,4,5)+' > zoom in </div>';
+    inner_e += '<div onclick="welcome_donot();" ' +common.style.buttonpos_menu(16,0,4,5)+" > Don't show again </div>";
+    //inner_e += '<div onclick="" ' +common.style.buttonpos_menu(16,0,4,5)+" >  </div>";
+                              
+    element = document.createElement('div');
+    element.setAttribute('id', id);
+    element.innerHTML=inner_e;
+    document.getElementById(parent).appendChild(element);
+    return (element);	
+}
+function welcome_donot(){                                                 consolelog_func();
+	common.welcome="donot";
+	cookie_set("welcome_", "donot");
+}
+
+
 
 

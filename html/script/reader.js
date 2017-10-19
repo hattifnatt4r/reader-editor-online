@@ -227,7 +227,10 @@ function reader_utter(stop_i, onend) {                                   console
             utter_paragraph(id, sentence_id_part, reader.word_id, stop_i, onend); 
              
         }
-        if (n_select_type==1){ utter_sentence(id, reader.word_id, stop_i, onend); }
+        if (n_select_type==1){ 
+			var text = document.getElementById(id).innerText;
+			utter_sentence(text, stop_i, onend); 
+		}
     }
 }
 function reader_fill_zoom(){                                             consolelog_func(); 
@@ -332,22 +335,22 @@ function reader_show_buttons(){                                          console
     
     //inner_e+= '<div id="reader_speed"     class="buttons" onclick=""  style="'+reader_button_position(4)+'">'+symbol_speed+'</div>' ;
     inner_e+= '<div id="playpause"   onclick="reader_play_pause();"    ' +common.style.buttonpos(6,4)+'>'+symbol_play+'</div>' ;
-    inner_e+= '<div id="reader_navigate"   onclick="reader_show_navigate()" ' +common.style.buttonpos(2,4)+'>'+symbol_updown+'</div>' ;
+    inner_e+= '<div id="reader_navigate"   onclick="reader_show_navigate()" ' +common.style.buttonpos(2,4)+'>'+symbol_up_down+'</div>' ;
     
     var subdir = reader.subdir; 
     if (subdir==='mail'){
 		inner_e+= '<div id="reader_mail" onclick="reader_show_mail();" '+common.style.buttonpos(4,2)+'>'+symbol_mail+'</div>' ;
 	}else{
-		inner_e+= '<div id="readall"     onclick="reader_scroll(-1,1,1);"  '+common.style.buttonpos(4,4)+'>'+symbol_readall+'</div>' ;
+		inner_e+= '<div id="readall"     onclick="reader_scroll(-1,1,1);"  '+common.style.buttonpos(4,4)+'>read all</div>' ;
 	}
     elem.innerHTML=inner_e;
 }
 function reader_show_navigate(){                                         consolelog_func(); 
 	elem = document.getElementById('nvigate_area');
 	inner_e = '';
-	inner_e+= '<div id="navigate_0" onclick="reader_navigate(0);" '+common_buttonpos_menu(4,0)+'> start </div>' ;
-	inner_e+= '<div id="navigate_1" onclick="reader_navigate(0.5);" '+common_buttonpos_menu(6,0)+'> mid </div>' ;
-	inner_e+= '<div id="navigate_2" onclick="reader_navigate(1);" '+common_buttonpos_menu(7,0)+'> end </div>' ;
+	inner_e+= '<div id="navigate_0" onclick="reader_navigate(0);" '+common.style.buttonpos_menu(4,0)+'> start </div>' ;
+	inner_e+= '<div id="navigate_1" onclick="reader_navigate(0.5);" '+common.style.buttonpos_menu(6,0)+'> mid </div>' ;
+	inner_e+= '<div id="navigate_2" onclick="reader_navigate(1);" '+common.style.buttonpos_menu(7,0)+'> end </div>' ;
     common_create_menu('reader_navigate', 0, inner_e);
 }
 function reader_navigate(order){                                         consolelog_func(); 
@@ -373,22 +376,22 @@ function reader_navigate(order){                                         console
 function reader_show_menu(){                                             consolelog_func(); 
     var n_zoom = reader.zoomtype; var obj='common';
     inner_e = '';
-    inner_e+= '<div id="reader_fontsize"        onclick="common_show_fontsize('+obj+');" '+    common_buttonpos_menu(0,0)+'> font size </div>';    
-    inner_e+= '<div id="reader_menu_sound"      onclick="" ' +common_buttonpos_menu(4,3)+'>sound</div>';
-    inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common_buttonpos_menu(1,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
-    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(2,0)+'>lang</div>';
-    inner_e+= '<div id="reader_go"              onclick="" '+common_buttonpos_menu(3,3)+'>go</div>' ;
-    inner_e+= '<div id="reader_menu_go-files"   onclick="goto_files();" '+common_buttonpos_menu(7,0)+'">go home</div>';
-    inner_e+= '<div id="reader_menu_zoomtype_text" '+common_buttonpos_menu(5,1,4,2,0,-1)+'>'+reader.zoomtype_arr[n_zoom]+'</div>' ;
-    inner_e+= '<div id="reader_menu_zoomtype"   onclick="reader_show_zoomtype();" '+common_buttonpos_menu(6,0)+'>zoom</div>' ;
+    inner_e+= '<div id="reader_fontsize"        onclick="common_show_fontsize('+obj+');" '+    common.style.buttonpos_menu(0,0)+'> font size </div>';    
+    inner_e+= '<div id="reader_menu_sound"      onclick="" ' +common.style.buttonpos_menu(4,3)+'>sound</div>';
+    inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common.style.buttonpos_menu(1,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
+    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common.style.buttonpos_menu(2,0)+'>lang</div>';
+    inner_e+= '<div id="reader_go"              onclick="" '+common.style.buttonpos_menu(3,3)+'>go</div>' ;
+    inner_e+= '<div id="reader_menu_go-files"   onclick="goto_files();" '+common.style.buttonpos_menu(7,0)+'">go home</div>';
+    inner_e+= '<div id="reader_menu_zoomtype_text" '+common.style.buttonpos_menu(5,1,4,2,0,-1)+'>'+reader.zoomtype_arr[n_zoom]+'</div>' ;
+    inner_e+= '<div id="reader_menu_zoomtype"   onclick="reader_show_zoomtype();" '+common.style.buttonpos_menu(6,0)+'>zoom</div>' ;
     common_create_menu('reader_menu', 0, inner_e);
 }
 function reader_show_zoomtype(){                                         consolelog_func(); 
     n_zoom = reader.zoomtype;
-    inner_e = '<div id="reader_zoomtype_zoombox" '+common_buttonpos_menu(0,2)+'><div id="reader_zoomtype_zoom" class="text_zoom menu_zoom">'+reader.zoomtype_arr[n_zoom]+'</div></div>';
-    inner_e+= '<div id="0"   onclick="reader_set_zoomtype(this.id)" '+common_buttonpos_menu(4,0)+'> no zoom </div>';
-    inner_e+= '<div id="1"   onclick="reader_set_zoomtype(this.id)" '+common_buttonpos_menu(5,0)+'> by word </div>';
-    inner_e+= '<div id="2"   onclick="reader_set_zoomtype(this.id)" '+common_buttonpos_menu(6,0)+'> by sentence </div>';
+    inner_e = '<div id="reader_zoomtype_zoombox" '+common.style.buttonpos_menu(0,2)+'><div id="reader_zoomtype_zoom" class="text_zoom menu_zoom">'+reader.zoomtype_arr[n_zoom]+'</div></div>';
+    inner_e+= '<div id="0"   onclick="reader_set_zoomtype(this.id)" '+common.style.buttonpos_menu(4,0)+'> no zoom </div>';
+    inner_e+= '<div id="1"   onclick="reader_set_zoomtype(this.id)" '+common.style.buttonpos_menu(5,0)+'> by word </div>';
+    inner_e+= '<div id="2"   onclick="reader_set_zoomtype(this.id)" '+common.style.buttonpos_menu(6,0)+'> by sentence </div>';
     common_create_menu('reader_zoomtype', 1, inner_e);
 }
 function is_inlist(list){                                                consolelog_func(); 
@@ -427,8 +430,8 @@ function reader_if_editable(){                                           console
 
 function reader_show_mail(){                                             consolelog_func(); 
     var inner_e = '';
-    inner_e += '<div id="reader_sendmail" onclick="reader.click_php(this.id);" '+common_buttonpos_menu(4,0)+'> send mail </div>';
-    inner_e += '<div id="reader_refresh"  onclick="reader_refresh();" '         +common_buttonpos_menu(6,0)+'> refresh </div>';
+    inner_e += '<div id="reader_sendmail" onclick="reader.click_php(this.id);" '+common.style.buttonpos_menu(4,0)+'> send mail </div>';
+    inner_e += '<div id="reader_refresh"  onclick="reader_refresh();" '         +common.style.buttonpos_menu(6,0)+'> refresh </div>';
     common_create_menu('reader_mail', 0, inner_e);
     
     var username = get_usrname(reader.fname);                          

@@ -140,9 +140,9 @@ editor.style = {
 		}
 	},
 	button_exit:   function(i) { return '<div id="editor_exit"    onclick="editor_exit();" '    +this.get_button(i) +'> exit </div>'; },
-	button_delete: function(i) { return '<div id="editor_delete"  onclick="editor_delete();" '  +this.get_button(i) +'>'+symbol_delete_editor+'</div>'; },
-	button_prev:   function(i) { return '<div id="editor_prev"    onclick="editor_scroll(0);" ' +this.get_button(i) +'>'+symbol_left+'</div>' },
-	button_next:   function(i) { return '<div id="editor_next"    onclick="editor_scroll(1);" ' +this.get_button(i) +'>'+symbol_right+'</div>' },
+	button_delete: function(i) { return '<div id="editor_delete"  onclick="editor_delete();" '  +this.get_button(i) +'>'+symbol_delete+'</div>'; },
+	button_prev:   function(i) { return '<div id="editor_prev"    onclick="editor_scroll(0);" ' +this.get_button(i) +'>'+symbol_prev+'</div>' },
+	button_next:   function(i) { return '<div id="editor_next"    onclick="editor_scroll(1);" ' +this.get_button(i) +'>'+symbol_next+'</div>' },
 	button_backto_start:   function(i)    { return '<div id="editor_backto_start"   onclick="editor_backto_start();" '        +this.get_button(i) +'> back </div>' },
 	button_backto_letters: function(i, s) { return '<div id="editor_backto_letters" onclick="editor_backto_letters('+s+');" ' +this.get_button(i) +'> back </div>' },
 		
@@ -216,7 +216,7 @@ function editor_show_start(){                                            console
     inner_e0+= '<div id="editor_letters_en" onclick="editor_show_symbols(4,0);" '+editor.style.get_button(9,1) +'> abc </div>';
     inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(5,0);" '+editor.style.get_button(10,1)+'> абв </div>';
     inner_e0+= '<div id="editor_letters_ru" onclick="editor_show_symbols(2,0);" '+editor.style.get_button(11,1)+'>'+symbol_nextpage3+'</div>';
-    inner_e0+= '<div id="editor_navigate"   onclick="editor_show_navigate(0);" ' +editor.style.get_button(5)   +'>'+symbol_navigate+'</div>';
+    inner_e0+= '<div id="editor_navigate"   onclick="editor_show_navigate(0);" ' +editor.style.get_button(5)   +'>'+symbol_prev_next+'</div>';
     inner_e0+= '<div id="editor_exit"       onclick="editor_exit();" '           +editor.style.get_button(6)  +'> exit </div>';
     inner_e0+= '<div id="editor_menu"       onclick="editor_show_menu();" '      +editor.style.get_button(2)   +'> menu </div>';
     inner_e0+= '<div id="editor_save"       onclick="editor_save();" '           +editor.style.get_button(8)   +'> save </div>';
@@ -233,20 +233,20 @@ function editor_show_start(){                                            console
 function editor_show_menu(){                                             consolelog_func(); 
     var inner_e = "";
     var parent = "editor_created_elements";
-    inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common_buttonpos_menu(2,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
-    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common_buttonpos_menu(3,0)+'> lang </div>';
-    inner_e+= '<div id="editor_fontsize"     onclick="editor_show_fontsize();" '+common_buttonpos_menu(5,0)+'> font size </div>';
-    inner_e+= '<div id="editor_sound"        onclick="" '+common_buttonpos_menu(0,3)+'> sound </div>';
-    inner_e+= '<div id="editor_read"         onclick="" '+common_buttonpos_menu(4,3)+'> read </div>';
-    inner_e+= '<div id="editor_sound_button" onclick="" '+common_buttonpos_menu(1,3)+'> sound </div>';
+    inner_e+= '<div id="common_lang_both_zoom"  onclick="" ' +common.style.buttonpos_menu(2,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
+    inner_e+= '<div id="common_lang"            onclick="common_show_lang(1);" '+common.style.buttonpos_menu(3,0)+'> lang </div>';
+    inner_e+= '<div id="editor_fontsize"     onclick="editor_show_fontsize();" '+common.style.buttonpos_menu(5,0)+'> font size </div>';
+    inner_e+= '<div id="editor_sound"        onclick="" '+common.style.buttonpos_menu(0,3)+'> sound </div>';
+    inner_e+= '<div id="editor_read"         onclick="" '+common.style.buttonpos_menu(4,3)+'> read </div>';
+    inner_e+= '<div id="editor_sound_button" onclick="" '+common.style.buttonpos_menu(1,3)+'> sound </div>';
     common_create_menu('editor_menu', 0, inner_e,'editor_created_elements', true);
 }
 function editor_show_fontsize(){                                         consolelog_func(); 
 	var inner_e = "";
-    inner_e += '<div id="5"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(4,0)+'> 5 lines </div>';
-    inner_e += '<div id="4"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(5,0)+'> 4 lines </div>';
-    inner_e += '<div id="3"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(6,0)+'> 3 lines </div>';
-    inner_e += '<div id="2"  onclick="editor_set_fontsize(this.id,0);"  '+common_buttonpos_menu(7,0)+'> 2 lines </div>';
+    inner_e += '<div id="5"  onclick="editor_set_fontsize(this.id,0);"  '+common.style.buttonpos_menu(4,0)+'> 5 lines </div>';
+    inner_e += '<div id="4"  onclick="editor_set_fontsize(this.id,0);"  '+common.style.buttonpos_menu(5,0)+'> 4 lines </div>';
+    inner_e += '<div id="3"  onclick="editor_set_fontsize(this.id,0);"  '+common.style.buttonpos_menu(6,0)+'> 3 lines </div>';
+    inner_e += '<div id="2"  onclick="editor_set_fontsize(this.id,0);"  '+common.style.buttonpos_menu(7,0)+'> 2 lines </div>';
     common_create_menu('editor_fontsize', 1, inner_e, 'editor_created_elements', true);
 }
     
@@ -314,14 +314,14 @@ function editor_show_navigate(lvl){                                      console
     inner_e+= editor.style.button_delete(6);
     inner_e+= editor.style.button_prev(10);
     inner_e+= editor.style.button_next(12);
-    inner_e+= '<div id="editor_prevword" onclick="editor_scrollword(0);" ' +editor.style.get_button(9) +'>' +symbol_leftword  +'</div>' ;
-	inner_e+= '<div id="editor_nextword" onclick="editor_scrollword(1);" ' +editor.style.get_button(13)+'>' +symbol_rightword +'</div>' ;
+    inner_e+= '<div id="editor_prevword" onclick="editor_scrollword(0);" ' +editor.style.get_button(9) +'>' +symbol_prev_prev  +'</div>' ;
+	inner_e+= '<div id="editor_nextword" onclick="editor_scrollword(1);" ' +editor.style.get_button(13)+'>' +symbol_next_next +'</div>' ;
     inner_e+= '<div id="editor_up"       onclick="editor_scrollvert(0);" ' +editor.style.get_button(4) +'>' +symbol_up        +'</div>' ;
 	inner_e+= '<div id="editor_down"     onclick="editor_scrollvert(1);" ' +editor.style.get_button(11) +'>' +symbol_down      +'</div>' ;
 	inner_e+= '<div id="editor_sound"    onclick="editor_sound();" '       +editor.style.get_button(2) +'>' +symbols_sound[editor.sound_navigator] +'</div>' ;
 	inner_e+= '<div id="editor_spell"    onclick="editor_spell();" '       +editor.style.get_button(8) +'> spell </div>' ;
-	inner_e+= '<div id="editor_ctrlz"    onclick="editor_ctrlz();"  '      +editor.style.get_button(0,3) +'>' +symbol_ctrlz +'</div>' ;
-	inner_e+= '<div id="editor_ctrly"    onclick="editor_ctrly();"  '      +editor.style.get_button(1,3) +'>' +symbol_ctrly +'</div>' ;
+	inner_e+= '<div id="editor_ctrlz"    onclick="editor_ctrlz();"  '      +editor.style.get_button(0,3) +'>' +symbol_undo +'</div>' ;
+	inner_e+= '<div id="editor_ctrly"    onclick="editor_ctrly();"  '      +editor.style.get_button(1,3) +'>' +symbol_redo +'</div>' ;
     inner_e+= '<div id="editor_show_letter" '+editor.style.get_button(5,2)+'>_</div>';
     if (lvl===0){ 
 		inner_e+= editor.style.button_backto_start(7);

@@ -152,6 +152,12 @@
 .editor{ background-color: rgba(0,0,0,0.3); background-color: rgba(76, 95, 103, 0.35); }
 .editor:hover{ background-color: rgba(0,0,0,0.5); background-color: rgba(76, 95, 103, 0.65); }
 
+.ion_symbol{
+height:55%; opacity: 0.5;
+}
+.ion_symbol_larger{
+height:50%; 
+}
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
