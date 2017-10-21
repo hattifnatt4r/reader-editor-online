@@ -1,11 +1,21 @@
 <?php
-if ($_SESSION["session"]!==10){
+echo $_SESSION["session"];
+echo '| id_prev: '.$_SESSION["session_id_prev"].' | ';
+echo session_id();
+if ($_SESSION["session_id_prev"] !== session_id()){
+	echo ' NEW SESSION ';
+	$_SESSION['usr_dir'] = "users/guests/".session_id();
+	recurse_copy('users/common_backup',$_SESSION['usr_dir']);
+    chmod($_SESSION['usr_dir'], 0777);
+//}
+//if ($_SESSION["session"]!==10){
 	 //echo 'SESSION_START';
 	//getUserData();
-    $_SESSION["session"] = 10;
+    //$_SESSION["session"] = 10;
     
-    $_SESSION['usr_dir'] = "users/common";
-    $_SESSION['usr_home'] = "users/common";
+    //$_SESSION['usr_dir'] = "users/common";
+    //$_SESSION['usr_home'] = "users/common";
+    $_SESSION['usr_home'] = "users/guests/".session_id();
     $_SESSION["file_counter"] = 0;
     $_SESSION["word_i"] = 'HHEELLOO';
     $_SESSION['nentry'] = 0;
@@ -17,13 +27,86 @@ if ($_SESSION["session"]!==10){
     $_SESSION["files_arr"] = array();
     
     $_SESSION["alert"] = "";
+    $_SESSION["session_id_prev"] = session_id();
     //$_SESSION["submit_any"] = "ok";
 }
 //run_files();
-//echo 'USR-DIR: '.$_SESSION['usr_dir'];
-if (!is_writable("users/")) { echo "'users/' not writable";  }
-if (!is_writable("users_mail/")) { echo "'users_mail/' not writable";  }
-if (!is_writable("data/login.json")) { echo "'data/login.json' not writable";  }
+//if (!is_writable("users/guests/")) { echo " | 'users/guests/' not writable";  }
+if (!is_writable("users/")) { echo " | 'users/' not writable";  }
+if (!is_writable("users_mail/")) { echo " | 'users_mail/' not writable";  }
+if (!is_writable("data/login.json")) { echo " | 'data/login.json' not writable";  }
+
+if (strpos($_SESSION['usr_home'], "users/guests/")!=false ){
+	$fname = $_SESSION['usr_home']."/php_session.txt";
+	$myfile = fopen($fname, "r") or die("Unable to open file!");
+	$text = fread($myfile, filesize($fname));
+	fclose($myfile);
+	$myfile = fopen($fname , "w") or die("Unable to open file!");
+	$time = time();
+	fwrite($myfile, time());
+	echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
+	//echo ' | '.$time-(int)$text;
+	fclose($myfile);
+}
+
+if(isset($_POST["ffiles_test_submit"])) {
+	echo ' \n Clean_tmp';
+	$dir = "users/guests";
+	$delay = 2;
+	
+	$files1 = scandir($dir);
+	$files2 = scandir($dir, 1);
+	
+	//print_r($files1);
+	//print_r($files2);
+	
+	if ($handle = opendir($dir)) {
+
+		echo "SCAN";
+		
+		//while (false !== ($entry = readdir($handle))) {
+	    //    echo "$entry\n";
+	    //}
+	
+		
+		foreach(scandir($dir) as $entry) {
+			echo '<br>'.$entry;
+			if ($entry!=".." && $entry!="."){
+				$time = time();
+				$fname = $dir.'/'.$entry.'/php_session.txt';
+				$myfile = fopen($fname, "r") or die("Unable to open file!");
+				$text = fread($myfile, filesize($fname));
+				echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
+				
+				if ($time-(int)$text > $delay) { 
+					rmdir($dir.'/'.$entry);
+					//echo rmdir($dir.'/'.$entry.'/');
+					delete_files($dir.'/'.$entry.'/');
+					//echo $entry.' is DELETED';
+				} 
+			}
+		}
+		
+		closedir($handle);
+	}
+	
+	//echo opendir($dir);
+}
+
+function delete_files($target) {
+    if(is_dir($target)){
+        $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
+        
+        foreach( $files as $file )
+        {
+            delete_files( $file );      
+        }
+      
+        rmdir( $target );
+    } elseif(is_file($target)) {
+        unlink( $target );  
+    }
+}
 
 //-- files ------------------------------------------------------------------
 function run_files(){
@@ -54,11 +137,13 @@ function make_files_array(){
 	if ($handle = opendir($_SESSION['usr_dir'])) {
 	    $i = 1; 
 	    foreach(scandir($_SESSION['usr_dir']) as $entry) {
-	        if ($entry!=".." && $entry!=".") { 
+	        if ($entry!=".." && $entry!="." && $entry!="php_session.txt" ) { 
 	            $i = $i+1; 
 	            $filename = $_SESSION['usr_dir'].'/'.$entry;
-	            if (is_dir($filename)){array_push($arr_dir,$entry);} else{array_push($arr_file,$entry);}    
-	            } 
+	            if (is_dir($filename)){
+					array_push($arr_dir,$entry);
+				} else{array_push($arr_file,$entry);}    
+	        } 
 	    }
 	    $_SESSION['nentry'] = $i-1;
 	    closedir($handle);
@@ -321,27 +406,21 @@ if (isset($_POST['ffiles_enter_submit'])) {
 //-- login ------------------------------------------------------------------
 
 if (isset($_POST['ffiles_userlogin_submit'])) {
-    //$name = $_POST['loginname_text_name'];
-    //$pass = $_POST['loginpass_text_name'];
     $name = $_POST['ffiles_username'];
     $pass = $_POST['ffiles_userpass'];
     $value = $_POST['ffiles_userlogin_submit'];
-    //echo '<div style="position:fixed;top:0.5%;left:0%;z-order:1">'.'LOGIN '.$value.' name: '.$name.' pass: '.$pass.'</div>';
+    
+    if ($name=="guest"){ $name = "guests/".session_id(); }
+    
     if ($value=='new'){
-        //echo '<div style="position:fixed;top:0.5%;left:1%;z-order:1">'.'NEW LOGIN'.'</div>';
         $fname = "data/login.json";
         $myfile = fopen($fname, "r") or die("Unable to open $fname !");
         $json = fread($myfile, filesize($fname));
         fclose($myfile);
-        //echo '<div style="position:fixed;top:0.5%;left:10%;z-order:1">'.$json.'</div>';
         $text = substr($json,0,strrpos($json, "]")).  ', {"name":"'.$name.'","password":"'.$pass.'"}' .']}';
-        //echo '<div style="position:fixed;top:2.5%;left:10%;z-order:0;width:70%;">'.$text.'</div>';
         $myfile = fopen($fname, "w") or die("Unable to open $fname !");
         fwrite($myfile, $text);
         fclose($myfile);
-        //chmod("users", 0777);
-        //if (is_writable("users/")){ echo "is writable"; }
-		//else { echo "is not writable";  }
         recurse_copy('users/common_backup',"users/".$name);
         chmod("users/".$name, 0777);
     }

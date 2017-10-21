@@ -118,9 +118,9 @@ function files_run(){                                                    console
 	}
 	   
 	console.log('welcome: '+common.welcome);
-	//if (common.welcome=='do'){ 
-	//	files_welcome();
-	//}                                                                                                  
+	if (common.welcome=='do'){ 
+		files_welcome();
+	}                                                                                                  
 	var bodyStyles = window.getComputedStyle(document.body);
 	
 	files_show_buttons();                                                
@@ -154,13 +154,14 @@ function files_show_buttons(){                                           console
     inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5,2)+'>up- load</div>' ;
     inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(3,4)+'>'+symbol_prev+'</div>' ;
     inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(7,4)+'>'+symbol_next+'</div>' ;
+    inner_e+= '<div id="files_test"    onclick="clean_tmp();" '            +common.style.buttonpos(6,4)+'>clean_tmp</div>' ;
     //inner_e+= '<div id="files_python_button" class="buttons" onclick="files_click(10);"   style="'+reader_button_position(6)+'">py</div>';
     elem.innerHTML=inner_e;
     //if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload'); }
-    if (files.subdir=='mail'){                                                 
+    if (files.subdir=='mail'){                                           console.log(files.subdir);                        
         id = 'fileid_'+files.nentry;                                    
         document.getElementById(id).onclick=function() { files_show_addcontact(); } 
-        document.getElementById(id).innerHTML=symbol_newmail;
+        document.getElementById(id).innerHTML = "+";
         }
 }
 function files_show_menu(){                                              consolelog_func();
@@ -343,17 +344,21 @@ function files_login(xml){                                               console
 function files_login_new(xml){                                           consolelog_func();
     var name = document.getElementById('files_loginname_edit').innerHTML;
     var pass = document.getElementById('files_loginpass_edit').innerHTML;   
-    document.getElementById('ffiles_username').value = name;
-    document.getElementById('ffiles_userpass').value = pass; 
-    document.getElementById('ffiles_userlogin_submit').value = "new";    
-    files.username = name;
-    user_access=0;
-    data =  JSON.parse(xml.responseText); 
-    users = data.users;
-    for (i=0; i<users.length; i++){
-        name_i = users[i].name;                                          
-        if (name_i==name){ user_access=1; }
-    }                                                                    
+	
+	user_access=0;
+	if (name!='guest'){
+	    document.getElementById('ffiles_username').value = name;
+	    document.getElementById('ffiles_userpass').value = pass; 
+	    document.getElementById('ffiles_userlogin_submit').value = "new";    
+	    files.username = name;
+	    data =  JSON.parse(xml.responseText); 
+	    users = data.users;
+	    for (i=0; i<users.length; i++){
+	        name_i = users[i].name;                                          
+	        if (name_i==name){ user_access=1; }
+	    }                       
+	}          
+	                                   
     if (user_access==0){ 
 		files.iter = 0;
 		document.getElementById("ffiles_userlogin_submit").click();
@@ -372,7 +377,7 @@ function loadDoc(url1, login_function) {                                 console
 }
 
 function files_logout(){                                                 consolelog_func();
-    document.getElementById('ffiles_username').value = 'common';
+    document.getElementById('ffiles_username').value = 'guest';
     document.getElementById('ffiles_userpass').value = '';     
     files.iter = 0;    
     document.getElementById("ffiles_userlogin_submit").click();
@@ -440,4 +445,9 @@ function files_welcome(){
 	common_show_notification(text);
 	common.repeat_text = replace_all(text,'<br>','');
 	//utter_sentence(0, 1, 0, 1);
+}
+
+function clean_tmp(){
+	//window.location.href = '/script/cron.php';
+	document.getElementById('ffiles_test_submit').click(); 
 }

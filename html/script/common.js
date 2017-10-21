@@ -67,7 +67,7 @@ common.style = {
 		var content_width = (bright - 2*dx -this.xspace-1*wratio);
 		return(content_width);
 	},
-    buttonpos: function(i, class_n){                                     consolelog_func('brown');
+    buttonpos: function(i, class_n){                                     //consolelog_func('brown');
 		var wratio = window.innerWidth/window.innerHeight;
 		if (class_n===undefined) {class_n=0;}
 		var class_name = this.class_arr[class_n];
@@ -174,6 +174,7 @@ var symbol_sound_off = '<svg class="ion_symbol"> <use xlink:href="#ion-android-v
 var symbol_delete    = '<svg class="ion_symbol"> <use xlink:href="#ion-backspace"></use> </svg>';
 var symbol_undo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-undo"></use> </svg>';
 var symbol_redo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
+var symbol_newmail   = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
 
 
 var symbols_play_pause = [symbol_play, symbol_pause];
@@ -402,42 +403,7 @@ function find_indexof(text_origin, arr, i_start, i_end){                 console
 	else {res = res+i_start; }
 	return([res, symb]);
 }
-function find_indexof_all(text_origin, arr, i_start, i_end){             consolelog_func(color="green", noargs=true); 
-	if ( i_start === undefined ) { i_start = 0; }                        
-	if ( i_end === undefined ) { i_end = text_origin.length; }           
-	var txt = text_origin.substring(i_start, i_end);                     
-	var i=0, j=0, res=txt.length, symb='', success=0;
-	var res_arr = [];
-	var proceed = true; var k=0;                                         
-	
-	while (proceed){
-		success = 0; res = txt.length;
-		for (i=0; i<arr.length; i++) {
-			j = txt.indexOf(arr[i], k);
-			if ( j!=-1 && j<res ) { 
-				res=j; symb=arr[i]; success=1;      
-			}
-		}                                                                    
-		if ( success == 0 ) { 
-			res = -1; 
-			proceed = false;
-		}else { 
-			if ( symb == "<" ) { 
-				k = txt.indexOf(">", k+1)+1; 
-				
-				var proceed2 = 1; 
-				while (proceed2==1){
-					if ( k>=txt.length-1 || txt[k]!=' ') { proceed2=0; }
-					else { k+=1; } 
-				}         
-			}
-			else{ k = res + symb.length; }
-			res_arr.push([res,symb]);
-		}
-	}
-	for (i=0; i<res_arr.length; i+=1) { res_arr[i][0] += i_start; }
-	return(res_arr);
-}
+
 function common_textto_read(text){                                       consolelog_func(); 
 	text = text.replace('<br>', ' new line ');
 	text = text.replace('<abbr>', '');
@@ -534,8 +500,8 @@ function reader_parse_txt(text_origin, n_p){                             console
     var proceed = 1, i = 0, i_end=0, j = [], arr = [], tag_arr=[]; 
     var tag_i = "";
     
+    //-- split text by words ---------------------------------------------
     if (txt[0]==' '){
-		//i = find_spaceend(txt,0);		
 		var proceed2 = 1; 
 		while (proceed2==1){                                             // find first not-space symbol
 			if ( i>=txt.length-1 || txt[i]!=' ') { proceed2=0; }
@@ -543,6 +509,7 @@ function reader_parse_txt(text_origin, n_p){                             console
 		}  
 		arr.push( txt.substring(0,i) );
 	}
+	
 	var arr_endpositions = find_indexof_all(txt, endsymbol );  
 	var k=0;        
 	var i_end_test=0;
@@ -558,7 +525,7 @@ function reader_parse_txt(text_origin, n_p){                             console
 		} else if ( j[0]==i && j[1]=="<" ) {                             // 
 			i_end = txt.indexOf(">", i)+1;           
 			tag_i = txt.substring(i+1, txt.indexOf(" ",i));
-			if ( emptytag.indexOf(tag_i)!=-1 ) { tag_arr.push(arr.length); }    // remember index if word with non-empty tag, to preserve html structure
+			if ( emptytag.indexOf(tag_i)!=-1 ) { tag_arr.push(arr.length); }    // remember index if word has non-empty tag, to preserve html structure
 		} else if ( j[0]==i ){                                           //
 			i_end = j[0]+j[1].length;
 			a=0;  
@@ -577,11 +544,11 @@ function reader_parse_txt(text_origin, n_p){                             console
         if (i!=i_end){
 			arr.push( txt.substring(i,i_end) );     
 		}                         
-        //if (j[1]=='<br>'){ console.log( k+" ["+j+"], word: "+txt.substring(i,i_end).substring(0,300) ); }
         i = i_end;
     }                                                                    
     if (arr.length===0){ arr=[" "]; }                                    
     
+    //-- compose text with rpoper tags -----------------------------------
     var endsentence = ['...', '!!!', '???', '.', '!', '?'];
     var p0=n_p.toString();  
     var text = '';
@@ -648,9 +615,44 @@ function reader_parse_txt(text_origin, n_p){                             console
     }
     return ([text, arr_w, arr_s, arr_p, i_p]);
 
-
 }
 
+function find_indexof_all(text_origin, arr, i_start, i_end){             consolelog_func(color="green", noargs=true); 
+	if ( i_start === undefined ) { i_start = 0; }                        
+	if ( i_end === undefined ) { i_end = text_origin.length; }           
+	var txt = text_origin.substring(i_start, i_end);                     
+	var i=0, j=0, res=txt.length, symb='', success=0;
+	var res_arr = [];
+	var proceed = true; var k=0;                                         
+	
+	while (proceed){
+		success = 0; res = txt.length;
+		for (i=0; i<arr.length; i++) {
+			j = txt.indexOf(arr[i], k);
+			if ( j!=-1 && j<res ) { 
+				res=j; symb=arr[i]; success=1;      
+			}
+		}                                                                    
+		if ( success == 0 ) { 
+			res = -1; 
+			proceed = false;
+		}else { 
+			if ( symb == "<" ) { 
+				k = txt.indexOf(">", k+1)+1; 
+				
+				var proceed2 = 1; 
+				while (proceed2==1){
+					if ( k>=txt.length-1 || txt[k]!=' ') { proceed2=0; }
+					else { k+=1; } 
+				}         
+			}
+			else{ k = res + symb.length; }
+			res_arr.push([res,symb]);
+		}
+	}
+	for (i=0; i<res_arr.length; i+=1) { res_arr[i][0] += i_start; }
+	return(res_arr);
+}
 
 function text_from_file(text){                                           consolelog_func(); 
     var page_text = read_file('books_test/test_book_3.txt'); 
@@ -697,11 +699,20 @@ function loadDocXML(url1, login_function) {                              console
 }
 
 function get_subdir(name){                                               consolelog_func(); 
-    var i1 = name.indexOf('/',name.indexOf('/')+1);
+	var i1 = name.indexOf('/');
     var i2 = name.indexOf('/',i1+1);
     var dir = "";
     if (i2==-1) {dir='';}
-    else{ dir=name.substr(i1+1,i2-i1-1); }
+    else{ dir=name.substr(i1+1,i2-i1-1); }                               //console.log(dir);     
+    
+    i1 = name.indexOf('/',name.indexOf('/')+1);
+    i2 = name.indexOf('/',i1+1);
+    if (dir==="guests"){
+		i1 = i2*1;
+		i2 = name.indexOf('/',i1+1);
+	}
+    if (i2==-1) {dir='';}
+    else{ dir=name.substr(i1+1,i2-i1-1); }                               //console.log(dir);     
     return(dir);
 }
 function get_usrname(fname_i){                                           consolelog_func(); 
@@ -709,7 +720,7 @@ function get_usrname(fname_i){                                           console
     var i2 = fname_i.indexOf('/',i1+1);
     var dir = "";
     if (i2==-1) {dir='';}
-    else{ dir=fname_i.substr(i1+1,i2-i1-1); }
+    else{ dir=fname_i.substr(i1+1,i2-i1-1); }                            console.log(dir);     
     return(dir);
 }
 
@@ -813,7 +824,7 @@ function common_set_clickdelay(delay){                                   console
 
 //-- cookie ---------------------------------------------------------------------
 
-function cookie_get(cname) {                                             consolelog_func(); 
+function cookie_get(cname) {                                             //consolelog_func(); 
     var name = cname + "=";                                              
     decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');  
@@ -829,7 +840,7 @@ function cookie_get(cname) {                                             console
     }                                                                    
     return "";
 }
-function cookie_set(cname, cvalue, exdays){                              consolelog_func(); 
+function cookie_set(cname, cvalue, exdays){                              //consolelog_func(); 
 	if (exdays===undefined) {exdays=60;}
 	var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 3600 * 1000));
@@ -917,7 +928,7 @@ function common_show_notification(text){                                 console
 	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:5vmin;line-height:8vh; color: rgba(0,0,0,0.55);">';
 	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;font-family:Ubuntu;">'+text+' &nbsp </div> </div> </div> </div>' ;
                                        
-    inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > repeat </div>';
+    inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > utter </div>';
     //inner_e += '<div onclick="" ' +common.style.buttonpos_menu(18,0,4,5)+' > zoom in </div>';
     inner_e += '<div onclick="welcome_donot();" ' +common.style.buttonpos_menu(16,0,4,5)+" > Don't show again </div>";
     //inner_e += '<div onclick="" ' +common.style.buttonpos_menu(16,0,4,5)+" >  </div>";

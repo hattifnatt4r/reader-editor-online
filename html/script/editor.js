@@ -196,7 +196,7 @@ function editor_exit(){                                                  console
 		if (elem) { elem.innerHTML = editor.text_raw; }               
 		elem = document.getElementById("ffiles_edit_text" );
 		if (elem) { elem.value = editor.text_raw; }                      
-		filesys.editor_text = "";                                        
+		files.editor_text = "";                                        
 	}  
 }function editor_save(){                                                 consolelog_func("darkblue"); 
     if (editor.parent=='reader'){

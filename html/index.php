@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php ini_set('session.gc_maxlifetime', 10); session_start(); ?>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -144,6 +144,9 @@
 	<input id="ffiles_copyfname_text"  type="text"   name="ffiles_copyfname_text"  value="" >
 	<input id="ffiles_copyfdir_text"   type="text"   name="ffiles_copyfdir_text"   value="" >
 	<input id="ffiles_past_submit"     type="submit" name="ffiles_past_submit"     value="empty" >
+</form>	
+<form action="" method="post">  
+	<input id="ffiles_test_submit"     type="submit" name="ffiles_test_submit"     value="empty" >
 </form>	
 </div>
 
