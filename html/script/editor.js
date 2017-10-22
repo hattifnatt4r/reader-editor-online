@@ -170,8 +170,37 @@ function editor_run(parent, text_raw, destination, iter){                console
     
 	var elem=create_element('editor_text_box','text_scroll_box', 'editor_area'); 
 	elem.style = 'top:2%; width:96%; left:2%;';
-	elem.innerHTML = '<div class="text_scroll" ><div id="editor_text_area" class="reader_text" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;width:99%;height:100%;">zoom word</div></div>'; 
+	elem.innerHTML = '<div class="text_scroll" ><div id="editor_text_area"  class="reader_text" style="line-height:115%;color:rgba(0,0,0,0.55);align:left;width:99%;height:100%;">zoom word</div></div>'; 
 	elem = create_element('editor_buttons_area', 'editor_buttons_area', 'editor_area'); 
+	
+	var input = document.getElementById('body');
+    
+    input.onkeypress = function() {
+		var key = event.keyCode;                                           // Get the Unicode value
+		console.log('OK '+key);
+		if ( (key >= 32 && key <= 59 ) || key == 61 ||  (key >= 63 && key <= 125) || (key >= 1040 && key <= 1103) ) {
+			var y = String.fromCharCode(key);      
+			editor_set_letter(y, true);
+		}
+	};
+		
+    input.onkeydown = function() {
+	    var key = event.keyCode || event.charCode;
+		console.log(key);
+	    if( key == 8 || key == 46 ){                                     //console.log('delete');
+	        editor_delete();
+		}
+	    if( key == 13 ){                                                 //console.log('enter');
+	        editor_set_letter(92);
+		}
+	    if( key == 37 ){                                    
+	        editor_scroll(0);
+		}
+	    if( key == 39 ){                                    
+	        editor_scroll(1);
+		}
+	};
+	
 	
 	editor_type = 'bottom_2rows';
 	editor.style.set_style(editor_type);
@@ -186,6 +215,8 @@ function editor_exit(){                                                  console
     elem.parentNode.removeChild(elem);
     var elem = document.getElementById('editor_bkg');
     elem.parentNode.removeChild(elem);
+    document.getElementById('body').onkeydown = "";
+    document.getElementById('body').onkeypress = "";
     if (editor.parent=="reader"){ 
 		reader.ischanged_text = true;
 		reader.editor_text = editor.text_raw;
@@ -382,15 +413,23 @@ function editor_delete(){                                                console
 		editor.text_raw = text_c;	
         editor_set_cursor(); 
     }
-}function editor_set_letter(n){                                          consolelog_func(); 
-    var iter = editor.iter;
+}function editor_set_letter(n, keypress){                                          consolelog_func(); 
+	if (keypress===undefined) { keypress=false; }
+	var letter = "";
+	var iter = editor.iter;
 	var text = editor.text_raw;
-    keys = Object.keys( editor.dict.allchar() );
-    letter = editor.dict.allchar()[keys[n]];                             
-    if (editor.capslock+editor.caps===1) { 
-		if (/^[a-zA-Z]+$/.test(letter) || /^[а-яА-Я]+$/.test(letter)) { letter = letter.toUpperCase(); }
+	
+	if (keypress===true){
+		letter = n.toString();
+	}else{
+	    var keys = Object.keys( editor.dict.allchar() );
+	    letter = editor.dict.allchar()[keys[n]];       
+	                      
+	    if (editor.capslock+editor.caps===1) { 
+			if (/^[a-zA-Z]+$/.test(letter) || /^[а-яА-Я]+$/.test(letter)) { letter = letter.toUpperCase(); }
+		}
 	}
-    text_c = text.substr(0, iter)+letter+text.substr(iter);
+    var text_c = text.substr(0, iter)+letter+text.substr(iter);
     editor.text_raw = text_c;
     iter_new = iter+letter.length;
     editor.iter = iter_new;

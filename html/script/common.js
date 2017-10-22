@@ -130,7 +130,7 @@ common.browser = check_browser();
 
 
 document.addEventListener("click",handler,true);
-function handler(e){                                                     consolelog_func(); 
+function handler(e){                                                     consolelog_func('orange'); 
 	var time = new Date().getTime();
 	var type = e.target.type;     
 	if (type===undefined){

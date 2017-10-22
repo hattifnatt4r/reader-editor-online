@@ -19,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Swanky and Moo Moo' rel='stylesheet'> 
 </head>
 
-<body id='body' class='body_bkg' id='reader_body' onresize="reader_resize()">
+<body id='body' class='body_bkg' id='reader_body' onresize="reader_resize()" >
 <?php include 'script/reader.php'; ?>    
 <!-- <div id='reader_buttons_area' class='buttons_area'></div> -->
 <!-- <div style='position:fixed; top:0%; left:0%;background-color:#5c4023; opacity:0.1;width:100vw;height:7vh;'></div> -->
