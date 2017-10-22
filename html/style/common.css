@@ -177,7 +177,7 @@ text-align:center;
 }.text_scroll::-webkit-scrollbar {
   color:black;  border-radius: 0.25vmin; 
 }.text_scroll::-webkit-scrollbar-track {
-  position:absolute; left:0%; border-radius: 0.25vmin; 
+  /*position:absolute;*/ left:0%; border-radius: 0.25vmin; 
 }.text_scroll::-webkit-scrollbar-thumb {
   background-color: rgba(0,0,0,0.15); border-radius: 0.25vmin; 
 }.reader_text{
@@ -235,14 +235,16 @@ text-align:center;
 }
 /*-- caret ---------------------------------------------------------------*/ 
 .blinking-cursor {
-  font-size:104%;  opacity:0.5; 
-  position:absolute; 
+  /*position:static; /*display:block;*/ 
+  font-size:104%;  opacity:0.5;  
+  
   -webkit-animation: 1.3s blink step-end infinite;
   -moz-animation: 1.3s blink step-end infinite;
   -ms-animation: 1.3s blink step-end infinite;
   -o-animation: 1.3s blink step-end infinite;
-  animation: 1.3s blink step-end infinite;
+  animation: 1.3s blink step-end infinite; 
 }
+
 @keyframes "blink"         { from, to {color:#59aa09;} 50% {color: transparent;} }
 @-moz-keyframes blink      { from, to {color:#59aa09;} 50% {color: transparent;} }
 @-webkit-keyframes "blink" { from, to {color:#59aa09;} 50% {color: transparent;} }

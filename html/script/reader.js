@@ -249,7 +249,10 @@ function reader_fill_zoom(){                                             console
 function reader_highlite(){                                              consolelog_func(); 
     var id_prev = reader.id_prev;                                    
     var id = reader.get_id();                                         
-    document.getElementById(id_prev).className='text';
+    var elem = document.getElementById(id_prev);
+    if (elem){
+		elem.className='text';
+    }
     div = document.getElementById(id);                              
     div.className='text_highlite';                                 
     reader.id_prev = id;

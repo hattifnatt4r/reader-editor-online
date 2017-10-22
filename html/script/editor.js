@@ -83,7 +83,7 @@ editor.style = {
 	cursorshift: 0,
 	class_arr: ["buttons editor", "buttons symbol", "buttons nobkg", "buttons disabled"],
 	
-	get_button: function (i, class_n){                                   consolelog_func("brown"); 
+	get_button: function (i, class_n){                                   //consolelog_func("brown"); 
 		if (class_n===undefined) {class_n=0;}
 		var class_name = this.class_arr[class_n];
 		var style="";
@@ -565,8 +565,12 @@ function editor_scroll(order){                                           console
 }
 
 function editor_set_cursor(){                                            consolelog_func(); 
-	var cursorshift = editor.style.fontsize*0.15;                     
-    var cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" style="left:-'+cursorshift.toString()+'px" >|</em></em>'; 
+	var cursorshift = editor.style.fontsize*0.14;            
+	if (common.browser=="Firefox"){         
+		var cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" style="display:inline;margin:0 -'+cursorshift.toString()+'px; width:0px;left:-'+cursorshift.toString()+'px" >|</em></em>'; 
+	}else{
+		var cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" style="position:absolute;left:-'+cursorshift.toString()+'px;" >|</em></em>'; 
+    }
     var iter = editor.iter;                                           
     var text = editor.text_raw;                                     
     rspace = text.indexOf(' ',iter);                                  
@@ -577,6 +581,7 @@ function editor_set_cursor(){                                            console
         text_c = text.substr(0, iter)+cursor+text.substr(iter); 
     }                                                                  
     document.getElementById('editor_text_area').innerHTML=text_c;
+    
     scroll_to('cursor','editor_text_box', title=0);                  
     editor.spell_type=0;
     }

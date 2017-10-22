@@ -178,7 +178,7 @@ var symbol_addcontact= '<svg class="ion_symbol"> <use xlink:href="#ion-android-p
 
 var symbol_file      = '<svg class="ion_symbol"> <use xlink:href="#ion-android-document"></use> </svg>';
 var symbol_folder    = '<svg class="ion_symbol"> <use xlink:href="#ion-android-folder"></use> </svg>';
-var symbol_mail    = '<svg class="ion_symbol"> <use xlink:href="#ion-android-mail"></use> </svg>';
+var symbol_mail      = '<svg class="ion_symbol"> <use xlink:href="#ion-android-mail"></use> </svg>';
 
 
 var symbols_play_pause = [symbol_play, symbol_pause];
@@ -782,6 +782,7 @@ function common_set_fontsize(id, obj){                                   console
 
 function common_create_menu(id, lvl, buttons_html, parent, ineditor){    consolelog_func(); 
 	if (parent==undefined) { parent='created_elements'; }
+	//if (ineditor==undefined) { ineditor=; }
     if (lvl==0){                                                         
         menu_blur(ineditor);
         inner_e = '<div id="'+id+'_back"  onclick="menu_back(this.id,1,'+ineditor+');" class="back_area"></div>';
@@ -791,22 +792,28 @@ function common_create_menu(id, lvl, buttons_html, parent, ineditor){    console
         inner_e+= '<div id="'+id+'_area1"  class="menu_area" style="background-color:rgba(100,100,100,0.2);"></div>';
         inner_e+= '<div id="'+id+'_area2"  class="menu_area_lvl2">';
         }                                                                
-    element = document.createElement('div');
-    element.setAttribute('id', id);
-    element.innerHTML=inner_e+buttons_html+'</div>';
-    document.getElementById(parent).appendChild(element);
-    return (element);
+    var elem = document.createElement('div');                             console.log('elem: '+elem+', parent: '+parent);
+    elem.setAttribute('id', id);
+    elem.innerHTML = inner_e + buttons_html + '</div>';
+    document.getElementById(parent).appendChild(elem);                   //console.log(elem.innerHTML);
+    return (elem);
 }
 
 function menu_blur(ineditor){                                            consolelog_func(); 
 	if (ineditor===undefined) {ineditor=false;}
-	if (ineditor){ $('#editor_base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); }
-	else{          $('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); }
+	if (common.browser!='Firefox'){
+		if (ineditor){ $('#editor_base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); }
+		else{          $('#base_elements').foggy({ blurRadius:5, opacity:0.8, cssFilterSupport:true }); 
+		               //$('#base_elements').css('webkitFilter', 'blur (5px)');
+		}
+	}
 }
 function menu_back(id, foggyoff, ineditor){                              consolelog_func(); 
 	if (ineditor===undefined) {ineditor=false;}
-	if (ineditor){ if (foggyoff==1){ $('#editor_base_elements').foggy(false);  } }
-	else{          if (foggyoff==1){ $('#base_elements').foggy(false);  } }
+	if (common.browser!='Firefox'){
+		if (ineditor){ if (foggyoff==1){ $('#editor_base_elements').foggy(false);  } }
+		else{          if (foggyoff==1){ $('#base_elements').foggy(false);  } }
+	}
     elem = document.getElementById(id).parentNode;
     elem.parentNode.removeChild(elem);
 }

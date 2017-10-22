@@ -181,7 +181,7 @@ function files_show_menu(){                                              console
     //inner_e += '<div id="files_sound"    onclick="" '+common.style.buttonpos_menu(4,3)+'> sound </div>';
     inner_e += '<div id="files_clickdelay" onclick="common_show_clickdelay();" '+common.style.buttonpos_menu(4,0)+'> click delay </div>';
     common_create_menu('files_menu', 0, inner_e);
-    if (localStorage.getItem("copy_fdir")=="") { files_disable("files_past"); }
+    //if (localStorage.getItem("copy_fdir")=="") { files_disable("files_past"); }
 }
 function files_show_create(){                                            consolelog_func();
 	var inner_e = "";
