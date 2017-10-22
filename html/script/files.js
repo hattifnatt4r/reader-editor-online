@@ -8,6 +8,9 @@ if (localStorage.getItem("isset")!="true"){
 	localStorage.setItem("isset", "true");
 	localStorage.setItem("copy_fname", "");
 	localStorage.setItem("copy_fdir", "");
+	localStorage.setItem("show_welcome", "yes");
+}else{
+	localStorage.setItem("show_welcome", "no");
 }
 var files = {
 	iter: 0,
@@ -118,7 +121,7 @@ function files_run(){                                                    console
 	}
 	   
 	console.log('welcome: '+common.welcome);
-	if (common.welcome=='do'){ 
+	if (common.welcome=='do' && localStorage.getItem("show_welcome")==="yes" ){ 
 		files_welcome();
 	}                                                                                                  
 	var bodyStyles = window.getComputedStyle(document.body);
@@ -154,14 +157,14 @@ function files_show_buttons(){                                           console
     inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5,2)+'>up- load</div>' ;
     inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(3,4)+'>'+symbol_prev+'</div>' ;
     inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(7,4)+'>'+symbol_next+'</div>' ;
-    inner_e+= '<div id="files_test"    onclick="clean_tmp();" '            +common.style.buttonpos(6,4)+'>clean_tmp</div>' ;
+    //inner_e+= '<div id="files_test"    onclick="clean_tmp();" '             +common.style.buttonpos(6,4)+'>clean_tmp</div>' ;
     //inner_e+= '<div id="files_python_button" class="buttons" onclick="files_click(10);"   style="'+reader_button_position(6)+'">py</div>';
     elem.innerHTML=inner_e;
     //if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload'); }
     if (files.subdir=='mail'){                                           console.log(files.subdir);                        
         id = 'fileid_'+files.nentry;                                    
         document.getElementById(id).onclick=function() { files_show_addcontact(); } 
-        document.getElementById(id).innerHTML = "+";
+        document.getElementById(id).innerHTML = symbol_addcontact;
         }
 }
 function files_show_menu(){                                              consolelog_func();
@@ -268,6 +271,7 @@ function files_show_files(){                                             console
 	    dx = xwidth/wratio/eratio_x/100;
 	    files_arr[i].style.width = xwidth/wratio/eratio_x+'%';
 	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
+	    //elem_pic.innerHTML = symbol_file;
 	    var elem_name = document.getElementById(files_arr[i].id+'_name');	    
 		}
 	document.getElementById('files_array').style.visibility = 'visible';
@@ -295,7 +299,14 @@ function files_scroll(order, i_utter){                                   console
 }
 
 function files_fill_zoom(){                                              consolelog_func();
-    var dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+files.dir+' / </em>';
+	var dir = files.dir; var name = files.get_fname();                   
+	if (get_usrname(dir)=="guests"){
+		i1 = dir.indexOf('/',dir.indexOf('/')+1);
+	    i2 = dir.indexOf('/',i1+1);                                     
+		if (i2==-1) { i2 = dir.length; }                                 //console.log(i1+' - '+i2);
+		dir = dir.substring(0,i1)+dir.substring(i2); 
+	}
+    dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+'/ </em>';
     document.getElementById('files_zoom_text').innerHTML = dir+files.get_fname(); 
 }   
 function files_set_zoom(order){                                          consolelog_func();

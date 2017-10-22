@@ -158,6 +158,9 @@ height:55%; opacity: 0.5;
 .ion_symbol_larger{
 height:50%; 
 }
+.ion_symbol_files{
+text-align:center; 
+}
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{

@@ -1,9 +1,9 @@
 <?php
-echo $_SESSION["session"];
-echo '| id_prev: '.$_SESSION["session_id_prev"].' | ';
-echo session_id();
+//echo $_SESSION["session"];
+//echo '| id_prev: '.$_SESSION["session_id_prev"].' | ';
+//echo session_id();
 if ($_SESSION["session_id_prev"] !== session_id()){
-	echo ' NEW SESSION ';
+	//echo ' NEW SESSION ';
 	$_SESSION['usr_dir'] = "users/guests/".session_id();
 	recurse_copy('users/common_backup',$_SESSION['usr_dir']);
     chmod($_SESSION['usr_dir'], 0777);
@@ -44,8 +44,7 @@ if (strpos($_SESSION['usr_home'], "users/guests/")!=false ){
 	$myfile = fopen($fname , "w") or die("Unable to open file!");
 	$time = time();
 	fwrite($myfile, time());
-	echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
-	//echo ' | '.$time-(int)$text;
+	//echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
 	fclose($myfile);
 }
 
@@ -53,22 +52,8 @@ if(isset($_POST["ffiles_test_submit"])) {
 	echo ' \n Clean_tmp';
 	$dir = "users/guests";
 	$delay = 2;
-	
-	$files1 = scandir($dir);
-	$files2 = scandir($dir, 1);
-	
-	//print_r($files1);
-	//print_r($files2);
-	
-	if ($handle = opendir($dir)) {
 
-		echo "SCAN";
-		
-		//while (false !== ($entry = readdir($handle))) {
-	    //    echo "$entry\n";
-	    //}
-	
-		
+	if ($handle = opendir($dir)) {
 		foreach(scandir($dir) as $entry) {
 			echo '<br>'.$entry;
 			if ($entry!=".." && $entry!="."){
@@ -89,8 +74,6 @@ if(isset($_POST["ffiles_test_submit"])) {
 		
 		closedir($handle);
 	}
-	
-	//echo opendir($dir);
 }
 
 function delete_files($target) {

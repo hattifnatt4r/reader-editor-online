@@ -174,7 +174,11 @@ var symbol_sound_off = '<svg class="ion_symbol"> <use xlink:href="#ion-android-v
 var symbol_delete    = '<svg class="ion_symbol"> <use xlink:href="#ion-backspace"></use> </svg>';
 var symbol_undo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-undo"></use> </svg>';
 var symbol_redo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
-var symbol_newmail   = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
+var symbol_addcontact= '<svg class="ion_symbol"> <use xlink:href="#ion-android-person-add"></use> </svg>';
+
+var symbol_file      = '<svg class="ion_symbol"> <use xlink:href="#ion-android-document"></use> </svg>';
+var symbol_folder    = '<svg class="ion_symbol"> <use xlink:href="#ion-android-folder"></use> </svg>';
+var symbol_mail    = '<svg class="ion_symbol"> <use xlink:href="#ion-android-mail"></use> </svg>';
 
 
 var symbols_play_pause = [symbol_play, symbol_pause];
@@ -720,7 +724,7 @@ function get_usrname(fname_i){                                           console
     var i2 = fname_i.indexOf('/',i1+1);
     var dir = "";
     if (i2==-1) {dir='';}
-    else{ dir=fname_i.substr(i1+1,i2-i1-1); }                            console.log(dir);     
+    else{ dir=fname_i.substr(i1+1,i2-i1-1); }                            console.log(fname_i+" | "+dir);     
     return(dir);
 }
 
@@ -916,7 +920,6 @@ function consolelog(text, lvl, color){
 
 
 function common_show_notification(text){                                 consolelog_func();
-	//if (parent==undefined) { parent='created_elements'; }
 	var parent='created_elements';
 	var id = "notification";
 	var b_top = 90-common.style.b_height;
@@ -924,14 +927,11 @@ function common_show_notification(text){                                 console
 	
 	inner_e = '<div id="'+id+'_back" onclick="menu_back(this.id,1,false);" class="back_area"> </div>';
 	inner_e+= '<div class="menu_area" >';
-	//inner_e+= '<div id="'+id+'_area"  class="menu_area" style="left:0;width:100vw;top:25vh;height:50vh;" >';
 	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:5vmin;line-height:8vh; color: rgba(0,0,0,0.55);">';
 	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;font-family:Ubuntu;">'+text+' &nbsp </div> </div> </div> </div>' ;
                                        
     inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > utter </div>';
-    //inner_e += '<div onclick="" ' +common.style.buttonpos_menu(18,0,4,5)+' > zoom in </div>';
     inner_e += '<div onclick="welcome_donot();" ' +common.style.buttonpos_menu(16,0,4,5)+" > Don't show again </div>";
-    //inner_e += '<div onclick="" ' +common.style.buttonpos_menu(16,0,4,5)+" >  </div>";
                               
     element = document.createElement('div');
     element.setAttribute('id', id);
@@ -939,11 +939,21 @@ function common_show_notification(text){                                 console
     document.getElementById(parent).appendChild(element);
     return (element);	
 }
-function welcome_donot(){                                                 consolelog_func();
+function welcome_donot(){                                                consolelog_func();
 	common.welcome="donot";
 	cookie_set("welcome_", "donot");
 }
 
-
+function common_make_fname(fname){	                                     consolelog_func();
+	var dir = fname.substring(0,fname.lastIndexOf('/'));
+	if (get_usrname(dir)=="guests"){
+		var i1 = dir.indexOf('/',dir.indexOf('/')+1);
+	    var i2 = dir.indexOf('/',i1+1);                                     
+		if (i2==-1) { i2 = dir.length; }                                 
+		dir = dir.substring(0,i1)+dir.substring(i2); 
+	}
+	var name = fname.substring(fname.lastIndexOf('/')+1);
+    return([dir, name]);
+}
 
 
