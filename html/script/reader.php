@@ -28,33 +28,33 @@ if (isset($_POST['freader_save_submit'])) {
 
 if (isset($_POST['freader_sendmail_submit'])) {
     $msg = $_POST["freader_save_text"];
-    //$fname = $_POST["sendmail_text2_name"];
     $fname = get_mail_fname(get_usrname(), get_contactname());
-    echo '<div style="position:fixed;top:0%;left:20%;">'.$fname.'</div>';
-    echo '<div style="position:fixed;top:0%;left:25%;">'.$msg.'</div>';
     //echo $text;
-    //$fname = $_SESSION["filename_opened"];
     $myfile = fopen($fname, "r") or die("Unable to open file!");
     $text = fread($myfile, filesize($fname));
     fclose($myfile);
     $text = $text.' '.$msg;
+    //echo '<br> PREV_TEXT: '.$text.'<br>';  
+    //echo '<br> MSG: '.$text.'<br>';  
     
     $myfile = fopen($fname, "w") or die("Unable to open file!");
     fwrite($myfile, $text);
     fclose($myfile);
-    echo 'saved '.$fname;
+    //echo ' |  |  saved '.$fname;
     
     $fname = $_SESSION["filename_opened"];
     $myfile = fopen($fname, "w") or die("Unable to open file!");
     $name = get_usrname();
-    //$text = ' <br> <div id="mail_temp_title" name="'.$name.'"> write your message </div> <div id="mail_temp_text" name="'.$name.'"> abc </div><br><br><br>';
     $text = '';
     fwrite($myfile, $text);
     fclose($myfile);
     
-    $_SESSION["file_text"] = $text;
-    header('Location:/reader.php');
-    header('Location:/reader.php');
+    $_SESSION["file_text"] = $text;    
+    //echo '<br> FILE_TEXT: '.$text.'<br>';                       
+    
+    //header('Location:/reader.php');
+    //run_reader();
+    //header('Location:/reader.php');
 } 
 
 function get_usrname(){
@@ -87,6 +87,7 @@ function get_mail_fname($a,$b){
 run_reader();
 
 function run_reader(){
+	//echo "<br>----------- READER RUN --------------<br>";
 	//echo 'opened: '.$_SESSION["filename_opened"];
 	$dir = substr($_SESSION["usr_dir"], strpos($_SESSION["usr_dir"], "/")); 
 	if ($dir==$_SESSION["usr_dir"]){$dir='';} 
@@ -104,6 +105,7 @@ function run_reader(){
 	    //echo '<div style="position:fixed;top:0%;left:0%;">MAIL: '.$full_name.'</div>';
 	    $myfile = fopen($full_name, "r") or die("Unable to open file!");
 	    $text = fread($myfile, filesize($full_name));
+	    //echo '<br> TEXT: '.$text.'<br>';
 	    //echo '<div style="position:fixed;top:0%;left:50%;">MAIL: '.$text.'</div>';
 	    fclose($myfile);
 	    //echo '<div style="position:fixed;top:5%;left:0%;">MAIL: '.$text.'</div>';

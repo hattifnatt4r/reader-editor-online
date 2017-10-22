@@ -1,18 +1,8 @@
-/* body {} */
 
 .body_bkg{
-  /*background-color: #e0e2e4;  */
   background-color: white;  
-  /*
-  background-image: url("pics/reader6-01-01.gif");
-  background-image: url("pics/reader5-02-bkg08-01.png"); 
-  background-image: url("pics/reader8-01-bkg03-01.png"); 
-  */ 
-  /*background-image: url("pics/reader3-08.png"); */
-    
   background-size: auto 100%;
-  background-position: right top;
-  background-position: auto 0%;
+  /*background-position: auto 0%;*/
   background-repeat: no-repeat;
   
   /*---------------------------*/
@@ -29,10 +19,6 @@
   font-style:normal; 
 }.text_highlite{
   font-style:normal; 
-  /*background-color: #b1d775; */
-  background-color: rgba(129, 170, 9, 0.6);
-  background-color: rgba(89, 161, 18, 0.6);
-  background-color: rgba(105, 161, 18, 0.6);
   background-color: rgba(108, 170, 9, 0.6);
 }
 .editor_bkg{
@@ -43,7 +29,6 @@
 }
 .editor_buttons_area{
   background-color: rgba(0, 0, 0, 0.05); 
-  /* background-color: rgba(76, 95, 103, 0.1);  */
   position:fixed;
   top:50%; left:0;
   height:100%; width:100%;
@@ -62,36 +47,11 @@
   word-break: normal; white-space: normal;
   border-radius: 0.25vmin;
   color: rgba(0,0,0,0.5); 
-  /*color: rgba(250,250,250,0.8); */
-  
-  /*---------------------------*/
-  /*background-color: #8aa0a8;  
-  border: solid 1.7vmin #8aa0a8;  border-radius: 0.25vmin; 
-   
-  background-color: rgba(92, 64, 35, 0.1); 
-  background-color: rgba(107, 143, 36, 0.2); 
-  background-color: rgba(110, 152, 27, 0.2); 
-  background-color: #668113;
-  */
-  /*border: solid 1.7vmin rgba(0,0,0,0); 
-  border-top-width: 0vmin; */
-  
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08), 0 4px 13px 0 rgba(0,0,0,0.2);
-  
-  /*
-  background-image: url("pics/reader5-btn02-01.png");
-  background-size: 11.9vw 17.5vh;
-  background-position: -0.3vw 0vh;
-  background-repeat: no-repeat;
-  */
-  
+ 
   /*---------------------------*/
   display:flex; justify-content:center; align-items:center;
   font-family: "Ubuntu";  
-  
-  /*
-  background-image: url("pics/321.jpg");
-  background-size: 12vw 17vh; */
 }
 .buttons:hover{
   background-color: rgba(107, 143, 36, 0.7); 
@@ -158,6 +118,9 @@ height:55%; opacity: 0.5;
 .ion_symbol_larger{
 height:50%; 
 }
+.ion_symbol_smaller{
+height:50%; 
+}
 .ion_symbol_files{
 text-align:center; 
 }
@@ -170,7 +133,6 @@ text-align:center;
   line-height: 5vh; 
   border-radius: 0.25vmin;  
   white-space:pre;
-  /*background-color: white;   border: dashed 0.3vh #8a8a5c; */
 }.text_scroll{
   position:relative; left:0%;top:0%; width:99.5%;height:100%; 
   white-space:pre-wrap; overflow-y: scroll; overflow-x: hidden; direction:rtl;
@@ -182,14 +144,12 @@ text-align:center;
   background-color: rgba(0,0,0,0.15); border-radius: 0.25vmin; 
 }.reader_text{
   position:relative; left:1.3%;top:2%; width:93.5%;height:100%; direction:ltr;
-  /*background-color: rgba(255,255,255,0.9);*/
 }
 
 /*-- zoom ----------------------------------------------------------------*/
 .text_zoom_box{
   left:3.4%; top:78%; width:70%; height: 20%; 
   position:fixed; 
-  /*background-color: white;  */
   border-radius: 0.25vmin; 
   border: dashed 0.3vh #8a8a5c;  
   box-sizing:border-box;
@@ -203,7 +163,6 @@ text-align:center;
 }.text_zoom::-webkit-scrollbar {
   position:relative; 
 }.text_zoom::-webkit-scrollbar-track {
-  /*background-color: white;*/
 }.text_zoom::-webkit-scrollbar-thumb {
   background-color: #c8ccd0; 
   background-color: rgba(0,0,0,0.15);
@@ -235,7 +194,6 @@ text-align:center;
 }
 /*-- caret ---------------------------------------------------------------*/ 
 .blinking-cursor {
-  /*position:static; /*display:block;*/ 
   font-size:104%;  opacity:0.5;  
   
   -webkit-animation: 1.3s blink step-end infinite;
@@ -259,11 +217,10 @@ text-align:center;
   position:relative; text-align:center; box-sizing:border-box;
   color:rgba(0,0,0,0.8);
   background-color: white;  background-color:#acd2d2; background-color:#ddeaee;
-  /*border: dashed 2px #8a8a5c;*/
   border: solid 0.5vh white;
 }
-.mail_out{ left:1.5%; text-align:left; background-color:#ddeaee; border-color:#ddeaee;}
-.mail_in{ left:26.5%; text-align:right; background-color:#e6eedd; border-color:#e6eedd;}
+.mail_out{ left:1.5%; text-align:left; background-color:#ddeaee; border-color:#ddeaee;  /*background-color:rgba(0,0,0,0);*/}
+.mail_in{ left:26.5%; text-align:right; background-color:#e6eedd; border-color:#e6eedd;  /*background-color:rgba(0,0,0,0);*/}
 .mail_title{ background-color:white; border-color:white;}
 .mail_temp{ background-color:#ffe6cc; background-color:#f7f7d4; background-color:#ddeaee; /*background-color:#bbd5dd;*/ }
 .mail_space{ height:2vh; background-color:white;border-color:white;}

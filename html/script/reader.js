@@ -15,7 +15,8 @@ var reader = {
     editor_text: "",
     editor_iter: 0,
     mailtext: "",
-    cookie_number: 14,
+    mail_send: false,
+    cookie_number: 15,
     
     fname: "",
     readonly: false,
@@ -31,7 +32,7 @@ var reader = {
     buttons_php: { "reader_save": "freader_save_submit", 
 		           "reader_sendmail": "freader_sendmail_submit"
 		           },
-	click_php: function(id) {                                            consolelog_func('brown'); 
+	click_php: function(id) {                                            consolelog_func('orange'); 
 		document.getElementById(this.buttons_php[id]).click(); 
 	},
     get_id_array: function(){                                            consolelog_func('brown'); 
@@ -43,7 +44,11 @@ var reader = {
     },
     get_id: function(){                                                  consolelog_func('brown'); 
         var latest_id;
-        var id_arr = this.get_id_array();                                         
+        var id_arr = [];
+        if (this.selecttype == 1){ id_arr=this.sentence_id; }    
+        else if (this.selecttype == 2){ id_arr=this.paragraph_id; }    
+        else if (this.selecttype == 0){ id_arr=this.word_id; }  
+                                              
         if (this.iter==-1){ latest_id='file_title'; }
         else{ latest_id = id_arr[this.iter]; }                              
         return(latest_id);
@@ -80,6 +85,13 @@ reader_run();
 function reader_run() {                                                  consolelog_func('darkblue'); 
     var subdir = reader.subdir;                                          consolelog('ischanged_text: '+reader.ischanged_text+', editor_text: '+reader.editor_text);
     var fname = common_make_fname(reader.fname);
+    
+    console.log(reader.mail_send+' -- '+subdir);
+    if (reader.mail_send == true && subdir==='mail'){  
+		reader.mail_send = false;         
+		reader_refresh();
+	}
+    
     document.getElementById('file_title').innerHTML = '<em style="color:#008000;opacity:0.6;">'+fname[0]+'/ </em>'+fname[1]+'</em>';
     
     if (reader.ischanged_text==false){
@@ -128,9 +140,9 @@ function reader_text(){                                                  console
     var text = "", text_parsed = "";
     var parser = [];
     if (reader.ischanged_text==false){
-        text = document.getElementById('hidden_text').innerHTML;         
+        text = document.getElementById('hidden_text').innerHTML;                  
         parser = reader_parse_html(text);
-        text_parsed = parser[0];                                         
+        text_parsed = parser[0];                                         //console.log('false text_parsed: '+text_parsed);                                
         reader.word_id=parser[1]; reader.sentence_id=parser[2]; reader.paragraph_id=parser[3];
                                                                         
         document.getElementById('text_from_file').innerHTML = text_parsed;  
@@ -141,9 +153,9 @@ function reader_text(){                                                  console
             text_parsed = $('#text_from_file').find('#mail_editable').html();     
         }else{
             text_parsed = reader.text_parsed;
-        }
+        }                                                                //console.log('true text_parsed: '+text_parsed);
         reader.id_curr = reader.get_id();                                
-        text = reader.editor_text;                                       
+        text = reader.editor_text;                                       //console.log('text_new: '+text);
         document.getElementById('temp').innerHTML = text_parsed;         
         var id = reader.id_curr;                                         
         document.getElementById(id).innerHTML = text;                 
@@ -399,7 +411,7 @@ function reader_show_zoomtype(){                                         console
     inner_e+= '<div id="2"   onclick="reader_set_zoomtype(this.id)" '+common.style.buttonpos_menu(6,0)+'> by sentence </div>';
     common_create_menu('reader_zoomtype', 1, inner_e);
 }
-function is_inlist(list){                                                consolelog_func(); 
+function is_inlist(list){                                                //consolelog_func(); 
     inlist = false;
     fname_i = document.getElementById('file_title').innerText; 
     for (i=0; i<list.length; i++){ 
@@ -435,7 +447,8 @@ function reader_if_editable(){                                           console
 
 function reader_show_mail(){                                             consolelog_func(); 
     var inner_e = '';
-    inner_e += '<div id="reader_sendmail" onclick="reader.click_php(this.id);" '+common.style.buttonpos_menu(4,0)+'> send mail </div>';
+    //inner_e += '<div id="reader_sendmail" onclick="reader.click_php(this.id);" '+common.style.buttonpos_menu(4,0)+'> send mail </div>';
+    inner_e += '<div id="reader_sendmail" onclick="reader_send_mail();" '+common.style.buttonpos_menu(4,0)+'> send mail </div>';
     inner_e += '<div id="reader_refresh"  onclick="reader_refresh();" '         +common.style.buttonpos_menu(6,0)+'> refresh </div>';
     common_create_menu('reader_mail', 0, inner_e);
     
@@ -449,7 +462,12 @@ function reader_show_mail(){                                             console
     text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  
     document.getElementById('freader_save_text').value=text;  
 }
-function reader_refresh() {                                              consolelog_func(); 
+function reader_send_mail(){
+	reader.click_php("reader_sendmail");
+	reader.mail_send = true;
+	//window.location.href = '/reader.php';
+}
+function reader_refresh() {                                              consolelog_func('orange'); alert('refresh');
 	window.location.href = '/reader.php';
 }
 

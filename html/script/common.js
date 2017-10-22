@@ -178,7 +178,7 @@ var symbol_addcontact= '<svg class="ion_symbol"> <use xlink:href="#ion-android-p
 
 var symbol_file      = '<svg class="ion_symbol"> <use xlink:href="#ion-android-document"></use> </svg>';
 var symbol_folder    = '<svg class="ion_symbol"> <use xlink:href="#ion-android-folder"></use> </svg>';
-var symbol_mail      = '<svg class="ion_symbol"> <use xlink:href="#ion-android-mail"></use> </svg>';
+var symbol_mail      = '<svg class="ion_symbol ion_symbol_smaller"> <use xlink:href="#ion-android-mail"></use> </svg>';
 
 
 var symbols_play_pause = [symbol_play, symbol_pause];
@@ -300,7 +300,7 @@ function utter(txt, stop, onend, rate){                                  console
 	}
 }    
     
-function create_element(id, cl, parent, style, inner){                   consolelog_func(); 
+function create_element(id, cl, parent, style, inner){                   //consolelog_func(); 
     if (parent===undefined){ parent = 'created_elements'; }
     var element = document.createElement('div');
     element.setAttribute('id', id);
@@ -311,7 +311,7 @@ function create_element(id, cl, parent, style, inner){                   console
     return (element);
 }
 
-function replace_all(text, a,b){                                         consolelog_func(); 
+function replace_all(text, a,b){                                         //consolelog_func(); 
     proceed=1;
     while (proceed==1){
         i = text.indexOf(a);
@@ -415,7 +415,7 @@ function common_textto_read(text){                                       console
 	return(text);
 }
 
-function text_clean(text_origin){                                        consolelog_func();  // only void tags allowed!  
+function text_clean(text_origin){                                        //consolelog_func();  // only void tags allowed!  
 	var txt = text_origin.replace('\n','<br>');                          
 	var proceed = 1, i = 0, j1=0, j2=0; 
 	i = txt.indexOf('<');
@@ -433,7 +433,7 @@ function text_clean(text_origin){                                        console
 	replace_all(txt, '</ ', '</');
 	return (txt);
 }
-function reader_parse_html(text_origin){                                 consolelog_func(); 
+function reader_parse_html(text_origin){                                 //consolelog_func(); 
 	if (text_origin.replace(' ','')==='') { return reader_parse_txt(text_origin, 0); }
 	
 	var txt = text_clean(text_origin);  
@@ -497,7 +497,7 @@ function reader_parse_html(text_origin){                                 console
 	return ([text_final, arr_w, arr_s, arr_p]);
 }
 
-function reader_parse_txt(text_origin, n_p){                             consolelog_func(); 
+function reader_parse_txt(text_origin, n_p){                             //consolelog_func(); 
     var txt = text_origin;
     var endsymbol = ['<br>', '...', '!!!', '???', '.', '!', '?', ',', ' ','<'] ;
     var emptytag = ['area','base','col','command','embed','hr','img','input','ceygen','link','meta','param','source','track','wbr','video','audio'];
@@ -621,7 +621,7 @@ function reader_parse_txt(text_origin, n_p){                             console
 
 }
 
-function find_indexof_all(text_origin, arr, i_start, i_end){             consolelog_func(color="green", noargs=true); 
+function find_indexof_all(text_origin, arr, i_start, i_end){             //consolelog_func(color="green", noargs=true); 
 	if ( i_start === undefined ) { i_start = 0; }                        
 	if ( i_end === undefined ) { i_end = text_origin.length; }           
 	var txt = text_origin.substring(i_start, i_end);                     
@@ -719,12 +719,12 @@ function get_subdir(name){                                               console
     else{ dir=name.substr(i1+1,i2-i1-1); }                               //console.log(dir);     
     return(dir);
 }
-function get_usrname(fname_i){                                           consolelog_func(); 
+function get_usrname(fname_i){                                           //consolelog_func(); 
     var i1 = fname_i.indexOf('/');
     var i2 = fname_i.indexOf('/',i1+1);
     var dir = "";
     if (i2==-1) {dir='';}
-    else{ dir=fname_i.substr(i1+1,i2-i1-1); }                            console.log(fname_i+" | "+dir);     
+    else{ dir=fname_i.substr(i1+1,i2-i1-1); }                            //console.log(fname_i+" | "+dir);     
     return(dir);
 }
 
@@ -915,7 +915,19 @@ function consolelog_func(color, noargs) {
 		else {msg_shift += '.'; }
 	}
 	if (lvl>3) { msg+= " <-- " + caller.caller.name + "()"; }
+	
 	console.log('%c'+msg_shift+msg, 'color:'+color); 
+	/*
+	if (document.title=='files'){
+		console.log('%c'+msg_shift+msg, 'color:'+color); 
+		}
+	if (document.title=='reader'){
+		if (reader.ineditor==false){
+			console.log('%c'+msg_shift+msg, 'color:'+color); 
+		}
+	}
+	* */
+	
 }
 function consolelog(text, lvl, color){
 	if (lvl===undefined) { lvl = 1; }
@@ -926,11 +938,14 @@ function consolelog(text, lvl, color){
 }
 
 
-function common_show_notification(text){                                 consolelog_func();
+function common_show_notification(text, welcome){                        consolelog_func();
+	if (welcome===undefined){ welcome = false; }
 	var parent='created_elements';
 	var id = "notification";
 	var b_top = 90-common.style.b_height;
+	common.repeat_text = replace_all(text,'<br>','');
 	menu_blur();
+	
 	
 	inner_e = '<div id="'+id+'_back" onclick="menu_back(this.id,1,false);" class="back_area"> </div>';
 	inner_e+= '<div class="menu_area" >';
@@ -938,8 +953,10 @@ function common_show_notification(text){                                 console
 	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;font-family:Ubuntu;">'+text+' &nbsp </div> </div> </div> </div>' ;
                                        
     inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > utter </div>';
-    inner_e += '<div onclick="welcome_donot();" ' +common.style.buttonpos_menu(16,0,4,5)+" > Don't show again </div>";
-                              
+    if (welcome){
+		inner_e += '<div onclick="welcome_donot();" ' +common.style.buttonpos_menu(16,0,4,5)+" > Don't show again </div>";
+	}
+                  
     element = document.createElement('div');
     element.setAttribute('id', id);
     element.innerHTML=inner_e;
@@ -951,7 +968,7 @@ function welcome_donot(){                                                console
 	cookie_set("welcome_", "donot");
 }
 
-function common_make_fname(fname){	                                     consolelog_func();
+function common_make_fname(fname){	                                     //consolelog_func();
 	var dir = fname.substring(0,fname.lastIndexOf('/'));
 	if (get_usrname(dir)=="guests"){
 		var i1 = dir.indexOf('/',dir.indexOf('/')+1);

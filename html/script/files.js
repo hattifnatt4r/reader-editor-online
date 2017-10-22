@@ -221,10 +221,14 @@ function files_show_login(){                                             console
     common_create_menu('files_lodin', 0, inner_e);
 }
 function files_show_addcontact(){                                        consolelog_func();
-	var inner_e="";
-	inner_e += '<div '+common.style.buttonpos_menu(0,2)+'><div id="files_addmail_edit" onclick="files_edittext(this.id);" class="text_zoom menu_zoom"> new contact </div></div>';
-	inner_e += '<div id="files_addmail"      onclick="files.click_php(this.id);" '+common.style.buttonpos_menu(4,0)+'> add contact </div>';
-    common_create_menu('files_addmail', 0, inner_e);
+	if (get_usrname(files.dir)=="guests"){
+		common_show_notification('You need to log in to add contact.');
+	}else{
+		var inner_e="";
+		inner_e += '<div '+common.style.buttonpos_menu(0,2)+'><div id="files_addmail_edit" onclick="files_edittext(this.id);" class="text_zoom menu_zoom"> new contact </div></div>';
+		inner_e += '<div id="files_addmail"      onclick="files.click_php(this.id);" '+common.style.buttonpos_menu(4,0)+'> add contact </div>';
+		common_create_menu('files_addmail', 0, inner_e);
+	}
 }
 function files_show_upload(){                                            consolelog_func();
     var inner_e = "";
@@ -453,8 +457,8 @@ function files_welcome(){
 	text+=     "To open the file close this menu, then click on the file icon and 'check' button to the right. ";
 	text+=     "Use right and left arrows to read the file."
 	//var text = "Welcome! Your browser does not support speech synthesis. ";
-	common_show_notification(text);
-	common.repeat_text = replace_all(text,'<br>','');
+	common_show_notification(text, true);
+	//common.repeat_text = replace_all(text,'<br>','');
 	//utter_sentence(0, 1, 0, 1);
 }
 
