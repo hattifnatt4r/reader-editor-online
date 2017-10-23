@@ -110,13 +110,10 @@ function run_files(){
 	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
 	echo '<div hidden id="php_alert">'.$_SESSION["alert"]."</div>";
 	$_SESSION["alert"] = "";
-	//$_SESSION["submit_any"] = "ok";
 }
 function make_files_array(){
 	$arr_dir=array(); $arr_file=array(); $arr_entries=array(); 
 	array_push($arr_dir, '..');
-	//echo ' | '.$_SESSION['usr_dir'].' -- '.$handle.' || ';
-	//echo ' | '.opendir($_SESSION['usr_dir']).' -- '.$handle.' || ';
 	if ($handle = opendir($_SESSION['usr_dir'])) {
 	    $i = 1; 
 	    foreach(scandir($_SESSION['usr_dir']) as $entry) {
@@ -132,8 +129,6 @@ function make_files_array(){
 	    closedir($handle);
 	    $arr_entries = array_merge($arr_dir,$arr_file);
 	    $i=0;
-	    //$newmail = show_file(' ', $_SESSION['nentry']+1); //$show_arr=$show_arr.$newmail;
-	    //echo "<div  id='hidden_newmail' >".$newmail."</div>";
 	} else {echo "bad dir";}
 	$_SESSION["files_arr"]=$arr_entries;
 }
@@ -144,8 +139,6 @@ function show_file($entry, $i){
     $xwidth=$ywidth*1.1;
     $xspace = 1;
     $xn = floor(($right-$left)/($xspace+$xwidth)); 
-    //$xn = gmp_div_q($right-$left, $xspace+$xwidth); 
-    //$xn=2;
     $n_y = ($i-$i%$xn)/$xn;
     $x = $left + ($xspace+$xwidth)* ($i%$xn);
     $y = $top +  ($ywidth+$yspace)*$n_y;
@@ -156,24 +149,19 @@ function show_file($entry, $i){
     $filename = $_SESSION['usr_dir'].'/'.$entry;
     if (file_exists($filename)){
         if (is_dir($filename)){$class='files_pic files-dir';$title='dir';} else { $class='files_pic files-txt';$title='txt'; }
-        //if ($entry=='readme.txt'){ $class = 'files attention'; }
-    }//else{ $class='files attention'; $title=''; $entry='new <br> contact'; }
+    }
     if (strpos($entry,'~')!==false){ 
         $entry = str_replace('~','',$entry); $class='files attention';
          }
     $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  class="files" style="'.$style.'" title="'.$title.'" align="center">'
     .'<div id="fileid_'.$i.'_pic"  class="'.$class.'" ></div>'
     .'<div id="fileid_'.$i.'_name"  class="files_name" >'.$entry.'</div> </div>' ;
-    //$file_i = '<div id="fileid_'.$i.'"  class="'.$class.'" onclick="files_scroll('.$i.');"  style="'.$style.'" title="'.$title.'">'
-    //.$entry.'</div>' ;
     return($file_i);
 }
 //---------------------------------------------------------------------------
 function find_object($i_obj, $usr_dir){
 	make_files_array();
     $entry = $_SESSION["files_arr"][$i_obj];
-    //echo '| '.$entry.' | ';
-    //echo '|---| '.$_SESSION["files_arr"][1].' | '.$i_obj.' |---| ';
     return $entry;
 }
 
@@ -194,7 +182,6 @@ if (isset($_POST['ffiles_createtxt_submit'])) {
     echo 'TEXT: '.$text.' '; 
     if ($text!='' || $text!=' ' || $text!='  '){
         create_file($text,$_SESSION['usr_dir']); 
-        //header('Location:/index.php'); 
         echo "<div hidden id='php_goto'>"."index.php"."</div>";
     }
 }
@@ -203,7 +190,6 @@ if (isset($_POST['ffiles_createdir_submit'])) {
     echo 'TEXT: '.$text.' '; 
     if ($text!='' || $text!=' ' || $text!='  '){
         create_dir($text,$_SESSION['usr_dir']); 
-        //header('Location:/index.php'); 
         echo "<div hidden id='php_goto'>"."index.php"."</div>";
     }
 }
@@ -257,7 +243,6 @@ if (isset($_POST['ffiles_addmail_submit'])) {
 	}
     
     $_SESSION["alert"] = $alert;
-    //header('Location:/index.php'); 
     echo "<div hidden id='php_goto'>"."index.php"."</div>";
 }
 function get_usrname(){
@@ -289,7 +274,6 @@ if (isset($_POST["ffiles_past_submit"])) {
 	$fdir = $_POST["ffiles_copyfdir_text"];
 	$filename = 'users'.$fdir.'/'.$fname;
 	$newfile = $_SESSION['usr_dir'].'/'.$fname;
-	//chmod($_SESSION['usr_dir'], 0777);
 	$k=1;
 	$i = strrpos($newfile, ".");
 	$newfile_final = $newfile;
@@ -304,10 +288,7 @@ if (isset($_POST["ffiles_past_submit"])) {
 }		
 if (isset($_POST["ffiles_edit_submit"])) {
 	$_SESSION["file_counter"]=$_POST["ffiles_iter"];	
-	//echo 'EDIT';
-	//$text = $_POST["files_options_text"];
 	$text = $_POST["ffiles_edit_text"];
-	//echo 'TEXT: '.$text.' '; 
 	if ($text!='' || $text!=' ' || $text!='  '){
 		$entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
 		$filename = $_SESSION['usr_dir'].'/'.$entry;
@@ -315,7 +296,6 @@ if (isset($_POST["ffiles_edit_submit"])) {
 		if (!is_dir($filename)){$filename_new=$filename_new.'.txt';}
 		if (file_exists($filename)){ 
 			rename($filename, $filename_new);}
-		//header('Location:/index.php'); 
 		echo "<div hidden id='php_goto'>"."index.php"."</div>";
 	}
 }
@@ -334,7 +314,6 @@ if (isset($_POST["ffiles_cleanhtml_submit"])) {
 	chmod($fname, 0666);
 	fwrite($myfile, $txt);
 	fclose($myfile);
-	//header('Location:/index.php'); 
 	echo "<div hidden id='php_goto'>"."index.php"."</div>";
 }
 
@@ -344,46 +323,27 @@ if (isset($_POST['ffiles_enter_submit'])) {
     $_SESSION["file_counter"]=intval($_POST["ffiles_iter"]);
     $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
     $filename = $_SESSION['usr_dir'].'/'.$entry;
-    //echo ' | ENTER '.$_SESSION["file_counter"]." ".$entry." | ";
-    //unset($_POST);
     
 	if ($_SESSION["file_counter"]==0){
 		if ($_SESSION["usr_dir"]!=$_SESSION['usr_home']){
 			$new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
 			$_SESSION["usr_dir"] = $new_dir;
-			//echo '  | GO-BCK: '.$_SESSION['usr_dir'];
-			//$_SESSION['file_counter'] = 0;
-			//header('Location:/index.php');
-			//run_files();
 			echo "<div hidden id='php_goto'>"."index.php"."</div>";
 		}
 	}else{
 		if (is_dir($filename)){ 
 			$_SESSION['usr_dir'] = $filename;
-			//echo ' | GO-DIR: '.$_SESSION['usr_dir']." ".$_SESSION["file_counter"]." | ";
 			$_SESSION['file_counter'] = 0;
-			//header('Location:/index.php');
-			//run_files();
 			echo "<div hidden id='php_goto'>"."index.php"."</div>";
 		}else{
 			$myfile = fopen($filename, "r") or die("Unable to open file!");
 			$txt = fread($myfile, filesize($filename));
 			fclose($myfile);
 			$_SESSION["file_text"] = $txt;
-			//echo filesize($filename).'  '.$filename.' TEXT:  '.$txt;
 			$_SESSION["filename_opened"] = $filename;
-			//header('Location:/reader.php');
-			//header('Location: http:/reader.php');
-			//header('Location:  http://www.hedgehoginafog.com/reader.php');
-			//exit;
 			echo "<div hidden id='php_goto'>"."reader.php"."</div>";
 		}
 	}
-	//echo "<div hidden id='php_goto'>"."index.php"."</div>";
-	//echo '  | NEW-DIR2: '.$_SESSION['usr_dir']." | ";
-	//unset($_SESSION['message']);
-	//unset($_POST['ffiles_enter_submit']);
-	//$_SESSION["submit_any"] = "";
 }
 
 //-- login ------------------------------------------------------------------

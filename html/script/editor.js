@@ -25,10 +25,10 @@ editor.dict = {
 	letters_ru: { r1:'а',r2:'б',r3:'в',r4:'г',r5:'д',r6:'е',r7:'ё',r8:'ж',r9:'з',r10:'и',r11:'й',r12:'к',r13:'л',r14:'м',r15:'н',r16:'о',r17:'п',r18:'р',r19:'с',r20:'т',r21:'у',r22:'ф',r23:'х',r24:'ц',r25:'ч',r26:'ш',r27:'щ',r28:'ъ',r29:'ы',r30:'ь',r31:'э',r32:'ю',r33:'я' },
 	letters_en: {  a:'a', b:'b', c:'c', d:'d', e:'e', f:'f', g:'g', h:'h', i:'i', j:'j', k:'k', l:'l', m:'m', n:'n', o:'o', p:'p', q:'q', r:'r', s:'s', t:'t', u:'u', v:'v', w:'w', x:'x', y:'y', z:'z'},
 	symbols1:   { 0:'0',1:'1',2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',dot:'.', dash:'-', comma:',', qmark:'?', emark:'!', colon:':', semicolon:';', quotes:'"', plus:'+', minus:'-', eq:'=', star:'*', slash:'/', lbr:'(', rbr:')', power:'^', lbrsq:'[', rbrsq:']', lbrf:'{', rbrf:'}', underscore:'_', vert:'|'},
-	symbols2:   { space:' ', newline:' <br> ', pc:'<abbr>&#37</abbr>', less:'<abbr>&#60</abbr>', more:'<abbr>&#62</abbr>', at:'<abbr>&#64</abbr>', 
+	symbols2:   { space:' ', newline:' <br> ', pc:'%', less:'<abbr>&#60</abbr>', more:'<abbr>&#62</abbr>', at:'@', 
 				  backslash:'<abbr>&#8726</abbr>', sum:'<abbr>&#8721</abbr>', prod:'<abbr>&#8719</abbr>', sqrt:'<abbr>&#8730</abbr>', cdot:'<abbr>&#8729</abbr>', 
 		          leq:'<abbr>&#8804</abbr>', geq:'<abbr>&#8805</abbr>', ll:'<abbr>&#8810</abbr>', gg:'<abbr>&#8811</abbr>', sim:'<abbr>~</abbr>', neq:'<abbr>&#8800</abbr>', quiv:'<abbr>&#8801</abbr>', approx:'<abbr>&#8776</abbr>', 
-		          prime:'<abbr>&#8242</abbr>', ldquo:'<abbr>&#8220</abbr>', rdquo:'<abbr>&#8221</abbr>', lsquo:'<abbr>&#8216</abbr>', rsquo:'<abbr>&#8217</abbr>', 
+		          prime:"'", ldquo:'<abbr>&#8220</abbr>', rdquo:'<abbr>&#8221</abbr>', lsquo:'<abbr>&#8216</abbr>', rsquo:"'", 
 		          cap:'<abbr>&#8745</abbr>', cup:'<abbr>&#8746</abbr>', subset:'<abbr>&#8834</abbr>', supset:'<abbr>&#8835</abbr>' },
 	symbols2_b: { space:' ',  newline:'line',  pc:'&#37', less:'&#60', more:'&#62', leq:'&#8804', geq:'&#8805', ll:'&#8810', gg:'&#8811', approx:'&#8776', vert:'|', backslash:'&#8726', sum:'&#8721', prod:'&#8719', cap:'&#8745', cup:'&#8746', subset:'&#8834', supset:'&#8835', sim:'~', cdot:'&#8729', neq:'&#8800', quiv:'&#8801', sqrt:'&#8730',   prime:'&#8242', ldquo:'&#8220', rdquo:'&#8221', lsquo:'&#8216', rsquo:'&#8217', at:'&#64' },
 	allchar: function(){ 
@@ -38,16 +38,16 @@ editor.dict = {
 	
 	symbolset7_en: [ 
 		['u','c','d','r','l',  'o','t','h','e','s',  'n','a','i','space'],
-	    [ 'qmark','dash','dot','comma','z','q','prime',   'j','x','g','p','f','m',   'k','v','b','y','w' ],             
-	    ['colon','semicolon','emark','quotes','lbr','rbr',  '1','2','3','4','5',  '6','7','8','9','0','newline']
+	    [ 'prime','dash','dot','comma','z','q','m',   'j','x','g','p','f',   'k','v','b','y','w' ],             
+	    ['quotes','colon','emark','qmark','lbr','rbr',  '1','2','3','4','5',  '6','7','8','9','0','newline']
 	], symbolset7_ru: [ 
 		['r17','r18','r16','r13','r14',  'r3','r1','r6','r15','r10',   'space','r12','r19','r20'],    
-        ['r22','r11','r25','r32','r26','r27','r31',   'r23','r8','r9','r2','r21','r5',  'r24','r29','r33','r30','r4'],    
-		['r28','1','2','3','4','5',  '6','7','8','9','0',   'newline','emark','qmark','dash','dot','comma']
+        ['r31','r11','r25','r32','r26','r27','r5',   'r23','r8','r9','r2','r21',  'r24','r29','r33','r30','r4'],    
+		['qmark','1','2','3','4','5',  '6','7','8','9','0',  'r28','r22', 'newline','dash','dot','comma']
 	], symbolset7_math: [
-		['comma','dot','minus','plus','8','9',  '4','5','6','7','space',  '0','1','2','3'],    
-		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'qmark','sqrt','power','less','more',  'newline','eq','slash','cdot','lbr','rbr'],    
-		['i','j','k','l','underscore','space',  'd','e','f','g','h','space',  'a','b','c','x','y','z']  
+		['0','1','2','3','4','5','6','7','8','9',  'eq','plus','minus','space'],    
+		['lbrf','rbrf','lbrsq','rbrsq','semicolon','colon',  'qmark','space','power','space','space',  'newline','eq','slash','rsquo','lbr','rbr'],    
+		['i','j','k','l','underscore',  'space','e','f','g','h','d',  'a','b','c','x','y','z']  
 	], symbolset7_math2: [
 		['a','b','comma','dot','2','3', 'slash','minus','plus','lbr','rbr', 'x','y','z','space'],    
 		['less','more','sqrt','power','cdot','eq',  'newline','1','2','3','4','5',  '6','7','8','9','0','space'],    
@@ -57,9 +57,9 @@ editor.dict = {
 		[ 'dot','space','space','dash','z','q','at',   'j','x','g','p','f',   'k','v','b','y','w' ],             
 	    ['space','space','space','space','space','space', '1','2','3','4','5',  '6','7','8','9','0','underscore']
 	],symbolset7_other: [  
-		['lbrf','rbrf','lbrsq','rbrsq','lsquo','rsquo',  'quotes','at','ldquo','rdquo','less','more',  'eq','slash','cdot','lbr','rbr'],  
-		['comma','dot','minus','plus','8','9',  '4','5','6','7','space',  '0','1','2','at'],    
-		['i','j','k','l','underscore','space',  'd','e','f','g','h','space',  'a','b','c','x','y','z']  
+		['semicolon','colon','power','star','at',  'prime','quotes','slash','pc','dash', 'lbr','rbr','qmark','emark'],      
+		['space','space','space','space','space','space','space',  'dot','comma','eq','plus','underscore',  'space','lbrf','rbrf','lbrsq','rbrsq'],  
+		['space','space','space','space','space','space',  '0','1','2','3','4','5','6','7','8','9','space']
 	],                               
 	symbolset7_all: function(){ return [this.symbolset7_math, this.symbolset7_math2, this.symbolset7_other, this.symbolset7_files, this.symbolset7_en, this.symbolset7_ru] ; },
 	
@@ -174,32 +174,61 @@ function editor_run(parent, text_raw, destination, iter){                console
 	elem = create_element('editor_buttons_area', 'editor_buttons_area', 'editor_area'); 
 	
 	var input = document.getElementById('body');
-    
-    input.onkeypress = function() {
-		var key = event.keyCode;                                           // Get the Unicode value
-		console.log('OK '+key);
-		if ( (key >= 32 && key <= 59 ) || key == 61 ||  (key >= 63 && key <= 125) || (key >= 1040 && key <= 1103) ) {
-			var y = String.fromCharCode(key);      
-			editor_set_letter(y, true);
-		}
-	};
-		
-    input.onkeydown = function() {
-	    var key = event.keyCode || event.charCode;
-		console.log(key);
-	    if( key == 8 || key == 46 ){                                     //console.log('delete');
-	        editor_delete();
-		}
-	    if( key == 13 ){                                                 //console.log('enter');
-	        editor_set_letter(92);
-		}
-	    if( key == 37 ){                                    
-	        editor_scroll(0);
-		}
-	    if( key == 39 ){                                    
-	        editor_scroll(1);
-		}
-	};
+    if (common.browser=="Firefox"){ 
+		var a=0;
+		/*
+		input.onkeypress = function(event) {
+			var key = event.keyCode;                                           // Get the Unicode value
+			if ( (key >= 32 && key <= 59 ) || key == 61 ||  (key >= 63 && key <= 125) || (key >= 1040 && key <= 1103) ) {
+				var y = String.fromCharCode(key);                            console.log('keypress '+key+' '+y);  
+				editor_set_letter(y, true);
+			}
+		};
+		/*	
+	    input.onkeydown = function(event) {
+		    var key = event.keyCode;
+			console.log('keydown: '+key);
+		    if( key == 8 || key == 46 ){                                     //console.log('delete');
+		        editor_delete();
+			}
+		    if( key == 13 ){                                                 //console.log('enter');
+		        editor_set_letter(92);
+			}
+		    if( key == 37 ){                                    
+		        editor_scroll(0);
+			}
+		    if( key == 39 ){                                    
+		        editor_scroll(1);
+			}
+		};
+		*/ 
+	}
+	else{
+	    input.onkeypress = function(event) {
+			var key = event.keyCode;                                           // Get the Unicode value
+			if ( (key >= 32 && key <= 59 ) || key == 61 ||  (key >= 63 && key <= 125) || (key >= 1040 && key <= 1103) ) {
+				var y = String.fromCharCode(key);                            console.log('keypress '+key+' '+y);  
+				editor_set_letter(y, true);
+			}
+		};
+			
+	    input.onkeydown = function(event) {
+		    var key = event.keyCode;
+			console.log('keydown: '+key);
+		    if( key == 8 || key == 46 ){                                     //console.log('delete');
+		        editor_delete();
+			}
+		    if( key == 13 ){                                                 //console.log('enter');
+		        editor_set_letter(92);
+			}
+		    if( key == 37 ){                                    
+		        editor_scroll(0);
+			}
+		    if( key == 39 ){                                    
+		        editor_scroll(1);
+			}
+		};
+	}
 	
 	
 	editor_type = 'bottom_2rows';
@@ -210,6 +239,7 @@ function editor_run(parent, text_raw, destination, iter){                console
 	editor_show_start();                                                   
 	if (parent==='files') { editor_show_symbols(3,0); }
 }
+
 function editor_exit(){                                                  consolelog_func("darkblue"); 
     var elem = document.getElementById('editor_area');
     elem.parentNode.removeChild(elem);
@@ -314,8 +344,8 @@ function editor_show_symbols(lang, lvl){                                 console
 		}else if (lvl===1)  { 
 			inner_e+= '<div id="editor_caps"     onclick="editor_capital(1,0,0);" ' +editor.style.get_button(20) +'> caps </div>';
 			inner_e+= '<div id="editor_letters_p1" onclick="editor_show_symbols('+lang+',2);" ' +editor.style.get_button(7) +'>'+symbol2+'</div>'; 
-			//inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(13) +'> pin tab </div>';
-			reserved=[14,7,20];
+			inner_e+= '<div id="editor_caps" onclick="editor.pin_letters=1;" ' +editor.style.get_button(13) +'> pin tab </div>';
+			reserved=[14,7,20,13];
 		}
     }                                                                  
     for (ii=0; ii<editor.style.b_nx*editor.style.b_ny; ii++){

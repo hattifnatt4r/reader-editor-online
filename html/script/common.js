@@ -225,10 +225,13 @@ function utter_sentence(txt, stop, onend, repeat){                       console
     if (repeat!==undefined){ txt=common.repeat_text; }                   //console.log(txt);
     var proceed=true; 
     var ii=0, i=0, txt_i='', part_i='';
+    var i1=0, i2=0;
     while(proceed){
         if (txt.length>200){
             txt_i=txt.substring(0,200);
-            i=txt_i.lastIndexOf(',');                                    
+            i1=txt_i.lastIndexOf('. ');                                    
+            i2=txt_i.lastIndexOf(',');
+            i = Math.max(i1,i2);                                
             if (i===-1){i=txt_i.lastIndexOf(' ');}
             part_i=txt_i.substring(0,i+1);
             txt=txt.substring(i+1);
@@ -949,7 +952,7 @@ function common_show_notification(text, welcome){                        console
 	
 	inner_e = '<div id="'+id+'_back" onclick="menu_back(this.id,1,false);" class="back_area"> </div>';
 	inner_e+= '<div class="menu_area" >';
-	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:5vmin;line-height:8vh; color: rgba(0,0,0,0.55);">';
+	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:4.8vmin;line-height:7.5vh; color: rgba(0,0,0,0.55);">';
 	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;font-family:Ubuntu;">'+text+' &nbsp </div> </div> </div> </div>' ;
                                        
     inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > utter </div>';

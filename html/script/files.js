@@ -451,11 +451,11 @@ function files_past(){                                                   console
 //------------------------------------------------------------------------
 
 function files_welcome(){
-	var text = "Welcome! <br>This website may help you to read and write. See 'readme.txt' file to learn about website and how to use it. <br><br> Your browser does not support speech synthesis. Your browser does not support speech synthesis. Your browser does not support speech synthesis. Your browser does not support speech synthesis.";
-	var text = "Welcome! <br>This website may help you to read and write.";
-	text+=     " See 'readme.txt' file to learn about website and how to use it. <br>";
-	text+=     "To open the file close this menu, then click on the file icon and 'check' button to the right. ";
-	text+=     "Use right and left arrows to read the file."
+	var text = "Hi! <br>This website helps people to read and write. <br><br>";
+	text+=     "Check 'readme.txt' file for details. ";
+	text+=     "You will see it after closing this window. ";
+	text+=     "To open the file click on the file icon and 'check' button to the right. ";
+	//text+=     "Use right and left arrows to read the file."
 	//var text = "Welcome! Your browser does not support speech synthesis. ";
 	common_show_notification(text, true);
 	//common.repeat_text = replace_all(text,'<br>','');
