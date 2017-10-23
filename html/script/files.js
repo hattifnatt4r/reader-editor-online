@@ -249,31 +249,34 @@ function uploadOnChange() {                                              console
 //-- text display functions ---------------------------------------------------------------
 function files_show_files(){                                             consolelog_func();
 	var files_arr = document.getElementById('files_array').childNodes;   
-	var wratio = window.innerWidth/window.innerHeight;                   
-	var left = 2.5; 
-	var top=-7; 
-	var content_width = common.style.get_content_width();                
-	var eratio_x = content_width/wratio/100;                             
-	var eratio_y = 0.74;
-    var ywidth=21.5; var yspace=3;
-    var xwidth=ywidth*1.2;
-    var xspace = 3;                                                      
-    var xn = Math.floor((content_width+1)/(xspace+xwidth));             
+	var wratio = window.innerWidth/window.innerHeight;                   console.log('wratio: '+wratio+' '+window.innerWidth+' '+window.innerHeight);              
+	var left_pc = -1; 
+	var top_pc=-5.4; 
+    var ywidth_pc=22; var yspace_pc=3.7;
+    
+    var content_width = common.style.get_content_width()/wratio/100*window.innerWidth; 
+    var ywidth = ywidth_pc*window.innerHeight/100; 
+    var yspace = yspace_pc*window.innerHeight/100;
+    var top  = top_pc*window.innerHeight/100;
+    var left = left_pc*window.innerWidth/100;
+    
+    var xwidth = ywidth*1;
+    var xspace = yspace*0.8;
+                                                          
+    var xn = Math.floor((content_width-xspace)/(xspace+xwidth));             
     if (xn<1){xn=1};
-    var ratio = (content_width+1)/(xspace+xwidth)/xn;
-    var pic_width = 0.6*xwidth;
-    xwidth = xwidth*ratio;
+    var ratio = ( content_width - xwidth*xn )/(xspace*(xn+1));
+    var pic_width = 0.6*xwidth;                                          //console.log('xwidth: '+xwidth+' ratio: '+ratio);
     xspace = xspace*ratio;
     var i=0;       
 	for (i=0; i<files_arr.length; i+=1){                                 
 		var n_y = (i-i%xn)/xn;
-	    var x = left + (xspace+xwidth)* (i%xn);
-	    var y = top +  (ywidth+yspace)*n_y;  
-	    files_arr[i].style.top = y/eratio_y+'%';
-	    files_arr[i].style.left = x/wratio/eratio_x+'%';
-	    files_arr[i].style.height = ywidth/eratio_y+'%';
-	    dx = xwidth/wratio/eratio_x/100;
-	    files_arr[i].style.width = xwidth/wratio/eratio_x+'%';
+	    var x = left+ xspace + (xspace+xwidth)* (i%xn);
+	    var y = top + (ywidth+yspace)*n_y;  
+	    files_arr[i].style.top = y+'px';
+	    files_arr[i].style.left = x+'px'; 
+	    files_arr[i].style.height = ywidth+'px';
+	    files_arr[i].style.width  = xwidth+'px';
 	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
 	    //elem_pic.innerHTML = symbol_file;
 	    var elem_name = document.getElementById(files_arr[i].id+'_name');	    

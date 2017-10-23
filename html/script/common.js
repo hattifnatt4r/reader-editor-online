@@ -83,7 +83,7 @@ common.style = {
 	    return('class="'+class_name+'" style="'+style+'"'); 
 	},
 	
-	buttonpos_menu: function(i, class_n, x_dim, y_dim, shift_n, shift_nleft){  consolelog_func('brown'); 
+	buttonpos_menu: function(i, class_n, x_dim, y_dim, shift_n, shift_nleft){  //consolelog_func('brown'); 
 		if (class_n===undefined) {class_n=0;}
 		var class_arr = ["buttons", "buttons_text", "text_zoom_box", "buttons disabled"];
 		var class_name = class_arr[class_n];
@@ -281,6 +281,7 @@ function utter(txt, stop, onend, rate){                                  console
     else { msg.lang=common.lang; }
     if (!ru && !en && common.lang=='auto'){ msg.lang=common.langbase; }
     msg.rate = rate;                                                     //console.log('rate: '+msg.rate+', lang: '+msg.lang+', txt: '+msg.text+', stop: '+stop);
+    msg.rate = 0.9;                                                     //console.log('rate: '+msg.rate+', lang: '+msg.lang+', txt: '+msg.text+', stop: '+stop);
     if (stop==1){ 
 		if (common.browser!='Firefox'){
 			window.speechSynthesis.pause();         
