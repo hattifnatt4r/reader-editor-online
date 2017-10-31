@@ -17,6 +17,9 @@
 <link href='https://fonts.googleapis.com/css?family=Khula' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Swanky and Moo Moo' rel='stylesheet'> 
+<link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'> 
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato" />
 </head>
 
 <body id='body' class='body_bkg' id='reader_body' onresize="reader_resize()" >

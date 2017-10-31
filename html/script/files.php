@@ -1,20 +1,8 @@
 <?php
-//echo $_SESSION["session"];
-//echo '| id_prev: '.$_SESSION["session_id_prev"].' | ';
-//echo session_id();
 if ($_SESSION["session_id_prev"] !== session_id()){
-	//echo ' NEW SESSION ';
 	$_SESSION['usr_dir'] = "users/guests/".session_id();
 	recurse_copy('users/common_backup',$_SESSION['usr_dir']);
     chmod($_SESSION['usr_dir'], 0777);
-//}
-//if ($_SESSION["session"]!==10){
-	 //echo 'SESSION_START';
-	//getUserData();
-    //$_SESSION["session"] = 10;
-    
-    //$_SESSION['usr_dir'] = "users/common";
-    //$_SESSION['usr_home'] = "users/common";
     $_SESSION['usr_home'] = "users/guests/".session_id();
     $_SESSION["file_counter"] = 0;
     $_SESSION["word_i"] = 'HHEELLOO';
@@ -28,10 +16,8 @@ if ($_SESSION["session_id_prev"] !== session_id()){
     
     $_SESSION["alert"] = "";
     $_SESSION["session_id_prev"] = session_id();
-    //$_SESSION["submit_any"] = "ok";
+    //getUserData();
 }
-//run_files();
-//if (!is_writable("users/guests/")) { echo " | 'users/guests/' not writable";  }
 if (!is_writable("users/")) { echo " | 'users/' not writable";  }
 if (!is_writable("users_mail/")) { echo " | 'users_mail/' not writable";  }
 if (!is_writable("data/login.json")) { echo " | 'data/login.json' not writable";  }
@@ -44,51 +30,7 @@ if (strpos($_SESSION['usr_home'], "users/guests/")!=false ){
 	$myfile = fopen($fname , "w") or die("Unable to open file!");
 	$time = time();
 	fwrite($myfile, time());
-	//echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
 	fclose($myfile);
-}
-
-if(isset($_POST["ffiles_test_submit"])) {
-	echo ' \n Clean_tmp';
-	$dir = "users/guests";
-	$delay = 2;
-
-	if ($handle = opendir($dir)) {
-		foreach(scandir($dir) as $entry) {
-			echo '<br>'.$entry;
-			if ($entry!=".." && $entry!="."){
-				$time = time();
-				$fname = $dir.'/'.$entry.'/php_session.txt';
-				$myfile = fopen($fname, "r") or die("Unable to open file!");
-				$text = fread($myfile, filesize($fname));
-				echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
-				
-				if ($time-(int)$text > $delay) { 
-					rmdir($dir.'/'.$entry);
-					//echo rmdir($dir.'/'.$entry.'/');
-					delete_files($dir.'/'.$entry.'/');
-					//echo $entry.' is DELETED';
-				} 
-			}
-		}
-		
-		closedir($handle);
-	}
-}
-
-function delete_files($target) {
-    if(is_dir($target)){
-        $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
-        
-        foreach( $files as $file )
-        {
-            delete_files( $file );      
-        }
-      
-        rmdir( $target );
-    } elseif(is_file($target)) {
-        unlink( $target );  
-    }
 }
 
 //-- files ------------------------------------------------------------------
@@ -101,8 +43,11 @@ function run_files(){
 	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
 	
 	echo "<div id='content_box' class='text_scroll_box' style='position:fixed;height:73%;top:0%;' align='top'> 
-	<div class='text_scroll' style='top:-8.4%;left:0vw;' align='left' >
-	<div id='files_array' class='reader_text' style='top:0;left:0;visibility:hidden;'>".$show_arr."</div></div></div>";
+	<div class='text_scroll' style='top:-6.2%;left:0vw;' align='left' >
+	<div id='files_array' class='reader_text' style='top:0;left:0;visibility:hidden;height:20%;'>".$show_arr."</div></div></div>";
+	//echo "<div id='content_box' > 
+	//<div >
+	//<div id='files_array' >".$show_arr."</div></div></div>";
 	
 	echo '<div id="zoom_box" class="text_zoom_box">  
 	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
@@ -148,12 +93,14 @@ function show_file($entry, $i){
         " ;        
     $filename = $_SESSION['usr_dir'].'/'.$entry;
     if (file_exists($filename)){
-        if (is_dir($filename)){$class='files_pic files-dir';$title='dir';} else { $class='files_pic files-txt';$title='txt'; }
+        //if (is_dir($filename)){$class='files_pic files-dir';$title='dir';} else { $class='files_pic files-txt';$title='txt'; }
+        if (is_dir($filename)){$class='files_symbol';$title='dir';} else { $class='files_symbol'; $title='txt'; }
     }
     if (strpos($entry,'~')!==false){ 
-        $entry = str_replace('~','',$entry); $class='files attention';
+        //$entry = str_replace('~','',$entry); $class='files attention';
+        $entry = str_replace('~','',$entry); $class='files_symbol';
          }
-    $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  class="files" style="'.$style.'" title="'.$title.'" align="center">'
+    $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  class="files" style="'.$style.'" title="'.$title.'" >'
     .'<div id="fileid_'.$i.'_pic"  class="'.$class.'" ></div>'
     .'<div id="fileid_'.$i.'_name"  class="files_name" >'.$entry.'</div> </div>' ;
     return($file_i);
@@ -418,10 +365,6 @@ function getUserData(){
     
     $ip_i = getUserIP();
     $country = file_get_contents('http://api.wipmania.com/'.$ip_i.'?google.com');
-    //$wipmania = file_get_contents('http://api.wipmania.com/jsonp?callback=?') ;
-    //$n = strpos($wipmania, '"country":"')+11;
-    //$country = substr($wipmania,$n, strpos($wipmania, '"',$n+1)-$n );
-    //echo '<div style="position:fixed;top:0%;left:0%;z-order:1;width:70%;">'.$ip_i.' '.$country.' '.gmdate("Y-m-d H:i:s").'</div>';
     $text = $json.$ip_i.' '.$country.' '.gmdate("Y-m-d H:i:s")."\r\n";
     $myfile = fopen($fname, "w") or die("UUUUnable to open file!");
     fwrite($myfile, $text);
@@ -581,5 +524,48 @@ function replace_rec($txt,$a,$b){
     return($txt);
 }
 
+//-- clean tmp -----------------------------------------------------------
+
+if(isset($_POST["ffiles_test_submit"])) {
+	echo ' \n Clean_tmp';
+	$dir = "users/guests";
+	$delay = 2;
+
+	if ($handle = opendir($dir)) {
+		foreach(scandir($dir) as $entry) {
+			echo '<br>'.$entry;
+			if ($entry!=".." && $entry!="."){
+				$time = time();
+				$fname = $dir.'/'.$entry.'/php_session.txt';
+				$myfile = fopen($fname, "r") or die("Unable to open file!");
+				$text = fread($myfile, filesize($fname));
+				echo ' | time: '.$text.' - '.$time.' - '.(string)($time-(int)$text);
+				
+				if ($time-(int)$text > $delay) { 
+					rmdir($dir.'/'.$entry);
+					delete_files($dir.'/'.$entry.'/');
+				} 
+			}
+		} closedir($handle);
+	}
+}
+
+function delete_files($target) {
+    if(is_dir($target)){
+        $files = glob( $target . '*', GLOB_MARK ); 
+        foreach( $files as $file )
+        {
+            delete_files( $file );      
+        }
+        rmdir( $target );
+    } elseif(is_file($target)) {
+        unlink( $target );  
+    }
+}
+
+//------------------------------------------------------------------------
+
 run_files();
+
+
 ?>

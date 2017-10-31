@@ -4,11 +4,13 @@ var common = {
 	lang: "auto",
 	editor_nlines_lvl0: 3,
 	editor_nlines_lvl1: 2,
-	fontsize: 0.8,
+	b_fontsize_scale: 1,
+	f_fontsize_scale: 1,
+	r_fontsize_scale: 1,
 	time_delay: 10,
 	welcome: 'do',
 	
-	cookie_number: 7,
+	cookie_number: 9,
 	browser: "",
 	cookie_suffix: "_",
 	name: "common",
@@ -55,11 +57,37 @@ common.style = {
     yn:4, btop:3.5, bbot:96.5, 
     xn:2, bright:98, xspace:4, dx_side:1,
     dy: 16.5, xy_ratio: 1.1,
-    textheight_zoom: 78,
+    textheight_zoom: 77,
     textheight: 97,
     b_width: 12, 
     b_height: 17,
+    b_fontsize_base: 5,
+    f_fontsize_base: 3.8,
+    r_fontsize_base: 3.5,
+    b_fontsize: 0,
+    f_fontsize: 0,
+    r_fontsize: 0,
+    f_fontalpha: 1,
+    r_fontalpha: 1,
+    fontalpha_def: 0.58,
+    fontalpha_def_b: 0.58,
+    f_lineheight_base: 1.05,
+    b_lineheight_base: 1.05,
+    r_lineheight_base: 1.45,
+    f_lineheight: 0,
+    b_lineheight: 0,
+    r_lineheight: 0,
+    vmin: 10,
+    cursorshift:0.25,
     
+    init_font: function(scale, hscale){
+		this.b_fontsize = scale*this.b_fontsize_base;
+		this.f_fontsize = scale*this.f_fontsize_base;
+		this.r_fontsize = scale*this.r_fontsize_base;
+		this.b_lineheight = hscale*this.b_lineheight_base;
+		this.f_lineheight = hscale*this.f_lineheight_base;
+		this.r_lineheight = hscale*this.r_lineheight_base;
+	},
     get_content_width: function(){                                       consolelog_func('brown');
 		var wratio = window.innerWidth/window.innerHeight;
 		var bright = wratio*this.bright;
@@ -79,7 +107,8 @@ common.style = {
 	    var y = this.btop + (i%this.yn)*(yspace+this.dy*1);
 	    var x = bright - (this.xn-n_x)*dx - (this.xn-n_x-1)*this.xspace; 
 	    if ((i-i%this.yn)/this.yn==this.xn-1){ dx = dx*this.dx_side; }    
-	    var style = 'left:'+x/wratio+'%;top:'+y+'%;width:'+dx/wratio+'%;height:'+this.dy+'%; border-bottom-width:'+this.dy*0.13+'%;';
+	    var fontsize = this.b_fontsize*common.b_fontsize_scale*this.vmin;  
+	    var style = 'left:'+x/wratio+'%;top:'+y+'%;width:'+dx/wratio+'%;height:'+this.dy+'%; border-bottom-width:'+this.dy*0.13+'%; font-size:'+fontsize+'px; line-height:'+fontsize*this.b_lineheight+'px;';
 	    return('class="'+class_name+'" style="'+style+'"'); 
 	},
 	
@@ -107,27 +136,32 @@ common.style = {
 		var y = b_top + (b_yspace+b_height)*ny;
 		//if (class_n===1) { x += b_xspace-1; }
 		//if (class_n===2) { b_width = ( b_right-b_left-3*b_xspace-b_width); }
-		if (class_n===2) { b_width = 2*b_width+b_xspace; }
-		var style = 'left:'+x+'%; top:'+y+'%;'+'width:'+b_width+'%; height:'+b_height+'%;';  
+		var fontsize = this.b_fontsize*common.b_fontsize_scale*this.vmin;   
+		var lineheight = fontsize*this.b_lineheight;
+		if (class_n===2) { b_width = 2*b_width+b_xspace; lineheight = b_height*this.vmin+lineheight/2.0; }
+		var style = 'left:'+x+'%; top:'+y+'%;'+'width:'+b_width+'%; height:'+b_height+'%; font-size:'+fontsize+'px; line-height:'+lineheight+'px;';  
 		if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
 		if (class_n===0){ style+= 'background-color: rgba(110, 152, 27, 0.7);'; }
 		return('class="'+class_name+'" style="'+style+'"');
 	},
 	
 	resize: function(){                                                  consolelog_func('brown');
+		this.vmin = Math.min(window.innerWidth, window.innerHeight)/100;
+	    common.style.init_font(0.9,1.1);
 		var wratio = window.innerWidth/window.innerHeight;
 		var content_width = this.get_content_width();
 		var elem = document.getElementById('content_box');
 	    if (elem){ elem.style.width= content_width/wratio+'%'; }
 	    var elem = document.getElementById('zoom_box');
-	    if (elem){ elem.style.width= (content_width-5.4*wratio)/wratio+'%'; }  
+	    if (elem){ elem.style.width= (content_width-3.4*wratio)/wratio+'%'; }  
 	    var elem = document.getElementById('buttons_area');
 	    if (elem){ elem.style.left= (content_width-0.5*wratio)/wratio+'%'; } 
 	}	
 }
 
 common.browser = check_browser();
-
+common.style.vmin = Math.min(window.innerWidth, window.innerHeight)/100;
+common.style.init_font(0.9,1.1);
 
 document.addEventListener("click",handler,true);
 function handler(e){                                                     consolelog_func('orange'); 
@@ -174,10 +208,15 @@ var symbol_sound_off = '<svg class="ion_symbol"> <use xlink:href="#ion-android-v
 var symbol_delete    = '<svg class="ion_symbol"> <use xlink:href="#ion-backspace"></use> </svg>';
 var symbol_undo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-undo"></use> </svg>';
 var symbol_redo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
-var symbol_addcontact= '<svg class="ion_symbol"> <use xlink:href="#ion-android-person-add"></use> </svg>';
 
-var symbol_file      = '<svg class="ion_symbol"> <use xlink:href="#ion-android-document"></use> </svg>';
-var symbol_folder    = '<svg class="ion_symbol"> <use xlink:href="#ion-android-folder"></use> </svg>';
+
+var shadow = '<defs><filter id="shadow"><feDropShadow dx="4" dy="8" stdDeviation="4"/><feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer></filter></defs>';
+var symbol_addcontact= '<svg class="ion_symbol_txt" > <use xlink:href="#ion-android-person-add"></use> </svg>';
+//var symbol_file      = '<div>'+symbol_down+symbol_up+symbol_enter+'</div>';
+//var symbol_file      = '<div>'+'abc'+'</div>';
+//var symbol_file      = '<svg class="ion_symbol_txt">' + shadow + ' <use xlink:href="#ion-android-document"></use> </svg>';
+var symbol_file      = '<svg class="ion_symbol_txt">' + ' <use xlink:href="#ion-android-document"></use> </svg>';
+var symbol_folder    = '<svg class="ion_symbol_dir" align="center"> <use xlink:href="#ion-android-folder"></use> </svg>';
 var symbol_mail      = '<svg class="ion_symbol ion_symbol_smaller"> <use xlink:href="#ion-android-mail"></use> </svg>';
 
 
@@ -504,6 +543,7 @@ function reader_parse_html(text_origin){                                 //conso
 function reader_parse_txt(text_origin, n_p){                             //consolelog_func(); 
     var txt = text_origin;
     var endsymbol = ['<br>', '...', '!!!', '???', '.', '!', '?', ',', ' ','<'] ;
+    //var endsymbol = [' '];
     var emptytag = ['area','base','col','command','embed','hr','img','input','ceygen','link','meta','param','source','track','wbr','video','audio'];
     var proceed = 1, i = 0, i_end=0, j = [], arr = [], tag_arr=[]; 
     var tag_i = "";
@@ -557,7 +597,7 @@ function reader_parse_txt(text_origin, n_p){                             //conso
     if (arr.length===0){ arr=[" "]; }                                    
     
     //-- compose text with rpoper tags -----------------------------------
-    var endsentence = ['...', '!!!', '???', '.', '!', '?'];
+    var endsentence = ['... ', '!!! ', '??? ', '. ', '! ', '? ', '...', '!!!', '???', '.', '!', '?'];
     var p0=n_p.toString();  
     var text = '';
     var i_w = 0, i_s = 0, i_p = n_p; 
@@ -579,10 +619,13 @@ function reader_parse_txt(text_origin, n_p){                             //conso
     var new_sentence = false;
     for (i=0; i<arr.length; i+=1){
         word=arr[i];             
-        if (i===i_end) {character = 'A';}
-        else{ character = arr[i+1].charAt(0); }
-        if (character.toLowerCase() === character.toUpperCase() && /^\d+$/.test(character)===false){ character='a'; }   
-		new_sentence = (character == character.toUpperCase() && endsentence.indexOf(word.replace(' ',''))!=-1); 
+		new_sentence = false;
+		if (endsentence.indexOf(word.replace(' ',''))!=-1){
+			if (i===i_end) {character = 'A';}
+			else{ character = arr[i+1].charAt(0); }                      //console.log('1: '+character+' |'+arr[i]+'|'+arr[i+1]+'|');
+			if (character.toLowerCase() === character.toUpperCase() && /^\d+$/.test(character)===false){ character='a'; }  //console.log('2: '+character);
+			if (character == character.toUpperCase() ){ new_sentence = true; }
+			}
 		
         if ( tag_arr.indexOf(i)!=-1 ) {                                  // if tag, no wrapping
 				text = text+word; 
@@ -759,29 +802,57 @@ function common_set_lang(lang, is_base){                                 console
 }
 
 function common_show_fontsize(obj){                                      consolelog_func(); 
+	var alpha_def = 1, font_def = 3, scale=1;
+	if (obj.name==='files'){ alpha=common.style.f_fontalpha; font_def = common.style.f_fontsize; scale = common.f_fontsize_scale; }
+	if (obj.name==='common'){ alpha=common.style.r_fontalpha; font_def = common.style.r_fontsize; scale = common.r_fontsize_scale; }            
+	if (obj.name==='reader'){ alpha=common.style.r_fontalpha; font_def = common.style.r_fontsize; scale = common.r_fontsize_scale; } 
     var inner_e = ''; 
-    inner_e+=     '<div id="0.8"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(2,0)+'> x 0.7 </div>';
-    inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(3,0)+'> x 1 </div>';
-    inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(7,0)+'> x 1.2 </div>';
-    inner_e+=     '<div id="1.45"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(6,0)+'> x 1.5 </div>';
-    inner_e+=     '<div id="1.9"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(5,0)+'> x 2 </div>';
-    inner_e+=     '<div id="2.4"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(4,0)+'> x 2.5 </div>';
-    inner_e+=     '<div class="text_zoom_box" '+common.style.buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom menu_zoom" style="font-size:'+obj.fontsize*3.5+'vh;">text example</div></div>';
+    if (obj.name==='files'){
+	    inner_e+=     '<div id="0.8"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(7,0)+'> x 0.8 </div>';
+	    inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(6,0)+'> x 1 </div>';
+	    inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(5,0)+'> x 1.2 </div>';
+	    inner_e+=     '<div id="1.4"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(4,0)+'> x 1.4 </div>';
+    }
+    if (obj.name==='reader'){
+		inner_e+=     '<div id="0.8"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(2,0)+'> x 0.8 </div>';
+		inner_e+=     '<div id="1"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(3,0)+'> x 1 </div>';
+		inner_e+=     '<div id="1.2"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(7,0)+'> x 1.2 </div>';
+		inner_e+=     '<div id="1.4"    class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(6,0)+'> x 1.4 </div>';
+		inner_e+=     '<div id="2.0"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(5,0)+'> x 2.0 </div>';
+		inner_e+=     '<div id="3.0"      class="buttons"  onclick="common_set_fontsize(this.id,'+obj.name+');" '+common.style.buttonpos_menu(4,0)+'> x 3.0 </div>';
+	}
+    inner_e+=     '<div class="text_zoom_box" '+common.style.buttonpos_menu(0,2)+'><div id="common_fontsize_zoom" class="text_zoom menu_zoom" style="color:rgba(0,0,0,'+alpha+'); font-size:'+font_def*scale*common.style.vmin+'px;">text example</div></div>';
     common_create_menu('common_fontsize',1, inner_e);
 }
 function common_set_fontsize(id, obj){                                   consolelog_func(); 
-	var classname = ''; var lineheight = 1.1; var alpha_def=0.6;
-	if (obj.name==='files'){ classname = 'files_name'; lineheight = 1.1; alpha_def=0.6;}
-	if (obj.name==='common'){ classname = 'text_scroll'; lineheight = 1.38; alpha_def=0.8;}             
-	var font_default = 3.5;             
-	var scale = parseFloat(id);                                          
+	var s = common.style;
+	var classname = ''; var lineheight = 1.1; 
+	var alpha_def=s.fontalpha_def; 
+	var font_default = 3;
+	if (obj.name==='files'){ classname = 'files_name'; lineheight = s.f_lineheight; font_default = s.f_fontsize; }
+	if (obj.name==='common'){ classname = 'text_scroll'; lineheight = s.r_lineheight; font_default = s.r_fontsize; }            
+	if (obj.name==='reader'){ classname = 'text_scroll'; lineheight = s.r_lineheight; font_default = s.r_fontsize; }                         
+	var scale = parseFloat(id);      
 	var elem = document.getElementById('common_fontsize_zoom');
-    if (elem) {elem.style.fontSize = (font_default*scale)+'vh'; }
-    var alpha = alpha_def-0.3*scale/3;
-    $('.'+classname).css('font-size', (font_default*scale)+'vmin');
-    $('.'+classname).css('line-height', (lineheight*font_default*scale)+'vmin');
+    var alpha = alpha_def-(0.11-0.05*(scale-1)/2.0)*(scale-1);                                 
+    var fontsize = font_default*scale*s.vmin;                            console.log(fontsize+' | '+alpha);
+    common.style.f_fontalpha = alpha;
+    if (elem) {
+		elem.style.fontSize = fontsize+'px'; 
+		elem.style.color = 'rgba(0,0,0,'+alpha+')';
+	}
+    $('.'+classname).css('font-size', fontsize+'px');
+    $('.'+classname).css('line-height', lineheight*fontsize+'px');
     $('.'+classname).css('color', 'rgba(0,0,0,'+alpha+')');
-    obj.fontsize = scale;                                                
+    if (obj.name==='files'){ common.f_fontsize_scale = scale;   common.style.f_fontalpha = alpha; }
+    if (obj.name==='reader'){                                            console.log('READER');
+		common.r_fontsize_scale = scale;   common.style.r_fontalpha = alpha; 
+		var elem = document.getElementById('text_scroll_area');
+	    elem.style.fontSize = fontsize+'px';                             console.log(elem.style.fontSize);
+		elem.style.color = 'rgba(0,0,0,'+common.style.r_fontalpha+');'; 
+		elem.style.lineHeight = lineheight*fontsize+'px'; 
+	}  
+    //common.style.resize();                    
 }
 
 function common_create_menu(id, lvl, buttons_html, parent, ineditor){    consolelog_func(); 
@@ -954,7 +1025,7 @@ function common_show_notification(text, welcome){                        console
 	inner_e = '<div id="'+id+'_back" onclick="menu_back(this.id,1,false);" class="back_area"> </div>';
 	inner_e+= '<div class="menu_area" >';
 	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:4.8vmin;line-height:7.5vh; color: rgba(0,0,0,0.55);">';
-	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;font-family:Ubuntu;">'+text+' &nbsp </div> </div> </div> </div>' ;
+	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;">'+text+' &nbsp </div> </div> </div> </div>' ;
                                        
     inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > utter </div>';
     if (welcome){

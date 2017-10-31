@@ -7,24 +7,37 @@
   
   /*---------------------------*/
   position: fixed; left:0;top:0; width:100%;height:100%;
-  font-weight:400; font-size:20px; text-align:center; 
+  text-align:center; 
   
   font-family: Rockwell, "Courier Bold", Courier, Georgia, Times, "Times New Roman", serif;
+  
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  
   font-family: "Open Sans";
+  /*font-family: 'Source Sans Pro';
+  font-family: "Lato";
+  
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif; 
+  /*
   font-family: "Times New Roman", Georgia, Serif;  
+  font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+  font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  font-family: Bookman;
+  
+  /*font-family: "Trebuchet MS", Helvetica, sans-serif;
   /*font-family: proxima-nova, sans-serif;
-  font-family: "Open Sans";
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: "Open Sans"; */
+  /* 
+  font-family: Verdana, Geneva, sans-serif;  */
   font-weight: 100;
-  font-style: normal;
-  font-variant: normal;
+  /*font-style: normal;
+  /*font-variant: normal;
   /*font-family: "Ubuntu";  */
 }
 .text{
-  font-style:normal; 
+  /*font-style:normal; */
 }.text_highlite{
-  font-style:normal; 
+  /*font-style:normal; */
   background-color: rgba(108, 170, 9, 0.6);
 }
 .editor_bkg{
@@ -48,7 +61,6 @@
  }
 .buttons{
   width:12%; height:17%;     
-  font-size: 5vmin; line-height: 4.5vmin;
   position:fixed; box-sizing:border-box;
   word-break: normal; white-space: normal;
   border-radius: 0.25vmin;
@@ -57,7 +69,7 @@
  
   /*---------------------------*/
   display:flex; justify-content:center; align-items:center;
-  font-family: "Ubuntu";  
+  /*font-family: "Ubuntu";  */
 }
 .buttons:hover{
   background-color: rgba(107, 143, 36, 0.7); 
@@ -67,7 +79,6 @@
 }
 .buttons_text{
   width:12vw; height:17vh;     
-  font-size: 6.3vmin; line-height: 6.5vmin;
   position:fixed; box-sizing:border-box;
   word-break: normal; white-space: normal;
   background-color: white;  color: rgba(0,0,0,0.52);
@@ -85,7 +96,6 @@
   position:relative; top:0%;
   text-align: center;
   height: 53%; width:95%;
-  font-size:3.2vh; color:rgba(0,0,0,0.6); 
   word-break: break-all; white-space: normal;
   overflow-y: hidden; 
   border: solid 0vh rgba(0,0,0,0);
@@ -111,15 +121,15 @@
 .attention{       border-color: #a6ce7e; background-color: #a6ce7e; }
 
 .nobkg{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0); 
-  font-size: 17vmin; color:#8cb464; }
+  color:#8cb464; }
 .nobkg:hover{ background-color: rgba(0,0,0,0); border-color:rgba(0,0,0,0); box-shadow: 0 5px 8px 0 rgba(0,0,0,0);}
-.symbol{ background-color: #94B96E; border-color: #94B96E; background-color:rgba(110,152,27,0.7);  }
-.symbol:hover{ background-color: #73a145; border-color: #73a145; background-color:rgba(110,152,27,1);}
-.editor{ background-color: rgba(0,0,0,0.3); background-color: rgba(76, 95, 103, 0.35); }
-.editor:hover{ background-color: rgba(0,0,0,0.5); background-color: rgba(76, 95, 103, 0.65); }
+.symbol{ background-color:rgba(110,152,27,0.7);  }
+.symbol:hover{ background-color:rgba(110,152,27,1);}
+.editor{ background-color: rgba(76, 95, 103, 0.35); }
+.editor:hover{ background-color: rgba(76, 95, 103, 0.65); }
 
-.ion_symbol{
-height:55%; opacity: 0.5;
+.ion_symbol{ 
+height:55%; opacity: 0.4;
 }
 .ion_symbol_larger{
 height:50%; 
@@ -127,15 +137,23 @@ height:50%;
 .ion_symbol_smaller{
 height:50%; 
 }
-.ion_symbol_files{
-text-align:center; 
+.files_symbol{ opacity: 1;
+  display:flex; justify-content:center; align-items:center;
+  /*background-color: #eee;*/
+  position:relative;
+  height:45%; width:100%;
+  /*filter:url(#shadow);*/ 
 }
+.ion_symbol_dir{       height:105%; stroke: rgba(110,152,27,0.7); fill:rgba(110,152,27,0.7); }
+.ion_symbol_txt{       height:105%; stroke: rgba(19,105,134,0.3); fill:rgba(19,105,134,0.3); }
+/*.fsymbol_txt_hover{ opacity: 0.4; } */
+
 
 /*-- reader text ---------------------------------------------------------*/
 .text_scroll_box{
   left:1.5%; top:0%; width:70%; height: 74%; 
   position:fixed; text-align:center; box-sizing:border-box;
-  font-size:3vh; color:rgba(0,0,0,0.8);
+  color:rgba(0,0,0,0.8);
   line-height: 5vh; 
   border-radius: 0.25vmin;  
   white-space:pre;
@@ -154,17 +172,18 @@ text-align:center;
 
 /*-- zoom ----------------------------------------------------------------*/
 .text_zoom_box{
-  left:3.4%; top:78%; width:70%; height: 20%; 
+  left:1.5%; top:80%; width:70%; height: 20%; 
   position:fixed; 
   border-radius: 0.25vmin; 
-  border: dashed 0.3vh #8a8a5c;  
+  /*border: dashed 0.3vh #8a8a5c;  */
+  background-color: rgba(0, 0, 0, 0.05); 
   box-sizing:border-box;
-  font-size: 13vmin; line-height: 19vmin; 
+  font-size: 11vmin; line-height: 18vmin; 
   display:flex; justify-content:center; align-items:center;
 }.text_zoom{
   border-radius: 0.25vmin; top:0;
-  position:relative; width:100%; height:98%;  
-  font-style:normal;  color: rgba(0,0,0,0.58);
+  position:relative; width:100%; height:96%;  
+  color: rgba(0,0,0,0.58);
   overflow-x: scroll; overflow-y: hidden; white-space:nowrap; 
 }.text_zoom::-webkit-scrollbar {
   position:relative; 
@@ -173,12 +192,11 @@ text-align:center;
   background-color: #c8ccd0; 
   background-color: rgba(0,0,0,0.15);
 }
-.menu_zoom{font-size: 6vmin; top:-2vh;}
+.menu_zoom{top:-2vh;}
 /*-- menu ----------------------------------------------------------------*/
 .button_app{
   border-radius: 1%;
   width: 10%; height: 10%; left:10%;
-  font-size:20px;
   border-color: rgba(255,255,255,0.3);
   background-color: rgba(255,255,200,0.7); 
   border: solid 2px green;
@@ -200,6 +218,7 @@ text-align:center;
 }
 /*-- caret ---------------------------------------------------------------*/ 
 .blinking-cursor {
+font-style:normal;
   font-size:104%;  opacity:0.5;  
   
   -webkit-animation: 1.3s blink step-end infinite;

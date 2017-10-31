@@ -80,7 +80,7 @@ editor.style = {
 	nlines_lvl0: 3,
 	nlines_lvl1: 2,
 	fontsize: 0,
-	cursorshift: 0,
+	cursorshift: common.style.cursorshift,
 	class_arr: ["buttons editor", "buttons symbol", "buttons nobkg", "buttons disabled"],
 	
 	get_button: function (i, class_n){                                   //consolelog_func("brown"); 
@@ -104,7 +104,8 @@ editor.style = {
 	    if ( ny===this.b_ny-1 && this.b_botheight!=1 ) { b_height = b_height*this.b_botheight;
 		}
 	    
-	    style+= 'left:'+x+'%; top:'+y+'%; width:'+b_width+'%; height:'+b_height+'%; border-bottom-width:'+b_height*0.07+'%;'  ;  
+	    var fontsize = common.style.b_fontsize*common.b_fontsize_scale*common.style.vmin; 
+	    style+= 'left:'+x+'%; top:'+y+'%; width:'+b_width+'%; height:'+b_height+'%; border-bottom-width:'+b_height*0.07+'%; font-size:'+fontsize+'px;'  ;  
 	    return('class="'+class_name+'" style="'+style+'"');
 	},
 	
@@ -176,36 +177,11 @@ function editor_run(parent, text_raw, destination, iter){                console
 	var input = document.getElementById('body');
     if (common.browser=="Firefox"){ 
 		var a=0;
-		/*
-		input.onkeypress = function(event) {
-			var key = event.keyCode;                                           // Get the Unicode value
-			if ( (key >= 32 && key <= 59 ) || key == 61 ||  (key >= 63 && key <= 125) || (key >= 1040 && key <= 1103) ) {
-				var y = String.fromCharCode(key);                            console.log('keypress '+key+' '+y);  
-				editor_set_letter(y, true);
-			}
-		};
-		/*	
-	    input.onkeydown = function(event) {
-		    var key = event.keyCode;
-			console.log('keydown: '+key);
-		    if( key == 8 || key == 46 ){                                     //console.log('delete');
-		        editor_delete();
-			}
-		    if( key == 13 ){                                                 //console.log('enter');
-		        editor_set_letter(92);
-			}
-		    if( key == 37 ){                                    
-		        editor_scroll(0);
-			}
-		    if( key == 39 ){                                    
-		        editor_scroll(1);
-			}
-		};
-		*/ 
+		// todo
 	}
 	else{
 	    input.onkeypress = function(event) {
-			var key = event.keyCode;                                           // Get the Unicode value
+			var key = event.keyCode;                                     // Get the Unicode value
 			if ( (key >= 32 && key <= 59 ) || key == 61 ||  (key >= 63 && key <= 125) || (key >= 1040 && key <= 1103) ) {
 				var y = String.fromCharCode(key);                            console.log('keypress '+key+' '+y);  
 				editor_set_letter(y, true);
@@ -215,10 +191,10 @@ function editor_run(parent, text_raw, destination, iter){                console
 	    input.onkeydown = function(event) {
 		    var key = event.keyCode;
 			console.log('keydown: '+key);
-		    if( key == 8 || key == 46 ){                                     //console.log('delete');
+		    if( key == 8 || key == 46 ){                                 //console.log('delete');
 		        editor_delete();
 			}
-		    if( key == 13 ){                                                 //console.log('enter');
+		    if( key == 13 ){                                             //console.log('enter');
 		        editor_set_letter(92);
 			}
 		    if( key == 37 ){                                    
@@ -629,12 +605,11 @@ function editor_scroll(order){                                           console
     var text_read = common_textto_read(letter);
     if (editor.sound_navigator==1) { utter(text_read, 1, 0); }
     if (letter==' '){letter='_';}
-    //document.getElementById('editor_show_letter').innerHTML = letter;
     return (iter);
 }
 
 function editor_set_cursor(){                                            consolelog_func(); 
-	var cursorshift = editor.style.fontsize*0.14;            
+	var cursorshift = editor.style.fontsize*editor.style.cursorshift;            
 	if (common.browser=="Firefox"){         
 		var cursor = '<em id="cursor" style="position:relative;"><em class="blinking-cursor" style="display:inline;margin:0 -'+cursorshift.toString()+'px; width:0px;left:-'+cursorshift.toString()+'px" >|</em></em>'; 
 	}else{

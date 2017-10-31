@@ -19,7 +19,9 @@
 <link href='https://fonts.googleapis.com/css?family=Khula' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Swanky and Moo Moo' rel='stylesheet'> 
+<link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet'> 
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato" />
 </head>
 
 <body id='body' class='body_bkg' align='top' onresize="files_resize()" >
@@ -29,6 +31,8 @@
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
+	<symbol viewBox="0 0 512 512" id="ion-android-folder"><path d="M213.338 96H74.666C51.197 96 32 115.198 32 138.667v234.666C32 396.802 51.197 416 74.666 416h362.668C460.803 416 480 396.802 480 373.333V186.667C480 163.198 460.803 144 437.334 144H256.006l-42.668-48z"></path></symbol>
+	<symbol viewBox="0 0 512 512" id="ion-android-document"><path d="M288 48 H136 c-22.092 0-40 17.908-40 40 v336 c0 22.092 17.908 40 40 40 h240 c22.092 0 40-17.908 40-40 V176 L288 48z "></path></symbol>	
 		
 	<symbol viewBox="0 0 512 512" id="ion-arrow-left-b"><path d="M327.3 98.9l-2.1 1.8-156.5 136c-5.3 4.6-8.6 11.5-8.6 19.2 0 7.7 3.4 14.6 8.6 19.2L324.9 411l2.6 2.3c2.5 1.7 5.5 2.7 8.7 2.7 8.7 0 15.8-7.4 15.8-16.6V112.6c0-9.2-7.1-16.6-15.8-16.6-3.3 0-6.4 1.1-8.9 2.9z"></path></symbol>
     <symbol viewBox="0 0 512 512" id="ion-arrow-right-b"><path d="M184.7 413.1l2.1-1.8 156.5-136c5.3-4.6 8.6-11.5 8.6-19.2 0-7.7-3.4-14.6-8.6-19.2L187.1 101l-2.6-2.3C182 97 179 96 175.8 96c-8.7 0-15.8 7.4-15.8 16.6v286.8c0 9.2 7.1 16.6 15.8 16.6 3.3 0 6.4-1.1 8.9-2.9z"></path></symbol>

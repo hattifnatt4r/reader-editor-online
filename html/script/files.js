@@ -1,7 +1,4 @@
 
-//console.log(check_browser());
-
-
 console.log(document.title);
 //-- files variables ---------------------------------------------------------------
 if (localStorage.getItem("isset")!="true"){
@@ -15,8 +12,7 @@ if (localStorage.getItem("isset")!="true"){
 var files = {
 	iter: 0,
 	iter_prev: 0,
-	zoom: 0,
-	fontsize: 1.2,
+	zoom: 1,
 	username: "",
 	userpass: "",
 	userremember: false,
@@ -62,6 +58,10 @@ var files = {
 		if (i===undefined) {i=this.iter;} 
 		return 'fileid_'+i.toString(); 
 	}, 
+	get_felem: function(i){                                              consolelog_func('brown');
+		if (i===undefined) {i=this.iter;} 
+		return document.getElementById(this.get_fid(i));
+	},
 	get_felem_pic: function(i){                                          consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
 		return document.getElementById(this.get_fid(i)+'_pic');
@@ -130,20 +130,18 @@ function files_run(){                                                    console
 	document.getElementById("base_elements").appendChild(document.getElementById("content_box"));        
 	document.getElementById("base_elements").appendChild(document.getElementById("zoom_box"));
 	
-	common_set_fontsize(files.fontsize, files);                         
+	common_set_fontsize(common.f_fontsize_scale, files);                         
 	files_scroll(files.iter, 'no');                                      
 	files_set_zoom('no');                                                
 	common.style.resize();
 	files_show_files();
-	
-	//elem = document.getElementById("php_alert");                         
-	//if (elem.innerHTML!=''){console.log(elem.innerHTML);}
 }                                                                        
 
 //-- show buttons ---------------------------------------------------------------------------
 function files_resize(){                                                 consolelog_func("darkblue"); 
-	files_show_buttons();
 	common.style.resize();
+	//common_set_fontsize(common.f_fontsize_scale,files);
+	files_show_buttons();
 	files_show_files();
 }
 
@@ -154,34 +152,28 @@ function files_show_buttons(){                                           console
     inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common.style.buttonpos(1,4)+'> opt </div>';
     inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common.style.buttonpos(2,2)+'>'+symbol_enter+'</div></div>';
     inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common.style.buttonpos(4,2)+'>'+'log in'+'</div>' ;
-    inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5,2)+'>up- load</div>' ;
+    inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5,2)+'>upload</div>' ;
     inner_e+= '<div id="files_prev"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(3,4)+'>'+symbol_prev+'</div>' ;
     inner_e+= '<div id="files_next"    onclick="files_scroll(this.id);" '   +common.style.buttonpos(7,4)+'>'+symbol_next+'</div>' ;
     //inner_e+= '<div id="files_test"    onclick="clean_tmp();" '             +common.style.buttonpos(6,4)+'>clean_tmp</div>' ;
     //inner_e+= '<div id="files_python_button" class="buttons" onclick="files_click(10);"   style="'+reader_button_position(6)+'">py</div>';
     elem.innerHTML=inner_e;
-    //if ( dir=='/common' || dir.indexOf('/common/')==0 ){ files_disable('files_upload'); }
-    if (files.subdir=='mail'){                                           console.log(files.subdir);                        
-        id = 'fileid_'+files.nentry;                                    
-        document.getElementById(id).onclick=function() { files_show_addcontact(); } 
-        document.getElementById(id).innerHTML = symbol_addcontact;
-        }
+         
 }
 function files_show_menu(){                                              consolelog_func();
 	document.getElementById("ffiles_copyfname_text").value = localStorage.getItem("copy_fname");
     document.getElementById("ffiles_copyfdir_text").value = localStorage.getItem("copy_fdir"); 
 	var inner_e = "";  var obj = 'files';
     inner_e += '<div id="common_lang_both_zoom"  onclick="" ' +common.style.buttonpos_menu(1,1,4,2,0,-1)+'>'+common.langbase+' +<br> '+common.lang+'</div>';
-    inner_e += '<div id="common_lang_both"   onclick="common_show_lang(1)" ' +common.style.buttonpos_menu(2,0)+'>lang</div>';
+    inner_e += '<div id="common_lang_both"   onclick="common_show_lang(1)" '  +common.style.buttonpos_menu(2,0)+'>lang</div>';
     inner_e += '<div id="files_create"   onclick="files_show_create();" '     +common.style.buttonpos_menu(7,0)+'>new file</div>';
     inner_e += '<div id="files_zoom"     onclick="files_set_zoom();" '        +common.style.buttonpos_menu(3,0)+'>'+files.zoom_arr[files.zoom]+'</div>';
-    inner_e += '<div id="files_fontsize" onclick="common_show_fontsize('+obj+');" '+common.style.buttonpos_menu(6,0)+'> font size </div>';
     inner_e += '<div id="files_cleancookie" onclick="files_cleancookie();" '  +common.style.buttonpos_menu(0,0)+'> delete cookie </div>';
-    inner_e += '<div id="files_past"     onclick="files_past();" '+common.style.buttonpos_menu(5,0)+'> past </div>';
+    inner_e += '<div id="files_past"     onclick="files_past();" '            +common.style.buttonpos_menu(5,0)+'> past </div>';
+    inner_e += '<div id="files_clickdelay" onclick="common_show_clickdelay();" '   +common.style.buttonpos_menu(4,0)+'> click delay </div>';
+    inner_e += '<div id="files_fontsize" onclick="common_show_fontsize('+obj+');" '+common.style.buttonpos_menu(6,0)+'> font size </div>';
     //inner_e += '<div id="files_sound"    onclick="" '+common.style.buttonpos_menu(4,3)+'> sound </div>';
-    inner_e += '<div id="files_clickdelay" onclick="common_show_clickdelay();" '+common.style.buttonpos_menu(4,0)+'> click delay </div>';
     common_create_menu('files_menu', 0, inner_e);
-    //if (localStorage.getItem("copy_fdir")=="") { files_disable("files_past"); }
 }
 function files_show_create(){                                            consolelog_func();
 	var inner_e = "";
@@ -197,11 +189,11 @@ function files_show_options(){                                           console
     files.editor_text = text;
     var inner_e = ""; 
     inner_e += '<div '+common.style.buttonpos_menu(0,2)+'><div id="files_options_edit" onclick="files_edittext(this.id);" class="text_zoom menu_zoom">'+text+'</div></div>';
-    inner_e += '<div id="files_delete"    onclick="files.click_php(this.id);"  '+common.style.buttonpos_menu(4,0)+'> delete </div>';
-    inner_e += '<div id="files_edit"      onclick="files.click_php(this.id);"  '+common.style.buttonpos_menu(7,0)+'> edit name </div>';
-    inner_e += '<div id="files_cleanhtml" onclick="files.click_php(this.id);"  '+common.style.buttonpos_menu(5,0)+'> html to txt </div>';
-    inner_e += '<div id="files_download"  onclick="files_download();"  '+common.style.buttonpos_menu(3,0)+'> down- load </div>';
-    inner_e += '<div id="files_copy"      onclick="files_copy();" '+common.style.buttonpos_menu(6,0)+'>copy</div>';    
+    inner_e += '<div id="files_delete"    onclick="files.click_php(this.id);" ' +common.style.buttonpos_menu(4,0)+'> delete </div>';
+    inner_e += '<div id="files_edit"      onclick="files.click_php(this.id);" ' +common.style.buttonpos_menu(7,0)+'> edit name </div>';
+    inner_e += '<div id="files_cleanhtml" onclick="files.click_php(this.id);" ' +common.style.buttonpos_menu(5,0)+'> html to txt </div>';
+    inner_e += '<div id="files_download"  onclick="files_download();"  '        +common.style.buttonpos_menu(3,0)+'> down- load </div>';
+    inner_e += '<div id="files_copy"      onclick="files_copy();" '             +common.style.buttonpos_menu(6,0)+'>copy</div>';    
     common_create_menu('files_options', 0, inner_e);
     if (fname.indexOf('.php')==-1){files_disable('files_cleanhtml');}
 }
@@ -217,7 +209,7 @@ function files_show_login(){                                             console
     inner_e+= '<div id="files_userlogout"   onclick="files_logout();"             '+common.style.buttonpos_menu(10, 0,4,3)+'> logout </div>';
     inner_e+= '<div id="files_userremember" onclick="files_login_remember();" '    +common.style.buttonpos_menu(8,0,4,3)+'> remem- ber me</div>';
     inner_e+= '<div id="files_userdelete"   onclick="" '    +common.style.buttonpos_menu(6,3,4,3)+'> delete </div>';
-    inner_e+= '<div id="files_usermail"      onclick="" '   +common.style.buttonpos_menu(7,3,4,3)+'> mail data </div>';
+    inner_e+= '<div id="files_usermail"     onclick="" '    +common.style.buttonpos_menu(7,3,4,3)+'> mail data </div>';
     common_create_menu('files_lodin', 0, inner_e);
 }
 function files_show_addcontact(){                                        consolelog_func();
@@ -263,12 +255,12 @@ function files_show_files(){                                             console
     var xwidth = ywidth*1;
     var xspace = yspace*0.8;
                                                           
-    var xn = Math.floor((content_width-xspace)/(xspace+xwidth));             
+    var xn = Math.floor((content_width-xspace*2)/(xspace+xwidth));             
     if (xn<1){xn=1};
-    var ratio = ( content_width - xwidth*xn )/(xspace*(xn+1));
+    var ratio = ( content_width - xwidth*xn )/(xspace*(xn+1.5));
     var pic_width = 0.6*xwidth;                                          //console.log('xwidth: '+xwidth+' ratio: '+ratio);
     xspace = xspace*ratio;
-    var i=0;       
+    var i=0; var type='';
 	for (i=0; i<files_arr.length; i+=1){                                 
 		var n_y = (i-i%xn)/xn;
 	    var x = left+ xspace + (xspace+xwidth)* (i%xn);
@@ -276,12 +268,23 @@ function files_show_files(){                                             console
 	    files_arr[i].style.top = y+'px';
 	    files_arr[i].style.left = x+'px'; 
 	    files_arr[i].style.height = ywidth+'px';
-	    files_arr[i].style.width  = xwidth+'px';
-	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');
-	    //elem_pic.innerHTML = symbol_file;
-	    var elem_name = document.getElementById(files_arr[i].id+'_name');	    
-		}
+	    files_arr[i].style.width  = xwidth+'px';                         //console.log(files_arr[i].id)
+	    var elem     = document.getElementById(files_arr[i].id);
+	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');  
+	    type = elem.getAttribute('title');
+	    if (type==="txt") { symbol = symbol_file; }
+	    if (type==="dir") { symbol = symbol_folder; }
+	    if (elem_pic){elem_pic.innerHTML = symbol;}
+	}
 	document.getElementById('files_array').style.visibility = 'visible';
+	common_set_fontsize(common.f_fontsize_scale, files);
+	
+	if (files.subdir=='mail'){                                           //console.log(files.subdir);                        
+        var id = 'fileid_'+files.nentry;                                    
+        document.getElementById(id).onclick=function() { files_show_addcontact(); } 
+        document.getElementById(id+'_pic').innerHTML = symbol_addcontact;
+	    document.getElementById(id+'_name').innerHTML = "add contact";    
+	}
 }
 
 function files_scroll(order, i_utter){                                   consolelog_func('darkblue');
@@ -295,7 +298,14 @@ function files_scroll(order, i_utter){                                   console
     files.iter = iter;
                                               
     var elem = document.getElementById('ffiles_iter');
-    if (elem) {elem.value = files.iter; } 
+    if (elem) { elem.value = files.iter; } 
+    
+    files.get_felem(files.iter).className = 'files-hover';
+    if (files.iter_prev != files.iter) {
+		files.get_felem(files.iter_prev).className = 'files';
+	}
+    //files.get_felem_pic(files.iter).className = 'files_symbol sdymbol_txt_hover';
+    
     files_fill_zoom();
     scroll_to(files.get_fid(), 'content_box', title=0);
     
@@ -322,15 +332,15 @@ function files_set_zoom(order){                                          console
     var elem = document.getElementById("zoom_box");               
     if (files.zoom===1){ 
         elem.style.visibility='hidden';
-        document.getElementById('content_box').style.height = '96%';  
+        document.getElementById('content_box').style.height = '105%';  
     }else{
         elem.style.visibility='visible';
         document.getElementById('content_box').style.height = common.style.textheight_zoom+'%'; 
     }                                                                    
     var name = files.zoom_arr[files.zoom];                               
     elem = document.getElementById('files_zoom'); 
-    document.getElementById('zoom_box').style.height = (100 - common.style.textheight_zoom-2)+'%';
-    document.getElementById('zoom_box').style.top = (common.style.textheight_zoom +0.2)+'%';
+    document.getElementById('zoom_box').style.height = (100 - common.style.textheight_zoom -2.3)+'%';
+    document.getElementById('zoom_box').style.top = (common.style.textheight_zoom +3)+'%';
     if (elem) { 
 		elem.innerHTML = files.zoom_arr[files.zoom]; 
 		}
@@ -458,10 +468,7 @@ function files_welcome(){
 	text+=     "Check 'readme.txt' file for details. ";
 	text+=     "You will see it after closing this window. ";
 	text+=     "To open the file click on the file icon and 'check' button to the right. ";
-	//text+=     "Use right and left arrows to read the file."
-	//var text = "Welcome! Your browser does not support speech synthesis. ";
 	common_show_notification(text, true);
-	//common.repeat_text = replace_all(text,'<br>','');
 	//utter_sentence(0, 1, 0, 1);
 }
 

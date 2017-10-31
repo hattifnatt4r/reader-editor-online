@@ -1,5 +1,4 @@
 <?php
-//echo 'OPENED: ';
 if ($_SESSION["session_reader"]!=10){
     $_SESSION["session_reader"] = 10;
     $_SESSION["reader_counter"] = 0;
@@ -11,17 +10,14 @@ if (isset($_POST['reader_menu_go_files'])) {
 if (isset($_POST['reader_menu_go_file1'])) {
     header('Location:/index.php');
     }
-//echo "<div style='position:fixed; top:0%; left:2%'>".$_SESSION["filename_opened"]."</div>";
 
 if (isset($_POST['freader_save_submit'])) {
     $text = $_POST["freader_save_text"];
-    //echo $text;
     $fname = $_SESSION["filename_opened"];
     $myfile = fopen($fname, "w") or die("Unable to open file!");
     chmod($fname, 0666);
     fwrite($myfile, $text);
     fclose($myfile);
-    //echo 'saved '.$fname;
     $_SESSION["file_text"] = $text;
     header('Location:/reader.php');
 } 
@@ -50,11 +46,6 @@ if (isset($_POST['freader_sendmail_submit'])) {
     fclose($myfile);
     
     $_SESSION["file_text"] = $text;    
-    //echo '<br> FILE_TEXT: '.$text.'<br>';                       
-    
-    //header('Location:/reader.php');
-    //run_reader();
-    //header('Location:/reader.php');
 } 
 
 function get_usrname(){
