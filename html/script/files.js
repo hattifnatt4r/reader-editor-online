@@ -6,6 +6,7 @@ if (localStorage.getItem("isset")!="true"){
 	localStorage.setItem("copy_fname", "");
 	localStorage.setItem("copy_fdir", "");
 	localStorage.setItem("show_welcome", "yes");
+	localStorage.setItem("run", "1");
 }else{
 	localStorage.setItem("show_welcome", "no");
 }
@@ -22,10 +23,13 @@ var files = {
 	subdir: "",
 	editor_text: "",
 	
-	nentry: document.getElementById('hidden_files_nentry').innerHTML,
+	//nentry: document.getElementById('hidden_files_nentry').innerHTML,
+	nentry:1,
 	
 	name: "files",
 	dir: "",
+	nfolders: 1,
+	entries: [],
 	zoom_arr: ['no zoom', 'zoom'],
 	buttons_php: { "files_enter": "ffiles_enter_submit", 
 		           "files_edit": "ffiles_edit_submit",
@@ -43,12 +47,6 @@ var files = {
 	click_php: function(id) {                                            consolelog_func('brown');
 		if (id==="files_enter" && this.get_ftype()=="dir" ) { this.iter=0; this.iter_prev=0; }
 		document.getElementById(this.buttons_php[id]).click(); 
-	},
-	set_dir: function() {                                                consolelog_func('brown');
-		dir0 = document.getElementById('hidden_files_dir').innerHTML; 
-	    i = dir0.indexOf('/');
-	    if (i!=-1) { dir = dir0.substr(i); } else{dir = '';}
-		this.dir = dir;
 	},
 	get_fname: function(i){                                              consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
@@ -85,10 +83,12 @@ function files_cleancookie(){                                            console
 }
 
 //-- run files -------------------------------------------------------------------
+/*
 var elem = document.getElementById("php_goto");
 var php_goto = elem.innerHTML.replace(' ','');
 elem.innerHTML = '';
 if (php_goto!=''){ window.location.href = '/'+php_goto; }
+*/
 
 if ('speechSynthesis' in window) {
 	/*
@@ -107,7 +107,40 @@ if ('speechSynthesis' in window) {
 files_run();
 
 function files_run(){                                                    consolelog_func('darkblue'); 
-	files.set_dir(); 
+	if (localStorage.getItem("run")==1){
+		document.getElementById("ffiles_run_submit").click();
+		localStorage.setItem("run", "0");
+		/*
+		console.log(' POST ');
+		var url = "script/files.php";   
+		//var url = "http://localhost/ajax_test.php";   
+		var hr = new XMLHttpRequest();
+		var vars = "ffiles_run_submit=ok";
+		hr.open("POST", url, true);
+		hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		hr.onreadystatechange = function(){
+			console.log('state: '+hr.readyState+' '+hr.status);
+			if (hr.readyState ==4 && hr.status == 200){
+				var return_data = hr.responseText;
+				console.log('RETURN: '+return_data);
+				//document.getElementById("data_post").innerHTML = return_data;
+			}
+		}
+		hr.send(vars);
+		*/ 
+	}
+	var files_arr = JSON.parse(document.getElementById('hidden_files_arr').innerHTML);
+	console.log(files_arr);
+	
+	files.dir = files_arr.usr_dir;                           console.log('dir: '+files.dir);
+	//files_arr = files_arr.entries;
+	files.entries = files_arr.entries;
+	files.nentry = files_arr.entries.length-1;
+	files.nfolders = files_arr.nfolders;
+	
+	//var n = document.getElementById('hidden_files_nentry').innerHTML;
+	//files.nentry = files_arr.length-1;                                   console.log(files.nentry);
+	//files.set_dir(); 
 	files.subdir = get_subdir(files.dir+'/');  
 	document.getElementById('content_box').style.top = '-3.4%';
 	
@@ -127,20 +160,20 @@ function files_run(){                                                    console
 	var bodyStyles = window.getComputedStyle(document.body);
 	
 	files_show_buttons();                                                
-	document.getElementById("base_elements").appendChild(document.getElementById("content_box"));        
-	document.getElementById("base_elements").appendChild(document.getElementById("zoom_box"));
+	//document.getElementById("base_elements").appendChild(document.getElementById("content_box"));        
+	//document.getElementById("base_elements").appendChild(document.getElementById("zoom_box"));
 	
-	common_set_fontsize(common.f_fontsize_scale, files);                         
-	files_scroll(files.iter, 'no');                                      
-	files_set_zoom('no');                                                
+	common_set_fontsize(common.f_fontsize_scale, files);                                                                                                             
 	common.style.resize();
 	files_show_files();
+	files_scroll(files.iter, 'no'); 
+	files_set_zoom('no'); 
 }                                                                        
 
 //-- show buttons ---------------------------------------------------------------------------
 function files_resize(){                                                 consolelog_func("darkblue"); 
 	common.style.resize();
-	//common_set_fontsize(common.f_fontsize_scale,files);
+	common_set_fontsize(common.f_fontsize_scale,files);
 	files_show_buttons();
 	files_show_files();
 }
@@ -240,7 +273,9 @@ function uploadOnChange() {                                              console
 
 //-- text display functions ---------------------------------------------------------------
 function files_show_files(){                                             consolelog_func();
-	var files_arr = document.getElementById('files_array').childNodes;   
+	var files_arr = files.entries;
+	
+	//var files_arr = document.getElementById('files_array').childNodes;   
 	var wratio = window.innerWidth/window.innerHeight;                   console.log('wratio: '+wratio+' '+window.innerWidth+' '+window.innerHeight);              
 	var left_pc = -1; 
 	var top_pc=-5.4; 
@@ -255,28 +290,32 @@ function files_show_files(){                                             console
     var xwidth = ywidth*1;
     var xspace = yspace*0.8;
                                                           
-    var xn = Math.floor((content_width-xspace*2)/(xspace+xwidth));             
+    var xn = Math.floor((content_width-xspace*2)/(xspace+xwidth));       //console.log('xn: '+xn);	          
     if (xn<1){xn=1};
     var ratio = ( content_width - xwidth*xn )/(xspace*(xn+1.5));
     var pic_width = 0.6*xwidth;                                          //console.log('xwidth: '+xwidth+' ratio: '+ratio);
     xspace = xspace*ratio;
-    var i=0; var type='';
+    var i=0; var type=''; 
+    var inner_e = "";
 	for (i=0; i<files_arr.length; i+=1){                                 
 		var n_y = (i-i%xn)/xn;
 	    var x = left+ xspace + (xspace+xwidth)* (i%xn);
 	    var y = top + (ywidth+yspace)*n_y;  
-	    files_arr[i].style.top = y+'px';
-	    files_arr[i].style.left = x+'px'; 
-	    files_arr[i].style.height = ywidth+'px';
-	    files_arr[i].style.width  = xwidth+'px';                         //console.log(files_arr[i].id)
-	    var elem     = document.getElementById(files_arr[i].id);
-	    var elem_pic = document.getElementById(files_arr[i].id+'_pic');  
-	    type = elem.getAttribute('title');
-	    if (type==="txt") { symbol = symbol_file; }
-	    if (type==="dir") { symbol = symbol_folder; }
-	    if (elem_pic){elem_pic.innerHTML = symbol;}
+	    
+	    if (i<files.nfolders) { 
+			symbol = symbol_folder; 
+			title = "dir";
+		} else { 
+			symbol = symbol_file; 
+			title = "txt";
+		}
+		var style = 'position:absolute;top:'+y+'px; left:'+x+'px; height:'+ywidth+'px; width:'+xwidth+'px;';
+		inner_e+= '<div id="fileid_'+i+'" onclick="files_scroll('+i+');"  class="files" style="'+style+'" title="'+title+'" >';
+		inner_e+= '<div id="fileid_'+i+'_pic"  class="files_symbol" >'+symbol+'</div>';
+		inner_e+= '<div id="fileid_'+i+'_name"  class="files_name" >'+files.entries[i]+'</div> </div>' ;
 	}
 	document.getElementById('files_array').style.visibility = 'visible';
+	document.getElementById('files_array').innerHTML = inner_e;          //console.log(inner_e);
 	common_set_fontsize(common.f_fontsize_scale, files);
 	
 	if (files.subdir=='mail'){                                           //console.log(files.subdir);                        

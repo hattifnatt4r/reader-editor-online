@@ -87,6 +87,14 @@
 
 
 <div id='base_elements'>
+	<div id='content_box' class='text_scroll_box' style='position:fixed;height:73%;top:0%;' align='top'> 
+		<div class='text_scroll' style='top:-6.2%;left:0vw;' align='left' >
+			<div id='files_array' class='reader_text' style='top:0;left:0;visibility:hidden;height:20%;'></div>
+		</div>
+	</div>
+	<div id="zoom_box" class="text_zoom_box">  
+		<div id="files_zoom_text" class="text_zoom">..</div> 
+	</div>
     <div id='buttons_area' class='buttons_area'></div>
 </div>
 <div id='created_elements'></div>
@@ -127,6 +135,7 @@
 </form>	
 <form action="" method="post">  
 	<input id="ffiles_test_submit"     type="submit" name="ffiles_test_submit"     value="empty" >
+	<input id="ffiles_run_submit"      type="submit" name="ffiles_run_submit"     value="empty" >
 </form>	
 </div>
 

@@ -34,28 +34,39 @@ if (strpos($_SESSION['usr_home'], "users/guests/")!=false ){
 }
 
 //-- files ------------------------------------------------------------------
+
+if(isset($_POST["ffiles_run_submit"])) {
+	run_files();
+}
+
 function run_files(){
 	make_files_array();
 	echo "<div hidden id='hidden_files_nentry'>".$_SESSION['nentry']."</div>";
 	echo "<div hidden id='hidden_files_dir'>".$_SESSION['usr_dir']."</div>";
 	
-	$show_arr = ""; $i=0;
-	foreach($_SESSION["files_arr"] as $entry){ $file_i=show_file($entry, $i); $show_arr=$show_arr.$file_i; $i=$i+1; }
+	//echo "<div id='content_box' class='text_scroll_box' style='position:fixed;height:73%;top:0%;' align='top'> 
+	//<div class='text_scroll' style='top:-6.2%;left:0vw;' align='left' >
+	//<div id='files_array' class='reader_text' style='top:0;left:0;visibility:hidden;height:20%;'>".$show_arr."</div></div></div>";
 	
-	echo "<div id='content_box' class='text_scroll_box' style='position:fixed;height:73%;top:0%;' align='top'> 
-	<div class='text_scroll' style='top:-6.2%;left:0vw;' align='left' >
-	<div id='files_array' class='reader_text' style='top:0;left:0;visibility:hidden;height:20%;'>".$show_arr."</div></div></div>";
-	//echo "<div id='content_box' > 
-	//<div >
-	//<div id='files_array' >".$show_arr."</div></div></div>";
+	$arr = $_SESSION["files_arr"];
+	$arr = array(
+		"usr_dir" => $_SESSION['usr_dir'],
+		"entries" => $_SESSION["files_arr"],
+		"nfolders" => $_SESSION["nfolders"]
+	);
+	//array_push($arr, $_SESSION['usr_dir']);
+	//echo json_encode( $arr );
+	echo "<div hidden id='hidden_files_arr'>".json_encode( $arr )."</div>";
 	
-	echo '<div id="zoom_box" class="text_zoom_box">  
-	<div id="files_zoom_text" class="text_zoom">..</div> </div>';
+	//echo '<div id="zoom_box" class="text_zoom_box">  
+	//<div id="files_zoom_text" class="text_zoom">..</div> </div>';
 	
 	$entry = find_object($_SESSION["file_counter"], $_SESSION['usr_dir']);
-	echo '<div hidden id="php_alert">'.$_SESSION["alert"]."</div>";
+	//echo '<div hidden id="php_alert">'.$_SESSION["alert"]."</div>";
 	$_SESSION["alert"] = "";
 }
+
+
 function make_files_array(){
 	$arr_dir=array(); $arr_file=array(); $arr_entries=array(); 
 	array_push($arr_dir, '..');
@@ -76,35 +87,10 @@ function make_files_array(){
 	    $i=0;
 	} else {echo "bad dir";}
 	$_SESSION["files_arr"]=$arr_entries;
+	$_SESSION["nfolders"]=count($arr_dir);
 }
 
-function show_file($entry, $i){
-    $left = 2.5; $right = 65; $top=0; 
-    $ywidth=16.5; $yspace=9;
-    $xwidth=$ywidth*1.1;
-    $xspace = 1;
-    $xn = floor(($right-$left)/($xspace+$xwidth)); 
-    $n_y = ($i-$i%$xn)/$xn;
-    $x = $left + ($xspace+$xwidth)* ($i%$xn);
-    $y = $top +  ($ywidth+$yspace)*$n_y;
-    $style = "position:absolute;
-        left: ".$x."vw; top: ".$y."vh;
-        width:".$xwidth."vh; height:".$ywidth."vh;
-        " ;        
-    $filename = $_SESSION['usr_dir'].'/'.$entry;
-    if (file_exists($filename)){
-        //if (is_dir($filename)){$class='files_pic files-dir';$title='dir';} else { $class='files_pic files-txt';$title='txt'; }
-        if (is_dir($filename)){$class='files_symbol';$title='dir';} else { $class='files_symbol'; $title='txt'; }
-    }
-    if (strpos($entry,'~')!==false){ 
-        //$entry = str_replace('~','',$entry); $class='files attention';
-        $entry = str_replace('~','',$entry); $class='files_symbol';
-         }
-    $file_i = '<div id="fileid_'.$i.'" onclick="files_scroll('.$i.');"  class="files" style="'.$style.'" title="'.$title.'" >'
-    .'<div id="fileid_'.$i.'_pic"  class="'.$class.'" ></div>'
-    .'<div id="fileid_'.$i.'_name"  class="files_name" >'.$entry.'</div> </div>' ;
-    return($file_i);
-}
+
 //---------------------------------------------------------------------------
 function find_object($i_obj, $usr_dir){
 	make_files_array();
@@ -276,12 +262,14 @@ if (isset($_POST['ffiles_enter_submit'])) {
 			$new_dir = substr($_SESSION["usr_dir"],0,strrpos($_SESSION["usr_dir"], "/"));
 			$_SESSION["usr_dir"] = $new_dir;
 			echo "<div hidden id='php_goto'>"."index.php"."</div>";
+			run_files();
 		}
 	}else{
 		if (is_dir($filename)){ 
 			$_SESSION['usr_dir'] = $filename;
 			$_SESSION['file_counter'] = 0;
 			echo "<div hidden id='php_goto'>"."index.php"."</div>";
+			run_files();
 		}else{
 			$myfile = fopen($filename, "r") or die("Unable to open file!");
 			$txt = fread($myfile, filesize($filename));
@@ -289,8 +277,10 @@ if (isset($_POST['ffiles_enter_submit'])) {
 			$_SESSION["file_text"] = $txt;
 			$_SESSION["filename_opened"] = $filename;
 			echo "<div hidden id='php_goto'>"."reader.php"."</div>";
+			header('Location: reader.php');
 		}
 	}
+	run_files();
 }
 
 //-- login ------------------------------------------------------------------
@@ -565,7 +555,7 @@ function delete_files($target) {
 
 //------------------------------------------------------------------------
 
-run_files();
+//run_files();
 
 
 ?>

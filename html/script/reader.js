@@ -1,5 +1,10 @@
 
 console.log(document.title);
+
+if (localStorage.getItem("isset_reader")!="true"){
+	localStorage.setItem("isset_reader", "true");
+	localStorage.setItem("run_reader", "1");
+}
 //-- reader variables ----------------------------------------------------------------
 var reader = {
     latest_w: "p0s0w0", latest_s: "p0s0", latest_p: "p0",
@@ -69,20 +74,33 @@ function reader_beforunload() {                                          console
 
 //-- run reader ---------------------------------------------------------------------
 window.onbeforeunload = reader_beforunload;
-reader.fname = document.getElementById('file_title').innerText.replace(' ','');
-reader.cookie_suffix = "_"+reader.fname;
-reader.readonly = is_inlist(readonlydir);
-reader.subdir = get_subdir(reader.fname);   
-
-if (cookie_get('isset_'+reader.fname)!='isset'){                    
-    cookie_set("isset_"+reader.fname, "isset");
-    common.cookie_save.call(reader);
-}else{ common.cookie_load.call(reader); }                            
-common.cookie_load();
 
 reader_run();   
 
 function reader_run() {                                                  consolelog_func('darkblue'); 
+	if (localStorage.getItem("run_reader")==1){
+		document.getElementById("freader_run_submit").click();
+		localStorage.setItem("run_reader", "0");
+	}
+	var files_arr = document.getElementById('hidden_text').innerHTML;
+	//console.log(files_arr);
+	
+	reader.fname = document.getElementById('hidden_fname').innerText.replace(' ','');
+	console.log(reader.fname);
+	
+	//reader.fname = document.getElementById('file_title').innerText.replace(' ','');
+	reader.cookie_suffix = "_"+reader.fname;
+	//reader.readonly = is_inlist(readonlydir);                            //console.log(readonlydir);
+	reader.readonly = false;
+	reader.subdir = get_subdir(reader.fname);   
+	
+	if (cookie_get('isset_'+reader.fname)!='isset'){                    
+	    cookie_set("isset_"+reader.fname, "isset");
+	    common.cookie_save.call(reader);
+	}else{ common.cookie_load.call(reader); }                            
+	common.cookie_load();
+	
+	
     var subdir = reader.subdir;                                          consolelog('ischanged_text: '+reader.ischanged_text+', editor_text: '+reader.editor_text);
     var fname = common_make_fname(reader.fname);
     
@@ -96,9 +114,9 @@ function reader_run() {                                                  console
     
     if (reader.ischanged_text==false){
         reader_show_buttons();                                             
-        create_element('zoom_box','text_zoom_box', 'base_elements');
-        document.getElementById("zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
-        document.getElementById("base_elements").appendChild(document.getElementById("content_box"));
+        //create_element('zoom_box','text_zoom_box', 'base_elements');
+        //document.getElementById("zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
+        //document.getElementById("base_elements").appendChild(document.getElementById("content_box"));
     }
     if (subdir==='mail' && reader.ischanged_text==false){
         var user_name = get_usrname(reader.fname).replace(" ",""); 
@@ -219,7 +237,7 @@ function reader_scroll(order,stop,onend){                                console
     var subdir=reader.subdir; 
     var mail_notedit = false;
     if(subdir==='mail' && $('#'+id).parents('#mail_editable').length === 0) { mail_notedit=true; } 
-    
+    console.log('scroll iter: '+iter+'  '+mail_notedit);
     if (iter==-1 || mail_notedit===true){ edit_function = ''; edit_class='buttons disabled'; 
         document.getElementById('reader_edit').className='buttons symbol disabled';
         document.getElementById('reader_edit').setAttribute( "onclick", '' );
@@ -341,8 +359,8 @@ function reader_resize(){                                                console
 }
 
 function reader_show_buttons(){                                          consolelog_func(); 
-	var types = ['select <br> -','select <br> - -','select <br> - - -'];
-    var iter = reader.iter;
+	var types = ['select <br> -','select <br> - -','select <br> - - -']; 
+    var iter = reader.iter;      console.log('iter: '+iter+' '+reader.readonly);
     if (iter==-1 || reader.readonly){ edit_function = ''; edit_class='buttons symbol disabled'; }
     else { edit_function='onclick="reader_editor(reader_edit);"'; edit_class='buttons symbol'; }
     

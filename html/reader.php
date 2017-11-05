@@ -81,6 +81,15 @@
 <div hidden id='temp' style='position:fixed; top:50%; left:83%'>0</div>
 
 <div id='base_elements'>
+	<div id='content_box' class='text_scroll_box' style="position:absolute;top:-10%;">
+		<div id='text_scroll_area' class='text_scroll' align='left' >
+			<em id="file_title" style="font-style:normal;top:0; left:1.7vw;position:relative;"> </em>
+			<div id='text_from_file' class='reader_text'> </div>
+		</div>
+	</div>
+	<div id="zoom_box" class="text_zoom_box">
+		<div id="reader_zoom" class="text_zoom">zoom word</div>
+	</div>
     <div id='buttons_area' class='buttons_area'></div>
 </div>
 <div id='created_elements'> </div>
@@ -92,6 +101,7 @@
 	<input id="freader_save_text"       type="text"   name="freader_save_text"        value="empty" >
 	<input id="freader_save_submit"     type="submit" name="freader_save_submit"      value="empty" >
 	<input id="freader_sendmail_submit" type="submit" name="freader_sendmail_submit"  value="empty" >
+	<input id="freader_run_submit" type="submit" name="freader_run_submit"  value="empty" >
 </form>
 </div>
 

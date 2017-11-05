@@ -56,7 +56,7 @@
 .buttons_area{ 
   background-color: rgba(0, 0, 0, 0.05); 
   position:fixed;
-  top:0%; left:50%;
+  top:0%; left:100%;
   height:100%; width:100%;
  }
 .buttons{
@@ -89,7 +89,7 @@
 .disabled{ opacity:0.25; }
 .disabled:hover{ opacity:0.2; border-top-width: 0vmin; }
 
-.files{ border-radius: 0.25vmin; }
+.files{ position:absolute; border-radius: 0.25vmin; }
 .files:hover{ background-color:rgba(0,0,0,0.05); }
 .files-hover{ background-color:rgba(0,0,0,0.05); } 
 .files_name{
