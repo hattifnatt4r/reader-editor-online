@@ -32,6 +32,7 @@ var reader = {
     word_id: [], sentence_id: [], paragraph_id: [],
     mailnum: 0,
     navigate: 0,
+    json_tmp: "",
     
     zoomtype_arr: ['no zoom', 'by word', 'by sentence'],
     buttons_php: { "reader_save": "freader_save_submit", 
@@ -75,15 +76,45 @@ function reader_beforunload() {                                          console
 //-- run reader ---------------------------------------------------------------------
 window.onbeforeunload = reader_beforunload;
 
-reader_run();   
+//reader_run();  
+reader_run_ajax(); 
 
-function reader_run() {                                                  consolelog_func('darkblue'); 
+function reader_run_ajax() {                                            consolelog_func('brown');
+	
+	var return_data = '';
+	console.log(' POST ');
+	var url = "reader.php";   
+	var hr = new XMLHttpRequest();
+	hr.open("POST", url, true);
+	hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	hr.onreadystatechange = function(){
+		console.log('state: '+hr.readyState+' '+hr.status);
+		if (hr.readyState ==4 && hr.status == 200){
+			var return_data = hr.responseText;
+			console.log('RETURN: '+return_data);
+			document.getElementById('hidden').innerHTML = return_data;
+			reader.json_tmp = return_data;
+			reader_run();
+			//files_show_files();
+			
+		}
+	} 
+	hr.send("freader_run_submit=ok");
+}
+
+reader_run_ajax();
+
+function reader_run() {     
+	/*                                             consolelog_func('darkblue'); 
 	if (localStorage.getItem("run_reader")==1){
 		document.getElementById("freader_run_submit").click();
 		localStorage.setItem("run_reader", "0");
 	}
 	var files_arr = document.getElementById('hidden_text').innerHTML;
+	*/ 
 	//console.log(files_arr);
+	//var text_arr = LSON.parse(reader.json_tmp);
+	//console.log(text_arr);
 	
 	reader.fname = document.getElementById('hidden_fname').innerText.replace(' ','');
 	console.log(reader.fname);
@@ -441,7 +472,7 @@ function is_inlist(list){                                                //conso
     return(inlist);
 }
 function goto_files(){                                                   consolelog_func(); 
-	window.location.href = '/index.php'; 
+	window.location.href = '/index.html'; 
 	window.speechSynthesis.cancel(); 
 }
 

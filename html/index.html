@@ -1,4 +1,4 @@
-<?php ini_set('session.gc_maxlifetime', 10); session_start(); ?>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -25,8 +25,8 @@
 </head>
 
 <body id='body' class='body_bkg' align='top' onresize="files_resize()" >
-<?php include 'script/files.php'; ?>    
-<div hidden id='hidden_files_nentry' style='position:fixed; top:66%; left:85%'>0</div>
+<div hidden id='hidden_files_nentry' ></div>
+<div hidden id='hidden_files_arr' ></div>
 <div hidden id='php_goto'> </div>
 
 <svg width="0" height="0" style="position:absolute">
@@ -117,26 +117,22 @@
 	<input id="ffiles_mail_submit"     type="submit" name="ffiles_usermail_submit" value="empty" >
 	<input id="ffiles_addmail_submit"  type="submit" name="ffiles_addmail_submit"  value="empty" >
 	<input id="ffiles_download_submit" type="submit" name="ffiles_download_submit" value="empty" >
-</form>
-<form action="" method="post">  
+ 
 	<input id="ffiles_username"    type="text" name="ffiles_username"    value="empty" >
 	<input id="ffiles_userpass"    type="text" name="ffiles_userpass"    value="empty" >
 	<input id="ffiles_userlogin_submit"    type="submit" name="ffiles_userlogin_submit"    value="empty" >
 	<input id="ffiles_usermail_submit"     type="submit" name="ffiles_usermail_submit"     value="empty" >
+	
+	<input id="ffiles_copyfname_text"  type="text"   name="ffiles_copyfname_text"  value="" >
+	<input id="ffiles_copyfdir_text"   type="text"   name="ffiles_copyfdir_text"   value="" >
+	<input id="ffiles_past_submit"     type="submit" name="ffiles_past_submit"     value="empty" >
+	
+	<input id="ffiles_test_submit"     type="submit" name="ffiles_test_submit"     value="empty" >
 </form>	
 <form action="" method="post" enctype="multipart/form-data">
 	<input id="ffiles_upload_choose"   type="file"   name="ffiles_upload_choose"     value="empty" >
 	<input id="ffiles_upload_submit"   type="submit" name="ffiles_upload_submit"     value="empty" >
 </form>
-<form action="" method="post">  
-	<input id="ffiles_copyfname_text"  type="text"   name="ffiles_copyfname_text"  value="" >
-	<input id="ffiles_copyfdir_text"   type="text"   name="ffiles_copyfdir_text"   value="" >
-	<input id="ffiles_past_submit"     type="submit" name="ffiles_past_submit"     value="empty" >
-</form>	
-<form action="" method="post">  
-	<input id="ffiles_test_submit"     type="submit" name="ffiles_test_submit"     value="empty" >
-	<input id="ffiles_run_submit"      type="submit" name="ffiles_run_submit"     value="empty" >
-</form>	
 </div>
 
 <script language=JavaScript type="text/javascript" src="script/common.js"></script>
