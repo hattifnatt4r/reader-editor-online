@@ -72,7 +72,7 @@ function reader_click_ajax(submit_name, start) {                                
 	if (start==undefined) { start=false; }
 
 	var return_data = '';                                                console.log(' POST ');
-	var url = "reader.php";   
+	var url = common.url_php+"reader.php";   
 	var hr = new XMLHttpRequest();
 	hr.open("POST", url, true);
 	hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -80,7 +80,7 @@ function reader_click_ajax(submit_name, start) {                                
 		console.log('state: '+hr.readyState+' '+hr.status);
 		if (hr.readyState ==4 && hr.status == 200){
 			var return_data = hr.responseText;
-			console.log('RETURN: '+return_data);
+			//console.log('RETURN: '+return_data);
 			document.getElementById('hidden').innerHTML = return_data;
 			reader.json_tmp = return_data;
 			reader.fname = document.getElementById('hidden_fname').innerText.replace(' ','');

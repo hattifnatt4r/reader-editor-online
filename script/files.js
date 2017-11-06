@@ -75,7 +75,7 @@ if ('speechSynthesis' in window) {
 } else{ 
 	common_show_notification('Your browser does not support speech synthesis.');
 }
-
+files_show_buttons(); 
 files_click_ajax("ffiles_run_submit", true);
 
 //-- run functions -------------------------------------------------------
@@ -84,7 +84,7 @@ function files_click_ajax(submit_name, start) {                                 
 	if (start==undefined) { start=false; }
 
 	var return_data = '';                                                console.log(' POST ');
-	var url = "files.php";   
+	var url = common.url_php+"files.php";   
 	var hr = new XMLHttpRequest();
 	hr.open("POST", url, true);
 	hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -257,7 +257,7 @@ function files_show_upload(){                                            console
         formData.append('ffiles_upload_choose', file, file.name);
         formData.append('ffiles_upload_submit', 'new');
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'files.php', true);
+        xhr.open('POST', common.url_php+'files.php', true);
 		xhr.onreadystatechange = function(){
 			console.log('UPLOAD state: '+xhr.readyState+' '+xhr.status);
 			if (xhr.readyState ==4 && xhr.status == 200){
