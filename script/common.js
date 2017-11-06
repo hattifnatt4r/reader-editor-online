@@ -27,7 +27,8 @@ var common = {
 	ptag: "span",
 	
 	time_click: 0,
-	url_php: "http://hedgehoginafog.000webhostapp.com/",
+	//url_php: "https://hedgehogappp.com/",
+	url_php: "",
 	
 	cookie_save: function(){                                             consolelog_func('brown');
 	    var keys = Object.keys(this);                                    

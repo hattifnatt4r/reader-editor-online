@@ -6,7 +6,7 @@ console.log('--------------\n'+document.title);
 var files = {
 	iter: 0,
 	iter_prev: 0,
-	zoom: 1,
+	zoom: 0,
 	username: "",
 	userpass: "",
 	userremember: false,
