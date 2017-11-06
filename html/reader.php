@@ -3,14 +3,9 @@ session_start();
 if ($_SESSION["session_reader"]!=10){
     $_SESSION["session_reader"] = 10;
     $_SESSION["reader_counter"] = 0;
+    $_SESSION["alert"] = "";
     }
 //-- go ---------------------------------------------------------------------
-if (isset($_POST['reader_menu_go_files'])) {
-    header('Location:/index.php');
-    }    
-if (isset($_POST['reader_menu_go_file1'])) {
-    header('Location:/index.php');
-    }
 
 if (isset($_POST['freader_save_submit'])) {
     $text = $_POST["freader_save_text"];
@@ -20,24 +15,19 @@ if (isset($_POST['freader_save_submit'])) {
     fwrite($myfile, $text);
     fclose($myfile);
     $_SESSION["file_text"] = $text;
-    header('Location:/reader.php');
 } 
 
 if (isset($_POST['freader_sendmail_submit'])) {
     $msg = $_POST["freader_save_text"];
     $fname = get_mail_fname(get_usrname(), get_contactname());
-    //echo $text;
     $myfile = fopen($fname, "r") or die("Unable to open file!");
     $text = fread($myfile, filesize($fname));
     fclose($myfile);
     $text = $text.' '.$msg;
-    //echo '<br> PREV_TEXT: '.$text.'<br>';  
-    //echo '<br> MSG: '.$text.'<br>';  
     
     $myfile = fopen($fname, "w") or die("Unable to open file!");
     fwrite($myfile, $text);
     fclose($myfile);
-    //echo ' |  |  saved '.$fname;
     
     $fname = $_SESSION["filename_opened"];
     $myfile = fopen($fname, "w") or die("Unable to open file!");
@@ -76,9 +66,8 @@ function get_mail_fname($a,$b){
     return($full_name);
 }
 //-- text -------------------------------------------------------------------
-//run_reader();
 if(isset($_POST["freader_run_submit"])) {
-	run_reader();
+	$_SESSION["alert"] = "RUN";
 }
 
 function run_reader(){
@@ -91,35 +80,22 @@ function run_reader(){
 	if ($dir==$_SESSION["usr_dir"]){$dir='';} 
 	$fname = substr($_SESSION["filename_opened"], strrpos($_SESSION["filename_opened"], "/")+1);
 	
-	//echo "<div hidden id='hidden_text' >".$_SESSION["file_text"]."</div>";
-	//echo "<div hidden id='hidden_fname' >".$dir.'/'.$fname."</div>";
-	
 	echo "<div id='hidden_text' >".$_SESSION["file_text"]."</div>".
 		 "<div id='hidden_fname' >".$dir.'/'.$fname."</div>";
-	
-	$arr = array(
-		"fname" => $fname,
-		"session" => $_SESSION["file_text"],
-		"alert" => ""
-	);
-	//echo json_encode( $arr );
 
 	if (get_subdir()==='mail'){
-	    //$a=get_usrname();  
 	    $full_name = get_mail_fname(get_usrname(), $fname);
-	    //echo '<div style="position:fixed;top:0%;left:0%;">MAIL: '.$full_name.'</div>';
 	    $myfile = fopen($full_name, "r") or die("Unable to open file!");
 	    $text = fread($myfile, filesize($full_name));
-	    //echo '<br> TEXT: '.$text.'<br>';
-	    //echo '<div style="position:fixed;top:0%;left:50%;">MAIL: '.$text.'</div>';
 	    fclose($myfile);
-	    //echo '<div style="position:fixed;top:5%;left:0%;">MAIL: '.$text.'</div>';
-	    echo "<div hidden id='hidden_mail_all' style='position:fixed; top:80%; left:85%'>".$text."</div>";
+	    echo "<div hidden id='hidden_mail_all'>".$text."</div>";
 	    
 	    echo "<div hidden id='hidden_mail_archive' >".$text."</div>";
 	    echo "<div hidden id='hidden_mail_msg' >".$_SESSION["file_text"]."</div>";
 	}
-
 }
+
+run_reader();
+
 ?>
 

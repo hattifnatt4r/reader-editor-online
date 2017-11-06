@@ -1,15 +1,8 @@
 
-console.log(document.title);
+console.log('--------------\n'+document.title);
+
 //-- files variables ---------------------------------------------------------------
-if (localStorage.getItem("isset")!="true"){
-	localStorage.setItem("isset", "true");
-	localStorage.setItem("copy_fname", "");
-	localStorage.setItem("copy_fdir", "");
-	localStorage.setItem("show_welcome", "yes");
-	localStorage.setItem("run", "1");
-}else{
-	localStorage.setItem("show_welcome", "no");
-}
+
 var files = {
 	iter: 0,
 	iter_prev: 0,
@@ -20,34 +13,17 @@ var files = {
 	
 	cookie_number: 7,
 	cookie_suffix: "_f",
-	subdir: "",
-	editor_text: "",
+	name: "files",
 	
 	nentry:1,
-	
-	name: "files",
-	dir: "",
 	nfolders: 1,
 	entries: [],
 	json_tmp: "",
+	dir: "",
+	subdir: "",
+	editor_text: "",
 	zoom_arr: ['no zoom', 'zoom'],
-	buttons_php: { "files_enter": "ffiles_enter_submit", 
-		           "files_edit": "ffiles_edit_submit",
-		           "files_delete": "ffiles_delete_submit",
-		           "files_cleanhtml": "ffiles_cleanhtml_submit", 
-		           "files_createtxt": "ffiles_createtxt_submit", 
-		           "files_createdir": "ffiles_createdir_submit", 
-		           "files_mail": "ffiles_mail_submit", 
-		           "files_upload": "ffiles_upload_submit", 
-		           "files_upload_choose": "ffiles_upload_choose", 
-		           "files_addmail": "ffiles_addmail_submit", 
-		           "files_download": "ffiles_download_submit", 
-		           "files_past": "ffiles_past_submit", 
-		           },
-	click_php: function(id) {                                            consolelog_func('brown');
-		if (id==="files_enter" && this.get_ftype()=="dir" ) { this.iter=0; this.iter_prev=0; }
-		//document.getElementById(this.buttons_php[id]).click(); 
-	},
+	
 	get_fname: function(i){                                              //consolelog_func('brown');
 		if (i===undefined) {i=this.iter;} 
 		return document.getElementById('fileid_'+this.iter.toString()+'_name').innerHTML; 
@@ -72,23 +48,18 @@ var files = {
 		return type;
 	},
 }                                                        
-window.onbeforeunload = files_beforunload;
-function files_beforunload() {                                           consolelog_func();
-	common.cookie_save.call(files); 
-	common.cookie_save(); 
-}
-function files_cleancookie(){                                            consolelog_func();
-	cookie_delete_all(); 
-	window.location.href = '/index.php'; 
-}
 
-//-- run files -------------------------------------------------------------------
-/*
-var elem = document.getElementById("php_goto");
-var php_goto = elem.innerHTML.replace(' ','');
-elem.innerHTML = '';
-if (php_goto!=''){ window.location.href = '/'+php_goto; }
-*/
+//-- start ---------------------------------------------------------------
+if (localStorage.getItem("isset")!="true"){
+	localStorage.setItem("isset", "true");
+	localStorage.setItem("copy_fname", "");
+	localStorage.setItem("copy_fdir", "");
+	localStorage.setItem("show_welcome", "yes");
+	localStorage.setItem("run", "1");
+}else{
+	localStorage.setItem("show_welcome", "no");
+}
+window.onbeforeunload = files_beforunload;
 
 if ('speechSynthesis' in window) {
 	/*
@@ -104,13 +75,15 @@ if ('speechSynthesis' in window) {
 } else{ 
 	common_show_notification('Your browser does not support speech synthesis.');
 }
-//files_run();
 
-function files_click_ajax(submit_name, start) {                          consolelog_func('brown');
-	if (start==undefined){start = false;}                                
+files_click_ajax("ffiles_run_submit", true);
 
-	var return_data = '';
-	console.log(' POST ');
+//-- run functions -------------------------------------------------------
+
+function files_click_ajax(submit_name, start) {                                 consolelog_func('brown');
+	if (start==undefined) { start=false; }
+
+	var return_data = '';                                                console.log(' POST ');
 	var url = "files.php";   
 	var hr = new XMLHttpRequest();
 	hr.open("POST", url, true);
@@ -119,16 +92,14 @@ function files_click_ajax(submit_name, start) {                          console
 		console.log('state: '+hr.readyState+' '+hr.status);
 		if (hr.readyState ==4 && hr.status == 200){
 			var return_data = hr.responseText;
-			console.log('RETURN: '+return_data);
+			//console.log('RETURN: '+return_data);
 			files.json_tmp = return_data;
-			files_run();
-			//files_show_files();
-			
-		}
-	} 
+			files_run(start);
+	}} 
 	console.log('ITER: '+files.iter);
 	
-	var send_var = submit_name+"=ok&ffiles_iter="+files.iter;
+	var send_var = "ffiles_iter="+files.iter;
+	send_var    += "&"+submit_name+"=" +document.getElementById(submit_name).value;
 	send_var    += "&ffiles_edit_text="+document.getElementById("ffiles_edit_text").value;
 	send_var    += "&ffiles_username=" +document.getElementById("ffiles_username").value;
 	send_var    += "&ffiles_userpass=" +document.getElementById("ffiles_userpass").value;
@@ -136,21 +107,16 @@ function files_click_ajax(submit_name, start) {                          console
 	send_var    += "&ffiles_copyfdir_text=" +document.getElementById("ffiles_copyfdir_text").value;
 	hr.send(send_var);
 	
-	//if (start==true){ files_run(); }
-	if (submit_name=="ffiles_enter_submit" && start==false){
+	if (submit_name=="ffiles_enter_submit" ){
 		if (files.get_ftype()!=="dir") { window.location.href = '/reader.html'; }
 		else {
 			files.iter = 0; 
 			files.iter_prev = 0;
-			//files_run();
-			//files_show_files();
-		}
-	}
+	}}
 }
 
-files_click_ajax("ffiles_enter_submit", true);
-
-function files_run(){                                                    consolelog_func('darkblue'); 
+function files_run(start){                                               consolelog_func('darkblue'); 
+	if (start==undefined) { start=false; }
 	
 	var files_arr = JSON.parse(files.json_tmp);                          console.log(files_arr);
 	
@@ -162,20 +128,20 @@ function files_run(){                                                    console
 	files.subdir = get_subdir(files.dir+'/');  
 	document.getElementById('content_box').style.top = '-3.4%';
 	
-	if (cookie_get('isset_files_')!='isset'){                            
-		cookie_set("isset_files_", "isset");
-		common.cookie_save.call(files);
-		common.cookie_save();
-	}else { 
-		common.cookie_load.call(files); 
-		common.cookie_load();
-	}
-	   
-	console.log('welcome: '+common.welcome);
-	if (common.welcome=='do' && localStorage.getItem("show_welcome")==="yes" ){ 
-		files_welcome();
-	}                                                                                                  
-	var bodyStyles = window.getComputedStyle(document.body);
+	if (start){
+		if (cookie_get('isset_files_')!='isset'){                            
+			cookie_set("isset_files_", "isset");
+			common.cookie_save.call(files);
+			common.cookie_save();
+		}else { 
+			common.cookie_load.call(files); 
+			common.cookie_load();
+		}
+		console.log('welcome: '+common.welcome);
+		if (common.welcome=='do' && localStorage.getItem("show_welcome")==="yes" ){ 
+			files_welcome();
+		}  
+	}                                                                                                
 	
 	files_show_buttons();                                                
 	common_set_fontsize(common.f_fontsize_scale, files);                                                                                                             
@@ -198,7 +164,6 @@ function files_show_buttons(){                                           console
     var inner_e="";
     inner_e+= '<div id="files_menu"    onclick="files_show_menu();" '       +common.style.buttonpos(0,4)+'> menu </div>' ;
     inner_e+= '<div id="files_options" onclick="files_show_options();" '    +common.style.buttonpos(1,4)+'> opt </div>';
-    //inner_e+= '<div id="files_enter"   onclick="files.click_php(this.id);" '+common.style.buttonpos(2,2)+'>'+symbol_enter+'</div></div>';
     inner_e+= '<div id="ffiles_enter_submit"   onclick="files_click_ajax(this.id);" '+common.style.buttonpos(2,2)+'>'+symbol_enter+'</div></div>';
     inner_e+= '<div id="files_login"   onclick="files_show_login();" '      +common.style.buttonpos(4,2)+'>'+'log in'+'</div>' ;
     inner_e+= '<div id="files_upload"  onclick="files_show_upload();" '     +common.style.buttonpos(5,2)+'>upload</div>' ;
@@ -227,8 +192,6 @@ function files_show_menu(){                                              console
 function files_show_create(){                                            consolelog_func();
 	var inner_e = "";
     inner_e += '<div '+common.style.buttonpos_menu(0,2)+'><div id="files_create_edit" onclick="files_edittext(this.id);" class="text_zoom menu_zoom">file name</div></div>';    
-    //inner_e += '<div id="files_createtxt" onclick="files.click_php(this.id);" '+common.style.buttonpos_menu(6,0)+'>create txt</div>';
-    //inner_e += '<div id="files_createdir" onclick="files.click_php(this.id);" '+common.style.buttonpos_menu(4,0)+'>create dir </div>';
     inner_e += '<div id="ffiles_createtxt_submit" onclick="files_click_ajax(this.id);" '+common.style.buttonpos_menu(6,0)+'>create txt</div>';
     inner_e += '<div id="ffiles_createdir_submit" onclick="files_click_ajax(this.id);" '+common.style.buttonpos_menu(4,0)+'>create dir </div>';
     common_create_menu('files_create', 1, inner_e);
@@ -276,24 +239,56 @@ function files_show_addcontact(){                                        console
 function files_show_upload(){                                            consolelog_func();
     var inner_e = "";
     inner_e+= '<div '+common.style.buttonpos_menu(0,2)+'><div id="files_upload_name" onclick="" class="text_zoom menu_zoom"></div></div>';
-    inner_e+= '<div id="ffiles_upload_choose"  onclick="files_click_ajax(this.id);" '+common.style.buttonpos_menu(4,0)+'>choose file</div>';
-    inner_e+= '<div id="ffiles_upload_submit"  onclick="files_click_ajax(this.id);" '+common.style.buttonpos_menu(6,0)+'>upload file</div>';
-    common_create_menu('files_upload', 0, inner_e);
+    inner_e+= '<div id="files_upload_choose"  onclick="files_upload(this.id);" '+common.style.buttonpos_menu(4,0)+'>choose file</div>';
+    inner_e+= '<div id="files_upload"         onclick="files_upload(this.id);" '+common.style.buttonpos_menu(6,0)+'>upload file</div>';
+    common_create_menu('files_upload_area', 0, inner_e);
     document.getElementById('ffiles_upload_choose').onchange = uploadOnChange;
+    
+    var form = document.getElementById('form_upload');
+    var fileSelect = document.getElementById('ffiles_upload_choose');
+    var uploadButton = document.getElementById('ffiles_upload_submit');
+
+    form.onsubmit = function(event) {
+        event.preventDefault();
+        var files = fileSelect.files;
+        var formData = new FormData();
+        var file = files[0]; 
+        
+        formData.append('ffiles_upload_choose', file, file.name);
+        formData.append('ffiles_upload_submit', 'new');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'files.php', true);
+		xhr.onreadystatechange = function(){
+			console.log('UPLOAD state: '+xhr.readyState+' '+xhr.status);
+			if (xhr.readyState ==4 && xhr.status == 200){
+				var return_data = xhr.responseText;
+				files.json_tmp = return_data;
+				//console.log('UPLOAD RETURN: '+files.json_tmp);
+				files_run();
+				files_click_ajax("ffiles_enter_submit", true);
+			}
+		} 
+        xhr.send(formData);
+    }  
 }
-function uploadOnChange() {                                              consolelog_func();
+function files_upload(id){
+	var names = {"files_upload": "ffiles_upload_submit", 
+		         "files_upload_choose": "ffiles_upload_choose"} 
+	document.getElementById(names[id]).click(); 
+}
+function uploadOnChange() {                                              consolelog_func("darkblue");
     var filename = this.value;                                           
     var lastIndex = filename.lastIndexOf("\\");
     if (lastIndex >= 0) {
         filename = filename.substring(lastIndex + 1);
-    }document.getElementById('files_upload_name').innerHTML = filename;
+    }
+    document.getElementById('files_upload_name').innerHTML = filename;
 }
 
 //-- text display functions ---------------------------------------------------------------
 function files_show_files(){                                             consolelog_func();
 	var files_arr = files.entries;
 	
-	//var files_arr = document.getElementById('files_array').childNodes;   
 	var wratio = window.innerWidth/window.innerHeight;                   console.log('wratio: '+wratio+' '+window.innerWidth+' '+window.innerHeight);              
 	var left_pc = -1; 
 	var top_pc=-5.4; 
@@ -357,6 +352,7 @@ function files_scroll(order, i_utter){                                   console
     var elem = document.getElementById('ffiles_iter');
     if (elem) { elem.value = files.iter; } 
     
+    console.log('scroll iter: '+files.iter+' | '+files.iter_prev);
     files.get_felem(files.iter).className = 'files-hover';
     if (files.iter_prev != files.iter) {
 		files.get_felem(files.iter_prev).className = 'files';
@@ -422,7 +418,6 @@ function files_login(xml){                                               console
             if (pass_i==pass){
                 user_access=2;
                 files.iter = 0;
-                //document.getElementById("ffiles_userlogin_submit").click();
                 files_click_ajax("ffiles_userlogin_submit");
     }}}                                                                  
     utter(login_messages_en[user_access],0,0,0);
@@ -447,14 +442,13 @@ function files_login_new(xml){                                           console
 	                                   
     if (user_access==0){ 
 		files.iter = 0;
-		//document.getElementById("ffiles_userlogin_submit").click();
 		files_click_ajax("ffiles_userlogin_submit");
 	}
     utter(newlogin_messages_en[user_access],0,0,0);
 }
-function loadDoc(url1, login_function) {                                 consolelog_func();
+function loadDoc(url1, login_function) {                                 //consolelog_func();
     xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {                              consolelog_func();
+    xhttp.onreadystatechange = function() {                              //consolelog_func();
 	    if (this.readyState == 4 && this.status == 200) {                
 	        login_function(this);   
 	    }
@@ -467,7 +461,6 @@ function files_logout(){                                                 console
     document.getElementById('ffiles_username').value = 'guest';
     document.getElementById('ffiles_userpass').value = '';     
     files.iter = 0;    
-    //document.getElementById("ffiles_userlogin_submit").click();
     files_click_ajax("ffiles_userlogin_submit");
 }
 function files_login_remember(){                                         consolelog_func();
@@ -524,6 +517,15 @@ function files_past(){                                                   console
 
 //------------------------------------------------------------------------
 
+function files_beforunload() {                                           consolelog_func();
+	common.cookie_save.call(files); 
+	common.cookie_save(); 
+}
+function files_cleancookie(){                                            consolelog_func();
+	cookie_delete_all(); 
+	window.location.href = '/index.html'; 
+}
+
 function files_welcome(){
 	var text = "Hi! <br>This website helps people to read and write. <br><br>";
 	text+=     "Check 'readme.txt' file for details. ";
@@ -538,3 +540,4 @@ function clean_tmp(){
 	//document.getElementById('ffiles_test_submit').click(); 
 	files_click_ajax("ffiles_test_submit");
 }
+

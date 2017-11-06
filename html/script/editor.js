@@ -226,7 +226,7 @@ function editor_exit(){                                                  console
     if (editor.parent=="reader"){ 
 		reader.ischanged_text = true;
 		reader.editor_text = editor.text_raw;
-		reader.ineditor = false;                                         console.log(reader.ischanged_text+', text: '+reader.editor_text);    
+		reader.ineditor = false;                                         //console.log('EDITOR ischanged_text: '+reader.ischanged_text+', text: '+reader.editor_text+' ID: '+reader.id_curr);    
 		reader_run(); 
 	}else if (editor.parent=="files"){                                  
 		elem = document.getElementById(editor.destination);

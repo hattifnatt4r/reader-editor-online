@@ -1,33 +1,26 @@
 
-console.log(document.title);
+console.log('--------------\n'+document.title);
 
-if (localStorage.getItem("isset_reader")!="true"){
-	localStorage.setItem("isset_reader", "true");
-	localStorage.setItem("run_reader", "1");
-}
-//-- reader variables ----------------------------------------------------------------
+//-- reader variables ----------------------------------------------------
+
 var reader = {
     latest_w: "p0s0w0", latest_s: "p0s0", latest_p: "p0",
-    id_prev: "p0s0w0",
-    id_curr: "p0s0w0",
+    id_prev: "p0s0w0",  id_curr: "p0s0w0",
     ischanged_text: false,
     ineditor: false,
     iter: 0,
     selecttype: 2,
     zoomtype: 0,
-    
-    text_origin: "",
-    editor_text: "",
+    text_origin: "", editor_text: "", mailtext: "",
     editor_iter: 0,
-    mailtext: "",
-    mail_send: false,
-    cookie_number: 15,
+    
+    cookie_number: 14,
+    cookie_suffix: "_",
+    name: 'reader',
     
     fname: "",
     readonly: false,
     subdir: "",
-    cookie_suffix: "_",
-    name: 'reader',
     text_parsed: "",
     word_id: [], sentence_id: [], paragraph_id: [],
     mailnum: 0,
@@ -35,12 +28,7 @@ var reader = {
     json_tmp: "",
     
     zoomtype_arr: ['no zoom', 'by word', 'by sentence'],
-    buttons_php: { "reader_save": "freader_save_submit", 
-		           "reader_sendmail": "freader_sendmail_submit"
-		           },
-	click_php: function(id) {                                            consolelog_func('orange'); 
-		document.getElementById(this.buttons_php[id]).click(); 
-	},
+    
     get_id_array: function(){                                            consolelog_func('brown'); 
         var id_arr = [];
         if (this.selecttype == 1){ id_arr=this.sentence_id; }    
@@ -68,21 +56,22 @@ var reader = {
     },
     
 }
-function reader_beforunload() {                                          consolelog_func(); 
-	common.cookie_save.call(reader); 
-	common.cookie_save(); 
+
+//-- start ---------------------------------------------------------------
+
+if (localStorage.getItem("isset_reader")!="true"){
+	localStorage.setItem("isset_reader", "true");
+	localStorage.setItem("run_reader", "1");
 }
-
-//-- run reader ---------------------------------------------------------------------
 window.onbeforeunload = reader_beforunload;
+reader_click_ajax("freader_run_submit", true);
 
-//reader_run();  
-reader_run_ajax(); 
+//-- run functions -------------------------------------------------------
 
-function reader_run_ajax() {                                            consolelog_func('brown');
-	
-	var return_data = '';
-	console.log(' POST ');
+function reader_click_ajax(submit_name, start) {                                consolelog_func('orange');
+	if (start==undefined) { start=false; }
+
+	var return_data = '';                                                console.log(' POST ');
 	var url = "reader.php";   
 	var hr = new XMLHttpRequest();
 	hr.open("POST", url, true);
@@ -94,60 +83,42 @@ function reader_run_ajax() {                                            consolel
 			console.log('RETURN: '+return_data);
 			document.getElementById('hidden').innerHTML = return_data;
 			reader.json_tmp = return_data;
-			reader_run();
-			//files_show_files();
-			
-		}
-	} 
-	hr.send("freader_run_submit=ok");
+			reader.fname = document.getElementById('hidden_fname').innerText.replace(' ','');
+			reader_run(start);
+	}} 
+	console.log('ITER: '+reader.iter);
+	
+	var send_var = submit_name+"=" +document.getElementById(submit_name).value;
+	send_var    += "&freader_save_text="+document.getElementById("freader_save_text").value;
+	hr.send(send_var);
+	
 }
 
-reader_run_ajax();
-
-function reader_run() {     
-	/*                                             consolelog_func('darkblue'); 
-	if (localStorage.getItem("run_reader")==1){
-		document.getElementById("freader_run_submit").click();
-		localStorage.setItem("run_reader", "0");
+function reader_run(start) {                                                  consolelog_func('darkblue');                                               
+	if (start==undefined) { start=false; }
+	if (start){
+		reader.fname = document.getElementById('hidden_fname').innerText.replace(' ','');
+		console.log(reader.fname);
+		
+		reader.cookie_suffix = "_"+reader.fname;
+		//reader.readonly = is_inlist(readonlydir);                          console.log(readonlydir);
+		reader.readonly = false;
+		reader.subdir = get_subdir(reader.fname);   
+		console.log('isset: '+cookie_get('isset_'+reader.fname)+' '+reader.fname);
+		if (cookie_get('isset_'+reader.fname)!='isset'){                    
+		    cookie_set("isset_"+reader.fname, "isset");
+		    common.cookie_save.call(reader);
+		}else{ common.cookie_load.call(reader); }                            
+		common.cookie_load();
 	}
-	var files_arr = document.getElementById('hidden_text').innerHTML;
-	*/ 
-	//console.log(files_arr);
-	//var text_arr = LSON.parse(reader.json_tmp);
-	//console.log(text_arr);
-	
-	reader.fname = document.getElementById('hidden_fname').innerText.replace(' ','');
-	console.log(reader.fname);
-	
-	//reader.fname = document.getElementById('file_title').innerText.replace(' ','');
-	reader.cookie_suffix = "_"+reader.fname;
-	//reader.readonly = is_inlist(readonlydir);                            //console.log(readonlydir);
-	reader.readonly = false;
-	reader.subdir = get_subdir(reader.fname);   
-	
-	if (cookie_get('isset_'+reader.fname)!='isset'){                    
-	    cookie_set("isset_"+reader.fname, "isset");
-	    common.cookie_save.call(reader);
-	}else{ common.cookie_load.call(reader); }                            
-	common.cookie_load();
-	
 	
     var subdir = reader.subdir;                                          consolelog('ischanged_text: '+reader.ischanged_text+', editor_text: '+reader.editor_text);
     var fname = common_make_fname(reader.fname);
-    
-    console.log(reader.mail_send+' -- '+subdir);
-    if (reader.mail_send == true && subdir==='mail'){  
-		reader.mail_send = false;         
-		reader_refresh();
-	}
     
     document.getElementById('file_title').innerHTML = '<em style="color:#008000;opacity:0.6;">'+fname[0]+'/ </em>'+fname[1]+'</em>';
     
     if (reader.ischanged_text==false){
         reader_show_buttons();                                             
-        //create_element('zoom_box','text_zoom_box', 'base_elements');
-        //document.getElementById("zoom_box").innerHTML = '<div id="reader_zoom" class="text_zoom">zoom word</div>'
-        //document.getElementById("base_elements").appendChild(document.getElementById("content_box"));
     }
     if (subdir==='mail' && reader.ischanged_text==false){
         var user_name = get_usrname(reader.fname).replace(" ",""); 
@@ -185,8 +156,8 @@ function reader_run() {
     
 }
 
-function reader_text(){                                                  consolelog_func(); 
-    var subdir=reader.subdir;                                            consolelog('subdir: '+subdir+', editor_text: '+reader.editor_text+', ischanged_text: '+reader.ischanged_text);
+function reader_text(){                                                  consolelog_func('darkblue'); 
+    var subdir=reader.subdir;                                            //consolelog('subdir: '+subdir+', editor_text: '+reader.editor_text+', ischanged_text: '+reader.ischanged_text);
     var text = "", text_parsed = "";
     var parser = [];
     if (reader.ischanged_text==false){
@@ -205,22 +176,23 @@ function reader_text(){                                                  console
             text_parsed = reader.text_parsed;
         }                                                                //console.log('true text_parsed: '+text_parsed);
         reader.id_curr = reader.get_id();                                
-        text = reader.editor_text;                                       //console.log('text_new: '+text);
-        document.getElementById('temp').innerHTML = text_parsed;         
-        var id = reader.id_curr;                                         
-        document.getElementById(id).innerHTML = text;                 
+        text = reader.editor_text;                                       
+        document.getElementById('tmp').innerHTML = text_parsed;         
+        var id = reader.id_curr;                                         //console.log('text_new: '+text+' ID: '+id);
+        document.getElementById("text_from_file").innerHTML = "";
+        document.getElementById(id).innerHTML = text;                    //console.log('text_new_parsed: '+document.getElementById('tmp').innerHTML);
         
-        var text_all_parsed = document.getElementById('temp').innerHTML; 
+        var text_all_parsed = document.getElementById('tmp').innerHTML; 
         var text_all_origin = merge_text(text_all_parsed);               
     
-        reader.ischanged_text = false;
+        reader.ischanged_text = false;                                   //console.log('NEW TEXT: '+text_all_origin);
         reader_save(text_all_origin);
     }
 }                   
 
 function reader_save(text){                                              consolelog_func(); 
         document.getElementById('freader_save_text').value = text; 
-        document.getElementById('freader_save_submit').click();          
+        reader_click_ajax('freader_save_submit');        
 }
  
 //-- reader scroll functions -------------------------------------------------------------------
@@ -499,7 +471,7 @@ function reader_if_editable(){                                           console
 
 function reader_show_mail(){                                             consolelog_func(); 
     var inner_e = '';
-    inner_e += '<div id="reader_sendmail" onclick="reader_send_mail();" '+common.style.buttonpos_menu(4,0)+'> send mail </div>';
+    inner_e += '<div id="freader_sendmail_submit" onclick="reader_click_ajax(this.id);" '+common.style.buttonpos_menu(4,0)+'> send mail </div>';
     inner_e += '<div id="reader_refresh"  onclick="reader_refresh();" '  +common.style.buttonpos_menu(6,0)+'> refresh </div>';
     common_create_menu('reader_mail', 0, inner_e);
     
@@ -513,13 +485,9 @@ function reader_show_mail(){                                             console
     text = m_num+reader.mailnum+m_from+username+m_time+date+m_text+text ;                  
     document.getElementById('freader_save_text').value=text;  
 }
-function reader_send_mail(){
-	reader.click_php("reader_sendmail");
-	reader.mail_send = true;
-	//window.location.href = '/reader.php';
-}
+
 function reader_refresh() {                                              consolelog_func('orange'); //alert('refresh');
-	window.location.href = '/reader.php';
+	window.location.href = '/reader.html';
 }
 
 function reader_get_mailarr(){                                           consolelog_func(); 
@@ -552,4 +520,11 @@ function reader_get_mailarr(){                                           console
     
     reader.mailnum = parseInt(mail_arr[mail_arr.length-1][0])+1;       
     return(mail_arr);
+}
+
+//-------------------------------------------------------------------------
+
+function reader_beforunload() {                                          consolelog_func(); 
+	common.cookie_save.call(reader); 
+	common.cookie_save(); 
 }

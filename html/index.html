@@ -25,9 +25,6 @@
 </head>
 
 <body id='body' class='body_bkg' align='top' onresize="files_resize()" >
-<div hidden id='hidden_files_nentry' ></div>
-<div hidden id='hidden_files_arr' ></div>
-<div hidden id='php_goto'> </div>
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -127,13 +124,18 @@
 	<input id="ffiles_copyfdir_text"   type="text"   name="ffiles_copyfdir_text"   value="" >
 	<input id="ffiles_past_submit"     type="submit" name="ffiles_past_submit"     value="empty" >
 	
+	<input id="ffiles_run_submit"      type="submit" name="ffiles_run_submit"      value="empty" >
 	<input id="ffiles_test_submit"     type="submit" name="ffiles_test_submit"     value="empty" >
 </form>	
-<form action="" method="post" enctype="multipart/form-data">
+<form id="form_upload" action="files.php" method="post" enctype="multipart/form-data">
 	<input id="ffiles_upload_choose"   type="file"   name="ffiles_upload_choose"     value="empty" >
 	<input id="ffiles_upload_submit"   type="submit" name="ffiles_upload_submit"     value="empty" >
 </form>
 </div>
+
+<div hidden id='hidden_files_nentry' ></div>
+<div hidden id='hidden_files_arr' ></div>
+<div hidden id='php_goto'> </div>
 
 <script language=JavaScript type="text/javascript" src="script/common.js"></script>
 <script language=JavaScript type="text/javascript" src="script/files.js"></script>

@@ -210,11 +210,7 @@ var symbol_undo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-undo"
 var symbol_redo      = '<svg class="ion_symbol"> <use xlink:href="#ion-ios-redo"></use> </svg>';
 
 
-var shadow = '<defs><filter id="shadow"><feDropShadow dx="4" dy="8" stdDeviation="4"/><feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer></filter></defs>';
 var symbol_addcontact= '<svg class="ion_symbol_txt" > <use xlink:href="#ion-android-person-add"></use> </svg>';
-//var symbol_file      = '<div>'+symbol_down+symbol_up+symbol_enter+'</div>';
-//var symbol_file      = '<div>'+'abc'+'</div>';
-//var symbol_file      = '<svg class="ion_symbol_txt">' + shadow + ' <use xlink:href="#ion-android-document"></use> </svg>';
 var symbol_file      = '<svg class="ion_symbol_txt">' + ' <use xlink:href="#ion-android-document"></use> </svg>';
 var symbol_folder    = '<svg class="ion_symbol_dir" align="center"> <use xlink:href="#ion-android-folder"></use> </svg>';
 var symbol_mail      = '<svg class="ion_symbol ion_symbol_smaller"> <use xlink:href="#ion-android-mail"></use> </svg>';
@@ -1025,7 +1021,7 @@ function common_show_notification(text, welcome){                        console
 	inner_e = '<div id="'+id+'_back" onclick="menu_back(this.id,1,false);" class="back_area"> </div>';
 	inner_e+= '<div class="menu_area" >';
 	inner_e+= '<div class="text_scroll_box" style="position:fixed;top:15vh;left:12vw;width:76vw;height:'+(b_top-23)+'vh;font-size:4.8vmin;line-height:7.5vh; color: rgba(0,0,0,0.55);">';
-	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-10vh;height:20%;">'+text+' &nbsp </div> </div> </div> </div>' ;
+	inner_e+= '<div class="text_scroll" align="left" style="top:0;"> <div class="reader_text" style="top:-5vh;height:20%;">'+text+' &nbsp </div> </div> </div> </div>' ;
                                        
     inner_e += '<div onclick="utter_sentence(0, 1, 0, 1);" ' +common.style.buttonpos_menu(19,0,4,5)+' > utter </div>';
     if (welcome){

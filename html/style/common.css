@@ -245,7 +245,7 @@ font-style:normal;
   border: solid 0.5vh white;
 }
 .mail_out{ left:1.5%; text-align:left; background-color:#ddeaee; border-color:#ddeaee;  /*background-color:rgba(0,0,0,0);*/}
-.mail_in{ left:26.5%; text-align:right; background-color:#e6eedd; border-color:#e6eedd;  /*background-color:rgba(0,0,0,0);*/}
+.mail_in{ left:24.5%; text-align:right; background-color:#e6eedd; border-color:#e6eedd;  /*background-color:rgba(0,0,0,0);*/}
 .mail_title{ background-color:white; border-color:white;}
 .mail_temp{ background-color:#ffe6cc; background-color:#f7f7d4; background-color:#ddeaee; /*background-color:#bbd5dd;*/ }
 .mail_space{ height:2vh; background-color:white;border-color:white;}

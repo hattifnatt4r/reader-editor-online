@@ -6,16 +6,16 @@ if ($_SESSION["session_id_prev"] !== session_id()){
     chmod($_SESSION['usr_dir'], 0777);
     $_SESSION['usr_home'] = "users/guests/".session_id();
     $_SESSION["file_counter"] = 0;
-    $_SESSION["word_i"] = 'HHEELLOO';
-    $_SESSION['nentry'] = 0;
-    $_SESSION["letter_i"] = 'a';
-    $_SESSION["file_text"] = '';
     $_SESSION["editor_exit"] = '';
     
     $_SESSION["filename_opened"] = '';
     $_SESSION["files_arr"] = array();
     
     $_SESSION["alert"] = "";
+    $_SESSION["alert_mail"] = "";
+    $_SESSION["alert_enter"] = "";
+    $_SESSION["alert_upload"] = "";
+    $_SESSION["alert_options"] = "";
     $_SESSION["session_id_prev"] = session_id();
     //getUserData();
 }
@@ -45,7 +45,10 @@ function run_files(){
 		"entries" => $_SESSION["files_arr"],
 		"nfolders" => $_SESSION["nfolders"],
 		"alert" => $_SESSION["alert"],
-		"goreader" => ""
+		"alert_mail" => $_SESSION["alert_mail"],
+		"alert_enter" => $_SESSION["alert_enter"],
+		"alert_upload" => $_SESSION["alert_upload"],
+		"alert_options" => $_SESSION["alert_options"]
 	);
 	echo json_encode( $arr );
 }
@@ -66,7 +69,6 @@ function make_files_array(){
 				} else{array_push($arr_file,$entry);}    
 	        } 
 	    }
-	    $_SESSION['nentry'] = $i-1;
 	    closedir($handle);
 	    $arr_entries = array_merge($arr_dir,$arr_file);
 	    $i=0;
@@ -109,6 +111,7 @@ if (isset($_POST['ffiles_createdir_submit'])) {
 if (isset($_POST['ffiles_addmail_submit'])) {
     $value = $_POST['ffiles_addmail_submit'];
     $contact_name = $_POST["ffiles_edit_text"];
+    $alert = "";
     
     $success = 1;
     $usr_dir=$_SESSION['usr_dir'];
@@ -154,7 +157,7 @@ if (isset($_POST['ffiles_addmail_submit'])) {
         if (!file_exists($local_name)){ $success = 0; $alert = "Cannot create 2d local file"; }
 	}
     
-    $_SESSION["alert"] = $alert;
+    $_SESSION["alert_mail"] = $alert;
 }
 function get_usrname(){
     $usr_dir=$_SESSION['usr_dir'];
@@ -191,10 +194,10 @@ if (isset($_POST["ffiles_past_submit"])) {
 		$k+=1;
 	}
 	//$st = copy($filename, $newfile_final);
-	$_SESSION["alert"] = $_SESSION["alert"].'---'.$filename.'---'.$newfile_final.'---';
+	//$_SESSION["alert_options"] = $_SESSION["alert_options"].'---'.$filename.'---'.$newfile_final.'---';
 	//make_files_array();
 	if (!copy($filename, $newfile_final)){
-		$_SESSION["alert"] = $_SESSION["alert"].'--FAIL--';
+		$_SESSION["alert_options"] = '--Past file FAIL--';
 	}
 	//$_SESSION["alert"] = $_SESSION["alert"].'--'.$newfile_final.'--'.$st.'--';
 }		
@@ -230,9 +233,9 @@ if (isset($_POST["ffiles_cleanhtml_submit"])) {
 if (isset($_POST['ffiles_enter_submit'])) {
     $_SESSION["file_counter"]=intval($_POST["ffiles_iter"]);
     $entry=find_object($_SESSION["file_counter"],$_SESSION['usr_dir']);
-    $_SESSION["alert"] = $_SESSION["alert"].$_POST["ffiles_iter"];
+    //$_SESSION["alert"] = $_SESSION["alert"].$_POST["ffiles_iter"];
     $filename = $_SESSION['usr_dir'].'/'.$entry;
-    $_SESSION["alert"] = $_SESSION["alert"].$filename;
+    //$_SESSION["alert"] = $_SESSION["alert"].$filename;
     
 	if ($_SESSION["file_counter"]==0){
 		if ($_SESSION["usr_dir"]!=$_SESSION['usr_home']){
@@ -260,6 +263,7 @@ if (isset($_POST['ffiles_userlogin_submit'])) {
     $name = $_POST['ffiles_username'];
     $pass = $_POST['ffiles_userpass'];
     $value = $_POST['ffiles_userlogin_submit'];
+    $alert = "";
     
     if ($name=="guest"){ $name = "guests/".session_id(); }
     
@@ -344,6 +348,7 @@ function getUserIP(){
 //-- upload file -------------------------------------------------------------
 
 if(isset($_POST["ffiles_upload_submit"])) {
+	$alert = "";
     $target_dir = $_SESSION['usr_dir'];
     $target_file = $target_dir .'/'. basename($_FILES["ffiles_upload_choose"]["name"]);
     echo '<div style="position:fixed;top:5%;left:0%;z-order:1;width:70%;">'.$target_file.'</div>';
@@ -377,6 +382,7 @@ if(isset($_POST["ffiles_upload_submit"])) {
             $alert = $alert."Sorry, there was an error uploading your file.";
         }
     }
+    $_SESSION["alert_options"] = "--||--".$alert."--||--";
 }
 
 if(isset($_POST["python_submit_name"])) {
@@ -516,6 +522,9 @@ function delete_files($target) {
 }
 
 //------------------------------------------------------------------------
+if(isset($_POST["ffiles_run_submit"])){
+	$_SESSION["alert_enter"] = "RUN";
+} 
 
 run_files();
 

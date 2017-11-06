@@ -22,8 +22,6 @@
 </head>
 
 <body id='body' class='body_bkg' id='reader_body' onresize="reader_resize()" >
-<!-- <div id='reader_buttons_area' class='buttons_area'></div> -->
-<!-- <div style='position:fixed; top:0%; left:0%;background-color:#5c4023; opacity:0.1;width:100vw;height:7vh;'></div> -->
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -69,24 +67,19 @@
 		<path d="M98.9     334.7 l1.8 2.1 136 156.5 c4.6 5.3 11.5 8.6 19.2 8.6 7.7 0 14.6-3.4 19.2-8.6  L411   337.1 l2.3-2.6 c1.7-2.5 2.7-5.5 2.7-8.7 0-8.7-7.4-15.8-16.6-15.8  H112.6  c-9.2 0-16.6 7.1-16.6 15.8 0 3.3 1.1 6.4 2.9 8.9z"></path>
 	</symbol>
 	
-    <!-- etc -->
   </defs>
 </svg>
 
 
-<div hidden id='hidden_text_parsed' > </div>
-<div hidden id='hidden' > </div>
-<div hidden id='temp' > </div>
-
 <div id='base_elements'>
 	<div id='content_box' class='text_scroll_box' style="position:absolute;top:-10%;">
 		<div id='text_scroll_area' class='text_scroll' align='left' >
-			<em id="file_title" style="font-style:normal;top:0; left:1.7vw;position:relative;"> </em>
-			<div id='text_from_file' class='reader_text'> </div>
+			<em id="file_title" style="font-style:normal;top:-5vh; left:1.7vw;position:relative;"> </em>
+			<div id='text_from_file' class='reader_text' style="top:-5vh;"> </div>
 		</div>
 	</div>
 	<div id="zoom_box" class="text_zoom_box">
-		<div id="reader_zoom" class="text_zoom">zoom word</div>
+		<div id="reader_zoom" class="text_zoom"> </div>
 	</div>
     <div id='buttons_area' class='buttons_area'></div>
 </div>
@@ -99,9 +92,13 @@
 	<input id="freader_save_text"       type="text"   name="freader_save_text"        value="empty" >
 	<input id="freader_save_submit"     type="submit" name="freader_save_submit"      value="empty" >
 	<input id="freader_sendmail_submit" type="submit" name="freader_sendmail_submit"  value="empty" >
-	<input id="freader_run_submit" type="submit" name="freader_run_submit"  value="empty" >
+	<input id="freader_run_submit"      type="submit" name="freader_run_submit"       value="empty" >
 </form>
 </div>
+
+<div hidden id='hidden_text_parsed' > </div>
+<div hidden id='hidden' > </div>
+<div hidden id='tmp' > </div>
 
 <script language=JavaScript type="text/javascript" src="script/common.js"></script> 
 <script language=JavaScript type="text/javascript" src="script/reader.js"></script>
