@@ -1,11 +1,5 @@
 
 .body_bkg{
-  background-color: white;  
-  background-size: auto 100%;
-  /*background-position: auto 0%;*/
-  background-repeat: no-repeat;
-  
-  /*---------------------------*/
   position: fixed; left:0;top:0; width:100%;height:100%;
   text-align:center; 
   
@@ -29,15 +23,19 @@
   font-family: "Open Sans"; */
   /* 
   font-family: Verdana, Geneva, sans-serif;  */
-  font-weight: 100;
-  /*font-style: normal;
-  /*font-variant: normal;
   /*font-family: "Ubuntu";  */
+  font-weight: 100;
 }
-.text{
-  /*font-style:normal; */
-}.text_highlite{
-  /*font-style:normal; */
+.body_bkg_image{
+  background-size: auto 100%;
+  background-position: right top;
+  background-image: url("pics/reader8-01-bkg01-01.png");
+  /*background-image: url("pics/reader8-01-bkg03-01.png");
+  background-image: url("pics/reader6-01-bkg01.gif"); */
+  background-repeat: no-repeat;
+}
+.text{}
+.text_highlite{
   background-color: rgba(108, 170, 9, 0.6);
 }
 .editor_bkg{
@@ -59,17 +57,18 @@
   top:0%; left:100%;
   height:100%; width:100%;
  }
+.buttons_area_image{ background-color: rgba(0, 0, 0, 0);  }
+.buttons_image{ color: red; background-color: rgba(0, 0, 0, 0); }
 .buttons{
   width:12%; height:17%;     
   position:fixed; box-sizing:border-box;
   word-break: normal; white-space: normal;
-  border-radius: 0.25vmin;
+  border-radius: 0.5vmin;
   color: rgba(0,0,0,0.5); 
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08), 0 4px 13px 0 rgba(0,0,0,0.2);
  
   /*---------------------------*/
   display:flex; justify-content:center; align-items:center;
-  /*font-family: "Ubuntu";  */
 }
 .buttons:hover{
   background-color: rgba(107, 143, 36, 0.7); 
@@ -106,13 +105,13 @@
   height:45%; width:100%;
   -webkit-filter: drop-shadow(4px 5px 4px rgba(0,0,0,0.1)); 
 }
-.files-dir{ 
+.files_dir{ 
   background-image: url("pics/reader8_buttons_07-01_dir.png");
   background-size: auto 70%;
   background-position: center;
   background-repeat: no-repeat;
  }
-.files-txt{ 
+.files_txt{ 
   background-image: url("pics/reader8_buttons_06-01_txt.png");
   background-size: auto 90%;
   background-position: center;
@@ -183,7 +182,7 @@ height:50%;
 }.text_zoom{
   border-radius: 0.25vmin; top:0;
   position:relative; width:100%; height:96%;  
-  color: rgba(0,0,0,0.58);
+  color: rgba(0,0,0,0.5);
   overflow-x: scroll; overflow-y: hidden; white-space:nowrap; 
 }.text_zoom::-webkit-scrollbar {
   position:relative; 

@@ -9,8 +9,9 @@ var common = {
 	r_fontsize_scale: 1,
 	time_delay: 10,
 	welcome: 'do',
+	bkg_image: true,
 	
-	cookie_number: 9,
+	cookie_number: 10,
 	browser: "",
 	cookie_suffix: "_",
 	name: "common",
@@ -55,7 +56,9 @@ var common = {
 }
 
 common.style = {
-	class_arr: ["buttons", "buttons disabled", "buttons symbol", "buttons symbol disabled", "buttons editor", "buttons editor disabled"],
+	base_class: "buttons ",
+	last_class: " buttons_image",
+	class_arr: ["", "disabled", "symbol", "symbol disabled", "editor", "editor disabled"],
     yn:4, btop:3.5, bbot:96.5, 
     xn:2, bright:98, xspace:4, dx_side:1,
     dy: 16.5, xy_ratio: 1.1,
@@ -100,7 +103,7 @@ common.style = {
     buttonpos: function(i, class_n){                                     //consolelog_func('brown');
 		var wratio = window.innerWidth/window.innerHeight;
 		if (class_n===undefined) {class_n=0;}
-		var class_name = this.class_arr[class_n];
+		var class_name = this.base_class+this.class_arr[class_n]+ this.last_class; console.log(class_name);
 	    var bright = wratio*this.bright;           
 	    var n_x = (i-i%this.yn)/this.yn;
 	    

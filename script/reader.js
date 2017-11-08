@@ -115,7 +115,8 @@ function reader_run(start) {                                                  co
     var subdir = reader.subdir;                                          consolelog('ischanged_text: '+reader.ischanged_text+', editor_text: '+reader.editor_text);
     var fname = common_make_fname(reader.fname);
     
-    document.getElementById('file_title').innerHTML = '<em style="color:#008000;opacity:0.6;">'+fname[0]+'/ </em>'+fname[1]+'</em>';
+    //document.getElementById('file_title').innerHTML = '<em style="color:#008000;opacity:0.6;">'+fname[0]+'/ </em>'+fname[1]+'</em>';
+    document.getElementById('file_title').innerHTML = '<em style="color:black;opacity:0.3;">'+fname[0]+'/ </em>'+fname[1]+'</em>';
     
     if (reader.ischanged_text==false){
         reader_show_buttons();                                             

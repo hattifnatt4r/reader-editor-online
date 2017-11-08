@@ -75,8 +75,19 @@ if ('speechSynthesis' in window) {
 } else{ 
 	common_show_notification('Your browser does not support speech synthesis.');
 }
+//files_set_image();
 files_show_buttons(); 
 files_click_ajax("ffiles_run_submit", true);
+//files_set_image();
+
+function files_set_image(){                                              consolelog_func('brown');
+	document.getElementById("body").className += " body_bkg_image";
+	document.getElementById("buttons_area").className += " buttons_area_image";
+	common.style.last_class = " buttons_image ";
+	common.style.class_arr = ["", "", "", "", "", ""];
+	//$(".buttons").addClass("buttons_image");
+	//$(".buttons").css("background-color", "red");
+}
 
 //-- run functions -------------------------------------------------------
 
@@ -149,6 +160,8 @@ function files_run(start){                                               console
 	files_show_files();
 	files_scroll(files.iter, 'no'); 
 	files_set_zoom('no'); 
+	
+
 }                                                                        
 
 //-- show buttons ---------------------------------------------------------------------------
@@ -326,6 +339,7 @@ function files_show_files(){                                             console
 		inner_e+= '<div id="fileid_'+i+'" onclick="files_scroll('+i+');"  class="files" style="'+style+'" title="'+title+'" >';
 		inner_e+= '<div id="fileid_'+i+'_pic"  class="files_symbol" >'+symbol+'</div>';
 		inner_e+= '<div id="fileid_'+i+'_name"  class="files_name" >'+files.entries[i]+'</div> </div>' ;
+		//inner_e+= '<div id="fileid_'+i+'_pic"  class="files_pic files_'+title+'" >'+'</div>';
 	}
 	document.getElementById('files_array').style.visibility = 'visible';
 	document.getElementById('files_array').innerHTML = inner_e;          //console.log(inner_e);
@@ -376,7 +390,8 @@ function files_fill_zoom(){                                              console
 		if (i2==-1) { i2 = dir.length; }                                 //console.log(i1+' - '+i2);
 		dir = dir.substring(0,i1)+dir.substring(i2); 
 	}
-    dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+'/ </em>';
+    //dir = '<em style="font-style:normal;color:#008000;opacity:0.6;">'+dir+'/ </em>';
+    dir = '<em style="font-style:normal;color:black;opacity:0.3;">'+dir+'/ </em>';
     document.getElementById('files_zoom_text').innerHTML = dir+files.get_fname(); 
 }   
 function files_set_zoom(order){                                          consolelog_func();
